@@ -1,0 +1,29 @@
+# env
+.env
+
+# Laravel
+/vendor
+/node_modules
+
+# Composer
+composer.phar
+composer.lock
+# npm
+package-lock.json
+npm-debug.log
+
+#yarn
+yarn.lock
+yarn-error.log
+
+#public file
+/public/assets
+/public/storage
+/public/build
+
+#ctag
+.tags_sorted_by_file
+.tags
+
+# phpstorm
+.idea
