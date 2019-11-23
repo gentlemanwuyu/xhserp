@@ -26,32 +26,35 @@
             <img src="{{asset('/assets/images/xhs-logo.png')}}" alt="logo">
             <h2>汉生集团管理系统</h2>
         </div>
-        <form action="" method="post">
+        <form class="layui-form" lay-filter="login">
             <input name="_token" type="hidden" value="{!! csrf_token() !!}" />
             <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
-                    <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
-                    <input type="text" name="email" placeholder="邮箱" class="layui-input" required oninvalid="setCustomValidity('请输入用户名')" oninput="setCustomValidity('');">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username"></label>
+                    <input type="text" name="email" placeholder="Email" class="layui-input" lay-verify="required|email" lay-reqText="请输入您的Email">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-                    <input type="password" name="password" placeholder="密码" class="layui-input" required oninvalid="setCustomValidity('请输入密码')" oninput="setCustomValidity('');">
+                    <input type="password" name="password" placeholder="密码" class="layui-input" lay-verify="required" lay-reqText="请输入密码">
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-row">
                         <div class="layui-col-xs7">
                             <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-                            <input type="text" name="captcha" placeholder="验证码" class="layui-input" required oninvalid="setCustomValidity('请输入验证码')" oninput="setCustomValidity('');">
+                            <input type="text" name="captcha" placeholder="验证码" class="layui-input" lay-verify="required" lay-reqText="请输入验证码">
                         </div>
                         <div class="layui-col-xs5">
                             <div style="margin-left: 10px;">
-                                <img src="{{\Mews\Captcha\Facades\Captcha::src('woozee')}}" class="layadmin-user-login-codeimg" alt="captcha" onclick="this.src='{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?'+Math.random()">
+                                <img src="{{\Mews\Captcha\Facades\Captcha::src('woozee')}}" id="captcha" class="layadmin-user-login-codeimg" alt="captcha" onclick="this.src='{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?'+Math.random()">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <button type="submit" class="layui-btn layui-btn-fluid">登 入</button>
+                    <input type="checkbox" name="remember" lay-skin="switch" lay-text="记住密码|记住密码" checked>
+                </div>
+                <div class="layui-form-item">
+                    <button type="button" class="layui-btn layui-btn-fluid" lay-submit lay-filter="login">登 入</button>
                 </div>
             </div>
         </form>
@@ -61,12 +64,39 @@
         <p>© 2019 Powered by <a href="https://www.woozee.com.cn/" target="_blank">吴宇</a></p>
     </div>
 </div>
-<script src="{{asset('/assets/layui-src/dist/layui.js')}}"></script>
+<script src="{{asset('/assets/layui-src/dist/layui.all.js')}}"></script>
+<script src="{{asset('/assets/js/erp.js')}}"></script>
 <script>
     layui.use(['form', 'layer'], function(){
-        @if (isset($errors) && count($errors) > 0)
-            layui.layer.msg("{{implode('<br>', $errors->all())}}", {icon:2});
-        @endif
+        var layer = layui.layer
+                ,form = layui.form
+                ,$ = layui.$;
+
+        form.on('submit(login)', function (form_data) {
+            $.ajax({
+                method: "post",
+                url: "{{route('index::index.login')}}",
+                data: form_data.field,
+                success: function (data) {
+                    if ('success' == data.status) {
+                        window.location.href = "/";
+                    } else {
+                        layer.msg(data.msg, {icon:2});
+                        $('input[name=captcha]').val('');
+                        $('#captcha').attr('src', '{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?'+Math.random());
+                        return false;
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('input[name=captcha]').val('');
+                    $('#captcha').attr('src', '{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?'+Math.random());
+                    layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                    return false;
+                }
+            });
+
+            return false;
+        });
     });
 </script>
 </body>

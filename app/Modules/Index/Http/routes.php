@@ -11,4 +11,7 @@
 |
 */
 
-Route::get('login', ['as'=>'login_page', 'uses'=>'IndexController@loginPage']);
+Route::group(['as'=>'index.'], function (){
+    Route::get('login', ['as'=>'login_page', 'uses'=>'IndexController@loginPage']);
+    Route::post('login', ['as'=>'login', 'uses'=>'IndexController@login']);
+});
