@@ -38,4 +38,9 @@ class IndexController extends Controller
     {
         return view('index::index.index');
     }
+
+    public function home()
+    {
+        return view('index::index.home');
+    }
 }

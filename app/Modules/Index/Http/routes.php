@@ -15,9 +15,12 @@ Route::group(['as'=>'index.'], function (){
     Route::get('login', ['as'=>'login_page', 'uses'=>'IndexController@loginPage']);
     Route::post('login', ['as'=>'login', 'uses'=>'IndexController@login']);
 
-
-
     Route::group(['middleware' => ['auth']], function (){
         Route::get('/', ['as'=>'index', 'uses'=>'IndexController@index']);
+        Route::get('/home', ['as'=>'home', 'uses'=>'IndexController@home']);
     });
+});
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], function (){
+    Route::get('index', ['as'=>'index', 'uses'=>'UserController@index']);
 });
