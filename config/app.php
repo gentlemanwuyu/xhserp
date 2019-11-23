@@ -156,6 +156,17 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // 模块化
+        \Caffeinated\Modules\ModulesServiceProvider::class,
+
+        // 验证码
+        Mews\Captcha\CaptchaServiceProvider::class,
+
+        // Gravatar头像扩展包
+        \Creativeorange\Gravatar\GravatarServiceProvider::class,
+
+        // laravel-log-viewer
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*

@@ -1,0 +1,8 @@
+{
+	"name": "Index",
+	"slug": "index",
+	"namespace": "Index",
+	"version": "1.0",
+	"description": "This is the description for the Index module.",
+	"enabled": true
+}
