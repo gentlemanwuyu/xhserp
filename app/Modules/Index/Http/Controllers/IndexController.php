@@ -33,4 +33,9 @@ class IndexController extends Controller
             return ['status' => 'fail', 'msg'=>'邮箱或密码不正确'];
         }
     }
+
+    public function index()
+    {
+        return view('index::index.index');
+    }
 }
