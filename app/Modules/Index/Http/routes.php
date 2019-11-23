@@ -11,8 +11,4 @@
 |
 */
 
-Route::group(['prefix' => 'index'], function() {
-	Route::get('/', function() {
-		dd('This is the Index module index page.');
-	});
-});
+Route::get('login', ['as'=>'login_page', 'uses'=>'IndexController@loginPage']);
