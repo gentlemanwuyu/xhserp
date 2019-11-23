@@ -1,27 +1,64 @@
-# Laravel PHP Framework
+# 欣汉生企业管理系统
+* Author: Woozee(https://www.woozee.com.cn)
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+## 基础功能
+- 用户认证 —— 注册、登录、退出；
+- 企业结构 —— 部门；
+- 分类 —— 产品分类、商品分类；
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+## 运行环境要求
+- Nginx >= 1.12
+- PHP >= 7.0.0
+- Mysql >= 5.6
+- Redis >= 3.2
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+## 开发环境部署/安装
 
-## Official Documentation
+本项目代码使用 PHP 框架 [Laravel 5.2](https://d.laravel-china.org/docs/5.2/) 开发，本地开发环境使用 [Docker](https://github.com/gentlemanwuyu/dockerproject)。
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+### 基础安装
 
-## Contributing
+#### 1. 克隆源代码
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+克隆 `blog` 源代码到本地：
 
-## Security Vulnerabilities
+     git clone https://github.com/gentlemanwuyu/blog.git
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+#### 2. 安装扩展包依赖
 
-## License
+     composer install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+#### 3. 生成配置文件
+
+```
+cp .env.example .env
+```
+
+你可以根据情况修改 `.env` 文件里的内容，如数据库连接、缓存等：
+
+### 前端框架安装
+
+1). 安装 yarn
+
+windows系统直接去官网 [https://yarn.bootcss.com/](https://yarn.bootcss.com/) 下载安装最新版本。
+Linux系统可使用apt直接安装。
+
+2). 安装 前端扩展包
+
+    yarn install
+如果是windows系统，在执行时需要加上`--no-bin-links`
+
+3). 安装 gulp
+
+    yarn global add gulp
+
+4). 编译前端内容
+
+```shell
+// 运行所有gulp编译任务...
+gulp
+
+// 运行所有gulp编译任务并缩小输出，一般是正式环境使用。
+gulp --production
+```
+
