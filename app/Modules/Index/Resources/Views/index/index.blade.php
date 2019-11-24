@@ -84,7 +84,7 @@
         <!-- 侧边菜单 -->
         <div class="layui-side layui-side-menu">
             <div class="layui-side-scroll">
-                <div class="layui-logo" lay-href="home/console.html">
+                <div class="layui-logo" lay-href="{{route('index::index.home')}}">
                     <span>汉生集团</span>
                 </div>
 

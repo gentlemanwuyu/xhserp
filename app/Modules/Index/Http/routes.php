@@ -23,4 +23,5 @@ Route::group(['as'=>'index.'], function (){
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], function (){
     Route::get('index', ['as'=>'index', 'uses'=>'UserController@index']);
+    Route::get('paginate', ['as'=>'paginate', 'uses'=>'UserController@paginate']);
 });
