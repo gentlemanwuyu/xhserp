@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{asset('/assets/layuiadmin/style/admin.css')}}" media="all">
     @yield('css')
 </head>
-<body class="layui-layout-body">
+<body>
 @yield('body')
 <script src="{{asset('/assets/layui-src/dist/layui.all.js')}}"></script>
 <script src="{{asset('/assets/js/erp.js')}}"></script>
