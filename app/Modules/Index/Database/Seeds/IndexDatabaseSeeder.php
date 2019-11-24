@@ -15,7 +15,7 @@ class IndexDatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		// $this->call('App\Modules\Index\Database\Seeds\FoobarTableSeeder');
+		 $this->call(UsersTableSeeder::class);
 	}
 
 }
