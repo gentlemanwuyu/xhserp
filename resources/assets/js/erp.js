@@ -16,7 +16,7 @@ var $ = layui.$
     return message.join('<br>');
 };
 // 绑定打开新tab事件
-$('a[lay-event=open_tab]').on('click', function () {
+$('a[lay-href]').on('click', function () {
     var othis = $(this)
         ,href = othis.attr('lay-href')
         ,text = othis.attr('lay-text');
