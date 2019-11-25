@@ -14,4 +14,14 @@ var $ = layui.$
         });
     });
     return message.join('<br>');
-}
+};
+// 绑定打开新tab事件
+$('a[lay-event=open_tab]').on('click', function () {
+    var othis = $(this)
+        ,href = othis.attr('lay-href')
+        ,text = othis.attr('lay-text');
+
+    //执行跳转
+    var topLayui = parent === self ? layui : top.layui;
+    topLayui.index.openTabsPage(href, text || othis.text());
+});
