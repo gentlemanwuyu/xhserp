@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-    <a class="layui-btn layui-btn-sm layui-btn-normal">添加用户</a>
+    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('index::user.form')}}">添加用户</a>
     <table id="list"  lay-filter="list"></table>
     <script type="text/html" id="action">
         <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>修改</a>
@@ -27,7 +27,7 @@
                     {field: 'id', title: 'ID', width: '5%', align: 'center', sort: true, fixed: 'left'},
                     {field: 'name', title: '用户名', align: 'center'},
                     {field: 'email', title: '邮箱', align: 'center'},
-                    {field: 'gender', title: '性别', align: 'center'},
+                    {field: 'gender', title: '性别', width: '5%', align: 'center'},
                     {field: 'birthday', title: '生日', align: 'center'},
                     {field: 'telephone', title: '电话', align: 'center'},
                     {field: 'created_at', title: '创建时间', align: 'center', sort: true},

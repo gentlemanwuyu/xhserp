@@ -30,4 +30,9 @@ class UserController extends Controller
 
         return response()->json($paginate);
     }
+
+    public function form()
+    {
+        return view('index::user.form');
+    }
 }
