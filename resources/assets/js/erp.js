@@ -15,6 +15,14 @@ var $ = layui.$
     });
     return message.join('<br>');
 };
+
+// 给所有的ajax请求加上csrf_token
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
 // 绑定打开新tab事件
 $('a[lay-href]').on('click', function () {
     var othis = $(this)

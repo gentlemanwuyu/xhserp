@@ -20,7 +20,7 @@ elixir(function(mix) {
 
     // 添加版本管理
     mix.version([
-        'assets/css/erp.css',
-        'assets/js/erp.js'
+        'public/assets/css/erp.css',
+        'public/assets/js/erp.js'
     ]);
 });
