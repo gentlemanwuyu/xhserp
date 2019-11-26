@@ -3,13 +3,13 @@
     <div class="layui-col-xs6">
         <form class="layui-form" lay-filter="user">
             <div class="layui-form-item">
-                <label class="layui-form-label">邮箱</label>
+                <label class="layui-form-label required">邮箱</label>
                 <div class="layui-input-block">
                     <input type="text" name="email" lay-verify="required|email" lay-reqText="请输入邮箱" placeholder="" class="layui-input" value="">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">用户名</label>
+                <label class="layui-form-label required">用户名</label>
                 <div class="layui-input-block">
                     <input type="text" name="name" lay-verify="required|alpha_dash" lay-reqText="请输入用户名" placeholder="" class="layui-input" value="">
                 </div>

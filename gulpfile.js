@@ -16,4 +16,11 @@ elixir(function(mix) {
     mix.copy('resources/assets/layuiadmin','public/assets/layuiadmin');
     mix.copy('resources/assets/images','public/assets/images');
     mix.copy('resources/assets/js','public/assets/js');
+    mix.copy('resources/assets/css','public/assets/css');
+
+    // 添加版本管理
+    mix.version([
+        'assets/css/erp.css',
+        'assets/js/erp.js'
+    ]);
 });
