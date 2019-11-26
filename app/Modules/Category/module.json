@@ -1,0 +1,8 @@
+{
+	"name": "Category",
+	"slug": "category",
+	"namespace": "Category",
+	"version": "1.0",
+	"description": "This is the description for the Category module.",
+	"enabled": true
+}
