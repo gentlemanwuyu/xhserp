@@ -11,8 +11,6 @@
 |
 */
 
-Route::group(['prefix' => 'category'], function() {
-	Route::get('/', function() {
-		dd('This is the Category module index page.');
-	});
+Route::group(['prefix' => 'category', 'as'=>'category.'], function (){
+	Route::get('tree', ['as'=>'tree', 'uses'=>'CategoryController@tree']);
 });

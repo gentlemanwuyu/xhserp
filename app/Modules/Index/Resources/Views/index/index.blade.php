@@ -91,6 +91,17 @@
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
                     <li class="layui-nav-item">
                         <a href="javascript:;">
+                            <i class="layui-icon layui-icon-list"></i>
+                            <cite>分类管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-href="{{route('category::category.tree')}}"><i class="layui-icon layui-icon-tree"></i>分类树</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
                             <i class="layui-icon layui-icon-set"></i>
                             <cite>系统管理</cite>
                         </a>
