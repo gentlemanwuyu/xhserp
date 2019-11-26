@@ -3,8 +3,8 @@
     <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('index::user.form')}}">添加用户</a>
     <table id="list"  lay-filter="list"></table>
     <script type="text/html" id="action">
-        <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-        <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
     </script>
 @endsection
 @section('scripts')
