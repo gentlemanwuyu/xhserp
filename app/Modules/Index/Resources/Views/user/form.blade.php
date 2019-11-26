@@ -2,41 +2,48 @@
 @section('content')
     <div class="layui-col-xs6">
         <form class="layui-form" lay-filter="user">
+            @if(isset($user_id))
+                <input type="hidden" name="user_id" value="{{$user_id}}">
+            @endif
             <div class="layui-form-item">
                 <label class="layui-form-label required">邮箱</label>
                 <div class="layui-input-block">
-                    <input type="text" name="email" lay-verify="required|email" lay-reqText="请输入邮箱" placeholder="" class="layui-input" value="">
+                    @if(!empty($user))
+                        <span style="height: 38px;line-height: 38px;">{{$user->email}}</span>
+                    @else
+                        <input type="text" name="email" lay-verify="required|email" lay-reqText="请输入邮箱" placeholder="" class="layui-input" value="">
+                    @endif
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label required">用户名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" lay-verify="required|alpha_dash" lay-reqText="请输入用户名" placeholder="" class="layui-input" value="">
+                    <input type="text" name="name" lay-verify="required" lay-reqText="请输入用户名" placeholder="" class="layui-input" value="{{$user->name or ''}}">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">生日</label>
                 <div class="layui-input-block">
-                    <input type="text" name="birthday"  lay-verify="date" placeholder="" class="layui-input" value="">
+                    <input type="text" name="birthday"  lay-verify="date" placeholder="" class="layui-input" value="{{$user->birthday or ''}}">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">性别</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="gender_id" value="1" title="男">
-                    <input type="radio" name="gender_id" value="2" title="女">
+                    <input type="radio" name="gender_id" value="1" title="男" @if(!empty($user) && 1 == $user->gender_id) checked @endif>
+                    <input type="radio" name="gender_id" value="2" title="女" @if(!empty($user) && 2 == $user->gender_id) checked @endif>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">电话</label>
                 <div class="layui-input-block">
-                    <input type="text" name="telephone"  lay-verify="phone" placeholder="" class="layui-input" value="">
+                    <input type="text" name="telephone"  lay-verify="phone" placeholder="" class="layui-input" value="{{$user->telephone or ''}}">
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">是否管理员</label>
                 <div class="layui-input-block">
-                    <input type="checkbox" name="is_admin" lay-skin="switch" lay-text="是|否">
+                    <input type="checkbox" name="is_admin" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($user) && 1 == $user->is_admin) checked @endif>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -55,6 +62,32 @@
                     ,laydate = layui.laydate;
             laydate.render({
                 elem: 'input[name=birthday]'
+            });
+
+            form.on('submit(user)', function (form_data) {
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('index::user.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("用户添加成功", {icon:1});
+                            location.reload();
+                        } else {
+                            layer.msg("用户添加失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
+
+                return false;
             });
         });
     </script>

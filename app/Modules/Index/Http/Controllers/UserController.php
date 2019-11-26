@@ -31,8 +31,62 @@ class UserController extends Controller
         return response()->json($paginate);
     }
 
-    public function form()
+    public function form(Request $request)
     {
-        return view('index::user.form');
+        $data = [];
+        if ($request->get('user_id')) {
+            $data['user'] = User::find($request->get('user_id'));
+        }
+
+        return view('index::user.form', $data);
+    }
+
+    public function save(Request $request)
+    {
+        try {
+            $data = [
+                'name' => $request->get('name', ''),
+                'birthday' => $request->get('birthday') ?: null,
+                'telephone' => $request->get('telephone', ''),
+                'gender_id' => $request->get('gender_id', 0),
+            ];
+
+            // 判断邮箱是否已存在
+            if ($request->get('email')) {
+                $user = User::where('email', $request->get('email'))->first();
+                if ($user) {
+                    return response()->json(['status' => 'fail', 'msg' => '邮箱已存在！']);
+                }
+
+                $data['email'] = $request->get('email');
+            }
+
+            if ($request->get('is_admin')) {
+                $data['is_admin'] = $request->get('is_admin');
+            }
+
+            User::updateOrCreate(['id' => $request->get('user_id')], $data);
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $user = User::find($request->get('user_id'));
+
+            if (!$user) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该用户']);
+            }
+
+            $user->delete();
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
     }
 }

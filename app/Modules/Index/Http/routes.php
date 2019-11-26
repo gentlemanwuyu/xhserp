@@ -25,4 +25,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], func
     Route::get('index', ['as'=>'index', 'uses'=>'UserController@index']);
     Route::get('paginate', ['as'=>'paginate', 'uses'=>'UserController@paginate']);
     Route::get('form', ['as'=>'form', 'uses'=>'UserController@form']);
+    Route::post('save', ['as'=>'save', 'uses'=>'UserController@save']);
+    Route::post('delete', ['as'=>'delete', 'uses'=>'UserController@delete']);
 });

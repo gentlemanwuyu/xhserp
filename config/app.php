@@ -156,6 +156,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // 视图渲染
+        \App\Providers\ViewComposerServiceProvider::class,
+
         // 模块化
         \Caffeinated\Modules\ModulesServiceProvider::class,
 
