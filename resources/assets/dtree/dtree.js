@@ -1343,37 +1343,54 @@ layui.define(['jquery','layer','form'], function(exports) {
         var $div = $li.children("div"),
             $nextLi = $li.next("li"),
             $ul = $li.parent("ul");
-        if($ul[0].id == _this.obj[0].id) {
-            // 根节点下的节点
+        $prevLi = $li.prev('li');
+
+        if (0 == $prevLi.length) {
             $li.removeClass(LI_NAV_LINE);
             $li.removeClass(LI_NAV_LAST_LINE);
             $li.addClass(LI_NAV_FIRST_LINE);
-        } else {
-            // 非根节点下的节点
-            var $pnextLi = $ul.parent("li").next("li");
-            if($pnextLi.length == 0) {
-                if($nextLi.length == 0){
-                    $li.removeClass(LI_NAV_LINE);
-                    $li.removeClass(LI_NAV_FIRST_LINE);
-                    $li.addClass(LI_NAV_LAST_LINE);
-                } else {
-                    $li.removeClass(LI_NAV_FIRST_LINE);
-                    $li.removeClass(LI_NAV_LAST_LINE);
-                    $li.addClass(LI_NAV_LINE);
-                }
-            }else {
-                var $pnextdiv = $pnextLi.children("div");
-                if($nextLi.length == 0 && $div.children("cite").attr("data-leaf") == "leaf" && $pnextdiv.children("cite").attr("data-leaf") == "leaf") {
-                    $li.removeClass(LI_NAV_FIRST_LINE);
-                    $li.removeClass(LI_NAV_LINE);
-                    $li.addClass(LI_NAV_LAST_LINE);
-                } else {
-                    $li.removeClass(LI_NAV_FIRST_LINE);
-                    $li.removeClass(LI_NAV_LAST_LINE);
-                    $li.addClass(LI_NAV_LINE);
-                }
-            }
+        }else if (0 == $nextLi.length) {
+            $li.removeClass(LI_NAV_LINE);
+            $li.removeClass(LI_NAV_FIRST_LINE);
+            $li.addClass(LI_NAV_LAST_LINE);
+        }else {
+            $li.removeClass(LI_NAV_LAST_LINE);
+            $li.removeClass(LI_NAV_FIRST_LINE);
+            $li.addClass(LI_NAV_LINE);
         }
+
+        // 原框架树线展示方法
+        //if($ul[0].id == _this.obj[0].id) {
+        //    // 根节点下的节点
+        //    $li.removeClass(LI_NAV_LINE);
+        //    $li.removeClass(LI_NAV_LAST_LINE);
+        //    $li.addClass(LI_NAV_FIRST_LINE);
+        //} else {
+        //    // 非根节点下的节点
+        //    var $pnextLi = $ul.parent("li").next("li");
+        //    if($pnextLi.length == 0) {
+        //        if($nextLi.length == 0){
+        //            $li.removeClass(LI_NAV_LINE);
+        //            $li.removeClass(LI_NAV_FIRST_LINE);
+        //            $li.addClass(LI_NAV_LAST_LINE);
+        //        } else {
+        //            $li.removeClass(LI_NAV_FIRST_LINE);
+        //            $li.removeClass(LI_NAV_LAST_LINE);
+        //            $li.addClass(LI_NAV_LINE);
+        //        }
+        //    }else {
+        //        var $pnextdiv = $pnextLi.children("div");
+        //        if($nextLi.length == 0 && $div.children("cite").attr("data-leaf") == "leaf" && $pnextdiv.children("cite").attr("data-leaf") == "leaf") {
+        //            $li.removeClass(LI_NAV_FIRST_LINE);
+        //            $li.removeClass(LI_NAV_LINE);
+        //            $li.addClass(LI_NAV_LAST_LINE);
+        //        } else {
+        //            $li.removeClass(LI_NAV_FIRST_LINE);
+        //            $li.removeClass(LI_NAV_LAST_LINE);
+        //            $li.addClass(LI_NAV_LINE);
+        //        }
+        //    }
+        //}
     }
 
     /******************** 初始化数据区域 ********************/
