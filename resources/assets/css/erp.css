@@ -1,1 +1,13 @@
 .required:after { content: "*"; color: #ff2556; margin-left: 3px; }
+
+/* dtree自定义样式 */
+.dtree-category-item-this{color: #009688;}
+.dtree-category-item:hover{color: #009688;}
+.dtree-category-item cite{font-size:14px;}
+.dtree-category-item:hover cite{color:#009688;}
+.dtree-category-dtreefont{font-size: 16px;}
+.dtree-category-ficon{font-size: 14px;color:#393D49;}
+.dtree-category-icon{color:#393D49;}
+.dtree-category-checkbox:hover{color:#01AAED;}
+.dtree-category-choose{color:#01AAED;}
+.dtree-icon-hide:before {width: 14px;}

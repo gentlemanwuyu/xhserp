@@ -7,6 +7,8 @@
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{asset('/assets/layui-src/dist/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('/assets/layuiadmin/style/admin.css')}}" media="all">
+    <link rel="stylesheet" href="{{asset('/assets/dtree/dtree.css')}}" media="all">
+    <link rel="stylesheet" href="{{asset('/assets/dtree/font/dtreefont.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('/assets/css/erp.css')}}" media="all">
     @yield('css')
 </head>
