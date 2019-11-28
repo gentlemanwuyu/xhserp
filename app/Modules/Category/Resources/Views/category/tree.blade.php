@@ -137,7 +137,6 @@
                         icon: "layui-icon layui-icon-edit",
                         title: "编辑",
                         handler: function (node, $div) {
-                            console.log(node.context);
                             layer.prompt({
                                 title: '编辑分类',
                                 value: node.context
@@ -210,9 +209,6 @@
                 ]
                 ,toolbarFun:{
                     loadToolbarBefore: function(buttons, param, $div){
-                        console.log(buttons);
-                        console.log(param);
-                        console.log($div);
                         if(3 == param.level){
                             buttons.myAdd = "";
                         }
