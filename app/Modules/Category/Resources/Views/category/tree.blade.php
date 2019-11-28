@@ -53,7 +53,7 @@
                 ,toolbarShow:[]
                 ,toolbarExt:[
                     {
-                        toolbarId: "testAdd",
+                        toolbarId: "myAdd",
                         icon: "layui-icon layui-icon-add-1",
                         title: "添加子分类",
                         handler: function (node, $div) {
@@ -65,7 +65,7 @@
                         }
                     },
                     {
-                        toolbarId: "testEdit",
+                        toolbarId: "myEdit",
                         icon: "layui-icon layui-icon-edit",
                         title: "编辑",
                         handler: function (node, $div) {
@@ -79,7 +79,7 @@
                         }
                     },
                     {
-                        toolbarId: "testDel",
+                        toolbarId: "myDel",
                         icon:"layui-icon layui-icon-delete",
                         title:"删除",
                         handler: function(node,$div) {
