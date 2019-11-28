@@ -1346,9 +1346,15 @@ layui.define(['jquery','layer','form'], function(exports) {
         $prevLi = $li.prev('li');
 
         if (0 == $prevLi.length) {
-            $li.removeClass(LI_NAV_LINE);
-            $li.removeClass(LI_NAV_LAST_LINE);
-            $li.addClass(LI_NAV_FIRST_LINE);
+            if (0 == $nextLi.length) {
+                $li.removeClass(LI_NAV_LINE);
+                $li.removeClass(LI_NAV_FIRST_LINE);
+                $li.addClass(LI_NAV_LAST_LINE);
+            }else {
+                $li.removeClass(LI_NAV_LINE);
+                $li.removeClass(LI_NAV_LAST_LINE);
+                $li.addClass(LI_NAV_FIRST_LINE);
+            }
         }else if (0 == $nextLi.length) {
             $li.removeClass(LI_NAV_LINE);
             $li.removeClass(LI_NAV_FIRST_LINE);

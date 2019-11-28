@@ -5,6 +5,13 @@
     </style>
 @endsection
 @section('content')
+    <div class="layui-col-xs-12" style="margin-bottom: 15px;">
+        <button type="button" class="layui-btn"  dtree-id="category" dtree-menu="moveDown">展开</button>
+        <button type="button" class="layui-btn"  dtree-id="category" dtree-menu="moveUp">收起</button>
+        <button type="button" class="layui-btn"  dtree-id="category" dtree-menu="searchNode">搜索</button>
+        <button type="button" class="layui-btn"  dtree-id="category" dtree-menu="refresh">刷新</button>
+        <button type="button" class="layui-btn layui-btn-normal"  dtree-id="category" dtree-menu="addRoot">添加一级分类</button>
+    </div>
     <ul id="category" class="dtree" data-id="0"></ul>
 @endsection
 @section('scripts')
@@ -23,17 +30,17 @@
                 ,success: function(data, obj, first){ // 渲染前回调
                     data.data.forEach(function (category) {
                         category.level = 1;
-                        category.spread = true;
+                        category.spread = false;
                         if (category.children) {
                             category.last = false;
                             category.children.forEach(function (son) {
                                 son.level = 2;
-                                son.spread = true;
+                                son.spread = false;
                                 if (son.children) {
                                     son.last = false;
                                     son.children.forEach(function (grandson) {
                                         grandson.level = 3;
-                                        grandson.spread = true;
+                                        grandson.spread = false;
                                         grandson.last = true;
                                     });
                                 }else {
@@ -49,6 +56,46 @@
                 ,skin: "category"
                 ,ficon: ["1","-1"]
                 ,icon: "-1"
+                ,done: function(data, obj){
+
+                }
+                ,menubar:true
+                ,menubarTips:{
+                    freedom:[
+                        {
+                            menubarId:"addRoot",
+                            handler:function(){
+                                layer.prompt({
+                                    title: '添加一级分类'
+                                }, function(value, index, elem){
+                                    layer.close(index);
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: "{{route('category::category.save')}}",
+                                        data: {type: "{{$type}}", name: value},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("分类添加成功", {icon:1});
+                                                category_tree.refreshTree();
+                                            } else {
+                                                layer.msg("分类添加失败:"+data.msg, {icon:2});
+                                                return false;
+                                            }
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            return false;
+                                        }
+                                    });
+                                });
+                            }
+                        }
+                    ]
+                    ,group:[]
+                }
                 ,toolbar:true
                 ,toolbarShow:[]
                 ,toolbarExt:[
@@ -70,7 +117,7 @@
                                         layer.close(load_index);
                                         if ('success' == data.status) {
                                             layer.msg("分类添加成功", {icon:1});
-                                            location.reload();
+                                            category_tree.refreshTree();
                                         } else {
                                             layer.msg("分类添加失败:"+data.msg, {icon:2});
                                             return false;
@@ -109,7 +156,7 @@
                                         layer.close(load_index);
                                         if ('success' == data.status) {
                                             layer.msg("分类编辑成功", {icon:1});
-                                            location.reload();
+                                            category_tree.refreshTree();
                                         } else {
                                             layer.msg("分类编辑失败:"+data.msg, {icon:2});
                                             return false;
@@ -145,7 +192,7 @@
                                         layer.close(load_index);
                                         if ('success' == data.status) {
                                             layer.msg("分类删除成功", {icon:1});
-                                            location.reload();
+                                            category_tree.refreshTree();
                                         } else {
                                             layer.msg("分类删除失败:"+data.msg, {icon:2});
                                             return false;
@@ -161,6 +208,18 @@
                         }
                     }
                 ]
+                ,toolbarFun:{
+                    loadToolbarBefore: function(buttons, param, $div){
+                        console.log(buttons);
+                        console.log(param);
+                        console.log($div);
+                        if(3 == param.level){
+                            buttons.myAdd = "";
+                        }
+
+                        return buttons;
+                    }
+                }
             });
         });
     </script>
