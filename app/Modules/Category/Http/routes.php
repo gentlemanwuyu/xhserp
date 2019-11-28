@@ -14,4 +14,6 @@
 Route::group(['prefix' => 'category', 'as'=>'category.'], function (){
 	Route::get('tree/{type}', ['as'=>'tree', 'uses'=>'CategoryController@tree']);
 	Route::get('data/{type}', ['as'=>'data', 'uses'=>'CategoryController@data']);
+	Route::post('save', ['as'=>'save', 'uses'=>'CategoryController@save']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'CategoryController@delete']);
 });
