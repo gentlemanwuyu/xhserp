@@ -1,9 +1,4 @@
 @extends('layouts.default')
-@section('css')
-    <style>
-
-    </style>
-@endsection
 @section('content')
     <div class="layui-col-xs-12" style="margin-bottom: 15px;">
         <button type="button" class="layui-btn"  dtree-id="category" dtree-menu="moveDown">展开</button>
@@ -56,6 +51,15 @@
                 ,skin: "category"
                 ,ficon: ["1","-1"]
                 ,icon: "-1"
+                ,iconfont:["layui-icon"]
+                ,iconfontStyle:[{
+                    fnode:{
+                        node:{
+                            close: "layui-icon-rate-solid",
+                            open: "layui-icon-rate"
+                        }
+                    }
+                }]
                 ,done: function(data, obj){
 
                 }

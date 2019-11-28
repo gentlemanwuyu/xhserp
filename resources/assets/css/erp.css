@@ -12,3 +12,6 @@
 .dtree-category-choose{color:#01AAED;}
 .dtree-icon-hide:before {width: 14px;}
 .dtree-toolbar .layui-nav-child dd a i {color: #009688}
+.dtree-icon-hide {margin: 0!important;}
+.dtree-nav-item .layui-icon-rate-solid {position: absolute;top: 0;left: -15px;}
+.dtree-nav-item .layui-icon-rate {position: absolute;top: 0;left: -15px;}
