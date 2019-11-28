@@ -31,4 +31,17 @@ class Category extends Model
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
+    public static function tree($type, $parent_id = 0)
+    {
+        $categories = self::where('type', $type)->where('parent_id', $parent_id)->get();
+        foreach ($categories as $category) {
+            $children = self::tree($type, $category->id);
+            if (!$children->isEmpty()) {
+                $category->children = $children;
+            }
+        }
+
+        return $categories;
+    }
 }

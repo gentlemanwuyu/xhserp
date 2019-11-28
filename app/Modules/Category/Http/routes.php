@@ -12,5 +12,6 @@
 */
 
 Route::group(['prefix' => 'category', 'as'=>'category.'], function (){
-	Route::get('tree', ['as'=>'tree', 'uses'=>'CategoryController@tree']);
+	Route::get('tree/{type}', ['as'=>'tree', 'uses'=>'CategoryController@tree']);
+	Route::get('data/{type}', ['as'=>'data', 'uses'=>'CategoryController@data']);
 });

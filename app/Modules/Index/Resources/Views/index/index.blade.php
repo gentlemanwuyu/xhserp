@@ -96,7 +96,12 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd>
-                                <a lay-href="{{route('category::category.tree')}}"><i class="layui-icon layui-icon-tree"></i>分类树</a>
+                                <a lay-href="{{route('category::category.tree', ['type' => 1])}}"><i class="layui-icon layui-icon-tree"></i>产品分类</a>
+                            </dd>
+                        </dl>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-href="{{route('category::category.tree', ['type' => 2])}}"><i class="layui-icon layui-icon-tree"></i>商品分类</a>
                             </dd>
                         </dl>
                     </li>
