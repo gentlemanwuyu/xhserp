@@ -14,7 +14,10 @@ var $ = layui.$
         });
     });
     return message.join('<br>');
-};
+}
+    ,deleteRow = function (obj) {
+    $(obj).parents('tr').remove();
+}
 
 // 给所有的ajax请求加上csrf_token
 $.ajaxSetup({

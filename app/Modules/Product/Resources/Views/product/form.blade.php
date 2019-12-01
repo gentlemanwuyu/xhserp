@@ -1,9 +1,7 @@
 @extends('layouts.default')
 @section('css')
     <style>
-        .layui-table, .layui-table th, .layui-table td {
-            text-align: center;
-        }
+        .layui-table th, .layui-table tr{text-align: center;}
     </style>
 @endsection
 @section('content')
@@ -53,56 +51,50 @@
                 <h3>SKU列表</h3>
             </div>
             <div class="layui-card-body">
-                <table class="layui-table">
+                <table class="layui-table" lay-skin="line" id="skuTable">
                     <thead>
                     <tr>
                         <th>SKU编号</th>
                         <th>重量</th>
                         <th>成本价</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>贤心</td>
-                        <td>2016-11-29</td>
-                        <td>人生就像是一场修行</td>
-                    </tr>
-                    <tr>
-                        <td>许闲心</td>
-                        <td>2016-11-28</td>
-                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                    </tr>
-                    <tr>
-                        <td>许闲心</td>
-                        <td>2016-11-28</td>
-                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                    </tr>
-                    <tr>
-                        <td>许闲心</td>
-                        <td>2016-11-28</td>
-                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                    </tr>
-                    <tr>
-                        <td>许闲心</td>
-                        <td>2016-11-28</td>
-                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                    </tr>
-                    <tr>
-                        <td>许闲心</td>
-                        <td>2016-11-28</td>
-                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                    </tr>
-                    <tr>
-                        <td>许闲心</td>
-                        <td>2016-11-28</td>
-                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                    </tr>
+
                     </tbody>
                 </table>
             </div>
             <div class="layui-card-body">
-                <button type="button" class="layui-btn layui-btn-normal">添加sku</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-event="addSku">添加sku</button>
             </div>
         </div>
     </form>
+@endsection
+@section('scripts')
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+            $('button[lay-event=addSku]').on('click', function () {
+                var $body = $('#skuTable').find('tbody')
+                        ,html = '';
+                html += '<tr>';
+                html += '<td>';
+                html += '<input type="text" name="" placeholder="SKU编号" lay-verify="required" lay-reqText="" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<input type="text" name="" placeholder="重量" lay-verify="required" lay-reqText="" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<input type="text" name="" placeholder="成本价" lay-verify="required" lay-reqText="" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>';
+                html += '</td>';
+                html += '</tr>';
+
+                $body.append(html);
+            });
+        });
+    </script>
 @endsection
