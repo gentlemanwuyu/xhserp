@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
     <div class="layui-col-xs6">
-        <form class="layui-form" lay-filter="user">
+        <form class="layui-form layui-form-pane" lay-filter="user">
             @if(isset($user_id))
                 <input type="hidden" name="user_id" value="{{$user_id}}">
             @endif
@@ -27,7 +27,7 @@
                     <input type="text" name="birthday"  lay-verify="date" placeholder="" class="layui-input" value="{{$user->birthday or ''}}">
                 </div>
             </div>
-            <div class="layui-form-item">
+            <div class="layui-form-item" pane="">
                 <label class="layui-form-label">性别</label>
                 <div class="layui-input-block">
                     <input type="radio" name="gender_id" value="1" title="男" @if(!empty($user) && 1 == $user->gender_id) checked @endif>
@@ -40,7 +40,7 @@
                     <input type="text" name="telephone"  lay-verify="phone" placeholder="" class="layui-input" value="{{$user->telephone or ''}}">
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
+            <div class="layui-form-item" pane="">
                 <label class="layui-form-label">是否管理员</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="is_admin" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($user) && 1 == $user->is_admin) checked @endif>
