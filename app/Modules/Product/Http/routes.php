@@ -13,4 +13,5 @@
 
 Route::group(['prefix' => 'product', 'as'=>'product.'], function (){
 	Route::get('list', ['as'=>'list', 'uses'=>'ProductController@getList']);
+	Route::get('form', ['as'=>'form', 'uses'=>'ProductController@form']);
 });
