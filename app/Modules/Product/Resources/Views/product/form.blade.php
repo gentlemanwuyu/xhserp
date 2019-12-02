@@ -28,7 +28,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">分类</label>
                             <div class="layui-input-block">
-                                <select name="category_id" lay-filter="category" lay-search="">
+                                <select name="category_id" lay-filter="category" lay-search="" lay-verify="required" lay-reqText="请选择分类">
                                     <option value="">请选择分类</option>
                                     @foreach($categories as $category)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
@@ -69,6 +69,8 @@
                 <button type="button" class="layui-btn layui-btn-normal" lay-event="addSku">添加sku</button>
             </div>
         </div>
+        <button type="button" class="layui-btn" lay-submit lay-filter="product">提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
     </form>
 @endsection
 @section('scripts')
@@ -77,16 +79,17 @@
             var form = layui.form;
             $('button[lay-event=addSku]').on('click', function () {
                 var $body = $('#skuTable').find('tbody')
-                        ,html = '';
+                        ,html = ''
+                        ,sku_flag = Date.now();
                 html += '<tr>';
                 html += '<td>';
-                html += '<input type="text" name="" placeholder="SKU编号" lay-verify="required" lay-reqText="" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
-                html += '<input type="text" name="" placeholder="重量" lay-verify="required" lay-reqText="" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][weight]" placeholder="重量" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
-                html += '<input type="text" name="" placeholder="成本价" lay-verify="required" lay-reqText="" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][cost_price]" placeholder="成本价" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
                 html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>';
@@ -95,6 +98,43 @@
 
                 $body.append(html);
             });
+
+            form.on('submit(product)', function (form_data) {
+                var sku_exists = false;
+                $.each(form_data.field, function (key, val) {
+                    if (new RegExp(/^skus\[[\d]+\]\[[\d\D]+\]$/).test(key)) {
+                        sku_exists = true;
+                        return false; // 跳出循环
+                    }
+                });
+
+                if (!sku_exists) {
+                    layer.msg("请至少添加一个SKU", {icon:2});
+                    return false;
+                }
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('product::product.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("产品添加成功", {icon:1});
+                            location.reload();
+                        } else {
+                            layer.msg("产品添加失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
+            })
         });
     </script>
 @endsection
