@@ -6,6 +6,9 @@
 @endsection
 @section('content')
     <form class="layui-form layui-form-pane" lay-filter="product">
+        @if(isset($product_id))
+            <input type="hidden" name="product_id" value="{{$product_id}}">
+        @endif
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>基本信息</h3>
@@ -16,13 +19,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">产品编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入产品编号" class="layui-input" value="">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入产品编号" class="layui-input" value="{{$product->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">产品名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入产品名称" class="layui-input">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入产品名称" class="layui-input" value="{{$product->name or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -31,7 +34,7 @@
                                 <select name="category_id" lay-filter="category" lay-search="" lay-verify="required" lay-reqText="请选择分类">
                                     <option value="">请选择分类</option>
                                     @foreach($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
+                                        <option value="{{$category->id}}" @if(!empty($product->category_id) && $category->id == $product->category_id) selected @endif>{{$category->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -39,7 +42,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">产品描述</label>
                             <div class="layui-input-block">
-                                <textarea name="desc" class="layui-textarea"></textarea>
+                                <textarea name="desc" class="layui-textarea">{{$product->desc or ''}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -61,7 +64,14 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        @foreach($product->skus as $sku)
+                            <tr>
+                                <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][weight]" placeholder="重量" class="layui-input" value="{{(float)$sku->weight ? $sku->weight : ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][cost_price]" placeholder="成本价" class="layui-input" value="{{(float)$sku->cost_price ? $sku->weight : ''}}"></td>
+                                <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

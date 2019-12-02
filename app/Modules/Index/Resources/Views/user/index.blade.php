@@ -40,7 +40,7 @@
                 var data = obj.data;
 
                 if ('edit' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('index::user.form')}}?user_id=" + data.id, '修改用户[' + data.id + ']');
+                    parent.layui.index.openTabsPage("{{route('index::user.form')}}?user_id=" + data.id, '编辑用户[' + data.id + ']');
                 }else if ('delete' == obj.event) {
                     layer.confirm("确认要删除该用户？", {icon: 3, title:"确认"}, function (index) {
                         layer.close(index);

@@ -23,8 +23,13 @@ class ProductController extends Controller
     public function form(Request $request)
     {
         $categories = Category::where('type', 1)->get();
+        $data = compact('categories');
+        if ($request->get('product_id')) {
+            $product = Product::find($request->get('product_id'));
+            $data['product'] = $product;
+        }
 
-        return view('product::product.form', compact('categories'));
+        return view('product::product.form', $data);
     }
 
     public function paginate(Request $request)

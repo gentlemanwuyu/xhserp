@@ -11,20 +11,20 @@
                     @if(!empty($user))
                         <span class="erp-form-span">{{$user->email}}</span>
                     @else
-                        <input type="text" name="email" lay-verify="required|email" lay-reqText="请输入邮箱" placeholder="" class="layui-input" value="">
+                        <input type="text" name="email" lay-verify="required|email" lay-reqText="请输入邮箱" class="layui-input">
                     @endif
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label required">用户名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" lay-verify="required" lay-reqText="请输入用户名" placeholder="" class="layui-input" value="{{$user->name or ''}}">
+                    <input type="text" name="name" lay-verify="required" lay-reqText="请输入用户名" class="layui-input" value="{{$user->name or ''}}">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">生日</label>
                 <div class="layui-input-block">
-                    <input type="text" name="birthday"  lay-verify="date" placeholder="" class="layui-input" value="{{$user->birthday or ''}}">
+                    <input type="text" name="birthday"  lay-verify="date" class="layui-input" value="{{$user->birthday or ''}}">
                 </div>
             </div>
             <div class="layui-form-item" pane="">
@@ -37,7 +37,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">电话</label>
                 <div class="layui-input-block">
-                    <input type="text" name="telephone"  lay-verify="phone" placeholder="" class="layui-input" value="{{$user->telephone or ''}}">
+                    <input type="text" name="telephone"  lay-verify="phone" class="layui-input" value="{{$user->telephone or ''}}">
                 </div>
             </div>
             <div class="layui-form-item" pane="">
