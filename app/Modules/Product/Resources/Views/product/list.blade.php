@@ -65,13 +65,15 @@
                 ]
                 ,done: function(res, curr, count){
                     // 修改SKU列表表头
-                    var html = '';
-                    html += '<ul class="erp-table-list-ul">';
-                    html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
-                    html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">重量</li>';
-                    html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">成本价</li>';
-                    html += '</ul>';
-                    $('th[data-field=sku_list]').append(html);
+                    if (0 == $('th[data-field=sku_list] ul').length) {
+                        var html = '';
+                        html += '<ul class="erp-table-list-ul">';
+                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">重量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">成本价</li>';
+                        html += '</ul>';
+                        $('th[data-field=sku_list]').append(html);
+                    }
 
                     // 修改固定列的各行高度
                     $('.layui-table-fixed .layui-table-header thead tr').each(function () {
