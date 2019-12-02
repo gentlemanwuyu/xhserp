@@ -9,7 +9,7 @@
                 <label class="layui-form-label required">邮箱</label>
                 <div class="layui-input-block">
                     @if(!empty($user))
-                        <span style="height: 38px;line-height: 38px;">{{$user->email}}</span>
+                        <span class="erp-form-span">{{$user->email}}</span>
                     @else
                         <input type="text" name="email" lay-verify="required|email" lay-reqText="请输入邮箱" placeholder="" class="layui-input" value="">
                     @endif
