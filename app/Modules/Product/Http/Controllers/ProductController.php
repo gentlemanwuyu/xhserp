@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Category\Models\Category;
 use App\Modules\Product\Models\Product;
+use App\Modules\Product\Models\ProductSku;
 
 class ProductController extends Controller
 {
@@ -67,6 +68,27 @@ class ProductController extends Controller
 
             // 同步sku
             $product->syncSkus($request->get('skus'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $product = Product::find($request->get('product_id'));
+
+            if (!$product) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该产品']);
+            }
+
+            DB::beginTransaction();
+            $product->delete();
+            ProductSku::where('product_id', $request->get('product_id'))->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);

@@ -20,9 +20,8 @@
 @section('scripts')
     <script>
         layui.use(['table'], function () {
-            var table = layui.table;
-
-            table.render({
+            var table = layui.table
+                    ,tableIns = table.render({
                 elem: '#list',
                 url: "{{route('product::product.paginate')}}",
                 page: true,
@@ -101,8 +100,8 @@
                         var load_index = layer.load();
                         $.ajax({
                             method: "post",
-                            url: "{{route('index::user.delete')}}",
-                            data: {user_id: data.id},
+                            url: "{{route('product::product.delete')}}",
+                            data: {product_id: data.id},
                             success: function (data) {
                                 layer.close(load_index);
                                 if ('success' == data.status) {
