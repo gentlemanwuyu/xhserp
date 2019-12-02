@@ -36,7 +36,7 @@
                 },
                 cols: [
                         [
-                            {field: 'id', title: 'ID', width: '5%', align: 'center', fixed: 'left'},
+                            {field: 'id', title: 'ID', width: '5%', align: 'center'},
                             {field: 'code', title: '产品编号', align: 'center'},
                             {field: 'name', title: '品名', align: 'center'},
                             {field: 'category', title: '分类', align: 'center', templet: function (d) {
@@ -60,7 +60,7 @@
                             }},
                             {field: 'created_at', title: '创建时间', align: 'center'},
                             {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                            {field: 'action', title: '操作', width: '15%', align: 'center', toolbar: "#action", fixed: 'right'}
+                            {field: 'action', title: '操作', width: '15%', align: 'center', toolbar: "#action"}
                         ]
                 ]
                 ,done: function(res, curr, count){
