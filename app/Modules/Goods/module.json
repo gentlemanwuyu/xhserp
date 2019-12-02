@@ -1,0 +1,8 @@
+{
+	"name": "Goods",
+	"slug": "goods",
+	"namespace": "Goods",
+	"version": "1.0",
+	"description": "This is the description for the Goods module.",
+	"enabled": true
+}
