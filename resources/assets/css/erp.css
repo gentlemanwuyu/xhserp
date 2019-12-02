@@ -15,3 +15,9 @@
 .dtree-icon-hide {margin: 0!important;}
 .dtree-nav-item .layui-icon-rate-solid {position: absolute;top: 0;left: -15px;}
 .dtree-nav-item .layui-icon-rate {position: absolute;top: 0;left: -15px;}
+
+/* 表格内列表样式 */
+.erp-table-list-ul{border-top: 1px solid #e6e6e6;}
+.erp-table-list-ul-first{border-top: none;}
+.erp-table-list-li {display: inline-block; padding-top: 5px; padding-bottom: 5px; border-left: 1px solid #e6e6e6; line-height: 28px;}
+.erp-table-list-li-first {border-left: none;}
