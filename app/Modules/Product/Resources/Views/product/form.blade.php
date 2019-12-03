@@ -69,7 +69,7 @@
                             <tr>
                                 <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
                                 <td><input type="text" name="skus[{{$sku->id}}][weight]" placeholder="重量" class="layui-input" value="{{(float)$sku->weight ? $sku->weight : ''}}"></td>
-                                <td><input type="text" name="skus[{{$sku->id}}][cost_price]" placeholder="成本价" class="layui-input" value="{{(float)$sku->cost_price ? $sku->weight : ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][cost_price]" placeholder="成本价" class="layui-input" value="{{(float)$sku->cost_price ? $sku->cost_price : ''}}"></td>
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                             </tr>
                         @endforeach
