@@ -46,7 +46,7 @@
                     <input type="checkbox" name="is_admin" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($user) && 1 == $user->is_admin) checked @endif>
                 </div>
             </div>
-            <div class="layui-form-item">
+            <div class="layui-form-item erp-form-button-item">
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" lay-submit lay-filter="user">提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>

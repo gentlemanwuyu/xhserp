@@ -24,4 +24,5 @@
 
 /* 表单样式 */
 .layui-form-item[pane], .layui-form-pane .layui-form-item{background-color: #fff;}
+.layui-form-pane .erp-form-button-item{background-color: inherit;}
 .erp-form-span{height: 38px;line-height: 38px; padding-left: 10px;}

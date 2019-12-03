@@ -64,6 +64,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @if(isset($product->skus))
                         @foreach($product->skus as $sku)
                             <tr>
                                 <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
@@ -72,6 +73,7 @@
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                             </tr>
                         @endforeach
+                    @endif
                     </tbody>
                 </table>
             </div>
