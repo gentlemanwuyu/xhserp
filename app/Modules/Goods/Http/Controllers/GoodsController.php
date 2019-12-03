@@ -21,10 +21,12 @@ class GoodsController extends Controller
 
     public function selectProduct($type)
     {
+        $categories = Category::where('type', 1)->get();
+
         if (1 == $type) {
             return view('goods::goods.single_select_product');
         }elseif (2 == $type) {
-            return view('goods::goods.combo_select_product');
+            return view('goods::goods.combo_select_product', compact('categories'));
         }
 
 
