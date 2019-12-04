@@ -54,7 +54,7 @@
             var table = layui.table
                     ,listOpts = {
                 elem: '#list',
-                url: "{{route('product::product.paginate')}}",
+                url: "{{route('goods::combo.product_paginate')}}",
                 page: true,
                 parseData: function (res) {
                     return {

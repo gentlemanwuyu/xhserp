@@ -35,15 +35,12 @@ class ProductController extends Controller
 
     public function paginate(Request $request)
     {
-
-
         $paginate = Product::orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $product) {
             $product->category;
             $product->skus;
         }
-
 
         return response()->json($paginate);
     }
