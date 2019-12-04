@@ -91,7 +91,7 @@
                         ,sku_flag = Date.now();
                 html += '<tr>';
                 html += '<td>';
-                html += '<input type="text" name="skus[' + sku_flag + '][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input">';
                 html += '</td>';
                 @foreach($products as $product)
                     html += '<td>';
