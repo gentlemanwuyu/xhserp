@@ -41,9 +41,9 @@
         <fieldset class="layui-elem-field layui-field-title">
             <legend>已选择产品</legend>
         </fieldset>
-        <form class="layui-form">
+        <form class="layui-form" lay-filter="selected_product">
             <table id="selected" lay-filter="selected"></table>
-            <button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="product">确定</button>
+            <button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="selected_product">确定</button>
         </form>
     </div>
 @endsection
@@ -133,6 +133,14 @@
                 ]
                 ,page: false
                 ,data: []
+                ,done: function (res, curr, count) {
+                    var $table = $('div[lay-id=selected]')
+                            ,$tableBody = $table.find('.layui-table-box>.layui-table-body');
+                    res.data.forEach(function (item) {
+                        var $tr = $tableBody.find('table.layui-table>tbody>tr[data-index=' + item.LAY_TABLE_INDEX + ']');
+                        $tr.find('td[data-field=quantity]').append('<input type="hidden" data-field="quantity" name="selected[' + item.id + ']">')
+                    });
+                }
             }
                     ,selectedTable = table.render(selectedOpts);
             
@@ -201,6 +209,40 @@
                     // 将穿梭按钮disable
                     $(this).addClass('layui-btn-disabled');
                 }
+            });
+
+            // 监听单元格编辑事件
+            table.on('edit(selected)', function(obj){
+                var $td = obj.tr.find('td[data-field=quantity]');
+                $td.find('input[data-field=quantity]').val(obj.value);
+            });
+
+            form.on('submit(selected_product)', function (form_data) {
+                var $this_form = $(this).parent('form[lay-filter=selected_product]');
+
+                // 手动验证数量
+                var verify = form.config.verify
+                        ,isTrue = true;
+                $.each(form_data.field, function (key, val) {
+                    var $editDiv = $this_form.find('input[name="' + key + '"]').prev('div.layui-table-cell');
+                    if (verify.required(val)) {
+                        layer.msg('请输入数量', {icon: 5, shift: 6});
+                        $editDiv[0].click();
+                        isTrue = false;
+                        return false;
+                    }
+                    if (verify.number(val)) {
+                        layer.msg('数量必须是数字', {icon: 5, shift: 6});
+                        $editDiv[0].click();
+                        isTrue = false;
+                        return false;
+                    }
+                });
+
+                if (!isTrue) {
+                    return false;
+                }
+
             });
         });
     </script>
