@@ -23,7 +23,21 @@ class ComboController extends Controller
 
     public function productPaginate(Request $request)
     {
-        $paginate = Product::orderBy('id', 'desc')->paginate($request->get('limit'));
+        $query = Product::query();
+        if ($request->get('excepted_ids')) {
+            $query = $query->whereNotIn('id', $request->get('excepted_ids'));
+        }
+        if ($request->get('category_id')) {
+            $query = $query->where('category_id', $request->get('category_id'));
+        }
+        if ($request->get('code')) {
+            $query = $query->where('code', $request->get('code'));
+        }
+        if ($request->get('name')) {
+            $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $product) {
             $product->category;

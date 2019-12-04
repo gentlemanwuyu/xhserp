@@ -11,18 +11,18 @@
 @endsection
 @section('content')
     <div class="layui-col-xs6">
-        <form class="layui-form">
+        <form class="layui-form" lay-filter="product">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-xs3">
-                    <select name="category_id" lay-filter="category" lay-search="" lay-verify="required" lay-reqText="请选择分类">
+                    <select name="category_id" lay-search="">
                         <option value="">产品分类</option>
                         @foreach($categories as $category)
                             <option value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="layui-col-xs3"><input type="text" name="title" placeholder="产品编号" lay-verify="required" autocomplete="off" class="layui-input"></div>
-                <div class="layui-col-xs3"><input type="text" name="title" placeholder="品名" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                <div class="layui-col-xs3"><input type="text" name="code" placeholder="产品编号" autocomplete="off" class="layui-input"></div>
+                <div class="layui-col-xs3"><input type="text" name="name" placeholder="品名" autocomplete="off" class="layui-input"></div>
                 <div class="layui-col-xs3">
                     <button type="button" class="layui-btn" lay-submit lay-filter="product">搜索</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -46,12 +46,12 @@
             <button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="product">确定</button>
         </form>
     </div>
-
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.use(['table', 'form'], function () {
             var table = layui.table
+                    ,form = layui.form
                     ,listOpts = {
                 elem: '#list',
                 url: "{{route('goods::combo.product_paginate')}}",
@@ -134,8 +134,15 @@
                 ,page: false
                 ,data: []
             }
-                    ,selectTable = table.render(selectedOpts);
+                    ,selectedTable = table.render(selectedOpts);
+            
+            // 产品列表搜索监听
+            form.on('submit(product)', function (form_data) {
+                listOpts.where = $.extend({}, listOpts.where, form_data.field);
+                listTable.reload(listOpts);
+            });
 
+            // 监听产品列表的checkbox点击事件
             table.on('checkbox(list)', function (obj) {
                 var checkStatus = table.checkStatus('list');
                 if (checkStatus.data.length > 0) {
@@ -145,6 +152,7 @@
                 }
             });
 
+            // 监听已选择产品的checkbox点击事件
             table.on('checkbox(selected)', function (obj) {
                 var checkStatus = table.checkStatus('selected');
                 if (checkStatus.data.length > 0) {
@@ -154,11 +162,44 @@
                 }
             });
 
+            // 穿梭按钮点击事件
             $('.layui-transfer-active button[data-index=0]').on('click', function () {
                 if (!$(this).hasClass('layui-btn-disabled')) {
                     var checkStatus = table.checkStatus('list');
                     selectedOpts.data = table.cache['selected'].concat(checkStatus.data);
-                    selectTable.reload(selectedOpts);
+                    selectedTable.reload(selectedOpts);
+
+                    var selectedData = table.cache['selected']
+                            ,selectedProductIds = array_column(selectedData, 'id');
+
+                    listOpts.where = $.extend({}, listOpts.where, {excepted_ids: selectedProductIds});
+                    listTable.reload(listOpts);
+
+                    // 将穿梭按钮disable
+                    $(this).addClass('layui-btn-disabled');
+                }
+            });
+            $('.layui-transfer-active button[data-index=1]').on('click', function () {
+                if (!$(this).hasClass('layui-btn-disabled')) {
+                    var checkStatus = table.checkStatus('selected')
+                            ,selectedData = table.cache['selected']
+                            ,transferProductIds = array_column(checkStatus.data, 'id');
+
+                    selectedData.forEach(function (val, key) {
+                        if (-1 != transferProductIds.indexOf(val.id)) {
+                            delete selectedData[key];
+                        }
+                    });
+                    selectedData = array_filter(selectedData);
+
+                    selectedOpts.data = selectedData;
+                    selectedTable.reload(selectedOpts);
+
+                    listOpts.where = $.extend({}, listOpts.where, {excepted_ids: array_column(selectedData, 'id')});
+                    listTable.reload(listOpts);
+
+                    // 将穿梭按钮disable
+                    $(this).addClass('layui-btn-disabled');
                 }
             });
         });

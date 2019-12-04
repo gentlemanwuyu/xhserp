@@ -15,6 +15,7 @@ var $ = layui.$
     });
     return message.join('<br>');
 }
+    // 删除表格中的一行
     ,deleteRow = function (obj) {
     $(obj).parents('tr').remove();
 }
@@ -25,6 +26,12 @@ var $ = layui.$
     });
 
     return collection;
+}
+    // 去除数组中的空值
+    ,array_filter = function (arr) {
+    return $.grep(arr, function (item) {
+        return $.trim(item).length > 0;
+    });
 }
 
 // 给所有的ajax请求加上csrf_token
