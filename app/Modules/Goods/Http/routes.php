@@ -13,6 +13,13 @@
 
 Route::group(['prefix' => 'goods', 'as'=>'goods.'], function (){
 	Route::get('list', ['as'=>'list', 'uses'=>'GoodsController@getList']);
-	Route::get('select_product/{type}', ['as'=>'select_product', 'uses'=>'GoodsController@selectProduct']);
-	Route::get('single_form', ['as'=>'single_form', 'uses'=>'GoodsController@singleForm']);
+});
+
+Route::group(['prefix' => 'single', 'as'=>'single.'], function (){
+	Route::get('select_product', ['as'=>'select_product', 'uses'=>'SingleController@selectProduct']);
+	Route::get('form', ['as'=>'form', 'uses'=>'SingleController@form']);
+});
+
+Route::group(['prefix' => 'combo', 'as'=>'combo.'], function (){
+	Route::get('select_product', ['as'=>'select_product', 'uses'=>'ComboController@selectProduct']);
 });

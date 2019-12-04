@@ -4,18 +4,19 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Modules\Product\Models\Product;
 use App\Modules\Category\Models\Category;
 
-class GoodsController extends Controller
+class ComboController extends Controller
 {
     public function __construct()
     {
         
 	}
 
-    public function getList(Request $request)
+    public function selectProduct()
     {
-        return view('goods::goods.list');
+        $categories = Category::where('type', 1)->get();
+
+        return view('goods::goods.combo_select_product', compact('categories'));
     }
 }

@@ -89,7 +89,7 @@
                 var data = obj.data;
 
                 if ('select' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('goods::goods.single_form')}}?product_id=" + data.id, '添加商品[单品][' + data.id + ']');
+                    parent.layui.index.openTabsPage("{{route('goods::single.form')}}?product_id=" + data.id, '添加商品[单品][' + data.id + ']');
                 }
             });
         });
