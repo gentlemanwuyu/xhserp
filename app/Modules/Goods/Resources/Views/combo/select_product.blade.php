@@ -148,6 +148,7 @@
             form.on('submit(product)', function (form_data) {
                 listOpts.where = $.extend({}, listOpts.where, form_data.field);
                 listTable.reload(listOpts);
+                $('.layui-transfer-active').find('button[data-index=0]').addClass('layui-btn-disabled');
             });
 
             // 监听产品列表的checkbox点击事件
