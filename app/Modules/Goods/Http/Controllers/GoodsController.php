@@ -4,8 +4,6 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Modules\Product\Models\Product;
-use App\Modules\Category\Models\Category;
 
 class GoodsController extends Controller
 {
