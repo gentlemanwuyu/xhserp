@@ -29,7 +29,7 @@
                 </div>
             </div>
         </form>
-        <table id="list" class="layui-table" lay-filter="list"></table>
+        <table id="list" lay-filter="list"></table>
     </div>
     <div class="layui-col-xs2" style="text-align: center;">
         <div class="layui-transfer-active" style="margin-top: 150px;">
@@ -42,40 +42,8 @@
             <legend>已选择产品</legend>
         </fieldset>
         <form class="layui-form">
-            <table class="layui-table" id="selected" lay-filter="selected" style="margin: 15px 0;">
-                <thead>
-                <tr>
-                    <th><input type="checkbox" name="layTableCheckbox" lay-skin="primary" lay-filter="layTableAllChoose"></th>
-                    <th width="30">ID</th>
-                    <th width="100">产品编号</th>
-                    <th width="100">品名</th>
-                    <th>数量</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><input type="checkbox" name="layTableCheckbox" lay-skin="primary"></td>
-                    <td>20</td>
-                    <td>xhsllj011lm</td>
-                    <td>流量计011螺母</td>
-                    <td style="padding: 0;"><input type="text" name="title" lay-verify="required" autocomplete="off" class="layui-input"></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="layTableCheckbox" lay-skin="primary"></td>
-                    <td>20</td>
-                    <td>xhsllj011lm</td>
-                    <td>流量计011螺母</td>
-                    <td style="padding: 0;"><input type="text" name="title" lay-verify="required" autocomplete="off" class="layui-input"></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="layTableCheckbox" lay-skin="primary"></td>
-                    <td>20</td>
-                    <td>xhsllj011lm</td>
-                    <td>流量计011螺母</td>
-                    <td style="padding: 0;"><input type="text" name="title" lay-verify="required" autocomplete="off" class="layui-input"></td>
-                </tr>
-                </tbody>
-            </table>
+            <table id="selected" lay-filter="selected"></table>
+            <button type="button" class="layui-btn layui-btn-normal" lay-submit lay-filter="product">确定</button>
         </form>
     </div>
 
@@ -84,7 +52,7 @@
     <script>
         layui.use(['table'], function () {
             var table = layui.table
-                    ,tableIns = table.render({
+                    ,listOpts = {
                 elem: '#list',
                 url: "{{route('product::product.paginate')}}",
                 page: true,
@@ -150,16 +118,49 @@
                         $(this).css('height', tr_height);
                     });
                 }
-            });
+            }
+                    ,listTable = table.render(listOpts)
+                    ,selectedOpts = {
+                elem: '#selected'
+                ,cols: [
+                    [
+                        {type: 'checkbox', width: 60},
+                        {field: 'id', title: 'ID', width: 60, align: 'center'},
+                        {field: 'code', title: '产品编号', width: 150, align: 'center'},
+                        {field: 'name', title: '品名', width: 200, align: 'center'},
+                        {field: 'quantity', title: '数量', align: 'center', edit: 'text'}
+                    ]
+                ]
+                ,page: false
+                ,data: []
+            }
+                    ,selectTable = table.render(selectedOpts);
 
-            table.on('tool(list)', function(obj){
-                var data = obj.data;
-
-                if ('select' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('goods::goods.single_form')}}?product_id=" + data.id, '添加商品[单品][' + data.id + ']');
+            table.on('checkbox(list)', function (obj) {
+                var checkStatus = table.checkStatus('list');
+                if (checkStatus.data.length > 0) {
+                    $('.layui-transfer-active').find('button[data-index=0]').removeClass('layui-btn-disabled');
+                }else {
+                    $('.layui-transfer-active').find('button[data-index=0]').addClass('layui-btn-disabled');
                 }
             });
 
+            table.on('checkbox(selected)', function (obj) {
+                var checkStatus = table.checkStatus('selected');
+                if (checkStatus.data.length > 0) {
+                    $('.layui-transfer-active').find('button[data-index=1]').removeClass('layui-btn-disabled');
+                }else {
+                    $('.layui-transfer-active').find('button[data-index=1]').addClass('layui-btn-disabled');
+                }
+            });
+
+            $('.layui-transfer-active button[data-index=0]').on('click', function () {
+                if (!$(this).hasClass('layui-btn-disabled')) {
+                    var checkStatus = table.checkStatus('list');
+                    selectedOpts.data = table.cache['selected'].concat(checkStatus.data);
+                    selectTable.reload(selectedOpts);
+                }
+            });
         });
     </script>
 @endsection

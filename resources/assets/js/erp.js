@@ -18,6 +18,14 @@ var $ = layui.$
     ,deleteRow = function (obj) {
     $(obj).parents('tr').remove();
 }
+    ,array_column = function (arr, field) {
+    var collection = [];
+    arr.forEach(function (item) {
+        collection.push(item[field]);
+    });
+
+    return collection;
+}
 
 // 给所有的ajax请求加上csrf_token
 $.ajaxSetup({
