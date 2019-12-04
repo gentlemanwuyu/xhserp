@@ -117,6 +117,9 @@
                                 ,tr_height = $this.parents('.layui-table-box').children('.layui-table-body').find('table tbody tr[data-index=' + data_index + ']').css('height');
                         $(this).css('height', tr_height);
                     });
+
+                    // 将where条件中的excepted_ids清空
+                    this.where.excepted_ids = [];
                 }
             }
                     ,listTable = table.render(listOpts)
