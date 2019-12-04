@@ -2,6 +2,9 @@
 @section('css')
     <style>
         .layui-table th, .layui-table tr{text-align: center;}
+        #skuTable tbody td{padding: 0;}
+        #skuTable .layui-input{border: 0;}
+        #skuTable .layui-form-switch{margin-left: 0;}
     </style>
 @endsection
 @section('content')
@@ -54,10 +57,10 @@
                 <table class="layui-table" id="skuTable">
                     <thead>
                     <tr>
-                        <th rowspan="2" width="5%">是否开启</th>
+                        <th rowspan="2" width="8%">是否开启</th>
                         <th colspan="3">产品信息</th>
-                        <th rowspan="2">SKU编号</th>
-                        <th rowspan="2">最低售价</th>
+                        <th rowspan="2" class="required">SKU编号</th>
+                        <th rowspan="2" class="required">最低售价</th>
                         <th rowspan="2">建议零售价</th>
                     </tr>
                     <tr>
@@ -74,8 +77,8 @@
                                 <td>{{$sku->code or ''}}</td>
                                 <td>{{(float)$sku->weight ? $sku->weight : ''}}</td>
                                 <td>{{(float)$sku->cost_price ? $sku->weight : ''}}</td>
-                                <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
-                                <td><input type="text" name="skus[{{$sku->id}}][lowest_price]" placeholder="最低售价(必填)" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" value=""></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" value=""></td>
                                 <td><input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value=""></td>
                             </tr>
                         @endforeach
