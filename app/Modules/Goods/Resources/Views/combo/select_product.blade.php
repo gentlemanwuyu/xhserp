@@ -222,6 +222,10 @@
             });
 
             form.on('submit(selected_product)', function (form_data) {
+                if ('{}' == JSON.stringify(form_data.field)) {
+                    return false;
+                }
+
                 var $this_form = $(this).parent('form[lay-filter=selected_product]');
 
                 // 手动验证数量
@@ -247,6 +251,7 @@
                     return false;
                 }
 
+                parent.layui.index.openTabsPage("{{route('goods::combo.form')}}?" + $this_form.serialize(), '添加商品[组合]');
             });
         });
     </script>

@@ -46,4 +46,16 @@ class ComboController extends Controller
 
         return response()->json($paginate);
     }
+
+    public function form(Request $request)
+    {
+        $categories = Category::where('type', 2)->get();
+        $selectedInputs = $request->get('selected');
+        $products = Product::whereIn('id', array_keys($selectedInputs))->get();
+        foreach ($products as $product) {
+            $product->quantity = $selectedInputs[$product->id] ?: 0;
+        }
+
+        return view('goods::combo.form', compact('categories', 'products'));
+    }
 }
