@@ -10,6 +10,9 @@
 @endsection
 @section('content')
     <form class="layui-form layui-form-pane" lay-filter="single">
+        @if(isset($product_id))
+            <input type="hidden" name="product_id" value="{{$product_id}}">
+        @endif
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>基本信息</h3>
@@ -77,7 +80,7 @@
                     @if(isset($product->skus))
                         @foreach($product->skus as $sku)
                             <tr class="layui-disabled" row-index="{{$sku->id}}">
-                                <td><input type="checkbox" name="skus[{{$sku->id}}][enabled]" lay-skin="switch" lay-text="是|否" value="1" switch-index="{{$sku->id}}" lay-filter="enableSku"></td>
+                                <td><input type="checkbox" name="" lay-skin="switch" lay-text="是|否" switch-index="{{$sku->id}}" lay-filter="enableSku"></td>
                                 <td>{{$sku->code or ''}}</td>
                                 <td>{{(float)$sku->weight ? $sku->weight : ''}}</td>
                                 <td>{{(float)$sku->cost_price ? $sku->weight : ''}}</td>
@@ -156,7 +159,41 @@
 
             // 表单提交
             form.on('submit(single)', function (form_data) {
+                var sku_exists = false;
+                $.each(form_data.field, function (key, val) {
+                    if (new RegExp(/^skus\[[\d]+\]\[[\d\D]+\]$/).test(key)) {
+                        sku_exists = true;
+                        return false; // 跳出循环
+                    }
+                });
 
+                if (!sku_exists) {
+                    layer.msg("请至少开启一个SKU", {icon: 5, shift: 6});
+                    return false;
+                }
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('goods::single.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("商品添加成功", {icon: 1, time: 2000}, function(){
+                                parent.layui.admin.closeThisTabs();
+                            });
+                        } else {
+                            layer.msg("商品添加失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
             });
         });
     </script>

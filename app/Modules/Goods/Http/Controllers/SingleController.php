@@ -4,6 +4,10 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Modules\Goods\Models\Goods;
+use App\Modules\Goods\Models\Single;
+use App\Modules\Goods\Models\SingleProduct;
 use App\Modules\Product\Models\Product;
 use App\Modules\Category\Models\Category;
 
@@ -52,5 +56,37 @@ class SingleController extends Controller
         $categories = Category::where('type', 2)->get();
 
         return view('goods::single.form', compact('product', 'categories'));
+    }
+
+    public function save(Request $request)
+    {
+        try {
+            $goods_data = [
+                'code' => $request->get('code', ''),
+                'name' => $request->get('name', ''),
+                'category_id' => $request->get('category_id', 0),
+                'desc' => $request->get('desc', ''),
+                'type' => Goods::SINGLE,
+            ];
+
+            DB::beginTransaction();
+
+            $single = Single::updateOrCreate(['id' => $request->get('goods_id')], $goods_data);
+
+            if (!$single) {
+                throw new \Exception("商品保存失败");
+            }
+
+            SingleProduct::updateOrCreate(['goods_id' => $single->id], ['goods_id' => $single->id, 'product_id' => $request->get('product_id')]);
+
+            // 同步sku
+            $single->syncSkus($request->get('skus'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
     }
 }

@@ -20,6 +20,7 @@ Route::group(['prefix' => 'single', 'as'=>'single.'], function (){
 	Route::get('select_product', ['as'=>'select_product', 'uses'=>'SingleController@selectProduct']);
 	Route::get('product_paginate', ['as'=>'product_paginate', 'uses'=>'SingleController@productPaginate']);
 	Route::get('form', ['as'=>'form', 'uses'=>'SingleController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'SingleController@save']);
 });
 
 Route::group(['prefix' => 'combo', 'as'=>'combo.'], function (){

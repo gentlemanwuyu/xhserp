@@ -16,6 +16,8 @@ class Goods extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'goods';
+
     /**
      * 商品类型
      */
