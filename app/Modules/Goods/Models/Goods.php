@@ -10,6 +10,7 @@ namespace App\Modules\Goods\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Category\Models\Category;
 
 class Goods extends Model
 {
@@ -27,4 +28,14 @@ class Goods extends Model
     ];
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class)->where('type', 2);
+    }
+
+    public function skus()
+    {
+        return $this->hasMany(GoodsSku::class);
+    }
 }

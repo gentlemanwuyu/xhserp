@@ -38,14 +38,9 @@ class Product extends Model
         }
     }
 
-    /**
-     * 关联product_categories表
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->where('type', 1);
     }
 
     public function skus()
