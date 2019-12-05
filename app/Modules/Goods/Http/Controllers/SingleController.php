@@ -52,10 +52,19 @@ class SingleController extends Controller
 
     public function form(Request $request)
     {
-        $product = Product::find($request->get('product_id'));
         $categories = Category::where('type', 2)->get();
+        $data = compact('categories');
 
-        return view('goods::single.form', compact('product', 'categories'));
+        if ($request->get('product_id')) {
+            $product = Product::find($request->get('product_id'));
+            $data['product'] = $product;
+        }else {
+            $goods = Single::find($request->get('goods_id'));
+            $data['goods'] = $goods;
+            $data['product'] = $goods->product;
+        }
+
+        return view('goods::single.form', $data);
     }
 
     public function save(Request $request)
@@ -66,8 +75,11 @@ class SingleController extends Controller
                 'name' => $request->get('name', ''),
                 'category_id' => $request->get('category_id', 0),
                 'desc' => $request->get('desc', ''),
-                'type' => Goods::SINGLE,
             ];
+
+            if (!$request->get('goods_id')) {
+                $goods_data['type'] = Goods::SINGLE;
+            }
 
             DB::beginTransaction();
 
@@ -77,7 +89,9 @@ class SingleController extends Controller
                 throw new \Exception("商品保存失败");
             }
 
-            SingleProduct::updateOrCreate(['goods_id' => $single->id], ['goods_id' => $single->id, 'product_id' => $request->get('product_id')]);
+            if (!$request->get('goods_id')) {
+                SingleProduct::create(['goods_id' => $single->id, 'product_id' => $request->get('product_id')]);
+            }
 
             // 同步sku
             $single->syncSkus($request->get('skus'));

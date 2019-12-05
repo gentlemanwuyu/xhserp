@@ -8,7 +8,7 @@
 
 namespace App\Modules\Goods\Models;
 
-
+use App\Modules\Product\Models\Product;
 
 class Single extends Goods
 {
@@ -17,6 +17,17 @@ class Single extends Goods
         return SingleProduct::where('goods_id', $this->id)->value('product_id');
     }
 
+    public function getProductAttribute()
+    {
+        return Product::find($this->product_id);
+    }
+
+    /**
+     * 同步sku
+     *
+     * @param $skus
+     * @return $this|bool
+     */
     public function syncSkus($skus)
     {
         if (!$skus || !is_array($skus)) {
@@ -34,13 +45,20 @@ class Single extends Goods
                 ]);
                 SingleSkuProductSku::create(['product_sku_id' => $product_sku_id, 'goods_sku_id' => $goods_sku->id]);
             }else {
-                GoodsSku::withTrashed()->update(['id' => $goods_sku_id], [
+                $goods_sku = GoodsSku::withTrashed()->find($goods_sku_id);
+                $goods_sku->update([
                     'code' => $item['code'],
                     'lowest_price' => $item['lowest_price'],
                     'msrp' => $item['msrp'],
+                    'deleted_at' => null,
                 ]);
             }
         }
+
+        GoodsSku::leftJoin('single_sku_product_skus AS ssps', 'ssps.goods_sku_id', '=', 'goods_skus.id')
+            ->where('goods_skus.goods_id', $this->id)
+            ->whereNotIn('ssps.product_sku_id', array_keys($skus))
+            ->delete();
 
         return $this;
     }
