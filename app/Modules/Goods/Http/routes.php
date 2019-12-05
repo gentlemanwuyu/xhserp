@@ -21,6 +21,7 @@ Route::group(['prefix' => 'single', 'as'=>'single.'], function (){
 	Route::get('product_paginate', ['as'=>'product_paginate', 'uses'=>'SingleController@productPaginate']);
 	Route::get('form', ['as'=>'form', 'uses'=>'SingleController@form']);
 	Route::post('save', ['as'=>'save', 'uses'=>'SingleController@save']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'SingleController@delete']);
 });
 
 Route::group(['prefix' => 'combo', 'as'=>'combo.'], function (){
