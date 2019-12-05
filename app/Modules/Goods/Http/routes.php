@@ -18,6 +18,7 @@ Route::group(['prefix' => 'goods', 'as'=>'goods.'], function (){
 
 Route::group(['prefix' => 'single', 'as'=>'single.'], function (){
 	Route::get('select_product', ['as'=>'select_product', 'uses'=>'SingleController@selectProduct']);
+	Route::get('product_paginate', ['as'=>'product_paginate', 'uses'=>'SingleController@productPaginate']);
 	Route::get('form', ['as'=>'form', 'uses'=>'SingleController@form']);
 });
 

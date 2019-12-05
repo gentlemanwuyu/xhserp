@@ -8,6 +8,24 @@
     </style>
 @endsection
 @section('content')
+    <form class="layui-form" lay-filter="product">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <select name="category_id" lay-search="">
+                    <option value="">产品分类</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2"><input type="text" name="code" placeholder="产品编号" autocomplete="off" class="layui-input"></div>
+            <div class="layui-col-xs2"><input type="text" name="name" placeholder="品名" autocomplete="off" class="layui-input"></div>
+            <div class="layui-col-xs2">
+                <button type="button" class="layui-btn" lay-submit lay-filter="product">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
     <table id="list" class="layui-table"  lay-filter="list"></table>
     <script type="text/html" id="action">
         <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="select">选择</a>
@@ -15,11 +33,12 @@
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.use(['table', 'form'], function () {
             var table = layui.table
-                    ,tableIns = table.render({
+                    ,form = layui.form
+                    ,listOpts = {
                 elem: '#list',
-                url: "{{route('product::product.paginate')}}",
+                url: "{{route('goods::single.product_paginate')}}",
                 page: true,
                 parseData: function (res) {
                     return {
@@ -83,6 +102,13 @@
                         $(this).css('height', tr_height);
                     });
                 }
+            }
+                    ,listTable = table.render(listOpts);
+
+            // 产品列表搜索监听
+            form.on('submit(product)', function (form_data) {
+                listOpts.where = $.extend({}, listOpts.where, form_data.field);
+                table.render(listOpts);
             });
 
             table.on('tool(list)', function(obj){
