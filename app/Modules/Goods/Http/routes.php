@@ -28,4 +28,5 @@ Route::group(['prefix' => 'combo', 'as'=>'combo.'], function (){
 	Route::get('select_product', ['as'=>'select_product', 'uses'=>'ComboController@selectProduct']);
 	Route::get('product_paginate', ['as'=>'product_paginate', 'uses'=>'ComboController@productPaginate']);
 	Route::get('form', ['as'=>'form', 'uses'=>'ComboController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'ComboController@save']);
 });

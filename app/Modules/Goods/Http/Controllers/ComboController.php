@@ -4,6 +4,10 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Modules\Goods\Models\Goods;
+use App\Modules\Goods\Models\Combo;
+use App\Modules\Goods\Models\ComboProduct;
 use App\Modules\Product\Models\Product;
 use App\Modules\Category\Models\Category;
 
@@ -57,5 +61,48 @@ class ComboController extends Controller
         }
 
         return view('goods::combo.form', compact('categories', 'products'));
+    }
+
+    public function save(Request $request)
+    {
+        try {
+            $goods_data = [
+                'code' => $request->get('code', ''),
+                'name' => $request->get('name', ''),
+                'category_id' => $request->get('category_id', 0),
+                'desc' => $request->get('desc', ''),
+            ];
+
+            if (!$request->get('goods_id')) {
+                $goods_data['type'] = Goods::COMBO;
+            }
+
+            DB::beginTransaction();
+
+            $combo = Combo::updateOrCreate(['id' => $request->get('goods_id')], $goods_data);
+
+            if (!$combo) {
+                throw new \Exception("商品保存失败");
+            }
+
+            if (!$request->get('goods_id')) {
+                foreach ($request->get('product_ids') as $product_id => $quantity) {
+                    ComboProduct::create([
+                        'goods_id' => $combo->id,
+                        'product_id' => $product_id,
+                        'quantity' => $quantity,
+                    ]);
+                }
+            }
+
+            // 同步sku
+            $combo->syncSkus($request->get('skus'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
     }
 }

@@ -7,7 +7,10 @@
     </style>
 @endsection
 @section('content')
-    <form class="layui-form layui-form-pane" lay-filter="product">
+    <form class="layui-form layui-form-pane" lay-filter="combo">
+        @foreach($products as $product)
+            <input type="hidden" name="product_ids[{{$product->id}}]" value="{{$product->quantity}}">
+        @endforeach
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>基本信息</h3>
@@ -18,13 +21,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">商品编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入商品编号" class="layui-input" value="{{$product->code or ''}}">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入商品编号" class="layui-input" value="">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">商品名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入商品名称" class="layui-input" value="{{$product->name or ''}}">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入商品名称" class="layui-input" value="">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -41,7 +44,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">商品描述</label>
                             <div class="layui-input-block">
-                                <textarea name="desc" class="layui-textarea">{{$product->desc or ''}}</textarea>
+                                <textarea name="desc" class="layui-textarea"></textarea>
                             </div>
                         </div>
                     </div>
@@ -64,7 +67,7 @@
                     </tr>
                     <tr>
                         @foreach($products as $product)
-                            <th width="200" class="required">{{$product->name}}({{$product->quantity}})</th>
+                            <th width="150" class="required">{{$product->name}}({{$product->quantity}})</th>
                         @endforeach
                     </tr>
                     </thead>
@@ -77,7 +80,7 @@
                 <button type="button" class="layui-btn layui-btn-normal" lay-event="addSku">添加sku</button>
             </div>
         </div>
-        <button type="button" class="layui-btn" lay-submit lay-filter="product">提交</button>
+        <button type="button" class="layui-btn" lay-submit lay-filter="combo">提交</button>
         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
     </form>
 @endsection
@@ -95,7 +98,7 @@
                 html += '</td>';
                 @foreach($products as $product)
                     html += '<td>';
-                    html += '<select name="" lay-verify="required" lay-reqText="请选择产品SKU">';
+                    html += '<select name="skus[' + sku_flag + '][parts][{{$product->id}}]" lay-verify="required" lay-reqText="请选择产品SKU">';
                     html += '<option value="">请选择产品SKU</option>';
                     @foreach($product->skus as $sku)
                         html += '<option value="{{$sku->id}}">{{$sku->code}}</option>';
@@ -104,7 +107,7 @@
                     html += '</td>';
                 @endforeach
                 html += '<td>';
-                html += '<input type="text" name="skus[' + sku_flag + '][lowest_price]" placeholder="最低售价" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
                 html += '<input type="text" name="skus[' + sku_flag + '][msrp]" placeholder="建议零售价" class="layui-input">';
@@ -116,6 +119,44 @@
 
                 $body.append(html);
                 form.render();
+            });
+
+            form.on('submit(combo)', function (form_data) {
+                var sku_exists = false;
+                $.each(form_data.field, function (key, val) {
+                    if (new RegExp(/^skus\[[\d]+\]\[[\d\D]+\]$/).test(key)) {
+                        sku_exists = true;
+                        return false; // 跳出循环
+                    }
+                });
+
+                if (!sku_exists) {
+                    layer.msg("请至少添加一个SKU", {icon: 5, shift: 6});
+                    return false;
+                }
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('goods::combo.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("商品添加成功", {icon: 1, time: 2000}, function(){
+                                parent.layui.admin.closeThisTabs();
+                            });
+                        } else {
+                            layer.msg("商品添加失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
             });
         });
     </script>
