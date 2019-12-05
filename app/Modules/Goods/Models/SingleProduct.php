@@ -14,5 +14,5 @@ class SingleProduct extends Model
 {
     protected $fillable = ['goods_id', 'product_id'];
 
-    protected $timestamps = false;
+    public $timestamps = false;
 }

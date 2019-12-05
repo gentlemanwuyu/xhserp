@@ -14,5 +14,5 @@ class ComboProduct extends Model
 {
     protected $fillable = ['goods_id', 'product_id', 'quantity'];
 
-    protected $timestamps = false;
+    public $timestamps = false;
 }

@@ -14,5 +14,5 @@ class ComboSkuProductSku extends Model
 {
     protected $fillable = ['goods_sku_id', 'product_id', 'product_sku_id'];
 
-    protected $timestamps = false;
+    public $timestamps = false;
 }
