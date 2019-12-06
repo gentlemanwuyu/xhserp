@@ -8,6 +8,7 @@
 
 namespace App\Modules\Goods\Models;
 
+use Illuminate\Support\Facades\DB;
 use App\Modules\Product\Models\Product;
 
 class Combo extends Goods
@@ -33,7 +34,7 @@ class Combo extends Goods
             ]);
 
             foreach ($item['parts'] as $product_id => $product_sku_id) {
-                ComboSkuProductSku::updateOrCreate(['goods_sku_id' => $goods_sku->id, 'product_id' => $product_id], [
+                DB::table('combo_sku_product_skus')->updateOrInsert(['goods_sku_id' => $goods_sku->id, 'product_id' => $product_id], [
                     'goods_sku_id' => $goods_sku->id,
                     'product_id' => $product_id,
                     'product_sku_id' => $product_sku_id,
