@@ -16,4 +16,9 @@ class SupplierController extends Controller
     {
         return view('purchase::supplier.index');
     }
+
+    public function form()
+    {
+        return view('purchase::supplier.form');
+    }
 }

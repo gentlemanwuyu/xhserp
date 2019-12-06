@@ -13,4 +13,5 @@
 
 Route::group(['prefix' => 'supplier', 'as'=>'supplier.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'SupplierController@index']);
+	Route::get('form', ['as'=>'form', 'uses'=>'SupplierController@form']);
 });
