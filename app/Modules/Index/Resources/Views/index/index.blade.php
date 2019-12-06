@@ -129,6 +129,17 @@
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">
+                            <i class="layui-icon layui-icon-cart-simple"></i>
+                            <cite>采购管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-href="{{route('purchase::supplier.index')}}"><i class="layui-icon layui-icon-group"></i>供应商管理</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
                             <i class="layui-icon layui-icon-set"></i>
                             <cite>系统管理</cite>
                         </a>

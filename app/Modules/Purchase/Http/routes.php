@@ -11,8 +11,6 @@
 |
 */
 
-Route::group(['prefix' => 'purchase'], function() {
-	Route::get('/', function() {
-		dd('This is the Purchase module index page.');
-	});
+Route::group(['prefix' => 'supplier', 'as'=>'supplier.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'SupplierController@index']);
 });
