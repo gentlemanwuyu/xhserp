@@ -3,6 +3,7 @@
     <style>
         .layui-table th, .layui-table tr{text-align: center;}
         #skuTable tbody td{padding: 0;}
+        #skuTable tbody tr{height: 40px;}
         #skuTable .layui-input{border: 0;}
     </style>
 @endsection
@@ -21,13 +22,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">商品编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入商品编号" class="layui-input" value="">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入商品编号" class="layui-input" value="{{$goods->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">商品名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入商品名称" class="layui-input" value="">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入商品名称" class="layui-input" value="{{$goods->name or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -36,7 +37,7 @@
                                 <select name="category_id" lay-filter="category" lay-search="" lay-verify="required" lay-reqText="请选择分类">
                                     <option value="">请选择分类</option>
                                     @foreach($categories as $category)
-                                        <option value="{{$category->id}}">{{$category->name}}</option>
+                                        <option value="{{$category->id}}" @if(isset($goods) && $goods->category_id == $category->id) selected @endif>{{$category->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -44,7 +45,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">商品描述</label>
                             <div class="layui-input-block">
-                                <textarea name="desc" class="layui-textarea"></textarea>
+                                <textarea name="desc" class="layui-textarea">{{$goods->desc or ''}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -72,7 +73,24 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        @foreach($goods->skus as $sku)
+                            <tr>
+                                <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code}}"></td>
+                                @foreach($products as $product)
+                                    <td>
+                                        <select name="skus[{{$sku->id}}][parts][{{$product->id}}]" lay-verify="required" lay-reqText="请选择产品SKU">
+                                            <option value="">请选择产品SKU</option>
+                                            @foreach($product->skus as $product_sku)
+                                                <option value="{{$product_sku->id}}" @if($sku->getProductSkuId($product->id) == $product_sku->id) selected @endif>{{$product_sku->code}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                @endforeach
+                                <td><input type="text" name="skus[{{$sku->id}}][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" value="{{$sku->lowest_price}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value="{{(float)$sku->msrp ? $sku->msrp : ''}}"></td>
+                                <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

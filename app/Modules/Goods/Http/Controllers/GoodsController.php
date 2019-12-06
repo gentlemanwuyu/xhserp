@@ -25,6 +25,7 @@ class GoodsController extends Controller
         foreach ($paginate as $g) {
             $g->category;
             $g->skus;
+            $g->setAppends(['type_name']);
         }
 
         return response()->json($paginate);

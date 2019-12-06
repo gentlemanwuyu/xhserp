@@ -25,8 +25,8 @@ class Goods extends Model
     const COMBO = 2;
 
     static $types = [
-        self::SINGLE => 'single',
-        self::COMBO => 'combo',
+        self::SINGLE => '单品',
+        self::COMBO => '组合',
     ];
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
@@ -38,6 +38,11 @@ class Goods extends Model
 
     public function skus()
     {
-        return $this->hasMany(GoodsSku::class);
+        return $this->hasMany(GoodsSku::class, 'goods_id');
+    }
+
+    public function getTypeNameAttribute()
+    {
+        return isset(self::$types[$this->type]) ? self::$types[$this->type] : '';
     }
 }

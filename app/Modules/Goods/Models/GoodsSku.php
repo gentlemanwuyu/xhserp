@@ -16,4 +16,9 @@ class GoodsSku extends Model
     use SoftDeletes;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function getProductSkuId($product_id)
+    {
+        return ComboSkuProductSku::where('goods_sku_id', $this->id)->where('product_id', $product_id)->value('product_sku_id');
+    }
 }

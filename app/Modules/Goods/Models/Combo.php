@@ -8,7 +8,7 @@
 
 namespace App\Modules\Goods\Models;
 
-
+use App\Modules\Product\Models\Product;
 
 class Combo extends Goods
 {
@@ -42,5 +42,20 @@ class Combo extends Goods
         }
 
         return $this;
+    }
+
+    public function getProductIdsAttribute()
+    {
+        return array_column(ComboProduct::where('goods_id', $this->id)->get(['product_id', 'quantity'])->toArray(), 'quantity', 'product_id');
+    }
+
+    public function getProductsAttribute()
+    {
+        $product_ids = $this->product_ids;
+        return Product::whereIn('id', array_keys($product_ids))->get()->map(function ($product) use ($product_ids) {
+            $product->quantity = isset($product_ids[$product->id]) ? $product_ids[$product->id] : 0;
+
+            return $product;
+        });
     }
 }

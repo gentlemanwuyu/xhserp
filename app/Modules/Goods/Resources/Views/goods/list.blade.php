@@ -42,6 +42,7 @@
                         {field: 'category', title: '分类', align: 'center', templet: function (d) {
                             return d.category.name;
                         }},
+                        {field: 'type_name', title: '类型', width: '5%', align: 'center'},
                         {field: 'sku_list', title: 'SKU列表', width: 400, align: 'center', templet: function (d) {
                             var html = '';
                             d.skus.forEach(function (sku, key) {
@@ -96,6 +97,8 @@
                 if ('edit' == obj.event) {
                     if (1 == data.type) {
                         parent.layui.index.openTabsPage("{{route('goods::single.form')}}?goods_id=" + data.id, '编辑单品[' + data.id + ']');
+                    }else if (2 == data.type) {
+                        parent.layui.index.openTabsPage("{{route('goods::combo.form')}}?goods_id=" + data.id, '编辑组合[' + data.id + ']');
                     }
                 }else if ('delete' == obj.event) {
                     layer.confirm("确认要删除该商品？", {icon: 3, title:"确认"}, function (index) {
