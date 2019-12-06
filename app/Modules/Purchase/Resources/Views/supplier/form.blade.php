@@ -5,9 +5,7 @@
         #contactTable tbody td{padding: 0;}
         #contactTable tbody tr{height: 40px;}
         #contactTable .layui-input{border: 0;}
-        .layui-form-select .layui-input:not(:first-child) {
-            border-left: 0;
-        }
+        .layui-input-block>.layui-col-xs4:not(:first-child)>.layui-form-select .layui-input{border-left: 0;}
     </style>
 @endsection
 @section('content')
