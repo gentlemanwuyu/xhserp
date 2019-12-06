@@ -1,0 +1,8 @@
+{
+	"name": "Purchase",
+	"slug": "purchase",
+	"namespace": "Purchase",
+	"version": "1.0",
+	"description": "This is the description for the Purchase module.",
+	"enabled": true
+}
