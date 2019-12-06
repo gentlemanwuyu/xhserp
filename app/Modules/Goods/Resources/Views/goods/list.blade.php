@@ -107,7 +107,7 @@
                         if (1 == data.type) {
                             deleteUrl = "{{route('goods::single.delete')}}";
                         }else if (2 == data.type) {
-
+                            deleteUrl = "{{route('goods::combo.delete')}}";
                         }else {
                             layer.msg("程序出错，请联系开发人员。", {icon: 5, shift: 6});
                             return false;

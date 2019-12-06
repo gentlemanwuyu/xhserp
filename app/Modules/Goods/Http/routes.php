@@ -29,4 +29,5 @@ Route::group(['prefix' => 'combo', 'as'=>'combo.'], function (){
 	Route::get('product_paginate', ['as'=>'product_paginate', 'uses'=>'ComboController@productPaginate']);
 	Route::get('form', ['as'=>'form', 'uses'=>'ComboController@form']);
 	Route::post('save', ['as'=>'save', 'uses'=>'ComboController@save']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'ComboController@delete']);
 });
