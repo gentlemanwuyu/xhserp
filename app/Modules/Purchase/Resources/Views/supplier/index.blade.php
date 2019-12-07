@@ -38,7 +38,7 @@
                         {field: 'id', title: 'ID', width: '5%', align: 'center'},
                         {field: 'name', title: '名称', align: 'center'},
                         {field: 'code', title: '编号', align: 'center'},
-                        {field: 'company', title: '公司', align: 'center'},
+                        {field: 'company', title: '公司', width: 250, align: 'center'},
                         {field: 'contacts', title: '联系人', width: 400, align: 'center', templet: function (d) {
                             var html = '';
                             d.contacts.forEach(function (contact, key) {
@@ -57,7 +57,7 @@
                         }},
                         {field: 'created_at', title: '创建时间', align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                        {field: 'action', title: '操作', width: '15%', align: 'center', toolbar: "#action"}
+                        {field: 'action', title: '操作', width: '10%', align: 'center', toolbar: "#action"}
                     ]
                 ]
                 ,done: function(res, curr, count){
