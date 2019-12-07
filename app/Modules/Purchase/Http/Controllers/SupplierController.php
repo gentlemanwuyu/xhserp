@@ -77,4 +77,24 @@ class SupplierController extends Controller
             return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
         }
     }
+
+    public function delete(Request $request)
+    {
+        try {
+            $supplier = Supplier::find($request->get('supplier_id'));
+
+            if (!$supplier) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该供应商']);
+            }
+
+            DB::beginTransaction();
+            $supplier->delete();
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
 }
