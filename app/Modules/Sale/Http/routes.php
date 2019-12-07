@@ -11,8 +11,6 @@
 |
 */
 
-Route::group(['prefix' => 'sale'], function() {
-	Route::get('/', function() {
-		dd('This is the Sale module index page.');
-	});
+Route::group(['prefix' => 'customer', 'as'=>'customer.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'CustomerController@index']);
 });
