@@ -20,7 +20,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -78,7 +78,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">简介</label>
                             <div class="layui-input-block">
-                                <textarea name="desc" class="layui-textarea"></textarea>
+                                <textarea name="intro" class="layui-textarea"></textarea>
                             </div>
                         </div>
                     </div>
@@ -120,16 +120,16 @@
             $('button[lay-event=addContact]').on('click', function () {
                 var $body = $('#contactTable').find('tbody')
                         ,html = ''
-                        ,sku_flag = Date.now();
+                        ,flag = Date.now();
                 html += '<tr>';
                 html += '<td>';
-                html += '<input type="text" name="contacts[' + sku_flag + '][name]" placeholder="名称" lay-verify="required" lay-reqText="请输入名称" class="layui-input">';
+                html += '<input type="text" name="contacts[' + flag + '][name]" placeholder="名称" lay-verify="required" lay-reqText="请输入名称" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
-                html += '<input type="text" name="contacts[' + sku_flag + '][position]" placeholder="职位" class="layui-input">';
+                html += '<input type="text" name="contacts[' + flag + '][position]" placeholder="职位" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
-                html += '<input type="text" name="contacts[' + sku_flag + '][phone]" placeholder="电话" class="layui-input">';
+                html += '<input type="text" name="contacts[' + flag + '][phone]" placeholder="电话" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
                 html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>';
@@ -226,6 +226,43 @@
 
                 form.render('select', 'supplier');
             });
+
+            form.on('submit(supplier)', function (form_data) {
+                var contact_exists = false;
+                $.each(form_data.field, function (key, val) {
+                    if (new RegExp(/^contacts\[[\d]+\]\[[\d\D]+\]$/).test(key)) {
+                        contact_exists = true;
+                        return false; // 跳出循环
+                    }
+                });
+
+                if (!contact_exists) {
+                    layer.msg("请至少添加一个联系人", {icon:2});
+                    return false;
+                }
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('purchase::supplier.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("供应商添加成功", {icon:1});
+                            location.reload();
+                        } else {
+                            layer.msg("供应商添加失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
+            })
         });
     </script>
 @endsection

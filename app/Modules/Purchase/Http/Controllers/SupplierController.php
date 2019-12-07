@@ -4,6 +4,7 @@ namespace App\Modules\Purchase\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Services\WorldService;
 use App\Modules\Purchase\Models\Supplier;
 
@@ -35,5 +36,40 @@ class SupplierController extends Controller
         }
 
         return response()->json($paginate);
+    }
+
+    public function save(Request $request)
+    {
+        try {
+            $supplier_data = [
+                'code' => $request->get('code', ''),
+                'name' => $request->get('name', ''),
+                'company' => $request->get('company', ''),
+                'phone' => $request->get('phone', ''),
+                'fax' => $request->get('fax', ''),
+                'state_id' => $request->get('state_id', 0),
+                'city_id' => $request->get('city_id', 0),
+                'county_id' => $request->get('county_id', 0),
+                'street_address' => $request->get('street_address', ''),
+                'intro' => $request->get('intro', ''),
+            ];
+
+            DB::beginTransaction();
+
+            $supplier = Supplier::updateOrCreate(['id' => $request->get('supplier_id')], $supplier_data);
+
+            if (!$supplier) {
+                throw new \Exception("供应商保存失败");
+            }
+
+            // 同步联系人
+            $supplier->syncContacts($request->get('contacts'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
     }
 }

@@ -17,7 +17,7 @@ class CreateSuppliersTable extends Migration
 			$table->string('name')->default('')->comment('名称');
 			$table->string('code')->default('')->comment('编号');
 			$table->string('company')->default('')->comment('公司名称');
-			$table->text('introduction')->default('')->comment('简介');
+			$table->text('intro')->default('')->comment('简介');
 			$table->string('phone')->default('')->comment('电话号码');
 			$table->string('fax')->default('')->comment('传真');
 			$table->integer('state_id')->default(0)->comment('省/洲');

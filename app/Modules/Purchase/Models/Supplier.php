@@ -21,4 +21,27 @@ class Supplier extends Model
     {
         return $this->hasMany(SupplierContact::class);
     }
+
+    public function syncContacts($contacts)
+    {
+        if (!$contacts || !is_array($contacts)) {
+            return false;
+        }
+
+        // 将不在请求中的联系人删除
+        SupplierContact::where('supplier_id', $this->id)->whereNotIn('id', array_keys($contacts))->get()->map(function ($contact) {
+            $contact->delete();
+        });
+
+        foreach ($contacts as $flag => $item) {
+            SupplierContact::updateOrCreate(['id' => $flag], [
+                'supplier_id' => $this->id,
+                'name' => $item['name'],
+                'position' => $item['position'],
+                'phone' => $item['phone'],
+            ]);
+        }
+
+        return $this;
+    }
 }
