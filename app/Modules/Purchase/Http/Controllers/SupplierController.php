@@ -4,6 +4,7 @@ namespace App\Modules\Purchase\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\WorldService;
 
 class SupplierController extends Controller
 {
@@ -19,6 +20,8 @@ class SupplierController extends Controller
 
     public function form()
     {
-        return view('purchase::supplier.form');
+        $chinese_regions = WorldService::chineseTree();
+
+        return view('purchase::supplier.form', compact('chinese_regions'));
     }
 }

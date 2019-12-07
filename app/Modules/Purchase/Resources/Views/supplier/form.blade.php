@@ -50,30 +50,28 @@
                     </div>
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">国家</label>
-                            <div class="layui-input-block">
-                                <select name="country" lay-search="" lay-verify="required" lay-reqText="请选择国家">
-                                    <option value="">请选择国家</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
                             <label class="layui-form-label">地址</label>
                             <div class="layui-input-block">
                                 <div class="layui-col-xs4">
-                                    <select name="" lay-search="" lay-verify="required" lay-reqText="请选择分类">
-                                        <option value="">请选择省份</option>
+                                    <select name="state_id" lay-search="" lay-filter="state">
+                                        <option value="">请选择省/洲</option>
+                                        @foreach($chinese_regions as $region)
+                                            <option value="{{$region['id']}}">{{$region['name']}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4">
-                                    <select name="" lay-search="" lay-verify="required" lay-reqText="请选择分类">
+                                <div class="layui-col-xs4 layui-hide">
+                                    <select name="city_id" lay-search="" lay-filter="city">
                                         <option value="">请选择市</option>
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4">
-                                    <select name="" lay-search="" lay-verify="required" lay-reqText="请选择分类">
+                                <div class="layui-col-xs4 layui-hide">
+                                    <select name="county_id" lay-search="" lay-filter="county">
                                         <option value="">请选择县/区</option>
                                     </select>
+                                </div>
+                                <div class="layui-col-xs12 layui-hide" style="margin-top: 15px;">
+                                    <input type="text" name="street_address" class="layui-input" placeholder="街道地址" value="">
                                 </div>
                             </div>
                         </div>
@@ -116,6 +114,7 @@
 @endsection
 @section('scripts')
     <script>
+        var chinese_regions = <?= json_encode($chinese_regions); ?>;
         layui.use(['form'], function () {
             var form = layui.form;
             $('button[lay-event=addContact]').on('click', function () {
@@ -139,6 +138,93 @@
 
                 $body.append(html);
                 form.render();
+            });
+
+            // 地址三级联动
+            form.on('select(state)', function (data) {
+                var value = data.value
+                        ,$citySelect = $('select[name=city_id]')
+                        ,$countySelect = $('select[name=county_id]')
+                        ,$streetInput = $('input[name=street_address]');
+                if (value) {
+                    var cities = chinese_regions[value]['children'];
+                    if (cities) {
+                        var optsHtml = '';
+                        optsHtml += '<option value="">请选择市</option>';
+                        $.each(cities, function (_, city) {
+                            optsHtml += '<option value="' + city.id + '">' + city.name + '</option>';
+                        });
+                        $citySelect.html(optsHtml);
+                        $citySelect.parent().removeClass('layui-hide');
+                        $countySelect.html('');
+                        $countySelect.parent().addClass('layui-hide');
+                        $streetInput.val('');
+                        $streetInput.parent().addClass('layui-hide');
+                    }else {
+                        $citySelect.html('');
+                        $citySelect.parent().addClass('layui-hide');
+                        $countySelect.html('');
+                        $countySelect.parent().addClass('layui-hide');
+                        $streetInput.val('');
+                        $streetInput.parent().removeClass('layui-hide');
+                    }
+                }else {
+                    $citySelect.html('');
+                    $citySelect.parent().addClass('layui-hide');
+                    $countySelect.html('');
+                    $countySelect.parent().addClass('layui-hide');
+                    $streetInput.val('');
+                    $streetInput.parent().addClass('layui-hide');
+                }
+
+                form.render('select', 'supplier');
+            });
+
+            form.on('select(city)', function (data) {
+                var value = data.value
+                        ,$stateSelect = $('select[name=state_id]')
+                        ,state_id = $stateSelect.val()
+                        ,$countySelect = $('select[name=county_id]')
+                        ,$streetInput = $('input[name=street_address]');
+
+                if (value) {
+                    var counties = chinese_regions[state_id]['children'][value]['children'];
+                    if (counties) {
+                        var optsHtml = '';
+                        optsHtml += '<option value="">请选择县/区</option>';
+                        $.each(counties, function (_, county) {
+                            optsHtml += '<option value="' + county.id + '">' + county.name + '</option>';
+                        });
+                        $countySelect.html(optsHtml);
+                        $countySelect.parent().removeClass('layui-hide');
+                        $streetInput.val('');
+                        $streetInput.parent().addClass('layui-hide');
+                    }else {
+                        $countySelect.html('');
+                        $countySelect.parent().addClass('layui-hide');
+                        $streetInput.val('');
+                        $streetInput.parent().removeClass('layui-hide');
+                    }
+                }else {
+                    $countySelect.html('');
+                    $countySelect.parent().addClass('layui-hide');
+                    $streetInput.val('');
+                    $streetInput.parent().addClass('layui-hide');
+                }
+
+                form.render('select', 'supplier');
+            });
+
+            form.on('select(county)', function(data){
+                var $streetInput = $('input[name=street_address]');
+                $streetInput.val('');
+                if (data.value) {
+                    $streetInput.parent().removeClass('layui-hide');
+                }else {
+                    $streetInput.parent().addClass('layui-hide');
+                }
+
+                form.render('select', 'supplier');
             });
         });
     </script>
