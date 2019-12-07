@@ -44,6 +44,8 @@ class ErpInstall extends Command
      */
     public function handle()
     {
+        $this->execShellWithPrettyPrint("php artisan migrate");
+        $this->execShellWithPrettyPrint("php artisan world:init");
         $this->execShellWithPrettyPrint("php artisan module:migrate");
         $this->execShellWithPrettyPrint("php artisan db:seed");
         $this->createAdminAccount();
