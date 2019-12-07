@@ -15,7 +15,7 @@ class PurchaseDatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		// $this->call('App\Modules\Purchase\Database\Seeds\FoobarTableSeeder');
+		 $this->call(SuppliersTableSeeder::class);
 	}
 
 }
