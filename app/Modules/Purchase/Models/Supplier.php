@@ -16,4 +16,9 @@ class Supplier extends Model
     use SoftDeletes;
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+
+    public function contacts()
+    {
+        return $this->hasMany(SupplierContact::class);
+    }
 }
