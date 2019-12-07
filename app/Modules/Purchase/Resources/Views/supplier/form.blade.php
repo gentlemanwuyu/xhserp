@@ -10,6 +10,9 @@
 @endsection
 @section('content')
     <form class="layui-form layui-form-pane" lay-filter="supplier">
+        @if(isset($supplier_id))
+            <input type="hidden" name="supplier_id" value="{{$supplier_id}}">
+        @endif
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>基本信息</h3>
@@ -20,31 +23,31 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="{{$supplier->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入编号" class="layui-input" value="">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入编号" class="layui-input" value="{{$supplier->name or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">公司</label>
                             <div class="layui-input-block">
-                                <input type="text" name="company" class="layui-input" value="">
+                                <input type="text" name="company" class="layui-input" value="{{$supplier->company or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">电话</label>
                             <div class="layui-input-block">
-                                <input type="text" name="phone" class="layui-input" value="">
+                                <input type="text" name="phone" class="layui-input" value="{{$supplier->phone or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">传真</label>
                             <div class="layui-input-block">
-                                <input type="text" name="fax" class="layui-input" value="">
+                                <input type="text" name="fax" class="layui-input" value="{{$supplier->fax or ''}}">
                             </div>
                         </div>
                     </div>
@@ -56,29 +59,39 @@
                                     <select name="state_id" lay-search="" lay-filter="state">
                                         <option value="">请选择省/洲</option>
                                         @foreach($chinese_regions as $region)
-                                            <option value="{{$region['id']}}">{{$region['name']}}</option>
+                                            <option value="{{$region['id']}}" @if(!empty($supplier->state_id) && $region['id'] == $supplier->state_id) selected @endif>{{$region['name']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4 layui-hide">
+                                <div class="layui-col-xs4 @if(empty($supplier->city_id)) layui-hide @endif">
                                     <select name="city_id" lay-search="" lay-filter="city">
-                                        <option value="">请选择市</option>
+                                        @if(!empty($supplier->city_id))
+                                            <option value="">请选择市</option>
+                                            @foreach($chinese_regions[$supplier->state_id]['children'] as $city)
+                                                <option value="{{$city['id']}}" @if($supplier->city_id == $city['id']) selected @endif>{{$city['name']}}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4 layui-hide">
+                                <div class="layui-col-xs4 @if(empty($supplier->county_id)) layui-hide @endif">
                                     <select name="county_id" lay-search="" lay-filter="county">
-                                        <option value="">请选择县/区</option>
+                                        @if(!empty($supplier->county_id))
+                                            <option value="">请选择县/区</option>
+                                            @foreach($chinese_regions[$supplier->state_id]['children'][$supplier->city_id]['children'] as $county)
+                                                <option value="{{$county['id']}}" @if($supplier->county_id == $county['id']) selected @endif>{{$county['name']}}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
-                                <div class="layui-col-xs12 layui-hide" style="margin-top: 15px;">
-                                    <input type="text" name="street_address" class="layui-input" placeholder="街道地址" value="">
+                                <div class="layui-col-xs12 @if(empty($supplier->county_id)) layui-hide @endif" style="margin-top: 15px;">
+                                    <input type="text" name="street_address" class="layui-input" placeholder="街道地址" value="{{$supplier->street_address or ''}}">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">简介</label>
                             <div class="layui-input-block">
-                                <textarea name="intro" class="layui-textarea"></textarea>
+                                <textarea name="intro" class="layui-textarea">{{$supplier->intro or ''}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -100,7 +113,16 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        @if(isset($supplier->contacts))
+                            @foreach($supplier->contacts as $contact)
+                                <tr>
+                                    <td><input type="text" name="contacts[{{$contact->id}}][name]" placeholder="名称" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="{{$contact->name or ''}}"></td>
+                                    <td><input type="text" name="contacts[{{$contact->id}}][position]" placeholder="职位" class="layui-input" value="{{$contact->position or ''}}"></td>
+                                    <td><input type="text" name="contacts[{{$contact->id}}][phone]" placeholder="电话" class="layui-input" value="{{$contact->phone or ''}}"></td>
+                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>

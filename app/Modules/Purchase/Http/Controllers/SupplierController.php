@@ -20,11 +20,16 @@ class SupplierController extends Controller
         return view('purchase::supplier.index');
     }
 
-    public function form()
+    public function form(Request $request)
     {
         $chinese_regions = WorldService::chineseTree();
+        $data = compact('chinese_regions');
+        if ($request->get('supplier_id')) {
+            $supplier = Supplier::find($request->get('supplier_id'));
+            $data['supplier'] = $supplier;
+        }
 
-        return view('purchase::supplier.form', compact('chinese_regions'));
+        return view('purchase::supplier.form', $data);
     }
 
     public function paginate(Request $request)
