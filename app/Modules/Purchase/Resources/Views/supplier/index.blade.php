@@ -93,20 +93,20 @@
                 if ('edit' == obj.event) {
                     parent.layui.index.openTabsPage("{{route('purchase::supplier.form')}}?supplier_id=" + data.id, '编辑供应商[' + data.id + ']');
                 }else if ('delete' == obj.event) {
-                    layer.confirm("确认要删除该产品？", {icon: 3, title:"确认"}, function (index) {
+                    layer.confirm("确认要删除该供应商？", {icon: 3, title:"确认"}, function (index) {
                         layer.close(index);
                         var load_index = layer.load();
                         $.ajax({
                             method: "post",
-                            url: "{{route('product::product.delete')}}",
-                            data: {product_id: data.id},
+                            url: "{{route('purchase::supplier.delete')}}",
+                            data: {supplier_id: data.id},
                             success: function (data) {
                                 layer.close(load_index);
                                 if ('success' == data.status) {
-                                    layer.msg("产品删除成功", {icon:1});
+                                    layer.msg("供应商删除成功", {icon:1});
                                     tableIns.reload();
                                 } else {
-                                    layer.msg("产品删除失败:"+data.msg, {icon:2});
+                                    layer.msg("供应商删除失败:"+data.msg, {icon:2});
                                     return false;
                                 }
                             },
