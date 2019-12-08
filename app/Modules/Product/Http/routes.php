@@ -18,3 +18,7 @@ Route::group(['prefix' => 'product', 'as'=>'product.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'ProductController@save']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'ProductController@delete']);
 });
+
+Route::group(['prefix' => 'inventory', 'as'=>'inventory.'], function (){
+	Route::get('form', ['as'=>'form', 'uses'=>'InventoryController@form']);
+});

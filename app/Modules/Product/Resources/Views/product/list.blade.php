@@ -13,6 +13,7 @@
 
     </table>
     <script type="text/html" id="action">
+        <a class="layui-btn layui-btn-sm" lay-event="inventory">库存</a>
         <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
     </script>
@@ -92,7 +93,9 @@
             table.on('tool(list)', function(obj){
                 var data = obj.data;
 
-                if ('edit' == obj.event) {
+                if ('inventory' == obj.event) {
+                    parent.layui.index.openTabsPage("{{route('product::inventory.form')}}?product_id=" + data.id, '库存管理[' + data.id + ']');
+                }else if ('edit' == obj.event) {
                     parent.layui.index.openTabsPage("{{route('product::product.form')}}?product_id=" + data.id, '编辑产品[' + data.id + ']');
                 }else if ('delete' == obj.event) {
                     layer.confirm("确认要删除该产品？", {icon: 3, title:"确认"}, function (index) {
