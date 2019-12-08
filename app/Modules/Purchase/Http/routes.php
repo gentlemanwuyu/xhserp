@@ -21,4 +21,5 @@ Route::group(['prefix' => 'supplier', 'as'=>'supplier.'], function (){
 
 Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'OrderController@index']);
+	Route::get('form', ['as'=>'form', 'uses'=>'OrderController@form']);
 });

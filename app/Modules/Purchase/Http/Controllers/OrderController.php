@@ -16,4 +16,9 @@ class OrderController extends Controller
     {
         return view('purchase::order.index');
     }
+
+    public function form()
+    {
+        return view('purchase::order.form');
+    }
 }
