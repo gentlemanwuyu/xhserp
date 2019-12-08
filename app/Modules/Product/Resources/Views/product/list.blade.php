@@ -36,13 +36,13 @@
                 },
                 cols: [
                         [
-                            {field: 'id', title: 'ID', width: '5%', align: 'center'},
-                            {field: 'code', title: '产品编号', align: 'center'},
-                            {field: 'name', title: '品名', align: 'center'},
-                            {field: 'category', title: '分类', align: 'center', templet: function (d) {
+                            {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
+                            {field: 'code', title: '产品编号', width: 160, align: 'center', fixed: 'left'},
+                            {field: 'name', title: '品名', width: 160, align: 'center', fixed: 'left'},
+                            {field: 'category', title: '分类', width: 160, align: 'center', templet: function (d) {
                                 return d.category.name;
                             }},
-                            {field: 'sku_list', title: 'SKU列表', width: 400, align: 'center', templet: function (d) {
+                            {field: 'sku_list', title: 'SKU列表', width: 560, align: 'center', templet: function (d) {
                                 var html = '';
                                 d.skus.forEach(function (sku, key) {
                                     if (0 == key) {
@@ -55,13 +55,15 @@
                                     html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
                                     html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.cost_price + '</li>';
                                     html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.stock + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.highest_stock + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.lowest_stock + '</li>';
                                     html += '</ul>';
                                 });
                                 return html;
                             }},
-                            {field: 'created_at', title: '创建时间', align: 'center'},
-                            {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                            {field: 'action', title: '操作', width: '15%', align: 'center', toolbar: "#action"}
+                            {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
+                            {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
+                            {field: 'action', title: '操作', width: 200, align: 'center', fixed: 'right', toolbar: "#action"}
                         ]
                 ]
                 ,done: function(res, curr, count){
@@ -73,6 +75,8 @@
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">重量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">成本价</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">最高库存</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">最低库存</li>';
                         html += '</ul>';
                         $('th[data-field=sku_list]').append(html);
                     }
