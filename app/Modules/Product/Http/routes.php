@@ -21,4 +21,5 @@ Route::group(['prefix' => 'product', 'as'=>'product.'], function (){
 
 Route::group(['prefix' => 'inventory', 'as'=>'inventory.'], function (){
 	Route::get('form', ['as'=>'form', 'uses'=>'InventoryController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'InventoryController@save']);
 });

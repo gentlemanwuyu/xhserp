@@ -51,12 +51,19 @@
                                         html += '<ul class="erp-table-list-ul">';
                                     }
 
+                                    var stock = '-', highest_stock = '-', lowest_stock = '-';
+                                    if (sku.inventory) {
+                                        stock = sku.inventory.stock;
+                                        highest_stock = sku.inventory.highest_stock;
+                                        lowest_stock = sku.inventory.lowest_stock;
+                                    }
+
                                     html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + sku.code + '</li>';
                                     html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
                                     html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.cost_price + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.stock + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.highest_stock + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.lowest_stock + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + stock + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + highest_stock + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + lowest_stock + '</li>';
                                     html += '</ul>';
                                 });
                                 return html;

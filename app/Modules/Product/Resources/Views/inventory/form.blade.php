@@ -4,6 +4,7 @@
         .layui-table th, .layui-table tr{text-align: center;}
         .layui-table td{padding: 0;}
         .layui-table .layui-input{border: 0; text-align: center;}
+        tbody tr{height: 40px!important;}
     </style>
 @endsection
 @section('content')
@@ -23,9 +24,9 @@
                     @foreach($product->skus as $sku)
                         <tr>
                             <td>{{$sku->code}}</td>
-                            <td><input type="text" name="stock" class="layui-input" placeholder="库存数量" value=""></td>
-                            <td><input type="text" name="highest_stock" class="layui-input" placeholder="最高库存" value=""></td>
-                            <td><input type="text" name="lowest_stock" class="layui-input" placeholder="最低库存" value=""></td>
+                            <td><input type="text" name="inventory[{{$sku->id}}][stock]" class="layui-input" placeholder="库存数量" value="{{$sku->inventory->stock or ''}}"></td>
+                            <td><input type="text" name="inventory[{{$sku->id}}][highest_stock]" class="layui-input" placeholder="最高库存" value="{{$sku->inventory->highest_stock or ''}}"></td>
+                            <td><input type="text" name="inventory[{{$sku->id}}][lowest_stock]" class="layui-input" placeholder="最低库存" value="{{$sku->inventory->lowest_stock or ''}}"></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -35,4 +36,36 @@
             </form>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+            form.on('submit(inventory)', function (form_data) {
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('product::inventory.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("库存设置成功", {icon:1});
+                            location.reload();
+                        } else {
+                            layer.msg("库存设置失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
+            })
+        });
+    </script>
 @endsection
