@@ -51,9 +51,10 @@
                                         html += '<ul class="erp-table-list-ul">';
                                     }
 
-                                    html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + sku.code + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.weight + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.cost_price + '</li>';
+                                    html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + sku.code + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.cost_price + '</li>';
+                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.inventory.stock + '</li>';
                                     html += '</ul>';
                                 });
                                 return html;
@@ -68,9 +69,10 @@
                     if (0 == $('th[data-field=sku_list] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
-                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">重量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">成本价</li>';
+                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px; text-align: center;">sku编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">重量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">成本价</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存</li>';
                         html += '</ul>';
                         $('th[data-field=sku_list]').append(html);
                     }

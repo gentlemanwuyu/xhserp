@@ -39,7 +39,9 @@ class ProductController extends Controller
 
         foreach ($paginate as $product) {
             $product->category;
-            $product->skus;
+            $product->skus->map(function ($sku) {
+                $sku->inventory;
+            });
         }
 
         return response()->json($paginate);

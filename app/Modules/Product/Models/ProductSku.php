@@ -24,6 +24,11 @@ class ProductSku extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function inventory()
+    {
+        return $this->hasOne(Inventory::class, 'sku_id');
+    }
+
     public function getSingleSkuAttribute()
     {
         $goods_sku_id = SingleSkuProductSku::where('product_sku_id', $this->id)->value('goods_sku_id');
