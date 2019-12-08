@@ -29,7 +29,7 @@ class Customer extends Model
         }
 
         // 将不在请求中的联系人删除
-        CustomerContact::where('supplier_id', $this->id)->whereNotIn('id', array_keys($contacts))->get()->map(function ($contact) {
+        CustomerContact::where('customer_id', $this->id)->whereNotIn('id', array_keys($contacts))->get()->map(function ($contact) {
             $contact->delete();
         });
 
