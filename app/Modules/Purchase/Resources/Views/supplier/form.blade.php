@@ -63,9 +63,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4 @if(empty($supplier->city_id)) layui-hide @endif">
+                                <div class="layui-col-xs4 @if(empty($chinese_regions[$supplier->state_id]['children'])) layui-hide @endif">
                                     <select name="city_id" lay-search="" lay-filter="city">
-                                        @if(!empty($supplier->city_id))
+                                        @if(!empty($chinese_regions[$supplier->state_id]['children']))
                                             <option value="">请选择市</option>
                                             @foreach($chinese_regions[$supplier->state_id]['children'] as $city)
                                                 <option value="{{$city['id']}}" @if($supplier->city_id == $city['id']) selected @endif>{{$city['name']}}</option>
@@ -73,9 +73,9 @@
                                         @endif
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4 @if(empty($supplier->county_id)) layui-hide @endif">
+                                <div class="layui-col-xs4 @if(empty($chinese_regions[$supplier->state_id]['children'][$supplier->city_id]['children'])) layui-hide @endif">
                                     <select name="county_id" lay-search="" lay-filter="county">
-                                        @if(!empty($supplier->county_id))
+                                        @if(!empty($chinese_regions[$supplier->state_id]['children'][$supplier->city_id]['children']))
                                             <option value="">请选择县/区</option>
                                             @foreach($chinese_regions[$supplier->state_id]['children'][$supplier->city_id]['children'] as $county)
                                                 <option value="{{$county['id']}}" @if($supplier->county_id == $county['id']) selected @endif>{{$county['name']}}</option>
@@ -83,7 +83,27 @@
                                         @endif
                                     </select>
                                 </div>
-                                <div class="layui-col-xs12 @if(empty($supplier->county_id)) layui-hide @endif" style="margin-top: 15px;">
+                                <?php
+                                    $flag = true;
+                                    if (empty($supplier->state_id)) {
+                                        $flag = false; // 如果没有选择省份，街道地址不显示
+                                    }else {
+                                        if (empty($supplier->city_id)) {
+                                            // 如果城市为空，判断省份下是否有城市列表
+                                            if (!empty($chinese_regions[$supplier->state_id]['children'])) {
+                                                $flag = false;
+                                            }
+                                        }else {
+                                            if (empty($supplier->county_id)) {
+                                                // 如果县区为空，判断城市下是否有县区列表
+                                                if (!empty($chinese_regions[$supplier->state_id]['children'][$supplier->city_id]['children'])) {
+                                                    $flag = false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                ?>
+                                <div class="layui-col-xs12 @if(!$flag) layui-hide @endif" style="margin-top: 15px;">
                                     <input type="text" name="street_address" class="layui-input" placeholder="街道地址" value="{{$supplier->street_address or ''}}">
                                 </div>
                             </div>
