@@ -38,6 +38,7 @@ class SupplierController extends Controller
 
         foreach ($paginate as $supplier) {
             $supplier->contacts;
+            $supplier->setAppends(['payment_method_name']);
         }
 
         return response()->json($paginate);
@@ -52,6 +53,8 @@ class SupplierController extends Controller
                 'company' => $request->get('company', ''),
                 'phone' => $request->get('phone', ''),
                 'fax' => $request->get('fax', ''),
+                'payment_method' => $request->get('payment_method', 0),
+                'monthly_day' => $request->get('monthly_day', 0),
                 'state_id' => $request->get('state_id', 0),
                 'city_id' => $request->get('city_id', 0),
                 'county_id' => $request->get('county_id', 0),

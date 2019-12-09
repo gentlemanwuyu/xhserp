@@ -17,9 +17,20 @@ class Supplier extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    static $payment_methods = [
+        1 => '现金',
+        2 => '货到付款',
+        3 => '月结',
+    ];
+
     public function contacts()
     {
         return $this->hasMany(SupplierContact::class);
+    }
+
+    public function getPaymentMethodNameAttribute()
+    {
+        return isset(self::$payment_methods[$this->payment_method]) ? self::$payment_methods[$this->payment_method] : '';
     }
 
     public function syncContacts($contacts)
