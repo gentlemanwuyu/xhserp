@@ -136,9 +136,12 @@
             }
                     // 绑定日期插件
                     ,bindLayDate = function () {
-                laydate.render({
-                    elem: 'input[lay-filter=delivery_date]'
-                });
+                $('input[lay-filter=delivery_date]').each(function () {
+                    laydate.render({
+                        elem: this
+                        ,trigger : 'click'
+                    });
+                })
             };
             $('button[lay-event=addItem]').on('click', function () {
                 var $body = $('#detailTable').find('tbody')
