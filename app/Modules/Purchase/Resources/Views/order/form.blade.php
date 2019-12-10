@@ -25,7 +25,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">供应商</label>
                             <div class="layui-input-block">
-                                <select name="supplier_id" lay-search="">
+                                <select name="supplier_id" lay-search="" lay-filter="supplier" lay-verify="required" lay-reqText="请选择供应商">
                                     <option value="">请选择供应商</option>
                                     @foreach($suppliers as $supplier)
                                         <option value="{{$supplier->id}}">{{$supplier->name}}</option>
@@ -36,7 +36,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">付款方式</label>
                             <div class="layui-input-block">
-                                <select name="payment_method">
+                                <select name="payment_method" lay-verify="required" lay-reqText="请选择付款方式">
                                     <option value="">请选择付款方式</option>
                                     @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method)
                                         <option value="{{$method_id}}">{{$method}}</option>
@@ -86,6 +86,7 @@
 @section('scripts')
     <script>
         var products = <?= json_encode($products); ?>;
+        var suppliers = <?= json_encode($suppliers); ?>;
         layui.use(['form', 'laydate'], function () {
             var form = layui.form
                     ,laydate = layui.laydate
@@ -96,7 +97,7 @@
                             ,flag = $td.parent('tr').attr('data-flag');
                     if (data.value) {
                         var html = '';
-                        html += '<select name="items[' + flag + '][sku_id]" lay-search="">';
+                        html += '<select name="items[' + flag + '][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">';
                         html += '<option value="">请选择SKU</option>';
                         products[data.value]['skus'].forEach(function (sku) {
                             html += '<option value="' + sku.id + '">' + sku.code + '</option>';
@@ -114,23 +115,25 @@
                     // 监听价格数量输入框
                     ,listenPriceQuantityInput = function () {
                 $('input[ lay-filter=quantity]').on('keyup', function () {
-                    var quantity = this.value
-                            ,price = $('input[ lay-filter=price]').val();
+                    var $tr = $(this).parents('tr')
+                            ,quantity = this.value
+                            ,price = $tr.find('input[ lay-filter=price]').val();
                     if (new RegExp(/^\d{1,}$/).test(quantity) && price && !isNaN(price)) {
                         var amount = parseInt(quantity) * parseFloat(price);
-                        $('td[erp-col=amount]').html(amount.toFixed(2));
+                        $tr.find('td[erp-col=amount]').html(amount.toFixed(2));
                     }else {
-                        $('td[erp-col=amount]').html('');
+                        $tr.find('td[erp-col=amount]').html('');
                     }
                 });
                 $('input[ lay-filter=price]').on('keyup', function () {
-                    var price = this.value
-                            ,quantity = $('input[ lay-filter=quantity]').val();
+                    var $tr = $(this).parents('tr')
+                            ,price = this.value
+                            ,quantity = $tr.find('input[ lay-filter=quantity]').val();
                     if (new RegExp(/^\d{1,}$/).test(quantity) && price && !isNaN(price)) {
                         var amount = parseInt(quantity) * parseFloat(price);
-                        $('td[erp-col=amount]').html(amount.toFixed(2));
+                        $tr.find('td[erp-col=amount]').html(amount.toFixed(2));
                     }else {
-                        $('td[erp-col=amount]').html('');
+                        $tr.find('td[erp-col=amount]').html('');
                     }
                 });
             }
@@ -154,7 +157,7 @@
                 html += '</td>';
                 // 选择产品
                 html += '<td>';
-                html += '<select name="items[' + flag + '][product_id]" lay-filter="product" lay-search="">';
+                html += '<select name="items[' + flag + '][product_id]" lay-filter="product" lay-search="" lay-verify="required" lay-reqText="请选择产品">';
                 html += '<option value="">请选择产品</option>';
                 $.each(products, function (_, product) {
                     html += '<option value="' + product.id + '">' + product.name + '</option>';
@@ -204,6 +207,55 @@
                 listenSelectProduct();
                 listenPriceQuantityInput();
                 bindLayDate();
+            });
+
+            // 监听供应商选择框
+            form.on('select(supplier)', function (data) {
+                var payment_method = '';
+                if (data.value) {
+                    payment_method = suppliers[data.value]['payment_method'];
+                }
+
+                $('select[name=payment_method]').val(payment_method);
+                form.render('select', 'order');
+            });
+
+            // 提交订单
+            form.on('submit(order)', function (form_data) {
+                var item_exists = false;
+                $.each(form_data.field, function (key, val) {
+                    if (new RegExp(/^items\[[\d]+\]\[[\d\D]+\]$/).test(key)) {
+                        item_exists = true;
+                        return true;
+                    }
+                });
+
+                if (!item_exists) {
+                    layer.msg("请添加订单明细再提交", {icon:2});
+                    return false;
+                }
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('purchase::order.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("订单添加成功", {icon:1});
+                            location.reload();
+                        } else {
+                            layer.msg("订单添加失败:"+data.msg, {icon:2});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
             });
         });
     </script>
