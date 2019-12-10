@@ -65,7 +65,7 @@
                         <th width="100">数量</th>
                         <th width="100">单价</th>
                         <th width="100">总价</th>
-                        <th width="200">交期</th>
+                        <th width="100">交期</th>
                         <th>备注</th>
                         <th width="60">操作</th>
                     </tr>
