@@ -16,6 +16,7 @@ class PurchaseDatabaseSeeder extends Seeder
 		Model::unguard();
 
 		 $this->call(SuppliersTableSeeder::class);
+		 $this->call(PurchaseOrdersTableSeeder::class);
 	}
 
 }
