@@ -17,7 +17,12 @@ var $ = layui.$
 }
     // 删除表格中的一行
     ,deleteRow = function (obj) {
+    var $tbody = $(obj).parents('tbody'), index = 1;
     $(obj).parents('tr').remove();
+    $tbody.find('tr td[erp-col=index]').each(function () {
+        $(this).html(index);
+        index++;
+    });
 }
     ,array_column = function (arr, field) {
     var collection = [];
