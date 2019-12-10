@@ -18,3 +18,7 @@ Route::group(['prefix' => 'customer', 'as'=>'customer.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'CustomerController@save']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'CustomerController@delete']);
 });
+
+Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'OrderController@index']);
+});

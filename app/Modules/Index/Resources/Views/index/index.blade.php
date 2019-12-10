@@ -150,6 +150,9 @@
                             <dd>
                                 <a lay-href="{{route('sale::customer.index')}}"><i class="layui-icon layui-icon-group"></i>客户管理</a>
                             </dd>
+                            <dd>
+                                <a lay-href="{{route('sale::order.index')}}"><i class="layui-icon layui-icon-form"></i>订单管理</a>
+                            </dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
