@@ -9,6 +9,9 @@
 @endsection
 @section('content')
     <form class="layui-form layui-form-pane" lay-filter="order">
+        @if(isset($order_id))
+            <input type="hidden" name="order_id" value="{{$order_id}}">
+        @endif
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>基本信息</h3>
@@ -19,7 +22,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">订单号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入订单号" class="layui-input" value="">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入订单号" class="layui-input" value="{{$order->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -28,7 +31,7 @@
                                 <select name="supplier_id" lay-search="" lay-filter="supplier" lay-verify="required" lay-reqText="请选择供应商">
                                     <option value="">请选择供应商</option>
                                     @foreach($suppliers as $supplier)
-                                        <option value="{{$supplier->id}}">{{$supplier->name}}</option>
+                                        <option value="{{$supplier->id}}" @if(isset($order->supplier_id) && $supplier->id == $order->supplier_id) selected @endif>{{$supplier->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -39,7 +42,7 @@
                                 <select name="payment_method" lay-verify="required" lay-reqText="请选择付款方式">
                                     <option value="">请选择付款方式</option>
                                     @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method)
-                                        <option value="{{$method_id}}">{{$method}}</option>
+                                        <option value="{{$method_id}}" @if(isset($order->payment_method) && $method_id == $order->payment_method) selected @endif>{{$method}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -71,7 +74,39 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        @if(isset($order->items))
+                            <?php $index = 1; ?>
+                            @foreach($order->items as $item)
+                                <tr data-flag="{{$item->id}}">
+                                    <td erp-col="index">{{$index++}}</td>
+                                    <td>
+                                        <select name="items[{{$item->id}}][product_id]" lay-filter="product" lay-search="" lay-verify="required" lay-reqText="请选择产品">
+                                            <option value="">请选择产品</option>
+                                            @foreach($products as $product)
+                                                <option value="{{$product->id}}" @if($item->product_id == $product->id) selected @endif>{{$product->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td erp-col="product_code">{{$item->product->code or ''}}</td>
+                                    <td erp-col="sku">
+                                        <select name="items[{{$item->id}}][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">
+                                            <option value="">请选择SKU</option>
+                                            @foreach($products[$item->product_id]->skus as $sku)
+                                                <option value="{{$sku->id}}" @if($item->sku_id == $sku->id) selected @endif>{{$sku->code}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
+                                    <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
+                                    <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
+                                    <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
+                                    <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
+                                    <td><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
+                                    <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
+                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -146,6 +181,12 @@
                     });
                 })
             };
+
+            // 页面初始化绑定事件
+            listenSelectProduct();
+            listenPriceQuantityInput();
+            bindLayDate();
+
             $('button[lay-event=addItem]').on('click', function () {
                 var $body = $('#detailTable').find('tbody')
                         ,html = ''

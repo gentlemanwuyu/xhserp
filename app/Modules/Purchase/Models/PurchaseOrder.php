@@ -44,4 +44,19 @@ class PurchaseOrder extends Model
 
         return $this;
     }
+
+    public function items()
+    {
+        return $this->hasMany(PurchaseOrderItem::class, 'order_id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function getPaymentMethodNameAttribute()
+    {
+        return isset(Supplier::$payment_methods[$this->payment_method]) ? Supplier::$payment_methods[$this->payment_method] : '';
+    }
 }
