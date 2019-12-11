@@ -63,9 +63,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4 @if(empty($chinese_regions[$customer->state_id]['children'])) layui-hide @endif">
+                                <div class="layui-col-xs4 @if(empty($customer) || empty($chinese_regions[$customer->state_id]['children'])) layui-hide @endif">
                                     <select name="city_id" lay-search="" lay-filter="city">
-                                        @if(!empty($chinese_regions[$customer->state_id]['children']))
+                                        @if(!empty($customer) && !empty($chinese_regions[$customer->state_id]['children']))
                                             <option value="">请选择市</option>
                                             @foreach($chinese_regions[$customer->state_id]['children'] as $city)
                                                 <option value="{{$city['id']}}" @if($customer->city_id == $city['id']) selected @endif>{{$city['name']}}</option>
@@ -73,9 +73,9 @@
                                         @endif
                                     </select>
                                 </div>
-                                <div class="layui-col-xs4 @if(empty($chinese_regions[$customer->state_id]['children'][$customer->city_id]['children'])) layui-hide @endif">
+                                <div class="layui-col-xs4 @if(empty($customer) || empty($chinese_regions[$customer->state_id]['children'][$customer->city_id]['children'])) layui-hide @endif">
                                     <select name="county_id" lay-search="" lay-filter="county">
-                                        @if(!empty($chinese_regions[$customer->state_id]['children'][$customer->city_id]['children']))
+                                        @if(!empty($customer) && !empty($chinese_regions[$customer->state_id]['children'][$customer->city_id]['children']))
                                             <option value="">请选择县/区</option>
                                             @foreach($chinese_regions[$customer->state_id]['children'][$customer->city_id]['children'] as $county)
                                                 <option value="{{$county['id']}}" @if($customer->county_id == $county['id']) selected @endif>{{$county['name']}}</option>
