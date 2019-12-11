@@ -52,6 +52,17 @@
                         </div>
                     </div>
                     <div class="layui-col-xs4">
+                        <div class="layui-form-item" pane="">
+                            <label class="layui-form-label required">付款方式</label>
+                            <div class="layui-input-block">
+                                @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
+                                    <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
+                                @endforeach
+                                @if(isset($customer->payment_method) && 3 == $customer->payment_method)
+                                    <input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" value="{{$customer->monthly_day or ''}}" lay-verify="required" lay-reqText="请输入月结天数">
+                                @endif
+                            </div>
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">地址</label>
                             <div class="layui-input-block">
@@ -267,6 +278,16 @@
                 }
 
                 form.render('select', 'customer');
+            });
+
+            // 付款方式单选监听
+            form.on('radio(payment_method)', function(data){
+                var $monthlyDay = $(data.elem).parent().find('input[name=monthly_day]');
+                if (1 == data.value || 2 == data.value) {
+                    $monthlyDay.remove();
+                }else if (3 == data.value && $monthlyDay.length == 0) {
+                    $(data.elem).parent().append('<input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">');
+                }
             });
 
             form.on('submit(customer)', function (form_data) {
