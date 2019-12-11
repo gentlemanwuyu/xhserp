@@ -2,11 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Woozee
- * Date: 2019/12/8
- * Time: 19:19
+ * Date: 2019/12/11
+ * Time: 16:57
  */
 
-namespace App\Modules\Product\Models;
+namespace App\Modules\Warehouse\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

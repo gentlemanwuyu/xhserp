@@ -107,7 +107,7 @@
                 var data = obj.data;
 
                 if ('inventory' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('product::inventory.form')}}?product_id=" + data.id, '库存管理[' + data.id + ']');
+                    parent.layui.index.openTabsPage("{{route('warehouse::inventory.form')}}?product_id=" + data.id, '库存管理[' + data.id + ']');
                 }else if ('edit' == obj.event) {
                     parent.layui.index.openTabsPage("{{route('product::product.form')}}?product_id=" + data.id, '编辑产品[' + data.id + ']');
                 }else if ('delete' == obj.event) {

@@ -10,7 +10,7 @@ namespace App\Modules\Goods\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Product\Models\Inventory;
+use App\Modules\Warehouse\Models\Inventory;
 
 class GoodsSku extends Model
 {

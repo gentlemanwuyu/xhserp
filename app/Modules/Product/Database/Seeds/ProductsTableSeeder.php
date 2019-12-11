@@ -10,7 +10,7 @@ namespace App\Modules\Product\Database\Seeds;
 
 use App\Modules\Product\Models\Product;
 use App\Modules\Product\Models\ProductSku;
-use App\Modules\Product\Models\Inventory;
+use App\Modules\Warehouse\Models\Inventory;
 use Illuminate\Database\Seeder;
 
 class ProductsTableSeeder extends Seeder

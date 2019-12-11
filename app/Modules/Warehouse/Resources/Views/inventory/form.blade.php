@@ -47,7 +47,7 @@
                 var load_index = layer.load();
                 $.ajax({
                     method: "post",
-                    url: "{{route('product::inventory.save')}}",
+                    url: "{{route('warehouse::inventory.save')}}",
                     data: form_data.field,
                     success: function (data) {
                         layer.close(load_index);

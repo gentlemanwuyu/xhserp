@@ -11,8 +11,7 @@
 |
 */
 
-Route::group(['prefix' => 'warehouse'], function() {
-	Route::get('/', function() {
-		dd('This is the Warehouse module index page.');
-	});
+Route::group(['prefix' => 'inventory', 'as'=>'inventory.'], function (){
+	Route::get('form', ['as'=>'form', 'uses'=>'InventoryController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'InventoryController@save']);
 });

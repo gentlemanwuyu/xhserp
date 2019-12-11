@@ -1,25 +1,25 @@
 <?php
-namespace App\Modules\Product\Http\Controllers;
+namespace App\Modules\Warehouse\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Product\Models\Product;
-use App\Modules\Product\Models\Inventory;
+use App\Modules\Warehouse\Models\Inventory;
 
 class InventoryController extends Controller
 {
     public function __construct()
     {
 
-	}
+    }
 
     public function form(Request $request)
     {
         $product = Product::find($request->get('product_id'));
 
-        return view('product::inventory.form', compact('product'));
+        return view('warehouse::inventory.form', compact('product'));
     }
 
     public function save(Request $request)

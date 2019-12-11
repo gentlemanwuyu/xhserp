@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Goods\Models\GoodsSku;
+use App\Modules\Warehouse\Models\Inventory;
 
 class ProductSku extends Model
 {
