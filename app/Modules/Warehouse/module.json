@@ -1,0 +1,8 @@
+{
+	"name": "Warehouse",
+	"slug": "warehouse",
+	"namespace": "Warehouse",
+	"version": "1.0",
+	"description": "This is the description for the Warehouse module.",
+	"enabled": true
+}
