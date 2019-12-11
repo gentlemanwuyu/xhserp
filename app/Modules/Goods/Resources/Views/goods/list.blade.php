@@ -43,7 +43,7 @@
                             return d.category.name;
                         }},
                         {field: 'type_name', title: '类型', width: '5%', align: 'center'},
-                        {field: 'sku_list', title: 'SKU列表', width: 400, align: 'center', templet: function (d) {
+                        {field: 'sku_list', title: 'SKU列表', width: 500, align: 'center', templet: function (d) {
                             var html = '';
                             d.skus.forEach(function (sku, key) {
                                 if (0 == key) {
@@ -55,6 +55,7 @@
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + sku.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.lowest_price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.msrp + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.stock + '</li>';
                                 html += '</ul>';
                             });
                             return html;
@@ -72,6 +73,7 @@
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">最低售价</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">建议零售价</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">库存</li>';
                         html += '</ul>';
                         $('th[data-field=sku_list]').append(html);
                     }

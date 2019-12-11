@@ -24,7 +24,11 @@ class GoodsController extends Controller
 
         foreach ($paginate as $g) {
             $g->category;
-            $g->skus;
+            $g->skus->map(function ($sku) {
+                $sku->setAppends(['stock']);
+
+                return $sku;
+            });
             $g->setAppends(['type_name']);
         }
 
