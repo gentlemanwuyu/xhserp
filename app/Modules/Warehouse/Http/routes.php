@@ -20,3 +20,8 @@ Route::group(['prefix' => 'stockout', 'as'=>'stockout.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'StockoutController@index']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'StockoutController@paginate']);
 });
+
+Route::group(['prefix' => 'entry', 'as'=>'entry.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'EntryController@index']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'EntryController@paginate']);
+});

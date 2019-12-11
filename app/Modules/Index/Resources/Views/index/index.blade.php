@@ -134,7 +134,10 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd>
-                                <a lay-href="{{route('warehouse::stockout.index')}}"><i class="layui-icon layui-icon-template-1"></i>待备货列表</a>
+                                <a lay-href="{{route('warehouse::stockout.index')}}"><i class="layui-icon layui-icon-template-1"></i>备货管理</a>
+                            </dd>
+                            <dd>
+                                <a lay-href="{{route('warehouse::entry.index')}}"><i class="layui-icon layui-icon-template-1"></i>入库管理</a>
                             </dd>
                         </dl>
                     </li>
