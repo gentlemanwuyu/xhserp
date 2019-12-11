@@ -37,9 +37,14 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">付款方式</label>
+                            <label class="layui-form-label required">付款方式</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span"></span>
+                                <select name="payment_method" lay-verify="required" lay-reqText="请选择付款方式">
+                                    <option value="">请选择付款方式</option>
+                                    @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
+                                        <option value="{{$method_id}}" @if(isset($order->payment_method) && $method_id == $order->payment_method) selected @endif>{{$method}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -116,6 +121,7 @@
 @section('scripts')
     <script>
         var goods = <?= json_encode($goods); ?>;
+        var customers = <?= json_encode($customers); ?>;
         layui.use(['form', 'laydate'], function () {
             var form = layui.form
                     ,laydate = layui.laydate
@@ -248,7 +254,13 @@
 
             // 监听客戶选择框
             form.on('select(customer)', function (data) {
+                var payment_method = '';
+                if (data.value) {
+                    payment_method = customers[data.value]['payment_method'];
+                }
 
+                $('select[name=payment_method]').val(payment_method);
+                form.render('select', 'order');
             });
 
             // 提交订单
