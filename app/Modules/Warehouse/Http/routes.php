@@ -18,4 +18,5 @@ Route::group(['prefix' => 'inventory', 'as'=>'inventory.'], function (){
 
 Route::group(['prefix' => 'stockout', 'as'=>'stockout.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'StockoutController@index']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'StockoutController@paginate']);
 });

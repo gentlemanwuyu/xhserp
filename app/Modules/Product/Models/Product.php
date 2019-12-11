@@ -47,4 +47,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductSku::class);
     }
+
+    public function stockoutSkus()
+    {
+        return $this->hasMany(ProductSku::class)->leftjoin('inventories AS i', 'i.sku_id', '=', 'product_skus.id')->whereRaw('i.stock < i.lowest_stock');
+    }
 }
