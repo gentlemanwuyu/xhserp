@@ -16,6 +16,7 @@ class SaleDatabaseSeeder extends Seeder
 		Model::unguard();
 
 		 $this->call(CustomersTableSeeder::class);
+		 $this->call(OrdersTableSeeder::class);
 	}
 
 }

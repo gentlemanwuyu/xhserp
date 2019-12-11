@@ -26,25 +26,20 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">供应商</label>
+                            <label class="layui-form-label required">客户</label>
                             <div class="layui-input-block">
-                                <select name="supplier_id" lay-search="" lay-filter="supplier" lay-verify="required" lay-reqText="请选择供应商">
-                                    <option value="">请选择供应商</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{$supplier->id}}" @if(isset($order->supplier_id) && $supplier->id == $order->supplier_id) selected @endif>{{$supplier->name}}</option>
+                                <select name="customer_id" lay-search="" lay-filter="customer" lay-verify="required" lay-reqText="请选择客户">
+                                    <option value="">请选择客户</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{$customer->id}}" @if(isset($order->customer_id) && $customer->id == $order->customer_id) selected @endif>{{$customer->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">付款方式</label>
+                            <label class="layui-form-label">付款方式</label>
                             <div class="layui-input-block">
-                                <select name="payment_method" lay-verify="required" lay-reqText="请选择付款方式">
-                                    <option value="">请选择付款方式</option>
-                                    @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method)
-                                        <option value="{{$method_id}}" @if(isset($order->payment_method) && $method_id == $order->payment_method) selected @endif>{{$method}}</option>
-                                    @endforeach
-                                </select>
+                                <span class="erp-form-span"></span>
                             </div>
                         </div>
                     </div>
@@ -60,8 +55,8 @@
                     <thead>
                     <tr>
                         <th width="50">序号</th>
-                        <th width="150">产品</th>
-                        <th width="100">产品编号</th>
+                        <th width="150">商品</th>
+                        <th width="100">商品编号</th>
                         <th width="150">SKU</th>
                         <th>标题</th>
                         <th width="50">单位</th>
@@ -74,39 +69,39 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @if(isset($order->items))
-                            <?php $index = 1; ?>
-                            @foreach($order->items as $item)
-                                <tr data-flag="{{$item->id}}">
-                                    <td erp-col="index">{{$index++}}</td>
-                                    <td>
-                                        <select name="items[{{$item->id}}][product_id]" lay-filter="product" lay-search="" lay-verify="required" lay-reqText="请选择产品">
-                                            <option value="">请选择产品</option>
-                                            @foreach($products as $product)
-                                                <option value="{{$product->id}}" @if($item->product_id == $product->id) selected @endif>{{$product->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td erp-col="code">{{$item->product->code or ''}}</td>
-                                    <td erp-col="sku">
-                                        <select name="items[{{$item->id}}][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">
-                                            <option value="">请选择SKU</option>
-                                            @foreach($products[$item->product_id]->skus as $sku)
-                                                <option value="{{$sku->id}}" @if($item->sku_id == $sku->id) selected @endif>{{$sku->code}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
-                                    <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
-                                    <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
-                                    <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
-                                    <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
-                                    <td><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
-                                    <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
-                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
-                                </tr>
-                            @endforeach
-                        @endif
+                    @if(isset($order->items))
+                        <?php $index = 1; ?>
+                        @foreach($order->items as $item)
+                            <tr data-flag="{{$item->id}}">
+                                <td erp-col="index">{{$index++}}</td>
+                                <td>
+                                    <select name="items[{{$item->id}}][goods_id]" lay-filter="goods" lay-search="" lay-verify="required" lay-reqText="请选择商品">
+                                        <option value="">请选择商品</option>
+                                        @foreach($goods as $g)
+                                            <option value="{{$g->id}}" @if($item->goods_id == $g->id) selected @endif>{{$g->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td erp-col="code">{{$item->goods->code or ''}}</td>
+                                <td erp-col="sku">
+                                    <select name="items[{{$item->id}}][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">
+                                        <option value="">请选择SKU</option>
+                                        @foreach($goods[$item->goods_id]->skus as $sku)
+                                            <option value="{{$sku->id}}" @if($item->sku_id == $sku->id) selected @endif>{{$sku->code}}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
+                                <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
+                                <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
+                                <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
+                                <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
+                                <td><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
+                                <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
+                                <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                            </tr>
+                        @endforeach
+                    @endif
                     </tbody>
                 </table>
             </div>
@@ -120,34 +115,35 @@
 @endsection
 @section('scripts')
     <script>
-        var products = <?= json_encode($products); ?>;
-        var suppliers = <?= json_encode($suppliers); ?>;
+        var goods = <?= json_encode($goods); ?>;
         layui.use(['form', 'laydate'], function () {
             var form = layui.form
                     ,laydate = layui.laydate
-                    // 监听产品选择框
-                    ,listenSelectProduct = function () {
-                form.on('select(product)', function(data){
+            // 监听商品选择框
+                    ,listenSelectGoods = function () {
+                form.on('select(goods)', function(data){
                     var $td = $(data.elem).parent('td')
                             ,flag = $td.parent('tr').attr('data-flag');
                     if (data.value) {
                         var html = '';
                         html += '<select name="items[' + flag + '][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">';
                         html += '<option value="">请选择SKU</option>';
-                        products[data.value]['skus'].forEach(function (sku) {
+                        goods[data.value]['skus'].forEach(function (sku) {
                             html += '<option value="' + sku.id + '">' + sku.code + '</option>';
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=sku]').html(html);
-                        $td.siblings('td[erp-col=code]').html(products[data.value]['code']);
+                        $td.siblings('td[erp-col=code]').html(goods[data.value]['code']);
+                        $td.siblings('td[erp-col=title]').find('input[type=text]').val(goods[data.value]['name']);
                     }else {
                         $td.siblings('td[erp-col=sku]').html('');
                         $td.siblings('td[erp-col=code]').html('');
+                        $td.siblings('td[erp-col=title]').find('input[type=text]').val('');
                     }
                     form.render('select', 'order');
                 });
             }
-                    // 监听价格数量输入框
+            // 监听价格数量输入框
                     ,listenPriceQuantityInput = function () {
                 $('input[ lay-filter=quantity]').on('keyup', function () {
                     var $tr = $(this).parents('tr')
@@ -172,7 +168,7 @@
                     }
                 });
             }
-                    // 绑定日期插件
+            // 绑定日期插件
                     ,bindLayDate = function () {
                 $('input[lay-filter=delivery_date]').each(function () {
                     laydate.render({
@@ -183,7 +179,7 @@
             };
 
             // 页面初始化绑定事件
-            listenSelectProduct();
+            listenSelectGoods();
             listenPriceQuantityInput();
             bindLayDate();
 
@@ -196,23 +192,23 @@
                 html += '<td erp-col="index">';
                 html += $body.children('tr').length + 1;
                 html += '</td>';
-                // 选择产品
+                // 选择商品
                 html += '<td>';
-                html += '<select name="items[' + flag + '][product_id]" lay-filter="product" lay-search="" lay-verify="required" lay-reqText="请选择产品">';
-                html += '<option value="">请选择产品</option>';
-                $.each(products, function (_, product) {
-                    html += '<option value="' + product.id + '">' + product.name + '</option>';
+                html += '<select name="items[' + flag + '][goods_id]" lay-filter="goods" lay-search="" lay-verify="required" lay-reqText="请选择商品">';
+                html += '<option value="">请选择商品</option>';
+                $.each(goods, function (_, g) {
+                    html += '<option value="' + g.id + '">' + g.name + '</option>';
                 });
                 html += '</select>';
                 html += '</td>';
-                // 产品编号
+                // 商品编号
                 html += '<td erp-col="code">';
                 html += '</td>';
                 // 选择SKU
                 html += '<td erp-col="sku">';
                 html += '</td>';
                 // 标题
-                html += '<td>';
+                html += '<td erp-col="title">';
                 html += '<input type="text" name="items[' + flag + '][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input">';
                 html += '</td>';
                 // 单位
@@ -245,20 +241,14 @@
 
                 $body.append(html);
                 form.render();
-                listenSelectProduct();
+                listenSelectGoods();
                 listenPriceQuantityInput();
                 bindLayDate();
             });
 
-            // 监听供应商选择框
-            form.on('select(supplier)', function (data) {
-                var payment_method = '';
-                if (data.value) {
-                    payment_method = suppliers[data.value]['payment_method'];
-                }
+            // 监听客戶选择框
+            form.on('select(customer)', function (data) {
 
-                $('select[name=payment_method]').val(payment_method);
-                form.render('select', 'order');
             });
 
             // 提交订单
@@ -279,7 +269,7 @@
                 var load_index = layer.load();
                 $.ajax({
                     method: "post",
-                    url: "{{route('purchase::order.save')}}",
+                    url: "{{route('sale::order.save')}}",
                     data: form_data.field,
                     success: function (data) {
                         layer.close(load_index);

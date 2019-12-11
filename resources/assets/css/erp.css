@@ -27,5 +27,5 @@
 /* 表单样式 */
 .layui-form-item[pane], .layui-form-pane .layui-form-item{background-color: #fff;}
 .layui-form-pane .erp-form-button-item{background-color: inherit;}
-.erp-form-span{height: 38px;line-height: 38px; padding-left: 10px;}
+.erp-form-span{display: block; box-sizing: border-box; height: 38px; vertical-align: middle; padding-left: 10px; width: 100%; border: 1px solid #e6e6e6; line-height: 38px;}
 .erp-after-radio-input{width: 80px; height: 28px; border: 0; display: inline; margin-left: -20px; vertical-align: middle; margin-top: 6px; border-bottom: 1px solid #cccccc;}

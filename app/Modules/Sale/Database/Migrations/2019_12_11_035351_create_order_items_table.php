@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePurchaseOrderItemsTable extends Migration
+class CreateOrderItemsTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,10 +12,10 @@ class CreatePurchaseOrderItemsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('purchase_order_items', function (Blueprint $table) {
+		Schema::create('order_items', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('order_id')->default(0)->comment('订单ID');
-			$table->integer('product_id')->default(0)->comment('产品ID');
+			$table->integer('goods_id')->default(0)->comment('商品ID');
 			$table->integer('sku_id')->default(0)->comment('SKU ID');
 			$table->string('title')->default('')->comment('标题');
 			$table->string('unit')->default('')->comment('单位');
@@ -28,7 +28,7 @@ class CreatePurchaseOrderItemsTable extends Migration
 			$table->timestamp('deleted_at')->nullable()->comment('删除时间');
 
 			$table->index('order_id');
-			$table->index('product_id');
+			$table->index('goods_id');
 			$table->index('sku_id');
 		});
 	}
@@ -40,6 +40,6 @@ class CreatePurchaseOrderItemsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('purchase_order_items');
+		Schema::dropIfExists('order_items');
 	}
 }
