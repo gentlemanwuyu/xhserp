@@ -129,6 +129,17 @@
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">
+                            <i class="layui-icon layui-icon-component"></i>
+                            <cite>仓库管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-href="{{route('warehouse::stockout.index')}}"><i class="layui-icon layui-icon-template-1"></i>待备货列表</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
                             <i class="layui-icon layui-icon-cart-simple"></i>
                             <cite>采购管理</cite>
                         </a>
