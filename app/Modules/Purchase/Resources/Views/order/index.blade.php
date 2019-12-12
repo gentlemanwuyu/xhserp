@@ -161,6 +161,12 @@
                     dropdown(res.data,function(data) {
                         return [
                             {
+                                title: "详情",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('purchase::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
+                                }
+                            },
+                            {
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('purchase::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');

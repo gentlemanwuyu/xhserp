@@ -139,4 +139,9 @@ class OrderController extends Controller
             return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
         }
     }
+
+    public function detail()
+    {
+        return view('purchase::order.detail');
+    }
 }
