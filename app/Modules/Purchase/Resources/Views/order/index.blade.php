@@ -8,10 +8,56 @@
     </style>
 @endsection
 @section('content')
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('purchase::order.form')}}">添加订单</a>
-    <table id="list" class="layui-table"  lay-filter="list">
-
-    </table>
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="订单编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <select name="supplier_id" lay-search="">
+                    <option value="">供应商</option>
+                    @foreach($suppliers as $supplier)
+                        <option value="{{$supplier->id}}">{{$supplier->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="status">
+                    <option value="">状态</option>
+                    @foreach(\App\Modules\Purchase\Models\PurchaseOrder::$statuses as $status_id => $status_name)
+                        <option value="{{$status_id}}">{{$status_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="payment_method">
+                    <option value="">付款方式</option>
+                    @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $payment_method_name)
+                        <option value="{{$method_id}}">{{$payment_method_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="creator_id" lay-search="">
+                    <option value="">创建人</option>
+                    @foreach($users as $user)
+                        <option value="{{$user->id}}">{{$user->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('purchase::order.form')}}">添加订单</a>
+            </div>
+        </div>
+    </form>
+    <table id="list" class="layui-table"  lay-filter="list"></table>
     <script type="text/html" id="action">
         <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
@@ -19,9 +65,11 @@
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.use(['table', 'laydate', 'form'], function () {
             var table = layui.table
-                    ,tableIns = table.render({
+                    ,laydate = layui.laydate
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('purchase::order.paginate')}}",
                 page: true,
@@ -106,6 +154,13 @@
                         $(this).css('height', tr_height);
                     });
                 }
+            };
+
+            table.render(tableOpts);
+
+            laydate.render({
+                elem: 'input[name=created_at_between]'
+                ,range: true
             });
 
             table.on('tool(list)', function(obj){
@@ -139,6 +194,11 @@
                         });
                     });
                 }
+            });
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>

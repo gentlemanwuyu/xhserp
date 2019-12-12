@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Modules\Index\Models\User;
 use App\Modules\Product\Models\Product;
 use App\Modules\Purchase\Models\Supplier;
 use App\Modules\Purchase\Models\PurchaseOrder;
@@ -19,7 +20,10 @@ class OrderController extends Controller
 
     public function index()
     {
-        return view('purchase::order.index');
+        $suppliers = Supplier::all(['id', 'name']);
+        $users = User::where('is_admin', 0)->get();
+
+        return view('purchase::order.index', compact('suppliers', 'users'));
     }
 
     public function form(Request $request)
@@ -40,7 +44,28 @@ class OrderController extends Controller
 
     public function paginate(Request $request)
     {
-        $paginate = PurchaseOrder::orderBy('id', 'desc')->paginate($request->get('limit'));
+        $query = PurchaseOrder::query();
+        if ($request->get('code')) {
+            $query = $query->where('code', $request->get('code'));
+        }
+        if ($request->get('supplier_id')) {
+            $query = $query->where('supplier_id', $request->get('supplier_id'));
+        }
+        if ($request->get('status')) {
+            $query = $query->where('status', $request->get('status'));
+        }
+        if ($request->get('payment_method')) {
+            $query = $query->where('payment_method', $request->get('payment_method'));
+        }
+        if ($request->get('creator_id')) {
+            $query = $query->where('user_id', $request->get('creator_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('created_at', '>=', $created_at_between[0] . ' 00:00:00')->where('created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $order) {
             $order->items->map(function ($item) {
