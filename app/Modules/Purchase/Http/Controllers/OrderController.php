@@ -49,7 +49,8 @@ class OrderController extends Controller
                 return $item;
             });
             $order->supplier;
-            $order->setAppends(['payment_method_name']);
+            $order->user;
+            $order->setAppends(['payment_method_name', 'status_name']);
         }
 
         return response()->json($paginate);

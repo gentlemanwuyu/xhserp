@@ -40,13 +40,17 @@
                         {field: 'supplier_name', title: '供应商', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return d.supplier.name;
                         }},
-                        {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},
                         {field: 'total_amount', title: '总金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
                             d.items.forEach(function (item, key) {
                                 total_amount += item.quantity * item.price;
                             });
                             return total_amount.toFixed(2);
+                        }},
+                        {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
+                        {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
+                            return d.user ? d.user.name : '';
                         }},
                         {field: 'detail', title: '订单明细', width: 710, align: 'center', templet: function (d) {
                             var html = '';
@@ -68,8 +72,8 @@
                             });
                             return html;
                         }},
-                        {field: 'created_at', title: '创建时间', align: 'center'},
-                        {field: 'updated_at', title: '最后更新时间', align: 'center'},
+                        {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
+                        {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
                         {field: 'action', title: '操作', width: 200, align: 'center', fixed: 'right', toolbar: "#action"}
                     ]
                 ]

@@ -16,7 +16,7 @@ class PurchaseOrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $order = PurchaseOrder::create(['code' => 'xhspo20191210001', 'supplier_id' => 1, 'payment_method' => 1]);
+        $order = PurchaseOrder::create(['code' => 'xhspo20191210001', 'supplier_id' => 1, 'payment_method' => 1, 'status' => 3, 'user_id' => 2]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
             'product_id' => 7,
@@ -26,6 +26,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '2000',
             'price' => 0.3,
             'delivery_date' => '2019-12-15',
+            'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
@@ -36,6 +37,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '2000',
             'price' => 0.3,
             'delivery_date' => '2019-12-15',
+            'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
@@ -46,9 +48,10 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '2000',
             'price' => 0.3,
             'delivery_date' => '2019-12-15',
+            'delivery_status' => 1,
         ]);
 
-        $order = PurchaseOrder::create(['code' => 'xhspo20191210002', 'supplier_id' => 1, 'payment_method' => 1]);
+        $order = PurchaseOrder::create(['code' => 'xhspo20191210002', 'supplier_id' => 1, 'payment_method' => 1, 'status' => 1, 'user_id' => 3]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
             'product_id' => 11,
@@ -58,6 +61,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '2000',
             'price' => 0.25,
             'delivery_date' => '2019-12-18',
+            'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
@@ -68,8 +72,9 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '2000',
             'price' => 0.25,
             'delivery_date' => '2019-12-18',
+            'delivery_status' => 1,
         ]);
-        $order = PurchaseOrder::create(['code' => 'xhspo20191210003', 'supplier_id' => 2, 'payment_method' => 3]);
+        $order = PurchaseOrder::create(['code' => 'xhspo20191210003', 'supplier_id' => 2, 'payment_method' => 3, 'status' => 3, 'user_id' => 4]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
             'product_id' => 15,
@@ -79,6 +84,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '800',
             'price' => 2.2,
             'delivery_date' => '2019-12-25',
+            'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
             'order_id' => $order->id,
@@ -89,6 +95,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '800',
             'price' => 1.2,
             'delivery_date' => '2019-12-24',
+            'delivery_status' => 1,
         ]);
     }
 }
