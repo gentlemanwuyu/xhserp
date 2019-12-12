@@ -62,12 +62,13 @@
                                 }
 
                                 var amount = item.quantity * item.price;
+                                var delivery_date = null == item.delivery_date ? '' : item.delivery_date;
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + item.product.name + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 150px;">' + item.sku.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + amount.toFixed(2) + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.delivery_date + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + delivery_date + '</li>';
                                 html += '</ul>';
                             });
                             return html;

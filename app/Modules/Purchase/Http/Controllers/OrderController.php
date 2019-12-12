@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Modules\Product\Models\Product;
 use App\Modules\Purchase\Models\Supplier;
 use App\Modules\Purchase\Models\PurchaseOrder;
@@ -65,9 +66,16 @@ class OrderController extends Controller
                 'payment_method' => $request->get('payment_method'),
             ];
 
-            DB::beginTransaction();
+            $order = PurchaseOrder::find($request->get('order_id'));
 
-            $order = PurchaseOrder::updateOrCreate(['id' => $request->get('order_id')], $order_data);
+            DB::beginTransaction();
+            if (!$order) {
+                $order_data['status'] = 1;
+                $order_data['user_id'] = Auth::user()->id;
+                $order = PurchaseOrder::create($order_data);
+            }else {
+                $order->update($order_data);
+            }
 
             if (!$order) {
                 throw new \Exception("订单保存失败");
