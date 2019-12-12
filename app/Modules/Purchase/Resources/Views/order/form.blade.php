@@ -120,6 +120,7 @@
 @endsection
 @section('scripts')
     <script>
+        var order_id = <?= isset($order_id) ? $order_id : 0; ?>;
         var products = <?= json_encode($products); ?>;
         var suppliers = <?= json_encode($suppliers); ?>;
         layui.use(['form', 'laydate'], function () {
@@ -285,11 +286,13 @@
                     data: form_data.field,
                     success: function (data) {
                         layer.close(load_index);
+                        var action = order_id ? '编辑' : '添加';
                         if ('success' == data.status) {
-                            layer.msg("订单添加成功", {icon:1});
-                            location.reload();
+                            layer.msg('订单' + action + '成功', {icon: 1, time: 2000}, function(){
+                                location.reload();
+                            });
                         } else {
-                            layer.msg("订单添加失败:"+data.msg, {icon:2});
+                            layer.msg('订单' + action + '失败:' + data.msg, {icon:2});
                             return false;
                         }
                     },
