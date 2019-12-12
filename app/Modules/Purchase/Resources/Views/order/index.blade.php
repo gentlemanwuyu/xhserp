@@ -59,16 +59,23 @@
     </form>
     <table id="list" class="layui-table"  lay-filter="list"></table>
     <script type="text/html" id="action">
-        <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
+        <div class="urp-dropdown urp-dropdown-table">
+            <i class="layui-icon layui-icon-more-vertical urp-dropdown-btn"></i>
+            {{--<button class="layui-btn layui-btn-primary layui-btn-xs urp-dropdown-btn">--}}
+                {{--操作<i class="layui-icon layui-icon-down"></i>--}}
+            {{--</button>--}}
+        </div>
     </script>
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table', 'laydate', 'form'], function () {
+        layui.extend({
+            dropdown: '/assets/layui-table-dropdown/dropdown'
+        }).use(['table', 'laydate', 'form', 'dropdown'], function () {
             var table = layui.table
                     ,laydate = layui.laydate
                     ,form = layui.form
+                    ,dropdown = layui.dropdown
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('purchase::order.paginate')}}",
@@ -123,7 +130,7 @@
                         }},
                         {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
-                        {field: 'action', title: '操作', width: 200, align: 'center', fixed: 'right', toolbar: "#action"}
+                        {field: 'action', title: '操作', width: 100, align: 'center', fixed: 'right', toolbar: "#action"}
                     ]
                 ]
                 ,done: function(res, curr, count){
@@ -153,6 +160,46 @@
                                 ,tr_height = $this.parents('.layui-table-box').children('.layui-table-body').find('table tbody tr[data-index=' + data_index + ']').css('height');
                         $(this).css('height', tr_height);
                     });
+
+                    dropdown(res.data,function(data) {
+                        return [
+                            {
+                                title: "编辑",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('purchase::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
+                                }
+                            },
+                            {
+                                title: "删除",
+                                event: function() {
+                                    layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('purchase::order.delete')}}",
+                                            data: {order_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("订单删除成功", {icon:1});
+                                                    tableIns.reload();
+                                                } else {
+                                                    layer.msg("订单删除失败:"+data.msg, {icon:2});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                                return false;
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        ];
+                    })
                 }
             };
 
@@ -161,39 +208,6 @@
             laydate.render({
                 elem: 'input[name=created_at_between]'
                 ,range: true
-            });
-
-            table.on('tool(list)', function(obj){
-                var data = obj.data;
-
-                if ('edit' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('purchase::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
-                }else if ('delete' == obj.event) {
-                    layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
-                        layer.close(index);
-                        var load_index = layer.load();
-                        $.ajax({
-                            method: "post",
-                            url: "{{route('purchase::order.delete')}}",
-                            data: {order_id: data.id},
-                            success: function (data) {
-                                layer.close(load_index);
-                                if ('success' == data.status) {
-                                    layer.msg("订单删除成功", {icon:1});
-                                    tableIns.reload();
-                                } else {
-                                    layer.msg("订单删除失败:"+data.msg, {icon:2});
-                                    return false;
-                                }
-                            },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                layer.close(load_index);
-                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                return false;
-                            }
-                        });
-                    });
-                }
             });
 
             form.on('submit(search)', function (form_data) {
