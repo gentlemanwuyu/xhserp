@@ -61,9 +61,6 @@
     <script type="text/html" id="action">
         <div class="urp-dropdown urp-dropdown-table">
             <i class="layui-icon layui-icon-more-vertical urp-dropdown-btn"></i>
-            {{--<button class="layui-btn layui-btn-primary layui-btn-xs urp-dropdown-btn">--}}
-                {{--操作<i class="layui-icon layui-icon-down"></i>--}}
-            {{--</button>--}}
         </div>
     </script>
 @endsection
@@ -183,7 +180,7 @@
                                                 layer.close(load_index);
                                                 if ('success' == data.status) {
                                                     layer.msg("订单删除成功", {icon:1});
-                                                    tableIns.reload();
+                                                    table.render(tableOpts);
                                                 } else {
                                                     layer.msg("订单删除失败:"+data.msg, {icon:2});
                                                     return false;
