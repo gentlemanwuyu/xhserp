@@ -96,7 +96,7 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
+                                    <td erp-col="title"><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
@@ -140,9 +140,11 @@
                         html += '</select>';
                         $td.siblings('td[erp-col=sku]').html(html);
                         $td.siblings('td[erp-col=code]').html(products[data.value]['code']);
+                        $td.siblings('td[erp-col=title]').find('input[type=text]').val(products[data.value]['name']);
                     }else {
                         $td.siblings('td[erp-col=sku]').html('');
                         $td.siblings('td[erp-col=code]').html('');
+                        $td.siblings('td[erp-col=title]').find('input[type=text]').val('');
                     }
                     form.render('select', 'order');
                 });
@@ -212,7 +214,7 @@
                 html += '<td erp-col="sku">';
                 html += '</td>';
                 // 标题
-                html += '<td>';
+                html += '<td erp-col="title">';
                 html += '<input type="text" name="items[' + flag + '][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input">';
                 html += '</td>';
                 // 单位
