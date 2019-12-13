@@ -59,7 +59,7 @@
     </form>
     <table id="list" class="layui-table"  lay-filter="list"></table>
     <script type="text/html" id="action">
-        <div class="urp-dropdown urp-dropdown-table">
+        <div class="urp-dropdown urp-dropdown-table" title="操作">
             <i class="layui-icon layui-icon-more-vertical urp-dropdown-btn"></i>
         </div>
     </script>

@@ -24,6 +24,8 @@
 .erp-table-list-li{padding-top: 5px; padding-bottom: 5px; border-left: 1px solid #e6e6e6; line-height: 28px;}
 .erp-table-list-li-first{border-left: none;}
 
+td[data-field=action] i.layui-icon{color: #009688;}
+
 /* 表单样式 */
 .layui-form-item[pane], .layui-form-pane .layui-form-item{background-color: #fff;}
 .layui-form-pane .erp-form-button-item{background-color: inherit;}
