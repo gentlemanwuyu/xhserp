@@ -140,8 +140,10 @@ class OrderController extends Controller
         }
     }
 
-    public function detail()
+    public function detail(Request $request)
     {
-        return view('purchase::order.detail');
+        $order = PurchaseOrder::find($request->get('order_id'));
+
+        return view('purchase::order.detail', compact('order'));
     }
 }

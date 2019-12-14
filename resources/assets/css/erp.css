@@ -31,3 +31,12 @@ td[data-field=action] i.layui-icon{color: #009688;}
 .layui-form-pane .erp-form-button-item{background-color: inherit;}
 .erp-form-span{display: block; box-sizing: border-box; height: 38px; vertical-align: middle; padding-left: 10px; width: 100%; border: 1px solid #e6e6e6; line-height: 38px;}
 .erp-after-radio-input{width: 80px; height: 28px; border: 0; display: inline; margin-left: -20px; vertical-align: middle; margin-top: 6px; border-bottom: 1px solid #cccccc;}
+
+/* 详情页样式 */
+.erp-detail{margin-bottom: 30px;}
+.erp-detail-title{margin-bottom: 10px;}
+.erp-detail-title .layui-elem-field, .erp-detail-title .layui-field-title{margin: 0;}
+.erp-detail table th, .erp-detail table td{text-align: center;}
+.erp-info-table{background-color: inherit;}
+.erp-info-table tr>td:nth-child(2){text-align: left; background-color: #fff;}
+.erp-info-table tr>td:first-child{width: 110px; text-align: right;}
