@@ -13,6 +13,7 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix.copy('node_modules/layui-src/dist','public/assets/layui-src/dist');
+    mix.copy('node_modules/moment/moment.js','public/assets/moment/moment.js');
     mix.copy('resources/assets/layuiadmin','public/assets/layuiadmin');
     mix.copy('resources/assets/dtree','public/assets/dtree');
     mix.copy('resources/assets/layui-table-dropdown','public/assets/layui-table-dropdown');

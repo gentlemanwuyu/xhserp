@@ -16,6 +16,7 @@
 <body>
 @yield('body')
 <script src="{{asset('/assets/layui-src/dist/layui.all.js')}}"></script>
+<script src="{{asset('/assets/moment/moment.js')}}"></script>
 <script src="{{asset('/assets/js/erp.js')}}"></script>
 @yield('scripts')
 </body>
