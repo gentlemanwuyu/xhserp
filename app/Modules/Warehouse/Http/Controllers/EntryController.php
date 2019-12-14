@@ -4,11 +4,13 @@ namespace App\Modules\Warehouse\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Product\Models\ProductSku;
 use App\Modules\Purchase\Models\PurchaseOrder;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 use App\Modules\Warehouse\Models\SkuEntry;
+use App\Modules\Warehouse\Models\Inventory;
 
 class EntryController extends Controller
 {
@@ -56,15 +58,28 @@ class EntryController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
 
+            DB::beginTransaction();
             SkuEntry::create([
                 'sku_id' => $order_item->sku_id,
                 'order_item_id' => $request->get('order_item_id'),
                 'quantity' => $request->get('quantity'),
                 'user_id' => Auth::user()->id,
             ]);
+            $inventory = Inventory::where('sku_id', $order_item->sku_id)->first();
+            if (!$inventory) {
+                Inventory::create([
+                    'sku_id' => $order_item->sku_id,
+                    'stock' => $request->get('quantity'),
+                ]);
+            }else {
+                $inventory->stock += $request->get('quantity');
+                $inventory->save();
+            }
 
+            DB::commit();
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
         }
     }

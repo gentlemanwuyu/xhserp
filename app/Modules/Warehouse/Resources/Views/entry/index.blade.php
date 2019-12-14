@@ -110,7 +110,7 @@
                         actions.push({
                             title: "入库",
                             event: function () {
-                                parent.layui.index.openTabsPage("{{route('warehouse::entry.form')}}?sku_id=" + data.id, 'SKU入库[' + data.id + ']');
+                                parent.layui.index.openTabsPage("{{route('warehouse::entry.form')}}?sku_id=" + data.id, 'SKU入库[' + data.code + ']');
                             }
                         });
 
