@@ -71,4 +71,67 @@
             </table>
         </div>
     </div>
+    <div class="layui-row @if(!(isset($action) && 'review' == $action)) layui-hide @endif">
+        <form class="layui-form">
+            <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>
+            <button type="button" class="layui-btn layui-btn-danger" erp-action="reject">驳回</button>
+        </form>
+    </div>
+@endsection
+@section('scripts')
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+            $('button[erp-action=agree]').on('click', function () {
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('purchase::order.agree')}}",
+                    data: {order_id: "{{$order_id or ''}}"},
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("订单已通过", {icon: 1, time: 2000}, function(){
+                                parent.layui.admin.closeThisTabs();
+                            });
+                        } else {
+                            layer.msg("订单审核失败:" + data.msg, {icon: 2, time: 2000});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
+            });
+
+            $('button[erp-action=reject]').on('click', function () {
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('purchase::order.reject')}}",
+                    data: {order_id: "{{$order_id or ''}}"},
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("订单已驳回", {icon: 1, time: 2000}, function(){
+                                parent.layui.admin.closeThisTabs();
+                            });
+                        } else {
+                            layer.msg("订单审核失败:" + data.msg, {icon: 2, time: 2000});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        return false;
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

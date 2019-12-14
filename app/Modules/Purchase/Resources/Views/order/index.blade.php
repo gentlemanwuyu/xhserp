@@ -159,49 +159,58 @@
                     });
 
                     dropdown(res.data,function(data) {
-                        return [
-                            {
-                                title: "详情",
+                        var actions = [];
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('purchase::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
+                            }
+                        });
+                        if (1 == data.status) {
+                            actions.push({
+                                title: "审核",
                                 event: function () {
-                                    parent.layui.index.openTabsPage("{{route('purchase::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
+                                    parent.layui.index.openTabsPage("{{route('purchase::order.review')}}?order_id=" + data.id + "&action=review", '订单审核[' + data.id + ']');
                                 }
-                            },
-                            {
-                                title: "编辑",
-                                event: function () {
-                                    parent.layui.index.openTabsPage("{{route('purchase::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
-                                }
-                            },
-                            {
-                                title: "删除",
-                                event: function() {
-                                    layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
-                                        layer.close(index);
-                                        var load_index = layer.load();
-                                        $.ajax({
-                                            method: "post",
-                                            url: "{{route('purchase::order.delete')}}",
-                                            data: {order_id: data.id},
-                                            success: function (data) {
-                                                layer.close(load_index);
-                                                if ('success' == data.status) {
-                                                    layer.msg("订单删除成功", {icon:1});
-                                                    table.render(tableOpts);
-                                                } else {
-                                                    layer.msg("订单删除失败:"+data.msg, {icon:2});
-                                                    return false;
-                                                }
-                                            },
-                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                                layer.close(load_index);
-                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                            });
+                        }
+                        actions.push({
+                            title: "编辑",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('purchase::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
+                            }
+                        });
+                        actions.push({
+                            title: "删除",
+                            event: function() {
+                                layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
+                                    layer.close(index);
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: "{{route('purchase::order.delete')}}",
+                                        data: {order_id: data.id},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("订单删除成功", {icon:1});
+                                                table.render(tableOpts);
+                                            } else {
+                                                layer.msg("订单删除失败:"+data.msg, {icon:2});
                                                 return false;
                                             }
-                                        });
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            return false;
+                                        }
                                     });
-                                }
+                                });
                             }
-                        ];
+                        });
+
+                        return actions;
                     })
                 }
             };

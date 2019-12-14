@@ -26,4 +26,7 @@ Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'OrderController@save']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'OrderController@delete']);
 	Route::get('detail', ['as'=>'detail', 'uses'=>'OrderController@detail']);
+	Route::get('review', ['as'=>'review', 'uses'=>'OrderController@review']);
+	Route::post('agree', ['as'=>'agree', 'uses'=>'OrderController@agree']);
+	Route::post('reject', ['as'=>'reject', 'uses'=>'OrderController@reject']);
 });

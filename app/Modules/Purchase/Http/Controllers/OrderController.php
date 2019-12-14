@@ -146,4 +146,57 @@ class OrderController extends Controller
 
         return view('purchase::order.detail', compact('order'));
     }
+
+    public function review(Request $request)
+    {
+        $order = PurchaseOrder::find($request->get('order_id'));
+
+        return view('purchase::order.detail', compact('order'));
+    }
+
+    public function agree(Request $request)
+    {
+        try {
+            $order = PurchaseOrder::find($request->get('order_id'));
+
+            if (!$order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
+            }
+            if (1 != $order->status) {
+                return response()->json(['status' => 'fail', 'msg' => '该订单不是待审核状态，禁止操作']);
+            }
+
+            DB::beginTransaction();
+            $order->update(['status' => 3]);
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
+
+    public function reject(Request $request)
+    {
+        try {
+            $order = PurchaseOrder::find($request->get('order_id'));
+
+            if (!$order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
+            }
+            if (1 != $order->status) {
+                return response()->json(['status' => 'fail', 'msg' => '该订单不是待审核状态，禁止操作']);
+            }
+
+            DB::beginTransaction();
+            $order->update(['status' => 2]);
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
 }
