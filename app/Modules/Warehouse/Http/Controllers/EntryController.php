@@ -4,8 +4,11 @@ namespace App\Modules\Warehouse\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Modules\Product\Models\ProductSku;
 use App\Modules\Purchase\Models\PurchaseOrder;
+use App\Modules\Purchase\Models\PurchaseOrderItem;
+use App\Modules\Warehouse\Models\SkuEntry;
 
 class EntryController extends Controller
 {
@@ -38,8 +41,31 @@ class EntryController extends Controller
         return response()->json($paginate);
     }
 
-    public function form()
+    public function form(Request $request)
     {
-        return view('warehouse::entry.form');
+        $sku = ProductSku::find($request->get('sku_id'));
+
+        return view('warehouse::entry.form', compact('sku'));
+    }
+
+    public function save(Request $request)
+    {
+        try {
+            $order_item = PurchaseOrderItem::where('id', $request->get('order_item_id'))->where('delivery_status', 1)->first();
+            if (!$order_item) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
+            }
+
+            SkuEntry::create([
+                'sku_id' => $order_item->sku_id,
+                'order_item_id' => $request->get('order_item_id'),
+                'quantity' => $request->get('quantity'),
+                'user_id' => Auth::user()->id,
+            ]);
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
     }
 }

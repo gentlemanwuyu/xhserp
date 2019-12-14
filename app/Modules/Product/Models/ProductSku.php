@@ -46,6 +46,7 @@ class ProductSku extends Model
             ->where('poi.delivery_status', 1)
             ->get([
                 'purchase_orders.*',
+                'poi.id AS item_id',
                 'order_id',
                 'product_id',
                 'sku_id',
