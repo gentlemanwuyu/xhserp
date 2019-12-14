@@ -24,4 +24,5 @@ Route::group(['prefix' => 'stockout', 'as'=>'stockout.'], function (){
 Route::group(['prefix' => 'entry', 'as'=>'entry.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'EntryController@index']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'EntryController@paginate']);
+	Route::get('form', ['as'=>'form', 'uses'=>'EntryController@form']);
 });
