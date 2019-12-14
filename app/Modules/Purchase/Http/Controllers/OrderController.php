@@ -89,13 +89,13 @@ class OrderController extends Controller
                 'code' => $request->get('code', ''),
                 'supplier_id' => $request->get('supplier_id'),
                 'payment_method' => $request->get('payment_method'),
+                'status' => 1,
             ];
 
             $order = PurchaseOrder::find($request->get('order_id'));
 
             DB::beginTransaction();
             if (!$order) {
-                $order_data['status'] = 1;
                 $order_data['user_id'] = Auth::user()->id;
                 $order = PurchaseOrder::create($order_data);
             }else {
@@ -191,6 +191,29 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 2]);
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
+
+    public function cancel(Request $request)
+    {
+        try {
+            $order = PurchaseOrder::find($request->get('order_id'));
+
+            if (!$order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
+            }
+            if (3 != $order->status) {
+                return response()->json(['status' => 'fail', 'msg' => '该订单不是已通过状态，禁止操作']);
+            }
+
+            DB::beginTransaction();
+            $order->update(['status' => 5]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
