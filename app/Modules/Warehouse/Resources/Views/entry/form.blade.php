@@ -16,8 +16,9 @@
                     <div class="layui-input-block">
                         <select name="order_item_id" lay-verify="required" lay-reqText="请选择订单">
                             <option value="">请选择订单</option>
-                            @foreach($sku->purchase_orders as $order)
-                                <option value="{{$order->item_id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order->quantity}})</option>
+                            @foreach($sku->purchase_order_items as $order_item)
+                                <?php $order = $order_item->order; ?>
+                                <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->quantity}})</option>
                             @endforeach
                         </select>
                     </div>
@@ -36,7 +37,7 @@
 @endsection
 @section('scripts')
     <script>
-        var order_items = <?= json_encode(array_column($sku->purchase_orders->toArray(), null, 'item_id')) ?>;
+        var order_items = <?= json_encode(array_column($sku->purchase_order_items->toArray(), null, 'id')) ?>;
         layui.use(['form'], function () {
             var form = layui.form;
 

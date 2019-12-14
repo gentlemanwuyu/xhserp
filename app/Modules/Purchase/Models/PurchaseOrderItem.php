@@ -28,4 +28,9 @@ class PurchaseOrderItem extends Model
     {
         return $this->belongsTo(ProductSku::class, 'sku_id');
     }
+
+    public function order()
+    {
+        return $this->belongsTo(PurchaseOrder::class, 'order_id');
+    }
 }

@@ -36,8 +36,7 @@ class EntryController extends Controller
         foreach ($paginate as $sku) {
             $sku->product->category;
             $sku->inventory;
-            $sku->purchase_orders;
-            $sku->setAppends(['purchase_orders']);
+            $sku->setAppends(['purchase_order_items']);
         }
 
         return response()->json($paginate);

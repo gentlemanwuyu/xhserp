@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Goods\Models\GoodsSku;
 use App\Modules\Warehouse\Models\Inventory;
-use App\Modules\Purchase\Models\PurchaseOrder;
+use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class ProductSku extends Model
 {
@@ -38,31 +38,17 @@ class ProductSku extends Model
         return $goods_sku_id ? GoodsSku::find($goods_sku_id) : null;
     }
 
-    public function getPurchaseOrdersAttribute()
+    public function getPurchaseOrderItemsAttribute()
     {
-        return PurchaseOrder::leftJoin('purchase_order_items AS poi', 'poi.order_id', '=', 'purchase_orders.id')
-            ->where('poi.sku_id', $this->id)
-            ->where('purchase_orders.status', 3)
-            ->where('poi.delivery_status', 1)
-            ->get([
-                'purchase_orders.*',
-                'poi.id AS item_id',
-                'order_id',
-                'product_id',
-                'sku_id',
-                'title',
-                'unit',
-                'quantity',
-                'price',
-                'delivery_date',
-                'note',
-                'delivery_status',
-                'poi.created_at AS item_created_at',
-                'poi.updated_at AS item_updated_at',
-            ])->map(function ($order) {
-                $order->supplier;
+        return PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.order_id')
+            ->where('purchase_order_items.sku_id', $this->id)
+            ->where('po.status', 3)
+            ->where('purchase_order_items.delivery_status', 1)
+            ->get(['purchase_order_items.*'])
+            ->map(function ($order_item) {
+                $order_item->order->supplier;
 
-                return $order;
+                return $order_item;
             });
     }
 }

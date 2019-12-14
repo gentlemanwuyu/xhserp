@@ -8,7 +8,6 @@
     </style>
 @endsection
 @section('content')
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('product::product.form')}}">添加产品</a>
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
@@ -58,18 +57,18 @@
                         }},
                         {field: 'order_list', title: '订单明细', width: 640, align: 'center', templet: function (d) {
                             var html = '';
-                            d.purchase_orders.forEach(function (order, key) {
+                            d.purchase_order_items.forEach(function (order_item, key) {
                                 if (0 == key) {
                                     html += '<ul class="erp-table-list-ul erp-table-list-ul-first">';
                                 }else {
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                var delivery_date = null == order.delivery_date ? '' : order.delivery_date;
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + order.supplier.name + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 200px;">' + order.code + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + order.quantity + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(order.item_created_at).format('YYYY-MM-DD') + '</li>';
+                                var delivery_date = null == order_item.delivery_date ? '' : order_item.delivery_date;
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + order_item.order.supplier.name + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 200px;">' + order_item.order.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + order_item.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(order_item.created_at).format('YYYY-MM-DD') + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + delivery_date + '</li>';
                                 html += '</ul>';
                             });
