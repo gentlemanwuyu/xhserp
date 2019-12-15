@@ -47,7 +47,7 @@ class ProductSku extends Model
             ->get(['purchase_order_items.*'])
             ->map(function ($order_item) {
                 $order_item->order->supplier;
-
+                $order_item->setAppends(['entried_quantity']);
                 return $order_item;
             });
     }

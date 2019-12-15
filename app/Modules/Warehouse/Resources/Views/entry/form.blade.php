@@ -18,7 +18,7 @@
                             <option value="">请选择订单</option>
                             @foreach($sku->purchase_order_items as $order_item)
                                 <?php $order = $order_item->order; ?>
-                                <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->quantity}})</option>
+                                <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->quantity - $order_item->entried_quantity}})</option>
                             @endforeach
                         </select>
                     </div>
@@ -43,7 +43,7 @@
 
             form.on('submit(entry)', function (form_data) {
                 var quantity = parseInt(form_data.field.quantity);
-                var pending_quantity = parseInt(order_items[form_data.field.order_item_id]['quantity']);
+                var pending_quantity = parseInt(order_items[form_data.field.order_item_id]['quantity']) - parseInt(order_items[form_data.field.order_item_id]['entried_quantity']);
 
                 if (quantity > pending_quantity) {
                     layer.msg("入库数量不能大于待入库数量", {icon: 5, shift: 6});

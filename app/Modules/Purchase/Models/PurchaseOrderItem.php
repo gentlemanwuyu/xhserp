@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Product\Models\Product;
 use App\Modules\Product\Models\ProductSku;
+use App\Modules\Warehouse\Models\SkuEntry;
 
 class PurchaseOrderItem extends Model
 {
@@ -32,5 +33,17 @@ class PurchaseOrderItem extends Model
     public function order()
     {
         return $this->belongsTo(PurchaseOrder::class, 'order_id');
+    }
+
+    /**
+     * 已入库数量
+     *
+     * @return number
+     */
+    public function getEntriedQuantityAttribute()
+    {
+        $entries = SkuEntry::where('order_item_id', $this->id)->get(['quantity'])->toArray();
+
+        return array_sum(array_column($entries, 'quantity'));
     }
 }
