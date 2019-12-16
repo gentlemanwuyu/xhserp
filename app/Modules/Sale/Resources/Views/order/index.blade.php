@@ -93,7 +93,7 @@
                         {field: 'customer_name', title: '客户', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return d.customer.name;
                         }},
-                        {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},
                         {field: 'total_amount', title: '总金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
                             d.items.forEach(function (item, key) {
@@ -101,6 +101,7 @@
                             });
                             return total_amount.toFixed(2);
                         }},
+                        {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'detail', title: '订单明细', width: 710, align: 'center', templet: function (d) {
                             var html = '';
                             d.items.forEach(function (item, key) {

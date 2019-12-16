@@ -67,4 +67,9 @@ class Order extends Model
     {
         return isset(Customer::$payment_methods[$this->payment_method]) ? Customer::$payment_methods[$this->payment_method] : '';
     }
+
+    public function getStatusNameAttribute()
+    {
+        return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
+    }
 }
