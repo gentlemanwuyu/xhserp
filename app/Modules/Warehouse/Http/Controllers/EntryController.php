@@ -75,6 +75,19 @@ class EntryController extends Controller
                 $inventory->save();
             }
 
+            // 检查是否已经全部入库
+            $entries = SkuEntry::where('order_item_id', $request->get('order_item_id'))->get(['quantity']);
+            $entried_quantity = array_sum(array_column($entries->toArray(), 'quantity'));
+            if ($entried_quantity >= $order_item->quantity) {
+                $order_item->delivery_status = 2;
+                $order_item->save();
+            }
+            // 检查订单是否已完成
+            $unfinished_order_items = PurchaseOrderItem::where('order_id', $order_item->order_id)->where('delivery_status', '!=', 2)->get(['id', 'order_id', 'delivery_status']);
+            if ($unfinished_order_items->isEmpty()) {
+                PurchaseOrder::where('id', $order_item->order_id)->update(['status' => 4]);
+            }
+
             DB::commit();
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
