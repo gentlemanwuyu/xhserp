@@ -162,13 +162,62 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
-
                         actions.push({
-                            title: "编辑",
+                            title: "详情",
                             event: function () {
-                                parent.layui.index.openTabsPage("{{route('sale::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
+                                parent.layui.index.openTabsPage("{{route('sale::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
                             }
                         });
+
+                        if (1 == data.status) {
+                            actions.push({
+                                title: "审核",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('sale::order.review')}}?order_id=" + data.id + "&action=review", '订单审核[' + data.id + ']');
+                                }
+                            });
+                        }
+
+                        if (3 == data.status) {
+                            actions.push({
+                                title: "取消",
+                                event: function() {
+                                    layer.confirm("确认要取消该订单？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('sale::order.cancel')}}",
+                                            data: {order_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("订单已取消", {icon: 1, time: 2000});
+                                                    table.render(tableOpts);
+                                                } else {
+                                                    layer.msg("订单取消失败:"+data.msg, {icon:2});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                                return false;
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                        }
+
+                        if (-1 < [1, 2].indexOf(data.status)) {
+                            actions.push({
+                                title: "编辑",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('sale::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
+                                }
+                            });
+                        }
                         actions.push({
                             title: "删除",
                             event: function() {
