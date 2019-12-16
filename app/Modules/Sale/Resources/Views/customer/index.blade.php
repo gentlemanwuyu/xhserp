@@ -40,6 +40,9 @@
                         {field: 'code', title: '编号', align: 'center'},
                         {field: 'company', title: '公司', width: 250, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
+                        {field: 'monthly_day', title: '额度', width: 100, align: 'center', templet: function (d) {
+                            return 2 == d.payment_method ? d.credit : '';
+                        }},
                         {field: 'monthly_day', title: '月结天数', width: 100, align: 'center', templet: function (d) {
                             return 3 == d.payment_method ? d.monthly_day : '';
                         }},

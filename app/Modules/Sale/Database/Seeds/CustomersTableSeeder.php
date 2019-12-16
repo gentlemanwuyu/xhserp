@@ -42,6 +42,7 @@ class CustomersTableSeeder extends Seeder
             'phone' => '',
             'fax' => '',
             'payment_method' => 2,
+            'credit' => 10000,
             'state_id' => '810',
             'city_id' => '849',
             'county_id' => '857',

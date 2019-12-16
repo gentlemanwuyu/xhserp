@@ -21,6 +21,7 @@ class CreateCustomersTable extends Migration
 			$table->string('phone')->default('')->comment('电话号码');
 			$table->string('fax')->default('')->comment('传真');
 			$table->tinyInteger('payment_method')->default(0)->comment('付款方式，1为现金，2为货到付款，3为月结');
+			$table->integer('credit')->default(0)->comment('信用额度，只针对货到付款');
 			$table->tinyInteger('monthly_day')->unsigned()->default(0)->comment('月结天数');
 			$table->integer('state_id')->default(0)->comment('省/洲');
 			$table->integer('city_id')->default(0)->comment('市');

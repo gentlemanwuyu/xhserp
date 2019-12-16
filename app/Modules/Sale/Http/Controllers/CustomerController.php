@@ -54,6 +54,7 @@ class CustomerController extends Controller
                 'phone' => $request->get('phone', ''),
                 'fax' => $request->get('fax', ''),
                 'payment_method' => $request->get('payment_method', 0),
+                'credit' => $request->get('credit', 0),
                 'monthly_day' => $request->get('monthly_day', 0),
                 'state_id' => $request->get('state_id', 0),
                 'city_id' => $request->get('city_id', 0),
