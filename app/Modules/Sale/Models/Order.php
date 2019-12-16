@@ -37,8 +37,7 @@ class Order extends Model
         });
 
         foreach ($items as $flag => $item) {
-            OrderItem::updateOrCreate(['id' => $flag], [
-                'order_id' => $this->id,
+            $item_data = [
                 'goods_id' => $item['goods_id'],
                 'sku_id' => $item['sku_id'],
                 'title' => $item['title'],
@@ -47,7 +46,17 @@ class Order extends Model
                 'price' => $item['price'],
                 'delivery_date' => $item['delivery_date'] ?: null,
                 'note' => $item['note'],
-            ]);
+            ];
+
+            $order_item = OrderItem::find($flag);
+
+            if (!$order_item) {
+                $item_data['order_id'] = $this->id;
+                $item_data['delivery_status'] = 1;
+                OrderItem::create($item_data);
+            }else {
+                $order_item->update($item_data);
+            }
         }
 
         return $this;

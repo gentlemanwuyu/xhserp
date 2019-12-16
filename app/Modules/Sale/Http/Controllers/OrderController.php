@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Modules\Index\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Sale\Models\Customer;
@@ -68,9 +69,60 @@ class OrderController extends Controller
                 'payment_method' => $request->get('payment_method'),
             ];
 
-            DB::beginTransaction();
+            $customer = Customer::find($request->get('customer_id'));
+            if (!$customer) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该客户']);
+            }
 
-            $order = Order::updateOrCreate(['id' => $request->get('order_id')], $order_data);
+            // 分析订单需要进入什么状态
+            if (1 == $request->get('payment_method')) {
+                // 如果付款方式是现金，直接进入已通过状态
+                $order_data['status'] = 3;
+            }elseif (2 == $request->get('payment_method')) {
+                if (2 == $customer->payment_method) {
+                    // 判断是否超过额度
+                    $orders = Order::where('customer_id', $request->get('customer_id'))->whereIn('status', [3, 4])->get();
+                    $used_credit = 0; // 已使用额度
+                    $orders->each(function ($order) use (&$used_credit) {
+                        $order->items->each(function ($item) use (&$used_credit) {
+                            $used_credit += $item->quantity * $item->price;
+                        });
+                    });
+                    $current_amount = 0; // 当前订单得金额
+                    foreach ($request->get('items') as $item) {
+                        $current_amount += $item['quantity'] * $item['price'];
+                    }
+                    if ($customer->credit >= $used_credit + $current_amount) {
+                        $order_data['status'] = 3;
+                    }else{
+                        $order_data['status'] = 1;
+                    }
+                }else {
+                    $order_data['status'] = 1;
+                }
+            }elseif (3 == $request->get('payment_method')) {
+                if (3 == $customer->payment_method) {
+                    $order_data['status'] = 3;
+                }else {
+                    return response()->json(['status' => 'fail', 'msg' => '该客户不是月结客户']);
+                }
+            }else {
+                return response()->json(['status' => 'fail', 'msg' => '未知的付款方式']);
+            }
+
+            if (3 == $order_data['status']) {
+                $order_data['payment_status'] = 1;
+            }
+
+            $order = Order::find($request->get('order_id'));
+
+            DB::beginTransaction();
+            if (!$order) {
+                $order_data['user_id'] = Auth::user()->id;
+                $order = Order::create($order_data);
+            }else {
+                $order->update($order_data);
+            }
 
             if (!$order) {
                 throw new \Exception("订单保存失败");
