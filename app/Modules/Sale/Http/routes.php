@@ -31,3 +31,7 @@ Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
 	Route::post('reject', ['as'=>'reject', 'uses'=>'OrderController@reject']);
 	Route::post('cancel', ['as'=>'cancel', 'uses'=>'OrderController@cancel']);
 });
+
+Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
+	Route::get('form', ['as'=>'form', 'uses'=>'DeliveryOrderController@form']);
+});
