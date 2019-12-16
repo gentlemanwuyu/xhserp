@@ -17,6 +17,14 @@ class Order extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    static $statuses = [
+        1 => '待审核',
+        2 => '已驳回',
+        3 => '已通过',
+        4 => '已完成',
+        5 => '已取消',
+    ];
+
     public function syncItems($items)
     {
         if (!$items || !is_array($items)) {

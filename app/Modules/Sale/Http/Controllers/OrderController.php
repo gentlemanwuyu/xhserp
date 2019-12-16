@@ -3,6 +3,7 @@ namespace App\Modules\Sale\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Modules\Index\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
@@ -18,7 +19,10 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        return view('sale::order.index');
+        $customers = Customer::all();
+        $users = User::where('is_admin', 0)->get();
+
+        return view('sale::order.index', compact('customers', 'users'));
     }
 
     public function form(Request $request)

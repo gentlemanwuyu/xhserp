@@ -8,19 +8,72 @@
     </style>
 @endsection
 @section('content')
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('sale::order.form')}}">添加订单</a>
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="订单编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <select name="customer_id" lay-search="">
+                    <option value="">客户</option>
+                    @foreach($customers as $customer)
+                        <option value="{{$customer->id}}">{{$customer->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="status">
+                    <option value="">状态</option>
+                    @foreach(\App\Modules\Sale\Models\Order::$statuses as $status_id => $status_name)
+                        <option value="{{$status_id}}">{{$status_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="payment_method">
+                    <option value="">付款方式</option>
+                    @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $payment_method_name)
+                        <option value="{{$method_id}}">{{$payment_method_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="creator_id" lay-search="">
+                    <option value="">创建人</option>
+                    @foreach($users as $user)
+                        <option value="{{$user->id}}">{{$user->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs4">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('sale::order.form')}}">添加订单</a>
+            </div>
+        </div>
+    </form>
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
     <script type="text/html" id="action">
-        <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
+        <div class="urp-dropdown urp-dropdown-table" title="操作">
+            <i class="layui-icon layui-icon-more-vertical urp-dropdown-btn"></i>
+        </div>
     </script>
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.extend({
+            dropdown: '/assets/layui-table-dropdown/dropdown'
+        }).use(['table', 'dropdown', 'laydate'], function () {
             var table = layui.table
+                    ,dropdown = layui.dropdown
+                    ,laydate = layui.laydate
                     ,tableIns = table.render({
                 elem: '#list',
                 url: "{{route('sale::order.paginate')}}",
@@ -70,7 +123,7 @@
                         }},
                         {field: 'created_at', title: '创建时间', align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                        {field: 'action', title: '操作', width: 200, align: 'center', fixed: 'right', toolbar: "#action"}
+                        {field: 'action', title: '操作', width: 100, align: 'center', fixed: 'right', toolbar: "#action"}
                     ]
                 ]
                 ,done: function(res, curr, count){
@@ -100,40 +153,54 @@
                                 ,tr_height = $this.parents('.layui-table-box').children('.layui-table-body').find('table tbody tr[data-index=' + data_index + ']').css('height');
                         $(this).css('height', tr_height);
                     });
+
+                    dropdown(res.data,function(data) {
+                        var actions = [];
+
+                        actions.push({
+                            title: "编辑",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('sale::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
+                            }
+                        });
+                        actions.push({
+                            title: "删除",
+                            event: function() {
+                                layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
+                                    layer.close(index);
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: "{{route('sale::order.delete')}}",
+                                        data: {order_id: data.id},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("订单删除成功", {icon:1});
+                                                tableIns.reload();
+                                            } else {
+                                                layer.msg("订单删除失败:"+data.msg, {icon:2});
+                                                return false;
+                                            }
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            return false;
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                        return actions;
+                    });
                 }
             });
 
-            table.on('tool(list)', function(obj){
-                var data = obj.data;
-
-                if ('edit' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('sale::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
-                }else if ('delete' == obj.event) {
-                    layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
-                        layer.close(index);
-                        var load_index = layer.load();
-                        $.ajax({
-                            method: "post",
-                            url: "{{route('sale::order.delete')}}",
-                            data: {order_id: data.id},
-                            success: function (data) {
-                                layer.close(load_index);
-                                if ('success' == data.status) {
-                                    layer.msg("订单删除成功", {icon:1});
-                                    tableIns.reload();
-                                } else {
-                                    layer.msg("订单删除失败:"+data.msg, {icon:2});
-                                    return false;
-                                }
-                            },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                layer.close(load_index);
-                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                return false;
-                            }
-                        });
-                    });
-                }
+            laydate.render({
+                elem: 'input[name=created_at_between]'
+                ,range: true
             });
         });
     </script>
