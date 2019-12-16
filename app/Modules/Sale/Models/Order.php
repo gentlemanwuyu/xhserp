@@ -10,6 +10,7 @@ namespace App\Modules\Sale\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Index\Models\User;
 
 class Order extends Model
 {
@@ -80,5 +81,10 @@ class Order extends Model
     public function getStatusNameAttribute()
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -44,7 +44,28 @@ class OrderController extends Controller
 
     public function paginate(Request $request)
     {
-        $paginate = Order::orderBy('id', 'desc')->paginate($request->get('limit'));
+        $query = Order::query();
+        if ($request->get('code')) {
+            $query = $query->where('code', $request->get('code'));
+        }
+        if ($request->get('customer_id')) {
+            $query = $query->where('customer_id', $request->get('customer_id'));
+        }
+        if ($request->get('status')) {
+            $query = $query->where('status', $request->get('status'));
+        }
+        if ($request->get('payment_method')) {
+            $query = $query->where('payment_method', $request->get('payment_method'));
+        }
+        if ($request->get('creator_id')) {
+            $query = $query->where('user_id', $request->get('creator_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('created_at', '>=', $created_at_between[0] . ' 00:00:00')->where('created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $order) {
             $order->items->map(function ($item) {
@@ -54,6 +75,7 @@ class OrderController extends Controller
                 return $item;
             });
             $order->customer;
+            $order->user;
             $order->setAppends(['payment_method_name', 'status_name']);
         }
 

@@ -70,11 +70,12 @@
     <script>
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown', 'laydate'], function () {
+        }).use(['table', 'dropdown', 'laydate', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
                     ,laydate = layui.laydate
-                    ,tableIns = table.render({
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::order.paginate')}}",
                 page: true,
@@ -102,6 +103,9 @@
                             return total_amount.toFixed(2);
                         }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
+                        {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
+                            return d.user ? d.user.name : '';
+                        }},
                         {field: 'detail', title: '订单明细', width: 710, align: 'center', templet: function (d) {
                             var html = '';
                             d.items.forEach(function (item, key) {
@@ -123,8 +127,8 @@
                             });
                             return html;
                         }},
-                        {field: 'created_at', title: '创建时间', align: 'center'},
-                        {field: 'updated_at', title: '最后更新时间', align: 'center'},
+                        {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
+                        {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
                         {field: 'action', title: '操作', width: 100, align: 'center', fixed: 'right', toolbar: "#action"}
                     ]
                 ]
@@ -179,7 +183,7 @@
                                             layer.close(load_index);
                                             if ('success' == data.status) {
                                                 layer.msg("订单删除成功", {icon:1});
-                                                tableIns.reload();
+                                                table.render(tableOpts);
                                             } else {
                                                 layer.msg("订单删除失败:"+data.msg, {icon:2});
                                                 return false;
@@ -198,11 +202,18 @@
                         return actions;
                     });
                 }
-            });
+            };
+
+            table.render(tableOpts);
 
             laydate.render({
                 elem: 'input[name=created_at_between]'
                 ,range: true
+            });
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>
