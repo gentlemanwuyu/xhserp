@@ -15,7 +15,7 @@ class WarehouseDatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		// $this->call('App\Modules\Warehouse\Database\Seeds\FoobarTableSeeder');
+		 $this->call(ExpressesTableSeeder::class);
 	}
 
 }
