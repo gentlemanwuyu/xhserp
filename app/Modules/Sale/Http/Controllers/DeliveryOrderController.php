@@ -18,6 +18,11 @@ class DeliveryOrderController extends Controller
 
 	}
 
+    public function index(Request $request)
+    {
+        return view('sale::deliveryOrder.index');
+    }
+
     public function form(Request $request)
     {
         $orders = Order::where('customer_id', $request->get('customer_id'))->where('status', 3)->get()->pluck(null, 'id')->map(function ($o) {
