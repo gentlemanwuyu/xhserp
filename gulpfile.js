@@ -17,6 +17,7 @@ elixir(function(mix) {
     mix.copy('resources/assets/layuiadmin','public/assets/layuiadmin');
     mix.copy('resources/assets/dtree','public/assets/dtree');
     mix.copy('resources/assets/layui-table-dropdown','public/assets/layui-table-dropdown');
+    mix.copy('resources/assets/layui-autocomplete','public/assets/layui-autocomplete');
     mix.copy('resources/assets/images','public/assets/images');
     mix.copy('resources/assets/js','public/assets/js');
     mix.copy('resources/assets/css','public/assets/css');

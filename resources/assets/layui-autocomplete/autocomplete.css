@@ -1,0 +1,19 @@
+.autocomplete-list {
+    position:absolute;
+    background:#fff;
+    border:1px solid #cccccc;
+    width:100%;
+    box-sizing:border-box;
+    display:none;
+}
+.autocomplete-list li {
+    padding: 0 10px;
+    line-height: 36px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.autocomplete-list li.active {
+    background: #5FB878;
+    color: #fff;
+}
