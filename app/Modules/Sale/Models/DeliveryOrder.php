@@ -24,6 +24,11 @@ class DeliveryOrder extends Model
         3 => '快递物流',
     ];
 
+    static $statuses = [
+        1 => '待出货',
+        2 => '完成',
+    ];
+
     public function syncItems($items)
     {
         if (!$items || !is_array($items)) {
@@ -56,6 +61,11 @@ class DeliveryOrder extends Model
         return $this;
     }
 
+    public function items()
+    {
+        return $this->hasMany(DeliveryOrderItem::class);
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -64,5 +74,15 @@ class DeliveryOrder extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getDeliveryMethodNameAttribute()
+    {
+        return isset(self::$delivery_methods[$this->delivery_method]) ? self::$delivery_methods[$this->delivery_method] : '';
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
     }
 }

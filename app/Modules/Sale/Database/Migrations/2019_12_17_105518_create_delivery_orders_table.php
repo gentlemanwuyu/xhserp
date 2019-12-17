@@ -25,6 +25,7 @@ class CreateDeliveryOrdersTable extends Migration
 			$table->string('consignee_phone')->default('')->comment('收货人电话');
 			$table->text('note')->default('')->comment('备注');
 			$table->integer('user_id')->default(0)->comment('创建人ID');
+			$table->tinyInteger('status')->default(0)->comment('状态, 1为待出货, 2为完成');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->comment('最后更新时间');
 			$table->timestamp('deleted_at')->nullable()->comment('删除时间');

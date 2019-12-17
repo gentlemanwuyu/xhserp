@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Order;
 use App\Modules\Warehouse\Models\Express;
 use App\Modules\Sale\Models\Customer;
@@ -20,7 +21,10 @@ class DeliveryOrderController extends Controller
 
     public function index(Request $request)
     {
-        return view('sale::deliveryOrder.index');
+        $customers = Customer::all();
+        $users = User::where('is_admin', 0)->get();
+
+        return view('sale::deliveryOrder.index', compact('customers', 'users'));
     }
 
     public function form(Request $request)
@@ -34,6 +38,43 @@ class DeliveryOrderController extends Controller
         $customer = Customer::find($request->get('customer_id'));
 
         return view('sale::deliveryOrder.form', compact('orders', 'expresses', 'customer'));
+    }
+
+    public function paginate(Request $request)
+    {
+        $query = DeliveryOrder::query();
+        if ($request->get('code')) {
+            $query = $query->where('code', $request->get('code'));
+        }
+        if ($request->get('customer_id')) {
+            $query = $query->where('customer_id', $request->get('customer_id'));
+        }
+        if ($request->get('status')) {
+            $query = $query->where('status', $request->get('status'));
+        }
+        if ($request->get('creator_id')) {
+            $query = $query->where('user_id', $request->get('creator_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('created_at', '>=', $created_at_between[0] . ' 00:00:00')->where('created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
+
+        foreach ($paginate as $order) {
+            $order->items->map(function ($item) {
+                $item->order;
+                $item->orderItem;
+
+                return $item;
+            });
+            $order->customer;
+            $order->user;
+            $order->setAppends(['delivery_method_name', 'status_name']);
+        }
+
+        return response()->json($paginate);
     }
 
     public function save(Request $request)
@@ -61,6 +102,7 @@ class DeliveryOrderController extends Controller
             DB::beginTransaction();
             if (!$delivery_order) {
                 $data['user_id'] = Auth::user()->id;
+                $data['status'] = 1;
                 $delivery_order = DeliveryOrder::create($data);
             }else {
                 $delivery_order->update($data);
@@ -72,6 +114,29 @@ class DeliveryOrderController extends Controller
 
             // 同步item
             $delivery_order->syncItems($request->get('items'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
+
+            if (!$delivery_order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该出货单']);
+            }
+
+            DB::beginTransaction();
+            $delivery_order->delete();
+            $delivery_order->items->each(function ($item) {
+                $item->delete();
+            });
 
             DB::commit();
             return response()->json(['status' => 'success']);

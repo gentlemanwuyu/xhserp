@@ -35,5 +35,7 @@ Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
 Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'DeliveryOrderController@index']);
 	Route::get('form', ['as'=>'form', 'uses'=>'DeliveryOrderController@form']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'DeliveryOrderController@paginate']);
 	Route::post('save', ['as'=>'save', 'uses'=>'DeliveryOrderController@save']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'DeliveryOrderController@delete']);
 });
