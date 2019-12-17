@@ -150,6 +150,9 @@ layui.define(function (exports) {
         var $ul = that.$ul;
         $ul.on("mouseenter", "li", liHover);
         $ul.on("click", "li", liClick);
+        if (that.config.callback.changed) {
+            that.$elem.on('input propertychange', that.config.callback.changed);
+        }
 
         function liClick(e) {
             var callbackData = that.data[$(this).data("id")];
