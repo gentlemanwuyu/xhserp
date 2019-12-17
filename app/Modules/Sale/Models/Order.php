@@ -68,6 +68,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 
+    public function pendingItems()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id')->where('delivery_status', 1);
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
