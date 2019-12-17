@@ -92,22 +92,22 @@ layui.define(function (exports) {
         function listRender(input) {
             clearTimeout(that.delayTimer);
             that.delayTimer = setTimeout(function () {
-              that.config.callback.data(input, function (data) {
-                that.data = data;
-                var tpl = "";
-                data.map(function (item, index) {
-                  if (!input) {
-                    tpl += '<li data-id="' + index + '" data-value="' + item.value + '">' + item.title + '</li>';
-                  }else if (-1 < item.title.indexOf(input)) {
-                    tpl += '<li data-id="' + index + '" data-value="' + item.value + '">' + item.title + '</li>';
-                  }
+                that.config.callback.data(input, function (data) {
+                    that.data = data;
+                    var tpl = "";
+                    data.map(function (item, index) {
+                        if (!input) {
+                            tpl += '<li data-id="' + index + '" data-value="' + item.value + '">' + item.title + '</li>';
+                        }else if (-1 < item.title.indexOf(input)) {
+                            tpl += '<li data-id="' + index + '" data-value="' + item.value + '">' + item.title + '</li>';
+                        }
+                    });
+                    $ul.html(tpl);
+                    that.offset();
+                    $ul.remove();
+                    $ul.appendTo($("body")).show();
+                    that.bindDom();
                 });
-                $ul.html(tpl);
-                that.offset();
-                $ul.remove();
-                $ul.appendTo($("body")).show();
-                that.bindDom();
-              });
             }, that.config.delay);
         }
 
@@ -134,7 +134,7 @@ layui.define(function (exports) {
         });
 
         $elem.on('focus', function () {
-            listRender();
+            listRender($(this).val());
         });
 
         $elem.on("blur", function () {
@@ -156,7 +156,7 @@ layui.define(function (exports) {
             if (that.config.callback.selected) {
                 that.config.callback.selected(callbackData);
             }
-            that.$elem.val(callbackData.title);
+            that.$elem.val(callbackData.value);
             that.$ul.remove();
             e.stopPropagation();
         }
