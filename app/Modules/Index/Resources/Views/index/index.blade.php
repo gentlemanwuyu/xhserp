@@ -134,6 +134,9 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd>
+                                <a lay-href="{{route('warehouse::express.index')}}"><i class="layui-icon layui-icon-release"></i>快递管理</a>
+                            </dd>
+                            <dd>
                                 <a lay-href="{{route('warehouse::stockout.index')}}"><i class="layui-icon layui-icon-template-1"></i>备货管理</a>
                             </dd>
                             <dd>

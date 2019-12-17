@@ -27,3 +27,7 @@ Route::group(['prefix' => 'entry', 'as'=>'entry.'], function (){
 	Route::get('form', ['as'=>'form', 'uses'=>'EntryController@form']);
 	Route::post('save', ['as'=>'save', 'uses'=>'EntryController@save']);
 });
+
+Route::group(['prefix' => 'express', 'as'=>'express.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'ExpressController@index']);
+});
