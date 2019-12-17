@@ -10,6 +10,7 @@ namespace App\Modules\Sale\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\ChineseRegion;
 
 class Customer extends Model
 {
@@ -54,5 +55,37 @@ class Customer extends Model
         }
 
         return $this;
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(ChineseRegion::class, 'state_id');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(ChineseRegion::class, 'city_id');
+    }
+
+    public function county()
+    {
+        return $this->belongsTo(ChineseRegion::class, 'county_id');
+    }
+
+    public function getFullAddressAttribute()
+    {
+        $full_address = '';
+        if ($this->state_id) {
+            $full_address .= $this->state->name;
+        }
+        if ($this->city_id) {
+            $full_address .= $this->city->name;
+        }
+        if ($this->county_id) {
+            $full_address .= $this->county->name;
+        }
+        $full_address .= $this->street_address;
+
+        return $full_address;
     }
 }

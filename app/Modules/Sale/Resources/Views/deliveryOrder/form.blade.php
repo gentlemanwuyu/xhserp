@@ -37,23 +37,44 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label required">快递公司</label>
-                            <div class="layui-input-block">
-                                <select name="express_id" lay-search="" lay-verify="required" lay-reqText="请选择快递公司">
-                                    <option value="">请选择快递公司</option>
-                                    <option value="1">顺丰</option>
-                                    <option value="2">德邦</option>
-                                    <option value="3">速尔</option>
-                                    <option value="3">跨越</option>
-                                </select>
+                        <div id="express_field" class="layui-hide">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">快递公司</label>
+                                <div class="layui-input-block">
+                                    <select name="express_id" lay-search="" lay-verify="required" lay-reqText="请选择快递公司">
+                                        <option value="">请选择快递公司</option>
+                                        @foreach($expresses as $express)
+                                            <option value="{{$express->id}}">{{$express->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-hide" pane="">
+                                <label class="layui-form-label">是否代收</label>
+                                <div class="layui-input-block" style="display: flex;">
+                                    <input type="checkbox" name="is_collected" lay-skin="switch" lay-text="是|否" value="1">
+                                    <input type="text" name="collected_amount" placeholder="代收金额" class="erp-after-switch-input">
+                                </div>
                             </div>
                         </div>
-                        <div class="layui-form-item" pane="">
-                            <label class="layui-form-label">是否代收</label>
-                            <div class="layui-input-block" style="display: flex;">
-                                <input type="checkbox" name="" lay-skin="switch" lay-text="是|否" value="1">
-                                <input type="text" name="code" placeholder="代收金额" class="erp-after-switch-input">
+                    </div>
+                    <div class="layui-col-xs4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="address" lay-verify="required" lay-reqText="请输入地址" class="layui-input" value="{{$customer->full_address}}">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">收货人</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="consignee" lay-verify="required" lay-reqText="请输入收货人" class="layui-input" value="">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">联系电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="consignee_phone" lay-verify="required" lay-reqText="请输入联系电话" class="layui-input" value="">
                             </div>
                         </div>
                     </div>
@@ -102,9 +123,14 @@
 @endsection
 @section('scripts')
     <script>
-        var orders = <?= json_encode($orders); ?>;
-        layui.use(['form'], function () {
+        var orders = <?= json_encode($orders); ?>
+                ,contacts = <?= json_encode($customer->contacts); ?>
+                ,expresses = <?= json_encode($expresses); ?>;
+        layui.extend({
+            autocomplete: '/assets/layui-autocomplete/autocomplete'
+        }).use(['form', 'autocomplete'], function () {
             var form = layui.form
+                    ,autocomplete = layui.autocomplete
                     // 监听商品选择框
                     ,listenSelectOrder = function () {
                 form.on('select(order)', function(data){
@@ -136,6 +162,16 @@
                         $titleInput.val('');
                     }
                 });
+            }
+                    ,listenIsCollected = function () {
+                form.on('switch(is_collected)', function (data) {
+                    var $collected_amount = $('input[name=collected_amount]');
+                    if (data.elem.checked) {
+                        $collected_amount.removeClass('layui-hide').val('');
+                    }else {
+                        $collected_amount.addClass('layui-hide').val('');
+                    }
+                })
             };
 
             $('button[lay-event=addItem]').on('click', function () {
@@ -186,6 +222,63 @@
                 $body.append(html);
                 form.render();
                 listenSelectOrder();
+            });
+
+            // 监听物流方式
+            form.on('select(delivery_method)', function (data) {
+                var $express_field = $('#express_field');
+                if (3 == data.value) {
+                    var html = '';
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label required">快递公司</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<select name="express_id" lay-search="" lay-verify="required" lay-reqText="请选择快递公司">';
+                    html += '<option value="">请选择快递公司</option>';
+                    $.each(expresses, function (_, express) {
+                        html += '<option value="' + express.id + '">' + express.name + '</option>';
+                    });
+                    html += '</select>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div class="layui-form-item" pane="">';
+                    html += '<label class="layui-form-label">是否代收</label>';
+                    html += '<div class="layui-input-block" style="display: flex;">';
+                    html += '<input type="checkbox" name="is_collected" lay-filter="is_collected" lay-skin="switch" lay-text="是|否" value="1">';
+                    html += '<input type="text" name="collected_amount" placeholder="代收金额" class="erp-after-switch-input layui-hide">';
+                    html += '</div>';
+                    html += '</div>';
+                    $express_field.removeClass('layui-hide').html(html);
+                    form.render();
+                    listenIsCollected();
+                }else {
+                    $express_field.addClass('layui-hide').html('');
+                }
+            });
+
+            // 收货人autocomplete效果
+            autocomplete.init({
+                elem:"input[name=consignee]",
+                delay:200,
+                callback:{
+                    data:function(val,render){
+                        var data = [];
+                        $.each(contacts, function (_, contact) {
+                            data.push({
+                                title: contact.name + (contact.position ? '(' + contact.position + ')' : '')
+                                ,value: contact.name
+                                ,id: contact.id
+                                ,phone: contact.phone
+                            });
+                        });
+                        render(data);
+                    }
+                    ,selected:function(data){
+                        $('input[name=consignee_phone]').val(data.phone);
+                    }
+                    ,changed: function () {
+                        $('input[name=consignee_phone]').val('');
+                    }
+                }
             });
         });
     </script>

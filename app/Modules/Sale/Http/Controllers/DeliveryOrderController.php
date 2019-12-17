@@ -5,6 +5,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Sale\Models\Order;
+use App\Modules\Warehouse\Models\Express;
+use App\Modules\Sale\Models\Customer;
 
 class DeliveryOrderController extends Controller
 {
@@ -20,7 +22,9 @@ class DeliveryOrderController extends Controller
 
             return $o;
         });
+        $expresses = Express::all(['id', 'name']);
+        $customer = Customer::find($request->get('customer_id'));
 
-        return view('sale::deliveryOrder.form', compact('orders'));
+        return view('sale::deliveryOrder.form', compact('orders', 'expresses', 'customer'));
     }
 }
