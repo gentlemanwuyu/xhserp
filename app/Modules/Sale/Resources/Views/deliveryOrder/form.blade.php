@@ -27,10 +27,10 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">物流方式</label>
+                            <label class="layui-form-label required">出货方式</label>
                             <div class="layui-input-block">
-                                <select name="delivery_method" lay-search="" lay-filter="delivery_method" lay-verify="required" lay-reqText="请选择物流方式">
-                                    <option value="">请选择物流方式</option>
+                                <select name="delivery_method" lay-search="" lay-filter="delivery_method" lay-verify="required" lay-reqText="请选择出货方式">
+                                    <option value="">请选择出货方式</option>
                                     <option value="1">客户自取</option>
                                     <option value="2">送货</option>
                                     <option value="3">快递物流</option>
@@ -102,7 +102,7 @@
                         <th>Item</th>
                         <th>品名</th>
                         <th width="50">单位</th>
-                        <th width="100">数量</th>
+                        <th width="150">数量</th>
                         <th width="100">单价</th>
                         <th width="100">总价</th>
                         <th width="60">操作</th>
@@ -131,7 +131,7 @@
         }).use(['form', 'autocomplete'], function () {
             var form = layui.form
                     ,autocomplete = layui.autocomplete
-                    // 监听商品选择框
+                    // 监听订单选择框
                     ,listenSelectOrder = function () {
                 form.on('select(order)', function(data){
                     var $td = $(data.elem).parent('td')
@@ -152,17 +152,28 @@
                     form.render('select', 'delivery_order');
                 });
             }
+                    // 监听订单Item选择框
                     ,listenSelectItem = function (items) {
                 form.on('select(item)', function(data){
                     var $td = $(data.elem).parent('td')
-                            ,$titleInput = $td.siblings('td[erp-col=title]').find('input');
+                            ,$titleInput = $td.siblings('td[erp-col=title]').find('input')
+                            ,$quantityInput = $td.siblings('td[erp-col=quantity]').find('input')
+                            ,$unitTd = $td.siblings('td[erp-col=unit]')
+                            ,$priceTd = $td.siblings('td[erp-col=price]');
                     if (data.value) {
                         $titleInput.val(items[data.value]['title']);
+                        $unitTd.html(items[data.value]['unit']);
+                        $priceTd.html(items[data.value]['price']);
+                        $quantityInput.attr('placeholder', '待出货数量:' + items[data.value]['quantity']);
                     }else {
                         $titleInput.val('');
+                        $unitTd.html('');
+                        $priceTd.html('');
+                        $quantityInput.attr('placeholder', '数量');
                     }
                 });
             }
+                    // 监听是否代收开关
                     ,listenIsCollected = function () {
                 form.on('switch(is_collected)', function (data) {
                     var $collected_amount = $('input[name=collected_amount]');
@@ -172,7 +183,21 @@
                         $collected_amount.addClass('layui-hide').val('');
                     }
                 })
-            };
+            }
+                    // 监听数量输入框
+                    ,listenQuantityInput = function () {
+                $('input[ lay-filter=quantity]').on('keyup', function () {
+                    var $tr = $(this).parents('tr')
+                            ,quantity = this.value
+                            ,price = $tr.find('td[erp-col=price]').html();
+                    if (new RegExp(/^\d{1,}$/).test(quantity) && price && !isNaN(price)) {
+                        var amount = parseInt(quantity) * parseFloat(price);
+                        $tr.find('td[erp-col=amount]').html(amount.toFixed(2));
+                    }else {
+                        $tr.find('td[erp-col=amount]').html('');
+                    }
+                });
+            }
 
             $('button[lay-event=addItem]').on('click', function () {
                 var $body = $('#detailTable').find('tbody')
@@ -200,16 +225,14 @@
                 html += '<input type="text" name="items[' + flag + '][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input">';
                 html += '</td>';
                 // 单位
-                html += '<td>';
-                html += '<input type="text" name="items[' + flag + '][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input">';
+                html += '<td erp-col="unit">';
                 html += '</td>';
                 // 数量
-                html += '<td>';
+                html += '<td erp-col="quantity">';
                 html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input">';
                 html += '</td>';
                 // 单价
-                html += '<td>';
-                html += '<input type="text" name="items[' + flag + '][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input">';
+                html += '<td erp-col="price">';
                 html += '</td>';
                 // 总价
                 html += '<td erp-col="amount">';
@@ -222,6 +245,7 @@
                 $body.append(html);
                 form.render();
                 listenSelectOrder();
+                listenQuantityInput();
             });
 
             // 监听物流方式
