@@ -34,4 +34,5 @@ Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
 
 Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
 	Route::get('form', ['as'=>'form', 'uses'=>'DeliveryOrderController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'DeliveryOrderController@save']);
 });

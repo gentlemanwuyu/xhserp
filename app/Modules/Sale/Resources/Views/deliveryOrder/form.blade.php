@@ -10,8 +10,8 @@
 @endsection
 @section('content')
     <form class="layui-form layui-form-pane" lay-filter="delivery_order">
-        @if(isset($order_id))
-            <input type="hidden" name="order_id" value="{{$order_id}}">
+        @if(isset($customer_id))
+            <input type="hidden" name="customer_id" value="{{$customer_id}}">
         @endif
         <div class="layui-card">
             <div class="layui-card-header">
@@ -31,9 +31,9 @@
                             <div class="layui-input-block">
                                 <select name="delivery_method" lay-search="" lay-filter="delivery_method" lay-verify="required" lay-reqText="请选择出货方式">
                                     <option value="">请选择出货方式</option>
-                                    <option value="1">客户自取</option>
-                                    <option value="2">送货</option>
-                                    <option value="3">快递物流</option>
+                                    @foreach(\App\Modules\Sale\Models\DeliveryOrder::$delivery_methods as $method_id => $method_name)
+                                        <option value="{{$method_id}}">{{$method_name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -98,11 +98,11 @@
                     <thead>
                     <tr>
                         <th width="50">序号</th>
-                        <th width="150">订单</th>
-                        <th>Item</th>
-                        <th>品名</th>
+                        <th width="150" class="required">订单</th>
+                        <th class="required">Item</th>
+                        <th class="required">品名</th>
                         <th width="50">单位</th>
-                        <th width="150">数量</th>
+                        <th width="150" class="required">数量</th>
                         <th width="100">单价</th>
                         <th width="100">总价</th>
                         <th width="60">操作</th>
@@ -303,6 +303,44 @@
                         $('input[name=consignee_phone]').val('');
                     }
                 }
+            });
+
+            // 提交出货单
+            form.on('submit(delivery_order)', function (form_data) {
+                var item_exists = false;
+                $.each(form_data.field, function (key, val) {
+                    if (new RegExp(/^items\[[\d]+\]\[[\d\D]+\]$/).test(key)) {
+                        item_exists = true;
+                        return false;
+                    }
+                });
+
+                if (!item_exists) {
+                    layer.msg("请添加出货明细再提交", {icon: 5, shift: 6});
+                    return false;
+                }
+
+                var load_index = layer.load();
+                $.ajax({
+                    method: "post",
+                    url: "{{route('sale::deliveryOrder.save')}}",
+                    data: form_data.field,
+                    success: function (data) {
+                        layer.close(load_index);
+                        if ('success' == data.status) {
+                            layer.msg("出货单添加成功", {icon: 1, time: 2000});
+                            location.reload();
+                        } else {
+                            layer.msg("出货单添加失败:"+data.msg, {icon: 2, time: 2000});
+                            return false;
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(load_index);
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                        return false;
+                    }
+                });
             });
         });
     </script>
