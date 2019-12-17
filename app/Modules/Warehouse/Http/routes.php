@@ -30,4 +30,7 @@ Route::group(['prefix' => 'entry', 'as'=>'entry.'], function (){
 
 Route::group(['prefix' => 'express', 'as'=>'express.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'ExpressController@index']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'ExpressController@paginate']);
+	Route::post('save', ['as'=>'save', 'uses'=>'ExpressController@save']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'ExpressController@delete']);
 });
