@@ -187,6 +187,9 @@
                             <dd>
                                 <a lay-href="{{route('finance::collection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>收款管理</a>
                             </dd>
+                            <dd>
+                                <a lay-href="{{route('finance::pendingCollection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>应收款项</a>
+                            </dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">
