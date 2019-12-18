@@ -28,6 +28,10 @@ Route::group(['prefix' => 'entry', 'as'=>'entry.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'EntryController@save']);
 });
 
+Route::group(['prefix' => 'egress', 'as'=>'egress.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'EgressController@index']);
+});
+
 Route::group(['prefix' => 'express', 'as'=>'express.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'ExpressController@index']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'ExpressController@paginate']);
