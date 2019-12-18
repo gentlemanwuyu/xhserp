@@ -79,8 +79,10 @@
                     <th>品名</th>
                     <th>单位</th>
                     <th>数量</th>
-                    <th>单价</th>
-                    <th>总价</th>
+                    @if(!isset($source) || 'warehouse' != $source)
+                        <th>单价</th>
+                        <th>总价</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -93,12 +95,56 @@
                         <td>{{$item->title}}</td>
                         <td>{{$item->orderItem->unit}}</td>
                         <td>{{$item->quantity}}</td>
-                        <td>{{$item->orderItem->price}}</td>
-                        <td>{{$item->orderItem->price * $item->quantity}}</td>
+                        @if(!isset($source) || 'warehouse' != $source)
+                            <td>{{$item->orderItem->price}}</td>
+                            <td>{{$item->orderItem->price * $item->quantity}}</td>
+                        @endif
                     </tr>    
                 @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+    @if(isset($source) && 'warehouse' == $source && 1 == $delivery_order->status)
+        <div class="layui-row">
+            <form class="layui-form">
+                <button type="button" class="layui-btn layui-btn-normal" erp-action="finish">完成</button>
+            </form>
+        </div>
+    @endif
+@endsection
+@section('scripts')
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+            $('button[erp-action=finish]').on('click', function () {
+                layer.confirm("确认要已完成出货？", {icon: 3, title:"确认"}, function (index) {
+                    layer.close(index);
+                    var load_index = layer.load();
+                    $.ajax({
+                        method: "post",
+                        url: "{{route('warehouse::egress.finish')}}",
+                        data: {delivery_order_id: "{{$delivery_order_id or ''}}"},
+                        success: function (data) {
+                            layer.close(load_index);
+                            if ('success' == data.status) {
+                                layer.msg("完成出货", {icon: 1, time: 2000}, function(){
+                                    parent.layui.admin.closeThisTabs();
+                                });
+                            } else {
+                                layer.msg("完成出货失败:" + data.msg, {icon: 2, time: 2000});
+                                return false;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.close(load_index);
+                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                            return false;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection

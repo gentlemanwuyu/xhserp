@@ -30,6 +30,7 @@ Route::group(['prefix' => 'entry', 'as'=>'entry.'], function (){
 
 Route::group(['prefix' => 'egress', 'as'=>'egress.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'EgressController@index']);
+	Route::post('finish', ['as'=>'finish', 'uses'=>'EgressController@finish']);
 });
 
 Route::group(['prefix' => 'express', 'as'=>'express.'], function (){
