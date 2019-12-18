@@ -16,4 +16,9 @@ class CollectionController extends Controller
     {
         return view('finance::collection.index');
     }
+
+    public function form()
+    {
+        return view('finance::collection.form');
+    }
 }

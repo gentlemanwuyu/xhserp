@@ -13,4 +13,5 @@
 
 Route::group(['prefix' => 'collection', 'as'=>'collection.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'CollectionController@index']);
+	Route::get('form', ['as'=>'form', 'uses'=>'CollectionController@form']);
 });
