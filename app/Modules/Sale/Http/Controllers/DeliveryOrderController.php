@@ -29,15 +29,25 @@ class DeliveryOrderController extends Controller
 
     public function form(Request $request)
     {
-        $orders = Order::where('customer_id', $request->get('customer_id'))->where('status', 3)->get()->pluck(null, 'id')->map(function ($o) {
+        $expresses = Express::all(['id', 'name']);
+        $data = compact('expresses');
+        if (!empty($request->get('customer_id'))) {
+            $customer = Customer::find($request->get('customer_id'));
+        }elseif (!empty($request->get('delivery_order_id'))) {
+            $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
+            $data['delivery_order'] = $delivery_order;
+            $customer = $delivery_order->customer;
+        }
+
+        $orders = Order::where('customer_id', $customer->id)->where('status', 3)->get()->pluck(null, 'id')->map(function ($o) {
             $o->pis = $o->pendingItems->pluck(null, 'id');
 
             return $o;
         });
-        $expresses = Express::all(['id', 'name']);
-        $customer = Customer::find($request->get('customer_id'));
+        $data['customer'] = $customer;
+        $data['orders'] = $orders;
 
-        return view('sale::deliveryOrder.form', compact('orders', 'expresses', 'customer'));
+        return view('sale::deliveryOrder.form', $data);
     }
 
     public function paginate(Request $request)
@@ -83,18 +93,16 @@ class DeliveryOrderController extends Controller
             $data = [
                 'code' => $request->get('code', ''),
                 'delivery_method' => $request->get('delivery_method', 0),
+                'express_id' => $request->get('express_id', 0),
+                'is_collected' => $request->get('is_collected', 0),
+                'collected_amount' => $request->get('collected_amount', 0.00),
                 'address' => $request->get('address', ''),
                 'consignee' => $request->get('consignee', ''),
                 'consignee_phone' => $request->get('consignee_phone', ''),
                 'note' => $request->get('note', ''),
             ];
-            if (3 == $data['delivery_method']) {
-                $data['express_id'] = $request->get('express_id', 0);
-                $data['is_collected'] = $request->get('is_collected', 0);
-                $data['collected_amount'] = $request->get('collected_amount', 0.00);
-            }
             if ($request->get('customer_id')) {
-                $data['customer_id'] = $request->get('customer_id', 0);
+                $data['customer_id'] = $request->get('customer_id');
             }
 
             $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));

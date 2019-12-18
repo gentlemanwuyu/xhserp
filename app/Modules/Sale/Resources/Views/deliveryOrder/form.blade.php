@@ -13,6 +13,9 @@
         @if(isset($customer_id))
             <input type="hidden" name="customer_id" value="{{$customer_id}}">
         @endif
+        @if(isset($delivery_order_id))
+            <input type="hidden" name="delivery_order_id" value="{{$delivery_order_id}}">
+        @endif
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>基本信息</h3>
@@ -23,7 +26,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">出货单号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入出货单号" class="layui-input" value="{{$order->code or ''}}">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入出货单号" class="layui-input" value="{{$delivery_order->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -32,49 +35,51 @@
                                 <select name="delivery_method" lay-search="" lay-filter="delivery_method" lay-verify="required" lay-reqText="请选择出货方式">
                                     <option value="">请选择出货方式</option>
                                     @foreach(\App\Modules\Sale\Models\DeliveryOrder::$delivery_methods as $method_id => $method_name)
-                                        <option value="{{$method_id}}">{{$method_name}}</option>
+                                        <option value="{{$method_id}}" @if(isset($delivery_order) && $delivery_order->delivery_method == $method_id) selected @endif>{{$method_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div id="express_field" class="layui-hide">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label required">快递公司</label>
-                                <div class="layui-input-block">
-                                    <select name="express_id" lay-search="" lay-verify="required" lay-reqText="请选择快递公司">
-                                        <option value="">请选择快递公司</option>
-                                        @foreach($expresses as $express)
-                                            <option value="{{$express->id}}">{{$express->name}}</option>
-                                        @endforeach
-                                    </select>
+                        <div id="express_field" @if(!isset($delivery_order) || 3 != $delivery_order->delivery_method) class="layui-hide" @endif>
+                            @if(isset($delivery_order) && 3 == $delivery_order->delivery_method)
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label required">快递公司</label>
+                                    <div class="layui-input-block">
+                                        <select name="express_id" lay-search="" lay-verify="required" lay-reqText="请选择快递公司">
+                                            <option value="">请选择快递公司</option>
+                                            @foreach($expresses as $express)
+                                                <option value="{{$express->id}}" @if($delivery_order->express_id == $express->id) selected @endif>{{$express->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="layui-form-item layui-hide" pane="">
-                                <label class="layui-form-label">是否代收</label>
-                                <div class="layui-input-block" style="display: flex;">
-                                    <input type="checkbox" name="is_collected" lay-skin="switch" lay-text="是|否" value="1">
-                                    <input type="text" name="collected_amount" placeholder="代收金额" class="erp-after-switch-input">
+                                <div class="layui-form-item" pane="">
+                                    <label class="layui-form-label">是否代收</label>
+                                    <div class="layui-input-block" style="display: flex;">
+                                        <input type="checkbox" name="is_collected" lay-filter="is_collected" lay-skin="switch" lay-text="是|否" value="1" @if(1 == $delivery_order->is_collected) checked @endif>
+                                        <input type="text" name="collected_amount" placeholder="代收金额" class="erp-after-switch-input @if(1 != $delivery_order->is_collected) layui-hide @endif" @if(1 == $delivery_order->is_collected) value="{{(float)$delivery_order->collected_amount ?: ''}}" @endif>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label required">地址</label>
                             <div class="layui-input-block">
-                                <input type="text" name="address" lay-verify="required" lay-reqText="请输入地址" class="layui-input" value="{{$customer->full_address}}">
+                                <input type="text" name="address" lay-verify="required" lay-reqText="请输入地址" class="layui-input" value="{{$delivery_order->address or $customer->full_address}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">收货人</label>
                             <div class="layui-input-block">
-                                <input type="text" name="consignee" lay-verify="required" lay-reqText="请输入收货人" class="layui-input" value="">
+                                <input type="text" name="consignee" lay-verify="required" lay-reqText="请输入收货人" class="layui-input" value="{{$delivery_order->consignee or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">联系电话</label>
                             <div class="layui-input-block">
-                                <input type="text" name="consignee_phone" lay-verify="required" lay-reqText="请输入联系电话" class="layui-input" value="">
+                                <input type="text" name="consignee_phone" lay-verify="required" lay-reqText="请输入联系电话" class="layui-input" value="{{$delivery_order->consignee_phone or ''}}">
                             </div>
                         </div>
                     </div>
@@ -82,7 +87,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-block">
-                                <textarea name="note" class="layui-textarea"></textarea>
+                                <textarea name="note" class="layui-textarea">{{$delivery_order->note or ''}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -109,7 +114,40 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        @if(isset($delivery_order))
+                            <?php $index = 1; ?>
+                            @foreach($delivery_order->items as $item)
+                                <tr data-flag="{{$item->id}}">
+                                    <td erp-col="index">{{$index++}}</td>
+                                    <td erp-col="order">
+                                        <select name="items[{{$item->id}}][order_id]" lay-filter="order" lay-search="" lay-verify="required" lay-reqText="请选择订单">
+                                            <option value="">请选择订单</option>
+                                            @foreach($orders as $order)
+                                                <option value="{{$order->id}}" @if($item->order_id == $order->id) selected @endif>{{$order->code}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td erp-col="item">
+                                        <select name="items[{{$item->id}}][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">
+                                            <option value="">请选择Item</option>
+                                            @foreach($orders[$item->order_id]->items as $order_item)
+                                                <option value="{{$order_item->id}}" @if($item->order_item_id == $order_item->id) selected @endif>{{$order_item->title}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td erp-col="title">
+                                        <input type="text" name="items[{{$item->id}}][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input" value="{{$item->title or ''}}">
+                                    </td>
+                                    <td erp-col="unit">{{$item->orderItem->unit or ''}}</td>
+                                    <td erp-col="quantity">
+                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
+                                    </td>
+                                    <td erp-col="price">{{$item->orderItem->price or ''}}</td>
+                                    <td erp-col="amount">{{$item->orderItem->price * $item->quantity}}</td>
+                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -145,7 +183,7 @@
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=item]').html(html);
-                        listenSelectItem(orders[data.value]['pis']);
+                        listenSelectItem();
                     }else {
                         $td.siblings('td[erp-col=item]').html('');
                     }
@@ -153,13 +191,17 @@
                 });
             }
                     // 监听订单Item选择框
-                    ,listenSelectItem = function (items) {
+                    ,listenSelectItem = function () {
                 form.on('select(item)', function(data){
                     var $td = $(data.elem).parent('td')
                             ,$titleInput = $td.siblings('td[erp-col=title]').find('input')
                             ,$quantityInput = $td.siblings('td[erp-col=quantity]').find('input')
                             ,$unitTd = $td.siblings('td[erp-col=unit]')
-                            ,$priceTd = $td.siblings('td[erp-col=price]');
+                            ,$priceTd = $td.siblings('td[erp-col=price]')
+                            ,selectedOrderId = $td.siblings('td[erp-col=order]').find('select').val()
+                            ,items = orders[selectedOrderId]['pis'];
+
+                    $quantityInput.val('');
                     if (data.value) {
                         $titleInput.val(items[data.value]['title']);
                         $unitTd.html(items[data.value]['unit']);
@@ -209,7 +251,7 @@
                 html += $body.children('tr').length + 1;
                 html += '</td>';
                 // 选择订单
-                html += '<td>';
+                html += '<td erp-col="order">';
                 html += '<select name="items[' + flag + '][order_id]" lay-filter="order" lay-search="" lay-verify="required" lay-reqText="请选择订单">';
                 html += '<option value="">请选择订单</option>';
                 $.each(orders, function (_, order) {
@@ -247,6 +289,10 @@
                 listenSelectOrder();
                 listenQuantityInput();
             });
+            listenIsCollected();
+            listenSelectOrder();
+            listenSelectItem();
+            listenQuantityInput();
 
             // 监听物流方式
             form.on('select(delivery_method)', function (data) {
