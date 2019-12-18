@@ -1,0 +1,8 @@
+{
+	"name": "Finance",
+	"slug": "finance",
+	"namespace": "Finance",
+	"version": "1.0",
+	"description": "This is the description for the Finance module.",
+	"enabled": true
+}
