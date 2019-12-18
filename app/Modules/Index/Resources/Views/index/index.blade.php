@@ -180,6 +180,17 @@
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">
+                            <i class="layui-icon layui-icon-rmb"></i>
+                            <cite>财务管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-href="{{route('finance::collection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>收款管理</a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
                             <i class="layui-icon layui-icon-set"></i>
                             <cite>系统管理</cite>
                         </a>

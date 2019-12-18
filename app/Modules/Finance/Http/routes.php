@@ -11,8 +11,6 @@
 |
 */
 
-Route::group(['prefix' => 'finance'], function() {
-	Route::get('/', function() {
-		dd('This is the Finance module index page.');
-	});
+Route::group(['prefix' => 'collection', 'as'=>'collection.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'CollectionController@index']);
 });
