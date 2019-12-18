@@ -38,4 +38,5 @@ Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'DeliveryOrderController@paginate']);
 	Route::post('save', ['as'=>'save', 'uses'=>'DeliveryOrderController@save']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'DeliveryOrderController@delete']);
+	Route::get('detail', ['as'=>'detail', 'uses'=>'DeliveryOrderController@detail']);
 });

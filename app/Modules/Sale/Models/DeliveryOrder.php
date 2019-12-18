@@ -11,6 +11,7 @@ namespace App\Modules\Sale\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Index\Models\User;
+use App\Modules\Warehouse\Models\Express;
 
 class DeliveryOrder extends Model
 {
@@ -71,6 +72,11 @@ class DeliveryOrder extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function express()
+    {
+        return $this->belongsTo(Express::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -84,5 +90,10 @@ class DeliveryOrder extends Model
     public function getStatusNameAttribute()
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
+    }
+
+    public function getIsCollectedNameAttribute()
+    {
+        return 1 == $this->is_collected ? '是' : '否';
     }
 }

@@ -153,7 +153,7 @@
                         actions.push({
                             title: "详情",
                             event: function () {
-                                parent.layui.index.openTabsPage("{{route('sale::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
+                                parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.detail')}}?delivery_order_id=" + data.id, '出货单详情[' + data.id + ']');
                             }
                         });
 

@@ -153,4 +153,11 @@ class DeliveryOrderController extends Controller
             return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
         }
     }
+
+    public function detail(Request $request)
+    {
+        $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
+
+        return view('sale::deliveryOrder.detail', compact('delivery_order'));
+    }
 }
