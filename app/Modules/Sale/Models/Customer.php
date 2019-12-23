@@ -88,4 +88,23 @@ class Customer extends Model
 
         return $full_address;
     }
+
+    public function getUnpaidItemsAttribute()
+    {
+        return DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
+            ->leftJoin('orders AS o', 'o.id', '=', 'doi.order_id')
+            ->leftJoin('order_items AS oi', 'oi.id', '=', 'doi.order_item_id')
+            ->leftJoin('goods_skus AS gs', 'gs.id', '=', 'oi.sku_id')
+            ->where('delivery_orders.status', '2')
+            ->where('delivery_orders.customer_id', $this->id)
+            ->where('doi.is_paid', 0)
+            ->get([
+                'o.code AS order_code',
+                'gs.code AS sku_code',
+                'oi.quantity AS order_quantity',
+                'doi.quantity AS delivery_quantity',
+                'oi.price',
+                'doi.created_at AS delivery_at',
+            ]);
+    }
 }

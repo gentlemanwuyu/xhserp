@@ -18,4 +18,5 @@ Route::group(['prefix' => 'collection', 'as'=>'collection.'], function (){
 
 Route::group(['prefix' => 'pendingCollection', 'as'=>'pendingCollection.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'PendingCollectionController@index']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PendingCollectionController@paginate']);
 });
