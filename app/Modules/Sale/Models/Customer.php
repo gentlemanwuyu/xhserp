@@ -11,6 +11,7 @@ namespace App\Modules\Sale\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ChineseRegion;
+use Illuminate\Support\Facades\DB;
 
 class Customer extends Model
 {
@@ -99,12 +100,15 @@ class Customer extends Model
             ->where('delivery_orders.customer_id', $this->id)
             ->where('doi.is_paid', 0)
             ->get([
+                'doi.id AS delivery_order_item_id',
                 'o.code AS order_code',
                 'gs.code AS sku_code',
+                'oi.price',
                 'oi.quantity AS order_quantity',
                 'doi.quantity AS delivery_quantity',
-                'oi.price',
+                'delivery_orders.code AS delivery_code',
                 'doi.created_at AS delivery_at',
+                DB::raw('doi.quantity * oi.price AS amount'),
             ]);
     }
 }

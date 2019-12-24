@@ -4,6 +4,7 @@ namespace App\Modules\Finance\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Sale\Models\Customer;
 
 class CollectionController extends Controller
 {
@@ -17,8 +18,10 @@ class CollectionController extends Controller
         return view('finance::collection.index');
     }
 
-    public function form()
+    public function form(Request $request)
     {
-        return view('finance::collection.form');
+        $customer = Customer::find($request->get('customer_id'));
+
+        return view('finance::collection.form', compact('customer'));
     }
 }
