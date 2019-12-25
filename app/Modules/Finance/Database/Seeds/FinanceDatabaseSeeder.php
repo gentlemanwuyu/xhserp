@@ -15,7 +15,7 @@ class FinanceDatabaseSeeder extends Seeder
 	{
 		Model::unguard();
 
-		// $this->call('App\Modules\Finance\Database\Seeds\FoobarTableSeeder');
+		 $this->call(AccountsTableSeeder::class);
 	}
 
 }
