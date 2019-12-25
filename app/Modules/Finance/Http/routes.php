@@ -23,4 +23,8 @@ Route::group(['prefix' => 'pendingCollection', 'as'=>'pendingCollection.'], func
 
 Route::group(['prefix' => 'account', 'as'=>'account.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'AccountController@index']);
+	Route::get('form', ['as'=>'form', 'uses'=>'AccountController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'AccountController@save']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'AccountController@paginate']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'AccountController@delete']);
 });
