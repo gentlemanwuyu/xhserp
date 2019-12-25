@@ -20,3 +20,7 @@ Route::group(['prefix' => 'pendingCollection', 'as'=>'pendingCollection.'], func
 	Route::get('index', ['as'=>'index', 'uses'=>'PendingCollectionController@index']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PendingCollectionController@paginate']);
 });
+
+Route::group(['prefix' => 'account', 'as'=>'account.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'AccountController@index']);
+});
