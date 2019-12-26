@@ -22,7 +22,41 @@ class CollectionController extends Controller
 
     public function index()
     {
-        return view('finance::collection.index');
+        $customers = Customer::all();
+        $users = User::where('is_admin', 0)->get();
+
+        return view('finance::collection.index', compact('customers', 'users'));
+    }
+
+    public function paginate(Request $request)
+    {
+        $query = Collection::query();
+        if ($request->get('customer_id')) {
+            $query = $query->where('customer_id', $request->get('customer_id'));
+        }
+        if ($request->get('creator_id')) {
+            $query = $query->where('user_id', $request->get('creator_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('created_at', '>=', $created_at_between[0] . ' 00:00:00')->where('created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
+
+        foreach ($paginate as $collection) {
+            $collection->items->map(function ($item) {
+                $deliveryOrderItem = $item->deliveryOrderItem;
+                $deliveryOrderItem->order;
+                $deliveryOrderItem->orderItem;
+
+                return $item;
+            });
+            $collection->customer;
+            $collection->user;
+        }
+
+        return response()->json($paginate);
     }
 
     public function form(Request $request)
