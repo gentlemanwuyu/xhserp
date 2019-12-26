@@ -153,8 +153,9 @@
                         success: function (data) {
                             layer.close(load_index);
                             if ('success' == data.status) {
-                                layer.msg("付款单保存成功", {icon: 1, time: 2000});
-                                table.render(tableOpts);
+                                layer.msg("付款单保存成功", {icon: 1, time: 2000}, function(){
+                                    parent.layui.admin.closeThisTabs();
+                                });
                             } else {
                                 layer.msg("付款单保存失败:"+data.msg, {icon: 2, time: 2000});
                                 return false;

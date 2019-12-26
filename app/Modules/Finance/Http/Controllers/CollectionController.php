@@ -76,6 +76,9 @@ class CollectionController extends Controller
             }
             $remained_amount = $collection->amount - $used_amount;
             $collection->remained_amount = $remained_amount;
+            if (0 == $remained_amount) {
+                $collection->is_finished = 1;
+            }
             $collection->save();
 
             DB::commit();
