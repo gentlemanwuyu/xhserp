@@ -36,28 +36,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-form-item layui-hide">
-                            <label class="layui-form-label required">收款人</label>
-                            <div class="layui-input-block">
-                                <select name="collect_user_id" lay-verify="required" lay-reqText="请选择收款人">
-                                    <option value="">请选择收款人</option>
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-form-item layui-hide">
-                            <label class="layui-form-label required">汇款账户</label>
-                            <div class="layui-input-block">
-                                <select name="remit_account" lay-verify="required" lay-reqText="请选择汇款账户">
-                                    <option value="">请选择汇款账户</option>
-                                    @foreach($accounts as $account)
-                                        <option value="{{$account->id}}">{{$account->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -76,6 +54,7 @@
 @endsection
 @section('scripts')
     <script>
+        var users = <?= json_encode($users); ?>, accounts = <?= json_encode($accounts); ?>;
         layui.use(['form', 'table'], function () {
             var form = layui.form
                     ,table = layui.table
@@ -117,23 +96,34 @@
             });
 
             form.on('select(method)', function (data) {
-                var $collectUserSelect = $('select[name=collect_user_id]')
-                        ,$remitAccountSelect = $('select[name=remit_account]')
-                        ,$collectUserItem = $collectUserSelect.parents('.layui-form-item')
-                        ,$remitAccountItem = $remitAccountSelect.parents('.layui-form-item');
-
-                $collectUserSelect.val('');
-                $remitAccountSelect.val('');
-                if (!data.value || 3 == data.value) {
-                    $collectUserItem.addClass('layui-hide');
-                    $remitAccountItem.addClass('layui-hide');
-                }else if (1 == data.value) {
-                    $collectUserItem.removeClass('layui-hide');
-                    $remitAccountItem.addClass('layui-hide');
+                $('select[name=collect_user_id]').parents('.layui-form-item').remove();
+                $('select[name=account_id]').parents('.layui-form-item').remove();
+                var html = '';
+                if (1 == data.value) {
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label required">收款人</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<select name="collect_user_id" lay-verify="required" lay-reqText="请选择收款人">';
+                    html += '<option value="">请选择收款人</option>';
+                    users.forEach(function (user) {
+                        html += '<option value="' + user.id + '">' + user.name + '</option>';
+                    });
+                    html += '</select>';
+                    html += '</div>';
                 }else if (2 == data.value) {
-                    $collectUserItem.addClass('layui-hide');
-                    $remitAccountItem.removeClass('layui-hide');
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label required">汇款账户</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<select name="account_id" lay-verify="required" lay-reqText="请选择汇款账户">';
+                    html += '<option value="">请选择汇款账户</option>';
+                    accounts.forEach(function (account) {
+                        html += '<option value="' + account.id + '">' + account.name + '</option>';
+                    });
+                    html += '</select>';
+                    html += '</div>';
                 }
+
+                $(data.elem).parents('.layui-form-item').after(html);
 
                 form.render('select', 'collection');
             });
