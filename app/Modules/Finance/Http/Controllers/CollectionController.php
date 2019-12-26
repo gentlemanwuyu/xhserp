@@ -49,37 +49,65 @@ class CollectionController extends Controller
                 'collect_user_id' => $request->get('collect_user_id', 0),
                 'account_id' => $request->get('account_id', 0),
                 'user_id' => Auth::user()->id,
+                'remained_amount' => $request->get('amount'),
             ];
 
-
             DB::beginTransaction();
-            $collection = Collection::create($collection_data);
-            $used_amount = 0;
+            Collection::create($collection_data);
+            // 未抵扣的付款单
+            $remained_collections = Collection::where('is_finished', 0)->orderBy('created_at', 'asc')->get();
+
             if ($request->get('checked_doi_ids')) {
                 foreach ($request->get('checked_doi_ids') as $doi_id) {
                     $delivery_order_item = DeliveryOrderItem::find($doi_id);
                     $order_item = $delivery_order_item->orderItem;
+                    // 需要抵扣的金额
                     $amount = $order_item->price * $delivery_order_item->quantity;
-                    CollectionItem::create([
-                        'collection_id' => $collection->id,
-                        'doi_id' => $doi_id,
-                        'is_full' => 1,
-                        'amount' => $amount,
-                    ]);
-                    $used_amount += $amount;
+                    $remained_collection = $remained_collections->first();
+                    while ($remained_collection) {
+                        if ($amount <= $remained_collection->remained_amount) {
+                            // 剩余未抵扣的金额
+                            $remained_amount = $remained_collection->remained_amount;
+                            CollectionItem::create([
+                                'collection_id' => $remained_collection->id,
+                                'doi_id' => $doi_id,
+                                'amount' => $amount,
+                            ]);
+                            $remained_amount -= $amount;
+                            $remained_collection->remained_amount = $remained_amount;
+                            if (0 == $remained_amount) {
+                                $remained_collection->is_finished = 1;
+                            }
+
+                            $remained_collection->save();
+                            $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
+                        }else {
+                            CollectionItem::create([
+                                'collection_id' => $remained_collection->id,
+                                'doi_id' => $doi_id,
+                                'amount' => $remained_collection->remained_amount,
+                            ]);
+                            $amount -= $remained_collection->remained_amount;
+                            // 该收款单已经抵扣完
+                            $remained_collection->remained_amount = 0;
+                            $remained_collection->is_finished = 1;
+                            $remained_collection->save();
+                            // 将该收款单弹出
+                            $remained_collections->shift();
+                            $remained_collection = $remained_collections->first();
+                        }
+                        if (0 == $amount) {
+                            break;
+                        }
+                    }
+
+                    if ($amount > 0) {
+                        throw new \Exception("选中的明细金额不可大于收款金额");
+                    }
                     $delivery_order_item->is_paid = 1;
                     $delivery_order_item->save();
                 }
             }
-            if ($used_amount > $collection->amount) {
-                throw new \Exception("选中的明细金额不可大于收款金额");
-            }
-            $remained_amount = $collection->amount - $used_amount;
-            $collection->remained_amount = $remained_amount;
-            if (0 == $remained_amount) {
-                $collection->is_finished = 1;
-            }
-            $collection->save();
 
             DB::commit();
             return response()->json(['status' => 'success']);

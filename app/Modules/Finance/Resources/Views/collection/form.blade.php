@@ -20,6 +20,12 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
+                            <label class="layui-form-label">结余金额</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->total_remained_amount}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label required">收款金额</label>
                             <div class="layui-input-block">
                                 <input type="text" name="amount" lay-verify="required" lay-reqText="请输入收款金额" class="layui-input" value="" oninput="value=value.replace(/[^\d.]/g, '')">
@@ -54,7 +60,9 @@
 @endsection
 @section('scripts')
     <script>
-        var users = <?= json_encode($users); ?>, accounts = <?= json_encode($accounts); ?>;
+        var users = <?= json_encode($users); ?>
+                ,accounts = <?= json_encode($accounts); ?>
+                ,total_remained_amount =  <?= json_encode($customer->total_remained_amount); ?>;
         layui.use(['form', 'table'], function () {
             var form = layui.form
                     ,table = layui.table
@@ -89,7 +97,7 @@
                     checkedAmount += parseFloat(item.price) * parseInt(item.delivery_quantity);
                 });
 
-                if (checkedAmount > inputAmount) {
+                if (checkedAmount > inputAmount + total_remained_amount) {
                     layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
                     return false;
                 }
