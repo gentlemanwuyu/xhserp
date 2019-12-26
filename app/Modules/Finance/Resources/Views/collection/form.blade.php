@@ -130,7 +130,43 @@
 
             // 提交收款单
             form.on('submit(collection)', function (form_data) {
-                var checkStatus = table.checkStatus('detail');
+                var data = form_data.field;
+
+                if (0 >= parseFloat(data.amount)) {
+                    layer.msg("收款金额需大于0", {icon: 5, shift: 6});
+                    $('input[name=amount]').addClass('layui-form-danger').focus();
+                    return false;
+                }
+
+                var checkStatus = table.checkStatus('detail'), doi_ids = array_column(checkStatus.data, 'delivery_order_item_id');
+
+                data.checked_doi_ids = doi_ids;
+                data.customer_id = "{{$customer_id}}";
+
+                layer.confirm("收款单提交后不可修改，确认要提交吗？", {icon: 3, title:"确认"}, function (index) {
+                    layer.close(index);
+                    var load_index = layer.load();
+                    $.ajax({
+                        method: "post",
+                        url: "{{route('finance::collection.save')}}",
+                        data: data,
+                        success: function (data) {
+                            layer.close(load_index);
+                            if ('success' == data.status) {
+                                layer.msg("付款单保存成功", {icon: 1, time: 2000});
+                                table.render(tableOpts);
+                            } else {
+                                layer.msg("付款单保存失败:"+data.msg, {icon: 2, time: 2000});
+                                return false;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.close(load_index);
+                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                            return false;
+                        }
+                    });
+                });
             });
         });
     </script>

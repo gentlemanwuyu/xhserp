@@ -14,7 +14,7 @@ class CreateCollectionsTable extends Migration
 	{
 		Schema::create('collections', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('customer_id')->default(0)->comment('用户ID');
+			$table->integer('customer_id')->default(0)->comment('客户ID');
 			$table->decimal('amount', 8, 2)->default(0.00)->comment('收款金额');
 			$table->tinyInteger('method')->default(0)->comment('收款方式，1为现金，2为汇款，3为支票/汇票');
 			$table->integer('collect_user_id')->default(0)->comment('收款人ID');
