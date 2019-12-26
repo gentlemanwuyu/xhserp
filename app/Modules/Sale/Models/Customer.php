@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ChineseRegion;
 use Illuminate\Support\Facades\DB;
+use App\Modules\Finance\Models\Collection;
 
 class Customer extends Model
 {
@@ -90,6 +91,11 @@ class Customer extends Model
         return $full_address;
     }
 
+    /**
+     * 未付款Item
+     *
+     * @return mixed
+     */
     public function getUnpaidItemsAttribute()
     {
         return DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
@@ -110,5 +116,17 @@ class Customer extends Model
                 'doi.created_at AS delivery_at',
                 DB::raw('doi.quantity * oi.price AS amount'),
             ]);
+    }
+
+    /**
+     * 付款单剩余金额
+     *
+     * @return number
+     */
+    public function getTotalRemainedAmountAttribute()
+    {
+        $collections = Collection::where('is_finished', 0)->get()->toArray();
+
+        return array_sum(array_column($collections, 'remained_amount'));
     }
 }

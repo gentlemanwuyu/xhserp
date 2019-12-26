@@ -51,13 +51,14 @@
                         {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
                         {field: 'code', title: '客户编号', align: 'center', fixed: 'left'},
                         {field: 'name', title: '客户名称', align: 'center', fixed: 'left'},
-                        {field: 'total_amount', title: '总金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
+                        {field: 'total_amount', title: '应收金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
                             d.unpaid_items.forEach(function (item, key) {
                                 total_amount += item.delivery_quantity * item.price;
                             });
-                            return total_amount.toFixed(2);
+                            return total_amount;
                         }},
+                        {field: 'total_remained_amount', title: '结余金额', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'detail', title: '出货明细', width: 780, align: 'center', templet: function (d) {
                             var html = '';

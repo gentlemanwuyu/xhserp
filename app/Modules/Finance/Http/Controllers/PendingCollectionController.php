@@ -34,7 +34,7 @@ class PendingCollectionController extends Controller
         $paginate = $query->paginate($request->get('limit'));
 
         foreach ($paginate as $customer) {
-            $customer->setAppends(['unpaid_items', 'payment_method_name']);
+            $customer->setAppends(['unpaid_items', 'payment_method_name', 'total_remained_amount']);
         }
 
         return response()->json($paginate);
