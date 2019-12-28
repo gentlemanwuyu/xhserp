@@ -23,6 +23,14 @@ Route::group(['prefix' => 'pendingCollection', 'as'=>'pendingCollection.'], func
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PendingCollectionController@paginate']);
 });
 
+Route::group(['prefix' => 'payment', 'as'=>'payment.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'PaymentController@index']);
+});
+
+Route::group(['prefix' => 'pendingPayment', 'as'=>'pendingPayment.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'PendingPaymentController@index']);
+});
+
 Route::group(['prefix' => 'account', 'as'=>'account.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'AccountController@index']);
 	Route::get('form', ['as'=>'form', 'uses'=>'AccountController@form']);
