@@ -9,9 +9,14 @@
 namespace App\Modules\Warehouse\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class SkuEntry extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    public function orderItem()
+    {
+        return $this->belongsTo(PurchaseOrderItem::class, 'order_item_id');
+    }
 }

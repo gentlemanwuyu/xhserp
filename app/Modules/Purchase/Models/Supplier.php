@@ -10,6 +10,9 @@ namespace App\Modules\Purchase\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use App\Modules\Warehouse\Models\SkuEntry;
+use App\Modules\Finance\Models\Payment;
 
 class Supplier extends Model
 {
@@ -33,6 +36,30 @@ class Supplier extends Model
         return isset(self::$payment_methods[$this->payment_method]) ? self::$payment_methods[$this->payment_method] : '';
     }
 
+    /**
+     * 未付款Item
+     *
+     * @return mixed
+     */
+    public function getUnpaidItemsAttribute()
+    {
+        return SkuEntry::leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.order_item_id')
+            ->leftJoin('purchase_orders AS po', 'po.id', '=', 'poi.order_id')
+            ->leftJoin('product_skus AS ps', 'ps.id', '=', 'sku_entries.sku_id')
+            ->where('po.supplier_id', $this->id)
+            ->where('sku_entries.is_paid', 0)
+            ->get([
+                'sku_entries.id AS entry_id',
+                'po.code AS order_code',
+                'ps.code AS sku_code',
+                'poi.price',
+                'poi.quantity AS order_quantity',
+                'sku_entries.quantity AS entry_quantity',
+                DB::raw('sku_entries.quantity * poi.price AS amount'),
+                'sku_entries.created_at AS entry_at',
+            ]);
+    }
+
     public function syncContacts($contacts)
     {
         if (!$contacts || !is_array($contacts)) {
@@ -54,5 +81,17 @@ class Supplier extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * 付款单剩余金额
+     *
+     * @return number
+     */
+    public function getTotalRemainedAmountAttribute()
+    {
+        $payments = Payment::where('is_finished', 0)->get()->toArray();
+
+        return array_sum(array_column($payments, 'remained_amount'));
     }
 }
