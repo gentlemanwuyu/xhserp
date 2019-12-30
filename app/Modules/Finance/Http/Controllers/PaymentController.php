@@ -22,7 +22,40 @@ class PaymentController extends Controller
 
     public function index()
     {
-        return view('finance::payment.index');
+        $suppliers = Supplier::all();
+        $users = User::where('is_admin', 0)->get();
+
+        return view('finance::payment.index', compact('suppliers', 'users'));
+    }
+
+    public function paginate(Request $request)
+    {
+        $query = Payment::query();
+        if ($request->get('supplier_id')) {
+            $query = $query->where('supplier_id', $request->get('supplier_id'));
+        }
+        if ($request->get('creator_id')) {
+            $query = $query->where('user_id', $request->get('creator_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('created_at', '>=', $created_at_between[0] . ' 00:00:00')->where('created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
+
+        foreach ($paginate as $payment) {
+            $payment->items->map(function ($item) {
+                $entry = $item->entry;
+                $entry->orderItem->order;
+
+                return $item;
+            });
+            $payment->supplier;
+            $payment->user;
+        }
+
+        return response()->json($paginate);
     }
 
     public function form(Request $request)

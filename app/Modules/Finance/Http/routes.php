@@ -27,6 +27,7 @@ Route::group(['prefix' => 'payment', 'as'=>'payment.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'PaymentController@index']);
 	Route::get('form', ['as'=>'form', 'uses'=>'PaymentController@form']);
 	Route::post('save', ['as'=>'save', 'uses'=>'PaymentController@save']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PaymentController@paginate']);
 });
 
 Route::group(['prefix' => 'pendingPayment', 'as'=>'pendingPayment.'], function (){

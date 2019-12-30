@@ -10,6 +10,8 @@ namespace App\Modules\Finance\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Index\Models\User;
+use App\Modules\Purchase\Models\Supplier;
 
 class Payment extends Model
 {
@@ -20,5 +22,15 @@ class Payment extends Model
     public function items()
     {
         return $this->hasMany(PaymentItem::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
