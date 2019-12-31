@@ -14,14 +14,18 @@
 
     </table>
     <script type="text/html" id="action">
-        <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
+        <div class="urp-dropdown urp-dropdown-table" title="操作">
+            <i class="layui-icon layui-icon-more-vertical urp-dropdown-btn"></i>
+        </div>
     </script>
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.extend({
+            dropdown: '/assets/layui-table-dropdown/dropdown'
+        }).use(['table', 'dropdown'], function () {
             var table = layui.table
+                    ,dropdown = layui.dropdown
                     ,tableIns = table.render({
                 elem: '#list',
                 url: "{{route('goods::goods.paginate')}}",
@@ -62,7 +66,7 @@
                         }},
                         {field: 'created_at', title: '创建时间', align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                        {field: 'action', title: '操作', width: '15%', align: 'center', toolbar: "#action"}
+                        {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}
                     ]
                 ]
                 ,done: function(res, curr, count){
@@ -90,52 +94,67 @@
                                 ,tr_height = $this.parents('.layui-table-box').children('.layui-table-body').find('table tbody tr[data-index=' + data_index + ']').css('height');
                         $(this).css('height', tr_height);
                     });
-                }
-            });
 
-            table.on('tool(list)', function(obj){
-                var data = obj.data;
+                    dropdown(res.data,function(data) {
+                        var actions = [];
 
-                if ('edit' == obj.event) {
-                    if (1 == data.type) {
-                        parent.layui.index.openTabsPage("{{route('goods::single.form')}}?goods_id=" + data.id, '编辑单品[' + data.id + ']');
-                    }else if (2 == data.type) {
-                        parent.layui.index.openTabsPage("{{route('goods::combo.form')}}?goods_id=" + data.id, '编辑组合[' + data.id + ']');
-                    }
-                }else if ('delete' == obj.event) {
-                    layer.confirm("确认要删除该商品？", {icon: 3, title:"确认"}, function (index) {
-                        layer.close(index);
-                        var deleteUrl;
                         if (1 == data.type) {
-                            deleteUrl = "{{route('goods::single.delete')}}";
+                            actions.push({
+                                title: "编辑",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('goods::single.form')}}?goods_id=" + data.id, '编辑单品[' + data.id + ']');
+                                }
+                            });
                         }else if (2 == data.type) {
-                            deleteUrl = "{{route('goods::combo.delete')}}";
-                        }else {
-                            layer.msg("程序出错，请联系开发人员。", {icon: 5, shift: 6});
-                            return false;
+                            actions.push({
+                                title: "编辑",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('goods::combo.form')}}?goods_id=" + data.id, '编辑组合[' + data.id + ']');
+                                }
+                            });
                         }
 
-                        var load_index = layer.load();
-                        $.ajax({
-                            method: "post",
-                            url: deleteUrl,
-                            data: {goods_id: data.id},
-                            success: function (data) {
-                                layer.close(load_index);
-                                if ('success' == data.status) {
-                                    layer.msg("商品删除成功", {icon:1});
-                                    tableIns.reload();
-                                } else {
-                                    layer.msg("商品删除失败:"+data.msg, {icon:2});
-                                    return false;
-                                }
-                            },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                layer.close(load_index);
-                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                return false;
+                        actions.push({
+                            title: "删除",
+                            event: function() {
+                                layer.confirm("确认要删除该商品？", {icon: 3, title:"确认"}, function (index) {
+                                    layer.close(index);
+                                    var deleteUrl;
+                                    if (1 == data.type) {
+                                        deleteUrl = "{{route('goods::single.delete')}}";
+                                    }else if (2 == data.type) {
+                                        deleteUrl = "{{route('goods::combo.delete')}}";
+                                    }else {
+                                        layer.msg("程序出错，请联系开发人员。", {icon: 5, shift: 6});
+                                        return false;
+                                    }
+
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: deleteUrl,
+                                        data: {goods_id: data.id},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("商品删除成功", {icon:1});
+                                                tableIns.reload();
+                                            } else {
+                                                layer.msg("商品删除失败:"+data.msg, {icon:2});
+                                                return false;
+                                            }
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            return false;
+                                        }
+                                    });
+                                });
                             }
                         });
+
+                        return actions;
                     });
                 }
             });
