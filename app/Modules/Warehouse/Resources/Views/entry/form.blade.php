@@ -9,24 +9,31 @@
 @endsection
 @section('content')
     <form class="layui-form layui-form-pane" lay-filter="entry">
-        <div class="layui-row">
-            <div class="layui-col-xs4">
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">订单</label>
-                    <div class="layui-input-block">
-                        <select name="order_item_id" lay-verify="required" lay-reqText="请选择订单">
-                            <option value="">请选择订单</option>
-                            @foreach($sku->purchase_order_items as $order_item)
-                                <?php $order = $order_item->order; ?>
-                                <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->quantity - $order_item->entried_quantity}})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">入库数量</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="quantity" lay-verify="required|number" lay-reqText="请输入入库数量" class="layui-input">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <h3>SKU入库</h3>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-row layui-col-space30">
+                    <div class="layui-col-xs4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">订单</label>
+                            <div class="layui-input-block">
+                                <select name="order_item_id" lay-verify="required" lay-reqText="请选择订单">
+                                    <option value="">请选择订单</option>
+                                    @foreach($sku->purchase_order_items as $order_item)
+                                        <?php $order = $order_item->order; ?>
+                                        <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->quantity - $order_item->entried_quantity}})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">入库数量</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="quantity" lay-verify="required|number" lay-reqText="请输入入库数量" class="layui-input">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
