@@ -1,12 +1,4 @@
 @extends('layouts.default')
-@section('css')
-    <style>
-        th[data-field=detail] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
-        th[data-field=detail], td[data-field=detail]{padding: 0!important;}
-        td[data-field=detail] .layui-table-cell{padding: 0!important;}
-        td[data-field=detail] .layui-table-cell{height: auto;}
-    </style>
-@endsection
 @section('content')
     <a class="layui-btn layui-btn-normal" lay-href="{{route('finance::account.form')}}">添加账户</a>
     <table id="list" class="layui-table"  lay-filter="list">

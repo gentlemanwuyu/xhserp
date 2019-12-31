@@ -23,6 +23,10 @@
 .erp-table-list-ul-first{border-top: none;}
 .erp-table-list-li{padding-top: 5px; padding-bottom: 5px; border-left: 1px solid #e6e6e6; line-height: 28px;}
 .erp-table-list-li-first{border-left: none;}
+th[data-field=detail] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
+th[data-field=detail], td[data-field=detail]{padding: 0!important;}
+td[data-field=detail] .layui-table-cell{padding: 0!important;}
+td[data-field=detail] .layui-table-cell{height: auto;}
 
 td[data-field=action] i.layui-icon{color: #009688;}
 

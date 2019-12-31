@@ -1,12 +1,4 @@
 @extends('layouts.default')
-@section('css')
-    <style>
-        th[data-field=contacts] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
-        th[data-field=contacts], td[data-field=contacts]{padding: 0!important;}
-        td[data-field=contacts] .layui-table-cell{padding: 0!important;}
-        td[data-field=contacts] .layui-table-cell{height: auto;}
-    </style>
-@endsection
 @section('content')
     <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('sale::customer.form')}}">添加客户</a>
     <table id="list" class="layui-table"  lay-filter="list">
@@ -50,7 +42,7 @@
                         {field: 'monthly_day', title: '月结天数', width: 100, align: 'center', templet: function (d) {
                             return 3 == d.payment_method ? d.monthly_day : '';
                         }},
-                        {field: 'contacts', title: '联系人', width: 400, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '联系人', width: 400, align: 'center', templet: function (d) {
                             var html = '';
                             d.contacts.forEach(function (contact, key) {
                                 if (0 == key) {
@@ -73,14 +65,14 @@
                 ]
                 ,done: function(res, curr, count){
                     // 修改联系人列表表头
-                    if (0 == $('th[data-field=contacts] ul').length) {
+                    if (0 == $('th[data-field=detail] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 100px; text-align: center;">名称</li>';
                         html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">职位</li>';
                         html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">电话</li>';
                         html += '</ul>';
-                        $('th[data-field=contacts]').append(html);
+                        $('th[data-field=detail]').append(html);
                     }
 
                     // 修改固定列的各行高度

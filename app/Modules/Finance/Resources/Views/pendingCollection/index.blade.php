@@ -1,12 +1,4 @@
 @extends('layouts.default')
-@section('css')
-    <style>
-        th[data-field=detail] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
-        th[data-field=detail], td[data-field=detail]{padding: 0!important;}
-        td[data-field=detail] .layui-table-cell{padding: 0!important;}
-        td[data-field=detail] .layui-table-cell{height: auto;}
-    </style>
-@endsection
 @section('content')
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">

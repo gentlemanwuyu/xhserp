@@ -1,12 +1,4 @@
 @extends('layouts.default')
-@section('css')
-    <style>
-        th[data-field=sku_list] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
-        th[data-field=sku_list], td[data-field=sku_list]{padding: 0!important;}
-        td[data-field=sku_list] .layui-table-cell{padding: 0!important;}
-        td[data-field=sku_list] .layui-table-cell{height: auto;}
-    </style>
-@endsection
 @section('content')
     <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('goods::single.select_product')}}" lay-text="选择产品[单品]">添加单品</a>
     <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('goods::combo.select_product')}}" lay-text="选择产品[组合]">添加组合</a>
@@ -47,7 +39,7 @@
                             return d.category.name;
                         }},
                         {field: 'type_name', title: '类型', width: '5%', align: 'center'},
-                        {field: 'sku_list', title: 'SKU列表', width: 500, align: 'center', templet: function (d) {
+                        {field: 'detail', title: 'SKU列表', width: 500, align: 'center', templet: function (d) {
                             var html = '';
                             d.skus.forEach(function (sku, key) {
                                 if (0 == key) {
@@ -71,7 +63,7 @@
                 ]
                 ,done: function(res, curr, count){
                     // 修改SKU列表表头
-                    if (0 == $('th[data-field=sku_list] ul').length) {
+                    if (0 == $('th[data-field=detail] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
@@ -79,7 +71,7 @@
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">建议零售价</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">库存</li>';
                         html += '</ul>';
-                        $('th[data-field=sku_list]').append(html);
+                        $('th[data-field=detail]').append(html);
                     }
 
                     // 修改固定列的各行高度

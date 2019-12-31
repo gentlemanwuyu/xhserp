@@ -1,12 +1,4 @@
 @extends('layouts.default')
-@section('css')
-    <style>
-        th[data-field=order_list] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
-        th[data-field=order_list], td[data-field=order_list]{padding: 0!important;}
-        td[data-field=order_list] .layui-table-cell{padding: 0!important;}
-        td[data-field=order_list] .layui-table-cell{height: auto;}
-    </style>
-@endsection
 @section('content')
     <table id="list" class="layui-table"  lay-filter="list">
 
@@ -55,7 +47,7 @@
                         {field: 'lowest_stock', title: '最低库存', width: 100, align: 'center', templet: function (d) {
                             return d.inventory.lowest_stock;
                         }},
-                        {field: 'order_list', title: '订单明细', width: 720, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '订单明细', width: 720, align: 'center', templet: function (d) {
                             var html = '';
                             d.purchase_order_items.forEach(function (order_item, key) {
                                 if (0 == key) {
@@ -80,7 +72,7 @@
                 ]
                 ,done: function(res, curr, count){
                     // 修改SKU列表表头
-                    if (0 == $('th[data-field=order_list] ul').length) {
+                    if (0 == $('th[data-field=detail] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px; text-align: center;">供应商</li>';
@@ -90,7 +82,7 @@
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">下单时间</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">交期</li>';
                         html += '</ul>';
-                        $('th[data-field=order_list]').append(html);
+                        $('th[data-field=detail]').append(html);
                     }
 
                     // 修改固定列的各行高度
