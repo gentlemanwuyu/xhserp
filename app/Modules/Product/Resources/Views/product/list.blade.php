@@ -1,6 +1,43 @@
 @extends('layouts.default')
 @section('content')
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('product::product.form')}}">添加产品</a>
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="产品编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="name" placeholder="品名" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <select name="category_id" lay-search="">
+                    <option value="">分类</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @if(!empty($category->children))
+                            @foreach($category->children as $son)
+                                <option value="{{$son->id}}">{{$son->name}}</option>
+                                @if(!empty($son->children))
+                                    @foreach($son->children as $grandson)
+                                        <option value="{{$grandson->id}}">{{$grandson->name}}</option>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs4">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('product::product.form')}}">添加产品</a>
+            </div>
+        </div>
+    </form>
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
@@ -14,10 +51,12 @@
     <script>
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown'], function () {
+        }).use(['table', 'dropdown', 'laydate', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,tableIns = table.render({
+                    ,laydate = layui.laydate
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('product::product.paginate')}}",
                 page: true,
@@ -30,43 +69,43 @@
                     };
                 },
                 cols: [
-                        [
-                            {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
-                            {field: 'code', title: '产品编号', width: 160, align: 'center', fixed: 'left'},
-                            {field: 'name', title: '品名', width: 160, align: 'center', fixed: 'left'},
-                            {field: 'category', title: '分类', align: 'center', templet: function (d) {
-                                return d.category.name;
-                            }},
-                            {field: 'detail', title: 'SKU列表', width: 640, align: 'center', templet: function (d) {
-                                var html = '';
-                                d.skus.forEach(function (sku, key) {
-                                    if (0 == key) {
-                                        html += '<ul class="erp-table-list-ul erp-table-list-ul-first">';
-                                    }else {
-                                        html += '<ul class="erp-table-list-ul">';
-                                    }
+                    [
+                        {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
+                        {field: 'code', title: '产品编号', width: 160, align: 'center', fixed: 'left'},
+                        {field: 'name', title: '品名', width: 160, align: 'center', fixed: 'left'},
+                        {field: 'category', title: '分类', align: 'center', templet: function (d) {
+                            return d.category.name;
+                        }},
+                        {field: 'detail', title: 'SKU列表', width: 640, align: 'center', templet: function (d) {
+                            var html = '';
+                            d.skus.forEach(function (sku, key) {
+                                if (0 == key) {
+                                    html += '<ul class="erp-table-list-ul erp-table-list-ul-first">';
+                                }else {
+                                    html += '<ul class="erp-table-list-ul">';
+                                }
 
-                                    var stock = '-', highest_stock = '-', lowest_stock = '-';
-                                    if (sku.inventory) {
-                                        stock = sku.inventory.stock;
-                                        highest_stock = sku.inventory.highest_stock;
-                                        lowest_stock = sku.inventory.lowest_stock;
-                                    }
+                                var stock = '-', highest_stock = '-', lowest_stock = '-';
+                                if (sku.inventory) {
+                                    stock = sku.inventory.stock;
+                                    highest_stock = sku.inventory.highest_stock;
+                                    lowest_stock = sku.inventory.lowest_stock;
+                                }
 
-                                    html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + sku.code + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.cost_price + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 100px;">' + stock + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 100px;">' + highest_stock + '</li>';
-                                    html += '<li class="erp-table-list-li" style="width: 100px;">' + lowest_stock + '</li>';
-                                    html += '</ul>';
-                                });
-                                return html;
-                            }},
-                            {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
-                            {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
-                            {field: 'action', title: '操作', width: 100, align: 'center', fixed: 'right', toolbar: "#action"}
-                        ]
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + sku.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.cost_price + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + stock + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + highest_stock + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + lowest_stock + '</li>';
+                                html += '</ul>';
+                            });
+                            return html;
+                        }},
+                        {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
+                        {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
+                        {field: 'action', title: '操作', width: 100, align: 'center', fixed: 'right', toolbar: "#action"}
+                    ]
                 ]
                 ,done: function(res, curr, count){
                     // 修改SKU列表表头
@@ -86,7 +125,7 @@
                     // 修改固定列的各行高度
                     $('.layui-table-fixed .layui-table-header thead tr').each(function () {
                         var header_height = $(this).parents('.layui-table-box').children('.layui-table-header').find('table thead tr').css('height');
-                       $(this).css('height', header_height);
+                        $(this).css('height', header_height);
                     });
 
                     $('.layui-table-fixed .layui-table-body tbody tr').each(function () {
@@ -145,6 +184,17 @@
                         return actions;
                     });
                 }
+            }
+                    ,tableIns = table.render(tableOpts);
+
+            laydate.render({
+                elem: 'input[name=created_at_between]'
+                ,range: true
+            });
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>
