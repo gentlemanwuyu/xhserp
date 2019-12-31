@@ -13,14 +13,18 @@
 
     </table>
     <script type="text/html" id="action">
-        <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</a>
+        <div class="urp-dropdown urp-dropdown-table" title="操作">
+            <i class="layui-icon layui-icon-more-vertical urp-dropdown-btn"></i>
+        </div>
     </script>
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.extend({
+            dropdown: '/assets/layui-table-dropdown/dropdown'
+        }).use(['table', 'dropdown'], function () {
             var table = layui.table
+                    ,dropdown = layui.dropdown
                     ,tableIns = table.render({
                 elem: '#list',
                 url: "{{route('purchase::supplier.paginate')}}",
@@ -61,7 +65,7 @@
                         }},
                         {field: 'created_at', title: '创建时间', align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                        {field: 'action', title: '操作', width: '10%', align: 'center', toolbar: "#action"}
+                        {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}
                     ]
                 ]
                 ,done: function(res, curr, count){
@@ -88,38 +92,47 @@
                                 ,tr_height = $this.parents('.layui-table-box').children('.layui-table-body').find('table tbody tr[data-index=' + data_index + ']').css('height');
                         $(this).css('height', tr_height);
                     });
-                }
-            });
 
-            table.on('tool(list)', function(obj){
-                var data = obj.data;
-
-                if ('edit' == obj.event) {
-                    parent.layui.index.openTabsPage("{{route('purchase::supplier.form')}}?supplier_id=" + data.id, '编辑供应商[' + data.id + ']');
-                }else if ('delete' == obj.event) {
-                    layer.confirm("确认要删除该供应商？", {icon: 3, title:"确认"}, function (index) {
-                        layer.close(index);
-                        var load_index = layer.load();
-                        $.ajax({
-                            method: "post",
-                            url: "{{route('purchase::supplier.delete')}}",
-                            data: {supplier_id: data.id},
-                            success: function (data) {
-                                layer.close(load_index);
-                                if ('success' == data.status) {
-                                    layer.msg("供应商删除成功", {icon:1});
-                                    tableIns.reload();
-                                } else {
-                                    layer.msg("供应商删除失败:"+data.msg, {icon:2});
-                                    return false;
-                                }
-                            },
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                layer.close(load_index);
-                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                return false;
+                    dropdown(res.data,function(data) {
+                        var actions = [];
+                        actions.push({
+                            title: "编辑",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('purchase::supplier.form')}}?supplier_id=" + data.id, '编辑供应商[' + data.id + ']');
                             }
                         });
+
+                        actions.push({
+                            title: "删除",
+                            event: function() {
+                                layer.confirm("确认要删除该供应商？", {icon: 3, title:"确认"}, function (index) {
+                                    layer.close(index);
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: "{{route('purchase::supplier.delete')}}",
+                                        data: {supplier_id: data.id},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("供应商删除成功", {icon:1});
+                                                tableIns.reload();
+                                            } else {
+                                                layer.msg("供应商删除失败:"+data.msg, {icon:2});
+                                                return false;
+                                            }
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            return false;
+                                        }
+                                    });
+                                });
+                            }
+                        });
+
+                        return actions;
                     });
                 }
             });
