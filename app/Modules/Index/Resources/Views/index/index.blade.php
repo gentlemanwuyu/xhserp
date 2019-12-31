@@ -22,7 +22,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+                    <a href="http://www.hspcb168.com/" target="_blank" title="官网">
                         <i class="layui-icon layui-icon-website"></i>
                     </a>
                 </li>
@@ -31,16 +31,11 @@
                         <i class="layui-icon layui-icon-refresh-3"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="template/search.html?keywords=">
-                </li>
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right" style="padding: 0 10px;">
-
-                <li class="layui-nav-item" lay-unselect>
+                <li class="layui-nav-item">
                     <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
                         <i class="layui-icon layui-icon-notice"></i>
-
                         <!-- 如果有新消息，则显示小圆点 -->
                         <span class="layui-badge-dot"></span>
                     </a>
@@ -230,11 +225,10 @@
             </div>
             <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="{{route('index::index.home')}}" lay-attr="home/console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                    <li lay-id="{{route('index::index.home')}}" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
                 </ul>
             </div>
         </div>
-
 
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
@@ -242,9 +236,6 @@
                 <iframe src="{{route('index::index.home')}}" frameborder="0" class="layadmin-iframe"></iframe>
             </div>
         </div>
-
-        <!-- 辅助元素，一般用于移动设备下遮罩 -->
-        <div class="layadmin-body-shade" layadmin-event="shade"></div>
     </div>
 </div>
 
