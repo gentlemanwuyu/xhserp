@@ -22,8 +22,8 @@
                     </a>
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="http://www.hspcb168.com/" target="_blank" title="官网">
-                        <i class="layui-icon layui-icon-website"></i>
+                    <a href="javascript:;" layadmin-event="fullscreen">
+                        <i class="layui-icon layui-icon-screen-full"></i>
                     </a>
                 </li>
                 <li class="layui-nav-item" lay-unselect>
@@ -33,35 +33,30 @@
                 </li>
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right" style="padding: 0 10px;">
-                <li class="layui-nav-item">
-                    <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
-                        <i class="layui-icon layui-icon-notice"></i>
-                        <!-- 如果有新消息，则显示小圆点 -->
-                        <span class="layui-badge-dot"></span>
-                    </a>
-                </li>
+                {{--<li class="layui-nav-item">--}}
+                    {{--<a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">--}}
+                        {{--<i class="layui-icon layui-icon-notice"></i>--}}
+                        {{--<!-- 如果有新消息，则显示小圆点 -->--}}
+                        {{--<span class="layui-badge-dot"></span>--}}
+                    {{--</a>--}}
+                {{--</li>--}}
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a href="javascript:;" layadmin-event="theme">
                         <i class="layui-icon layui-icon-theme"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="javascript:;" layadmin-event="note">
-                        <i class="layui-icon layui-icon-note"></i>
-                    </a>
-                </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="javascript:;" layadmin-event="fullscreen">
-                        <i class="layui-icon layui-icon-screen-full"></i>
-                    </a>
-                </li>
+                {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
+                    {{--<a href="javascript:;" layadmin-event="note">--}}
+                        {{--<i class="layui-icon layui-icon-note"></i>--}}
+                    {{--</a>--}}
+                {{--</li>--}}
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <cite>{{\Auth::user()->name}}</cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="set/user/info.html">基本资料</a></dd>
-                        <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+                        {{--<dd><a lay-href="set/user/info.html">基本资料</a></dd>--}}
+                        <dd><a lay-href="{{route('index::user.password_form')}}">修改密码</a></dd>
                         <hr>
                         <dd style="text-align: center;"><a href="{{route('index::index.logout')}}">退出</a></dd>
                     </dl>

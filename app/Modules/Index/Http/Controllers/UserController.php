@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Index\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -83,6 +84,34 @@ class UserController extends Controller
             }
 
             $user->delete();
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+        }
+    }
+
+    public function passwordForm(Request $request)
+    {
+        return view('index::user.password_form');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json(['status' => 'fail', 'msg' => '非法用户']);
+            }
+
+            if ($request->get('password') != $request->get('confirm_password')) {
+                return response()->json(['status' => 'fail', 'msg' => '确认密码不一致']);
+            }
+
+            $user->password = bcrypt($request->get('password'));
+
+            $user->save();
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {

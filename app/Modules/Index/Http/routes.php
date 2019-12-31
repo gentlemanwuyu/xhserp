@@ -29,4 +29,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], func
     Route::get('form', ['as'=>'form', 'uses'=>'UserController@form']);
     Route::post('save', ['as'=>'save', 'uses'=>'UserController@save']);
     Route::post('delete', ['as'=>'delete', 'uses'=>'UserController@delete']);
+    Route::get('password_form', ['as'=>'password_form', 'uses'=>'UserController@passwordForm']);
+    Route::post('reset_password', ['as'=>'reset_password', 'uses'=>'UserController@resetPassword']);
 });
