@@ -210,6 +210,9 @@
                             <dd>
                                 <a lay-href="{{route('index::user.index')}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
                             </dd>
+                            <dd>
+                                <a lay-href="{{route('index::index.logs')}}"><i class="layui-icon layui-icon-log"></i>Laravel日志</a>
+                            </dd>
                         </dl>
                     </li>
                 </ul>
