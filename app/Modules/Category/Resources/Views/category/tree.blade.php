@@ -1,11 +1,9 @@
 @extends('layouts.default')
 @section('content')
     <div class="layui-col-xs-12" style="margin-bottom: 15px;">
-        <button type="button" class="layui-btn layui-btn-sm"  dtree-id="category" dtree-menu="moveDown">展开</button>
-        <button type="button" class="layui-btn layui-btn-sm"  dtree-id="category" dtree-menu="moveUp">收起</button>
-        {{--<button type="button" class="layui-btn layui-btn-sm"  dtree-id="category" dtree-menu="searchNode">搜索</button>--}}
-        <button type="button" class="layui-btn layui-btn-sm"  dtree-id="category" dtree-menu="refresh">刷新</button>
-        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal"  dtree-id="category" dtree-menu="addRoot">添加一级分类</button>
+        <button type="button" class="layui-btn erp-collapse"  dtree-id="category" dtree-menu="moveDown">展开</button>
+        {{--<button type="button" class="layui-btn"  dtree-id="category" dtree-menu="moveUp">收起</button>--}}
+        <button type="button" class="layui-btn layui-btn-normal"  dtree-id="category" dtree-menu="addRoot">添加一级分类</button>
     </div>
     <ul id="category" class="dtree" data-id="0"></ul>
 @endsection
@@ -221,6 +219,22 @@
                     }
                 }
             });
+
+            $('button.erp-collapse').on('click', function () {
+                var $this = $(this)
+                        ,dtreeMenu = $this.attr('dtree-menu')
+                        ,dtreeMethods = category_tree.menubarMethod();
+
+                if ('moveDown' == dtreeMenu) {
+                    dtreeMethods.openAllNode();
+                    $this.attr('dtree-menu', 'moveUp');
+                    $this.html('收起');
+                }else {
+                    dtreeMethods.closeAllNode();
+                    $this.attr('dtree-menu', 'moveDown');
+                    $this.html('展开');
+                }
+            })
         });
     </script>
 @endsection
