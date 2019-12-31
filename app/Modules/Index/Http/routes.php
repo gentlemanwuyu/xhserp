@@ -17,8 +17,9 @@ Route::group(['as'=>'index.'], function (){
 
     Route::group(['middleware' => ['auth']], function (){
         Route::get('/', ['as'=>'index', 'uses'=>'IndexController@index']);
-        Route::get('/home', ['as'=>'home', 'uses'=>'IndexController@home']);
-        Route::get('/logs', ['as'=>'logs', 'uses'=>'\Rap2hpoutre\LaravelLogViewer\LogViewerController@index']);
+        Route::get('logout', ['as'=>'logout', 'uses'=>'IndexController@logout']);
+        Route::get('home', ['as'=>'home', 'uses'=>'IndexController@home']);
+        Route::get('logs', ['as'=>'logs', 'uses'=>'\Rap2hpoutre\LaravelLogViewer\LogViewerController@index']);
     });
 });
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Index\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class IndexController extends Controller
 {
@@ -32,6 +33,15 @@ class IndexController extends Controller
         }else{
             return ['status' => 'fail', 'msg'=>'邮箱或密码不正确'];
         }
+    }
+
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::logout();
+        }
+
+        return Redirect::intended('/');
     }
 
     public function index()
