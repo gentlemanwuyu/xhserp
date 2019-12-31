@@ -46,12 +46,14 @@
                                 <input type="text" name="telephone"  lay-verify="phone" class="layui-input" value="{{$user->telephone or ''}}">
                             </div>
                         </div>
-                        <div class="layui-form-item" pane="">
-                            <label class="layui-form-label">是否管理员</label>
-                            <div class="layui-input-block">
-                                <input type="checkbox" name="is_admin" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($user) && 1 == $user->is_admin) checked @endif>
+                        @if(1 == \Auth::user()->is_admin)
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label">是否管理员</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="is_admin" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($user) && 1 == $user->is_admin) checked @endif>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
