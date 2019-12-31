@@ -44,4 +44,21 @@ class Category extends Model
 
         return $categories;
     }
+
+    /**
+     * 所有的子孙ID
+     *
+     * @return array
+     */
+    public function getChildrenIdsAttribute()
+    {
+        $ids = [];
+
+        $this->children->each(function ($c) use (&$ids) {
+            $ids[] = $c->id;
+            $ids = array_merge($ids, $c->children_ids);
+        });
+
+        return $ids;
+    }
 }
