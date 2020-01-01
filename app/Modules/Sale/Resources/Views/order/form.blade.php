@@ -53,7 +53,7 @@
                                 <select name="tax" lay-verify="required" lay-reqText="请选择税率">
                                     <option value="">请选择税率</option>
                                     @foreach(\App\Modules\Sale\Models\Customer::$taxes as $tax_id => $val)
-                                        <option value="{{$tax_id}}" @if(isset($order->tax) && $tax_id == $order->tax) selected @endif>{{$val['display']}}</option>
+                                        <option value="{{$tax_id}}" @if(isset($order) && $tax_id == $order->tax) selected @endif>{{$val['display']}}</option>
                                     @endforeach
                                 </select>
                             </div>
