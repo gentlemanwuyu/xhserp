@@ -75,7 +75,7 @@ class DeliveryOrderController extends Controller
         foreach ($paginate as $order) {
             $order->items->map(function ($item) {
                 $item->order;
-                $item->orderItem;
+                $item->orderItem->sku->setAppends(['stock']);
 
                 return $item;
             });

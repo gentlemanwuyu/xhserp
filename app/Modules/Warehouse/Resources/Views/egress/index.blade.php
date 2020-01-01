@@ -82,7 +82,7 @@
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
-                        {field: 'detail', title: '出货明细', width: 480, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '出货明细', width: 560, align: 'center', templet: function (d) {
                             var html = '';
                             d.items.forEach(function (item, key) {
                                 if (0 == key) {
@@ -94,6 +94,7 @@
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + item.order.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 200px;">' + item.order_item.title + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.order_item.sku.stock + '</li>';
                                 html += '</ul>';
                             });
                             return html;
@@ -111,6 +112,7 @@
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">订单编号</li>';
                         html += '<li class="erp-table-list-li" style="width: 200px; text-align: center;">Item</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存数量</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);
                     }
