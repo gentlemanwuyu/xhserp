@@ -24,6 +24,12 @@ class Customer extends Model
         3 => '月结',
     ];
 
+    static $taxes = [
+        1 => ['display' => '不含税', 'rate' => 0],
+        2 => ['display' => '3%', 'rate' => 0.03],
+        3 => ['display' => '17%', 'rate' => 0.17],
+    ];
+
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
     public function contacts()
@@ -128,5 +134,10 @@ class Customer extends Model
         $collections = Collection::where('is_finished', 0)->get()->toArray();
 
         return array_sum(array_column($collections, 'remained_amount'));
+    }
+
+    public function getTaxNameAttribute()
+    {
+        return isset(self::$taxes[$this->tax]) ? self::$taxes[$this->tax]['display'] : '';
     }
 }

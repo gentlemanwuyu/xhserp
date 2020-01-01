@@ -9,6 +9,14 @@
                 <input type="text" name="name" placeholder="客户名称" class="layui-input">
             </div>
             <div class="layui-col-xs2">
+                <select name="tax">
+                    <option value="">税率</option>
+                    @foreach(\App\Modules\Sale\Models\Customer::$taxes as $tax_id => $val)
+                        <option value="{{$tax_id}}">{{$val['display']}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
                 <select name="payment_method">
                     <option value="">付款方式</option>
                     @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method_name)
@@ -64,6 +72,7 @@
                         {field: 'name', title: '名称', align: 'center'},
                         {field: 'code', title: '编号', align: 'center'},
                         {field: 'company', title: '公司', width: 250, align: 'center'},
+                        {field: 'tax_name', title: '税率', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'monthly_day', title: '额度', width: 100, align: 'center', templet: function (d) {
                             return 2 == d.payment_method ? d.credit : '';

@@ -42,6 +42,9 @@ class CustomerController extends Controller
         if ($request->get('name')) {
             $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
         }
+        if ($request->get('tax')) {
+            $query = $query->where('tax', $request->get('tax'));
+        }
         if ($request->get('payment_method')) {
             $query = $query->where('payment_method', $request->get('payment_method'));
         }
@@ -55,7 +58,7 @@ class CustomerController extends Controller
 
         foreach ($paginate as $customer) {
             $customer->contacts;
-            $customer->setAppends(['payment_method_name']);
+            $customer->setAppends(['payment_method_name', 'tax_name']);
         }
 
         return response()->json($paginate);
@@ -70,6 +73,7 @@ class CustomerController extends Controller
                 'company' => $request->get('company', ''),
                 'phone' => $request->get('phone', ''),
                 'fax' => $request->get('fax', ''),
+                'tax' => $request->get('tax', 0),
                 'payment_method' => $request->get('payment_method', 0),
                 'credit' => $request->get('credit', 0),
                 'monthly_day' => $request->get('monthly_day', 0),

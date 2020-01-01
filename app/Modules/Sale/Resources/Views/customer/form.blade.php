@@ -53,6 +53,17 @@
                         </div>
                     </div>
                     <div class="layui-col-xs4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">税率</label>
+                            <div class="layui-input-block">
+                                <select name="tax" lay-verify="required" lay-reqText="请选择税率">
+                                    <option value="">请选择税率</option>
+                                    @foreach(\App\Modules\Sale\Models\Customer::$taxes as $tax_id => $val)
+                                        <option value="{{$tax_id}}">{{$val['display']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="layui-form-item" pane="">
                             <label class="layui-form-label required">付款方式</label>
                             <div class="layui-input-block">
@@ -126,6 +137,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-col-xs4">
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">简介</label>
                             <div class="layui-input-block">
@@ -326,16 +339,17 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("客户添加成功", {icon:1});
-                            location.reload();
+                            layer.msg("客户添加成功", {icon: 1, time: 2000}, function () {
+                                location.reload();
+                            });
                         } else {
-                            layer.msg("客户添加失败:"+data.msg, {icon:2});
+                            layer.msg("客户添加失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                         return false;
                     }
                 });
