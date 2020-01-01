@@ -1,7 +1,52 @@
 @extends('layouts.default')
 @section('content')
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('goods::single.select_product')}}" lay-text="选择产品[单品]">添加单品</a>
-    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-href="{{route('goods::combo.select_product')}}" lay-text="选择产品[组合]">添加组合</a>
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="商品编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="name" placeholder="品名" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <select name="category_id" lay-search="">
+                    <option value="">分类</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @if(!empty($category->children))
+                            @foreach($category->children as $son)
+                                <option value="{{$son->id}}">{{$son->name}}</option>
+                                @if(!empty($son->children))
+                                    @foreach($son->children as $grandson)
+                                        <option value="{{$grandson->id}}">{{$grandson->name}}</option>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="type">
+                    <option value="">类型</option>
+                    @foreach(\App\Modules\Goods\Models\Goods::$types as $type_id => $type_name)
+                        <option value="{{$type_id}}">{{$type_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs4">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('goods::single.select_product')}}" lay-text="选择产品[单品]">添加单品</a>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('goods::combo.select_product')}}" lay-text="选择产品[组合]">添加组合</a>
+            </div>
+        </div>
+    </form>
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
@@ -15,10 +60,12 @@
     <script>
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown'], function () {
+        }).use(['table', 'dropdown', 'laydate', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,tableIns = table.render({
+                    ,laydate = layui.laydate
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('goods::goods.paginate')}}",
                 page: true,
@@ -149,6 +196,17 @@
                         return actions;
                     });
                 }
+            }
+                    ,tableIns = table.render(tableOpts);
+
+            laydate.render({
+                elem: 'input[name=created_at_between]'
+                ,range: true
+            });
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>

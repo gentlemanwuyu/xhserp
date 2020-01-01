@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Goods\Models\Goods;
+use App\Modules\Category\Models\Category;
 
 class GoodsController extends Controller
 {
@@ -15,12 +16,34 @@ class GoodsController extends Controller
 
     public function getList(Request $request)
     {
-        return view('goods::goods.list');
+        $categories = Category::tree(2);
+
+        return view('goods::goods.list', compact('categories'));
     }
 
     public function paginate(Request $request)
     {
-        $paginate = Goods::orderBy('id', 'desc')->paginate($request->get('limit'));
+        $query = Goods::query();
+
+        if ($request->get('code')) {
+            $query = $query->where('code', $request->get('code'));
+        }
+        if ($request->get('name')) {
+            $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
+        }
+        if ($request->get('category_id')) {
+            $query = $query->where('category_id', $request->get('category_id'));
+        }
+        if ($request->get('type')) {
+            $query = $query->where('type', $request->get('type'));
+        }
+
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('created_at', '>=', $created_at_between[0] . ' 00:00:00')->where('created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $g) {
             $g->category;
