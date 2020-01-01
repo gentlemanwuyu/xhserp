@@ -69,7 +69,7 @@
                             <div class="layui-input-block">
                                 @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
                                     <div class="layui-inline">
-                                        <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
+                                        <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
                                         @if(isset($customer->payment_method))
                                             @if(2 == $customer->payment_method && 2 == $method_id)
                                                 <input type="text" name="credit" class="layui-input erp-after-radio-input" placeholder="额度(元)" value="{{$customer->credit or ''}}" lay-verify="required" lay-reqText="请输入额度">

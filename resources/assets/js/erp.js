@@ -107,4 +107,19 @@ layui.form.config.verify = {
             return label_text + '只能包含字母/数字/破折号-以及下划线_';
         }
     }
+    ,checkReq: function (value, item) {
+        var name = $(item).attr('name')
+            ,$inputs = $('input[name=' + name + ']')
+            ,checked = false
+            ,label_text = $(item).parents('div.layui-form-item').find('label.layui-form-label').text();
+        $inputs.each(function (_, input) {
+            if ($(input).prop('checked')) {
+                checked = true;
+            }
+        });
+
+        if (!checked) {
+            return '请选择' + label_text;
+        }
+    }
 };
