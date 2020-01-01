@@ -23,6 +23,13 @@ class UserController extends Controller
     {
         $query = User::query();
 
+        if ($request->get('email')) {
+            $query = $query->where('email', $request->get('email'));
+        }
+        if ($request->get('name')) {
+            $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
+        }
+
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
         foreach ($paginate as $user) {
             $gender = $user->gender;

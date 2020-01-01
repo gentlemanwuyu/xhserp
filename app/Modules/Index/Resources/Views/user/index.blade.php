@@ -1,6 +1,22 @@
 @extends('layouts.default')
 @section('content')
-    <a class="layui-btn layui-btn-normal" lay-href="{{route('index::user.form')}}">添加用户</a>
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="email" placeholder="邮箱" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="name" placeholder="用户名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs4">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('index::user.form')}}">添加用户</a>
+            </div>
+        </div>
+    </form>
     <table id="list"  lay-filter="list"></table>
     <script type="text/html" id="action">
         <div class="urp-dropdown urp-dropdown-table" title="操作">
@@ -12,10 +28,11 @@
     <script>
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown'], function(){
+        }).use(['table', 'dropdown', 'form'], function(){
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,tableIns = table.render({
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('index::user.paginate')}}",
                 page: true,
@@ -81,6 +98,12 @@
                         return actions;
                     });
                 }
+            }
+                    ,tableIns = table.render(tableOpts);
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>
