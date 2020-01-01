@@ -52,11 +52,22 @@
                         </div>
                     </div>
                     <div class="layui-col-xs4">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">税率</label>
+                            <div class="layui-input-block">
+                                <select name="tax" lay-verify="required" lay-reqText="请选择税率">
+                                    <option value="">请选择税率</option>
+                                    @foreach(\App\Modules\Purchase\Models\Supplier::$taxes as $tax_id => $val)
+                                        <option value="{{$tax_id}}" @if(isset($supplier) && $tax_id == $supplier->tax) selected @endif>{{$val['display']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="layui-form-item" pane="">
                             <label class="layui-form-label required">付款方式</label>
                             <div class="layui-input-block">
                                 @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method)
-                                    <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-filter="payment_method" @if(isset($supplier->payment_method) && $supplier->payment_method == $method_id) checked @endif>
+                                    <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($supplier->payment_method) && $supplier->payment_method == $method_id) checked @endif>
                                 @endforeach
                                 @if(isset($supplier->payment_method) && 3 == $supplier->payment_method)
                                     <input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" value="{{$supplier->monthly_day or ''}}" lay-verify="required" lay-reqText="请输入月结天数">
@@ -119,6 +130,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-col-xs4">
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">简介</label>
                             <div class="layui-input-block">
@@ -321,16 +334,17 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("供应商添加成功", {icon:1});
-                            location.reload();
+                            layer.msg("供应商添加成功", {icon: 1, time: 2000}, function () {
+                                location.reload();
+                            });
                         } else {
-                            layer.msg("供应商添加失败:"+data.msg, {icon:2});
+                            layer.msg("供应商添加失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                         return false;
                     }
                 });
