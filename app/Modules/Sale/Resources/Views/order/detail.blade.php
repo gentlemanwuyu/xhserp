@@ -22,6 +22,10 @@
                             <td>付款方式</td>
                             <td>{{$order->payment_method_name or ''}}</td>
                         </tr>
+                        <tr>
+                            <td>税率</td>
+                            <td>{{$order->tax_name or ''}}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

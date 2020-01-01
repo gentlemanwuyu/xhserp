@@ -28,7 +28,7 @@ class OrderController extends Controller
 
     public function form(Request $request)
     {
-        $suppliers = Supplier::all(['id', 'name', 'payment_method'])->pluck(null, 'id');
+        $suppliers = Supplier::all(['id', 'name', 'payment_method', 'tax'])->pluck(null, 'id');
         $products = Product::all()->map(function ($product) {
             $product->skus;
             return $product;
@@ -77,7 +77,7 @@ class OrderController extends Controller
             });
             $order->supplier;
             $order->user;
-            $order->setAppends(['payment_method_name', 'status_name']);
+            $order->setAppends(['payment_method_name', 'status_name', 'tax_name']);
         }
 
         return response()->json($paginate);
@@ -90,6 +90,7 @@ class OrderController extends Controller
                 'code' => $request->get('code', ''),
                 'supplier_id' => $request->get('supplier_id'),
                 'payment_method' => $request->get('payment_method'),
+                'tax' => $request->get('tax'),
                 'status' => 1,
             ];
 

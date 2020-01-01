@@ -47,6 +47,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">税率</label>
+                            <div class="layui-input-block">
+                                <select name="tax" lay-verify="required" lay-reqText="请选择税率">
+                                    <option value="">请选择税率</option>
+                                    @foreach(\App\Modules\Purchase\Models\Supplier::$taxes as $tax_id => $val)
+                                        <option value="{{$tax_id}}" @if(isset($order) && $tax_id == $order->tax) selected @endif>{{$val['display']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -255,12 +266,14 @@
 
             // 监听供应商选择框
             form.on('select(supplier)', function (data) {
-                var payment_method = '';
+                var payment_method = '', tax = '';
                 if (data.value) {
                     payment_method = suppliers[data.value]['payment_method'];
+                    tax = suppliers[data.value]['tax'];
                 }
 
                 $('select[name=payment_method]').val(payment_method);
+                $('select[name=tax]').val(tax);
                 form.render('select', 'order');
             });
 

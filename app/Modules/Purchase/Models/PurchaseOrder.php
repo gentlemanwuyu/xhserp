@@ -85,4 +85,9 @@ class PurchaseOrder extends Model
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
     }
+
+    public function getTaxNameAttribute()
+    {
+        return isset(Supplier::$taxes[$this->tax]) ? Supplier::$taxes[$this->tax]['display'] : '';
+    }
 }
