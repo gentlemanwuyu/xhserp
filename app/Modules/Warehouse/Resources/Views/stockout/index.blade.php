@@ -1,14 +1,44 @@
 @extends('layouts.default')
 @section('content')
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <select name="category_id" lay-search="">
+                    <option value="">分类</option>
+                    @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @if(!empty($category->children))
+                            @foreach($category->children as $son)
+                                <option value="{{$son->id}}">{{$son->name}}</option>
+                                @if(!empty($son->children))
+                                    @foreach($son->children as $grandson)
+                                        <option value="{{$grandson->id}}">{{$grandson->name}}</option>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs4">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+
+        </div>
+    </form>
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
 @endsection
 @section('scripts')
     <script>
-        layui.use(['table'], function () {
+        layui.use(['table', 'form'], function () {
             var table = layui.table
-                    ,tableIns = table.render({
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('warehouse::stockout.paginate')}}",
                 page: true,
@@ -79,6 +109,12 @@
                         $(this).css('height', tr_height);
                     });
                 }
+            }
+                    ,tableIns = table.render(tableOpts);
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>
