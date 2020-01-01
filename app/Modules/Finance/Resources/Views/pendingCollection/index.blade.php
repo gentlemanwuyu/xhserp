@@ -2,6 +2,22 @@
 @section('content')
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="客户编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="name" placeholder="客户名称" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <select name="payment_method">
+                    <option value="">付款方式</option>
+                    @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method_name)
+                        <option value="{{$method_id}}">{{$method_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
