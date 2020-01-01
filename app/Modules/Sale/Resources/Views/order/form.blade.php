@@ -47,6 +47,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">税率</label>
+                            <div class="layui-input-block">
+                                <select name="tax" lay-verify="required" lay-reqText="请选择税率">
+                                    <option value="">请选择税率</option>
+                                    @foreach(\App\Modules\Sale\Models\Customer::$taxes as $tax_id => $val)
+                                        <option value="{{$tax_id}}" @if(isset($order->tax) && $tax_id == $order->tax) selected @endif>{{$val['display']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,12 +265,14 @@
 
             // 监听客戶选择框
             form.on('select(customer)', function (data) {
-                var payment_method = '';
+                var payment_method = '', tax = '';
                 if (data.value) {
                     payment_method = customers[data.value]['payment_method'];
+                    tax = customers[data.value]['tax'];
                 }
 
                 $('select[name=payment_method]').val(payment_method);
+                $('select[name=tax]').val(tax);
                 form.render('select', 'order');
             });
 
@@ -286,16 +299,17 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("订单添加成功", {icon:1});
-                            location.reload();
+                            layer.msg("订单添加成功", {icon: 1, time: 2000}, function () {
+                                location.reload();
+                            });
                         } else {
-                            layer.msg("订单添加失败:"+data.msg, {icon:2});
+                            layer.msg("订单添加失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                         return false;
                     }
                 });

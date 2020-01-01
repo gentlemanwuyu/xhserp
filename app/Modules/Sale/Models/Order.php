@@ -92,4 +92,9 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getTaxNameAttribute()
+    {
+        return isset(Customer::$taxes[$this->tax]) ? Customer::$taxes[$this->tax]['display'] : '';
+    }
 }

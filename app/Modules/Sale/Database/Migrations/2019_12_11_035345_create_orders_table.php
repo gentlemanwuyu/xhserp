@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
 			$table->string('code')->default('')->comment('订单编号');
 			$table->integer('customer_id')->default(0)->comment('客户ID');
 			$table->tinyInteger('payment_method')->default(0)->comment('付款方式');
+			$table->tinyInteger('tax')->default(0)->comment('税率，1为不含税，2为3%，3为17%');
 			$table->tinyInteger('status')->default(0)->comment('订单状态，1为待审核，2为已驳回，3为已通过，4为已完成，5为已取消');
 			$table->tinyInteger('payment_status')->default(0)->comment('付款状态，1为待付款，2为完成付款');
 			$table->integer('user_id')->default(0)->comment('创建人ID');
