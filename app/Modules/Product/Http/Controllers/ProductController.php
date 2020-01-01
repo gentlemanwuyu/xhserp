@@ -44,6 +44,9 @@ class ProductController extends Controller
         if ($request->get('name')) {
             $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
         }
+        if ($request->get('category_id')) {
+            $query = $query->where('category_id', $request->get('category_id'));
+        }
 
         if ($request->get('created_at_between')) {
             $created_at_between = explode(' - ', $request->get('created_at_between'));
