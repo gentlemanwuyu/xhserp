@@ -37,10 +37,9 @@
     <script>
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown', 'laydate', 'form'], function () {
+        }).use(['table', 'dropdown', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,laydate = layui.laydate
                     ,form = layui.form
                     ,tableOpts = {
                 elem: '#list',
@@ -137,11 +136,6 @@
             };
 
             table.render(tableOpts);
-
-            laydate.render({
-                elem: 'input[name=created_at_between]'
-                ,range: true
-            });
 
             form.on('submit(search)', function (form_data) {
                 tableOpts.where = form_data.field;

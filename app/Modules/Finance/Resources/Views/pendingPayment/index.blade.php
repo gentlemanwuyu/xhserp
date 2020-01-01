@@ -2,6 +2,22 @@
 @section('content')
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="供应商编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <input type="text" name="name" placeholder="供应商名称" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <select name="payment_method">
+                    <option value="">付款方式</option>
+                    @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method_name)
+                        <option value="{{$method_id}}">{{$method_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -21,10 +37,9 @@
     <script>
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown', 'laydate', 'form'], function () {
+        }).use(['table', 'dropdown', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,laydate = layui.laydate
                     ,form = layui.form
                     ,tableOpts = {
                 elem: '#list',
@@ -121,11 +136,6 @@
             };
 
             table.render(tableOpts);
-
-            laydate.render({
-                elem: 'input[name=created_at_between]'
-                ,range: true
-            });
 
             form.on('submit(search)', function (form_data) {
                 tableOpts.where = form_data.field;

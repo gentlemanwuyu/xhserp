@@ -21,10 +21,20 @@ class PendingPaymentController extends Controller
 
     public function paginate(Request $request)
     {
-        $supplier_ids = SkuEntry::leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.order_item_id')
+        $query = SkuEntry::leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.order_item_id')
             ->leftJoin('purchase_orders AS po', 'po.id', '=', 'poi.order_id')
-            ->where('sku_entries.is_paid', 0)
-            ->get(['po.supplier_id']);
+            ->leftJoin('suppliers AS s', 's.id', '=', 'po.supplier_id');
+        $query = $query->where('sku_entries.is_paid', 0);
+        if ($request->get('code')) {
+            $query = $query->where('s.code', $request->get('code'));
+        }
+        if ($request->get('name')) {
+            $query = $query->where('s.name', 'like', '%' . $request->get('name') . '%');
+        }
+        if ($request->get('payment_method')) {
+            $query = $query->where('s.payment_method', $request->get('payment_method'));
+        }
+        $supplier_ids = $query->get(['po.supplier_id']);
         $supplier_ids = array_unique(array_column($supplier_ids->toArray(), 'supplier_id'));
 
         $query = Supplier::whereIn('id', $supplier_ids);
