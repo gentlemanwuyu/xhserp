@@ -41,8 +41,8 @@
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.cost_price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.stock + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.highest_stock + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.lowest_stock + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.highest_stock + '</li>';
                                 html += '</ul>';
                             });
                             return html;
@@ -60,8 +60,8 @@
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">重量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">成本价</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存</li>';
-                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">最高库存</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">最低库存</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">最高库存</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);
                     }
