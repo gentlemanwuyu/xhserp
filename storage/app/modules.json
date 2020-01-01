@@ -1,0 +1,10 @@
+{
+    "category": true,
+    "finance": true,
+    "goods": true,
+    "index": true,
+    "product": true,
+    "purchase": true,
+    "sale": true,
+    "warehouse": true
+}
