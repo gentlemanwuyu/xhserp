@@ -24,6 +24,12 @@
                 <div class="layui-row layui-col-space30">
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
+                            <label class="layui-form-label">客户</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->name or ''}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label required">出货单号</label>
                             <div class="layui-input-block">
                                 <input type="text" name="code" lay-verify="required" lay-reqText="请输入出货单号" class="layui-input" value="{{$delivery_order->code or ''}}">
