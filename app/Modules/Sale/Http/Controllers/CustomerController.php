@@ -58,6 +58,7 @@ class CustomerController extends Controller
 
         foreach ($paginate as $customer) {
             $customer->contacts;
+            $customer->manager;
             $customer->setAppends(['payment_method_name', 'tax_name']);
         }
 

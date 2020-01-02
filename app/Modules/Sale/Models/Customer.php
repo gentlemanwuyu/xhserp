@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ChineseRegion;
 use Illuminate\Support\Facades\DB;
+use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\Collection;
 
 class Customer extends Model
@@ -139,5 +140,10 @@ class Customer extends Model
     public function getTaxNameAttribute()
     {
         return isset(self::$taxes[$this->tax]) ? self::$taxes[$this->tax]['display'] : '';
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(User::class, 'manager_id');
     }
 }

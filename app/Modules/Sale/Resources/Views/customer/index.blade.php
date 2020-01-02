@@ -74,6 +74,9 @@
                         {field: 'company', title: '公司', width: 250, align: 'center'},
                         {field: 'tax_name', title: '税率', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
+                        {field: 'manager_name', title: '负责人', width: 100, align: 'center', templet: function (d) {
+                            return null == d.manager ? '' : d.manager.name;
+                        }},
                         {field: 'monthly_day', title: '额度', width: 100, align: 'center', templet: function (d) {
                             return 2 == d.payment_method ? d.credit : '';
                         }},

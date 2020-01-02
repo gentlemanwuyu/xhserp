@@ -30,6 +30,7 @@ class CustomersTableSeeder extends Seeder
             'city_id' => '823',
             'county_id' => '0',
             'street_address' => '博诚公司',
+            'manager_id' => '3',
         ]);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '丁晖', 'position' => '老板', 'phone' => '13626233563']);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '毕良山', 'position' => '合伙人', 'phone' => '13395165352']);
@@ -49,6 +50,7 @@ class CustomersTableSeeder extends Seeder
             'city_id' => '849',
             'county_id' => '857',
             'street_address' => '',
+            'manager_id' => '5',
         ]);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '小饶', 'position' => '老板', 'phone' => '15206226661']);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '老饶', 'position' => '老板', 'phone' => '13814573589']);
@@ -67,6 +69,7 @@ class CustomersTableSeeder extends Seeder
             'city_id' => '1959',
             'county_id' => '1963',
             'street_address' => '西乡街道铁岗水库路166号(桃花源科技创业中心侧)',
+            'manager_id' => '5',
         ]);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '王先生', 'position' => '采购总监', 'phone' => '13800138000']);
 
@@ -84,6 +87,7 @@ class CustomersTableSeeder extends Seeder
             'city_id' => '1959',
             'county_id' => '1963',
             'street_address' => '新桥街道新玉路横岗下大街1号',
+            'manager_id' => '6',
         ]);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '邓先生', 'position' => '采购副总监', 'phone' => '13800138000']);
     }
