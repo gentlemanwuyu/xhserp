@@ -64,23 +64,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-form-item" pane="">
-                            <label class="layui-form-label required">付款方式</label>
-                            <div class="layui-input-block">
-                                @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
-                                    <div class="layui-inline">
-                                        <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
-                                        @if(isset($customer->payment_method))
-                                            @if(2 == $customer->payment_method && 2 == $method_id)
-                                                <input type="text" name="credit" class="layui-input erp-after-radio-input" placeholder="额度(元)" value="{{$customer->credit or ''}}" lay-verify="required" lay-reqText="请输入额度">
-                                            @elseif(3 == $customer->payment_method && 3 == $method_id)
-                                                <input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" value="{{$customer->monthly_day or ''}}" lay-verify="required" lay-reqText="请输入月结天数">
-                                            @endif
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">地址</label>
                             <div class="layui-input-block">
@@ -151,6 +134,41 @@
                                 <textarea name="intro" class="layui-textarea">{{$customer->intro or ''}}</textarea>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <h3>付款方式</h3>
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-row layui-col-space30">
+                    <div class="layui-col-xs4">
+                        <div class="layui-form-item" pane="">
+                            <label class="layui-form-label required">付款方式</label>
+                            <div class="layui-input-block">
+                                @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
+                                    <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
+                                @endforeach
+                            </div>
+                        </div>
+                        @if(isset($customer) && 2 == $customer->payment_method)
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">额度</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="credit" class="layui-input" value="{{$customer->credit or ''}}">
+                                </div>
+                            </div>
+                        @endif
+                        @if(isset($customer) && 3 == $customer->payment_method)
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">月结天数</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="monthly_day" class="layui-input" value="{{$customer->monthly_day or ''}}">
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -308,18 +326,30 @@
 
             // 付款方式单选监听
             form.on('radio(payment_method)', function(data){
-                var $formItem = $(data.elem).parents('.layui-form-item')
-                        ,$credit = $formItem.find('input[name=credit]')
-                        ,$monthlyDay = $formItem.find('input[name=monthly_day]');
-                if (1 == data.value) {
-                    $credit.remove();
-                    $monthlyDay.remove();
-                }else if (2 == data.value) {
-                    $monthlyDay.remove();
-                    $(data.elem).parent().append('<input type="text" name="credit" class="layui-input erp-after-radio-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度">');
-                }else if (3 == data.value && $monthlyDay.length == 0) {
-                    $credit.remove();
-                    $(data.elem).parent().append('<input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">');
+                var $paymentMethodItem = $(data.elem).parents('.layui-form-item');
+                $('input[name=credit]').parents('.layui-form-item').remove();
+                $('input[name=monthly_day]').parents('.layui-form-item').remove();
+
+                if (2 == data.value) {
+                    var html = '';
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label required">额度</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    $paymentMethodItem.after(html);
+                }else if (3 == data.value) {
+                    var html = '';
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label required">月结天数</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    $paymentMethodItem.after(html);
                 }
             });
 
