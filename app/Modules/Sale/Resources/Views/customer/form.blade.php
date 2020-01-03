@@ -137,6 +137,12 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="layui-form-item" pane="">
+                            <label class="layui-form-label">放入客户池</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="in_pool" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($customer) && 0 == $customer->manager_id) checked @endif>
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-col-xs4">
                         <div class="layui-form-item layui-form-text">

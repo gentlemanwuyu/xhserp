@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Modules\Sale\Models\Customer;
 use App\Services\WorldService;
 
@@ -85,9 +86,21 @@ class CustomerController extends Controller
                 'intro' => $request->get('intro', ''),
             ];
 
+            $customer = Customer::find($request->get('customer_id'));
+
             DB::beginTransaction();
 
-            $customer = Customer::updateOrCreate(['id' => $request->get('customer_id')], $customer_data);
+            if ($customer) {
+                if ($request->get('in_pool')) {
+                    $customer_data['manager_id'] = 0;
+                }elseif (empty($customer->manager_id)) {
+                    $customer_data['manager_id'] = Auth::user()->id;
+                }
+                $customer->update($customer_data);
+            }else {
+                $customer_data['manager_id'] = $request->get('in_pool') ? 0 : Auth::user()->id;
+                $customer = Customer::create($customer_data);
+            }
 
             if (!$customer) {
                 throw new \Exception("供应商保存失败");
