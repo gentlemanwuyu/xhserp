@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Customer;
 use App\Services\WorldService;
 
@@ -18,7 +19,9 @@ class CustomerController extends Controller
 
     public function index()
     {
-        return view('sale::customer.index');
+        $users = User::where('is_admin', 0)->get();
+
+        return view('sale::customer.index', compact('users'));
     }
 
     public function form(Request $request)
@@ -48,6 +51,10 @@ class CustomerController extends Controller
         }
         if ($request->get('payment_method')) {
             $query = $query->where('payment_method', $request->get('payment_method'));
+        }
+
+        if ('' != $request->get('manager_id')) {
+            $query = $query->where('manager_id', $request->get('manager_id'));
         }
 
         if ($request->get('created_at_between')) {

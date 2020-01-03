@@ -25,6 +25,15 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
+                <select name="manager_id" lay-search="">
+                    <option value="">负责人</option>
+                    <option value="0">客户池</option>
+                    @foreach($users as $user)
+                        <option value="{{$user->id}}">{{$user->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
                 <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
             </div>
         </div>
