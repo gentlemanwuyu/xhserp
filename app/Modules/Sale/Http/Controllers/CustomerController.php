@@ -76,6 +76,26 @@ class CustomerController extends Controller
     public function save(Request $request)
     {
         try {
+            // code去重判断
+            $query = Customer::where('code', $request->get('code'));
+            if ($request->get('customer_id')) {
+                $query = $query->where('id', '!=', $request->get('customer_id'));
+            }
+            $code_exists = $query->first();
+            if ($code_exists) {
+                return response()->json(['status' => 'fail', 'msg' => '客户编号[' . $request->get('code') . ']已存在']);
+            }
+
+            // name去重判断
+            $query = Customer::where('name', $request->get('name'));
+            if ($request->get('customer_id')) {
+                $query = $query->where('id', '!=', $request->get('customer_id'));
+            }
+            $name_exists = $query->first();
+            if ($name_exists) {
+                return response()->json(['status' => 'fail', 'msg' => '客户名称[' . $request->get('name') . ']已存在']);
+            }
+
             $customer_data = [
                 'code' => $request->get('code', ''),
                 'name' => $request->get('name', ''),
@@ -110,7 +130,7 @@ class CustomerController extends Controller
             }
 
             if (!$customer) {
-                throw new \Exception("供应商保存失败");
+                return response()->json(['status' => 'fail', 'msg' => '客户保存失败']);
             }
 
             // 同步联系人

@@ -345,11 +345,11 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("客户添加成功", {icon: 1, time: 2000}, function () {
+                            layer.msg("客户保存成功", {icon: 1, time: 2000}, function () {
                                 location.reload();
                             });
                         } else {
-                            layer.msg("客户添加失败:"+data.msg, {icon: 2, time: 2000});
+                            layer.msg("客户保存失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },
