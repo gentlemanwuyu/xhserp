@@ -136,4 +136,11 @@ class CustomerController extends Controller
             return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
         }
     }
+
+    public function detail(Request $request)
+    {
+        $customer = Customer::find($request->get('customer_id'));
+
+        return view('sale::customer.detail', compact('customer'));
+    }
 }

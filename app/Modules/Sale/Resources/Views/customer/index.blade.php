@@ -131,6 +131,14 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('sale::customer.detail')}}?customer_id=" + data.id, '客户详情[' + data.id + ']');
+                            }
+                        });
+
                         actions.push({
                             title: "编辑",
                             event: function () {
