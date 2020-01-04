@@ -118,8 +118,26 @@ class CustomerController extends Controller
             if ($customer) {
                 if ($request->get('in_pool')) {
                     $customer_data['manager_id'] = 0;
+                    // 放入客户池时，将这个客户的付款方式申请删除
+                    PaymentMethodApplication::where('customer_id', $customer->id)->whereIn('status', [1, 2])->delete();
+                    // 并将付款方式改为现金
+                    $customer_data['payment_method'] = 1;
+                    $customer_data['credit'] = 0;
+                    $customer_data['monthly_day'] = 0;
                 }elseif (empty($customer->manager_id)) {
                     $customer_data['manager_id'] = Auth::user()->id;
+                    // 如果是货到付款或月结，需要申请
+                    if (in_array($request->get('payment_method'), [2, 3])) {
+                        PaymentMethodApplication::create([
+                            'customer_id' => $customer->id,
+                            'payment_method' => $request->get('payment_method'),
+                            'credit' => $request->get('credit', 0),
+                            'monthly_day' => $request->get('monthly_day', 0),
+                            'reason' => $request->get('reason', ''),
+                            'status' => 1,
+                            'user_id' => Auth::user()->id,
+                        ]);
+                    }
                 }
                 $customer->update($customer_data);
             }else {

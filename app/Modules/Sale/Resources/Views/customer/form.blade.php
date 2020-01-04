@@ -123,7 +123,7 @@
                         <div class="layui-form-item" pane="">
                             <label class="layui-form-label">放入客户池</label>
                             <div class="layui-input-block">
-                                <input type="checkbox" name="in_pool" value="1" lay-skin="switch" lay-text="是|否"  @if(!empty($customer) && 0 == $customer->manager_id) checked @endif>
+                                <input type="checkbox" name="in_pool" value="1" lay-skin="switch" lay-text="是|否" lay-filter="in_pool" @if(!empty($customer) && 0 == $customer->manager_id) checked @endif>
                             </div>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                                 <label class="layui-form-label required">付款方式</label>
                                 <div class="layui-input-block">
                                     @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
-                                        <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
+                                        <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请选择付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
                                     @endforeach
                                 </div>
                             </div>
@@ -197,9 +197,95 @@
 @endsection
 @section('scripts')
     <script>
-        var chinese_regions = <?= json_encode($chinese_regions); ?>;
+        var chinese_regions = <?= json_encode($chinese_regions); ?>
+                ,payment_methods = <?= json_encode(\App\Modules\Sale\Models\Customer::$payment_methods); ?>;
+        @if(isset($customer))
+            var customer = <?= json_encode($customer); ?>;
+        @else
+            var customer = undefined;
+        @endif
         layui.use(['form'], function () {
-            var form = layui.form;
+            var form = layui.form
+                    // 付款方式单选监听
+                    ,listenPaymentMethodRadio = function () {
+                form.on('radio(payment_method)', function(data){
+                    var $paymentMethodItem = $(data.elem).parents('.layui-form-item');
+                    $('input[name=credit]').parents('.layui-form-item').remove();
+                    $('input[name=monthly_day]').parents('.layui-form-item').remove();
+                    $('textarea[name=reason]').parents('.layui-form-item').remove();
+
+                    if (2 == data.value) {
+                        var html = '';
+                        html += '<div class="layui-form-item">';
+                        html += '<label class="layui-form-label required">额度</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度">';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '<div class="layui-form-item layui-form-text">';
+                        html += '<label class="layui-form-label required">申请原因</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<textarea name="reason" class="layui-textarea" placeholder="申请原因" lay-verify="required" lay-reqText="请输入申请原因"></textarea>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        $paymentMethodItem.after(html);
+                    }else if (3 == data.value) {
+                        var html = '';
+                        html += '<div class="layui-form-item">';
+                        html += '<label class="layui-form-label required">月结天数</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '<div class="layui-form-item layui-form-text">';
+                        html += '<label class="layui-form-label required">申请原因</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<textarea name="reason" class="layui-textarea" placeholder="申请原因" lay-verify="required" lay-reqText="请输入申请原因"></textarea>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        $paymentMethodItem.after(html);
+                    }
+                });
+            };
+
+            listenPaymentMethodRadio();
+
+            form.on('switch(in_pool)', function(data){
+                var checked = data.elem.checked
+                        ,$paymentMethodCard = $('input[name=payment_method]').parents('.layui-card')
+                        ,$baseInfoCard = $(data.elem).parents('.layui-card');
+
+                if (checked) {
+                    $paymentMethodCard.remove();
+                }else if (!customer || 0 == customer.manager_id) {
+                    var html = '';
+                    html += '<div class="layui-card">';
+                    html += '<div class="layui-card-header">';
+                    html += '<h3>付款方式</h3>';
+                    html += '</div>';
+                    html += '<div class="layui-card-body">';
+                    html += '<div class="layui-row layui-col-space30">';
+                    html += '<div class="layui-col-xs4">';
+                    html += '<div class="layui-form-item" pane="">';
+                    html += '<label class="layui-form-label required">付款方式</label>';
+                    html += '<div class="layui-input-block">';
+                    $.each(payment_methods, function (method_id, method_name) {
+                        html += '<input type="radio" name="payment_method" value="' + method_id + '" title="' + method_name + '" lay-verify="checkReq" lay-reqText="请选择付款方式" lay-filter="payment_method">';
+                    });
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    $baseInfoCard.after(html);
+                    form.render('radio', 'customer');
+                    listenPaymentMethodRadio();
+                }
+            });
+
             $('button[lay-event=addContact]').on('click', function () {
                 var $body = $('#contactTable').find('tbody')
                         ,html = ''
@@ -308,48 +394,6 @@
                 }
 
                 form.render('select', 'customer');
-            });
-
-            // 付款方式单选监听
-            form.on('radio(payment_method)', function(data){
-                var $paymentMethodItem = $(data.elem).parents('.layui-form-item');
-                $('input[name=credit]').parents('.layui-form-item').remove();
-                $('input[name=monthly_day]').parents('.layui-form-item').remove();
-                $('textarea[name=reason]').parents('.layui-form-item').remove();
-
-                if (2 == data.value) {
-                    var html = '';
-                    html += '<div class="layui-form-item">';
-                    html += '<label class="layui-form-label required">额度</label>';
-                    html += '<div class="layui-input-block">';
-                    html += '<input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度">';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '<div class="layui-form-item layui-form-text">';
-                    html += '<label class="layui-form-label required">申请原因</label>';
-                    html += '<div class="layui-input-block">';
-                    html += '<textarea name="reason" class="layui-textarea" placeholder="申请原因" lay-verify="required" lay-reqText="请输入申请原因"></textarea>';
-                    html += '</div>';
-                    html += '</div>';
-
-                    $paymentMethodItem.after(html);
-                }else if (3 == data.value) {
-                    var html = '';
-                    html += '<div class="layui-form-item">';
-                    html += '<label class="layui-form-label required">月结天数</label>';
-                    html += '<div class="layui-input-block">';
-                    html += '<input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '<div class="layui-form-item layui-form-text">';
-                    html += '<label class="layui-form-label required">申请原因</label>';
-                    html += '<div class="layui-input-block">';
-                    html += '<textarea name="reason" class="layui-textarea" placeholder="申请原因" lay-verify="required" lay-reqText="请输入申请原因"></textarea>';
-                    html += '</div>';
-                    html += '</div>';
-
-                    $paymentMethodItem.after(html);
-                }
             });
 
             form.on('submit(customer)', function (form_data) {
