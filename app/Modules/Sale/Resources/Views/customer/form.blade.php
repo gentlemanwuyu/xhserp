@@ -24,13 +24,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="{{$customer->code or ''}}">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="{{$customer->name or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入编号" class="layui-input" value="{{$customer->name or ''}}">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入编号" class="layui-input" value="{{$customer->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -138,41 +138,27 @@
                 </div>
             </div>
         </div>
-        <div class="layui-card">
-            <div class="layui-card-header">
-                <h3>付款方式</h3>
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-row layui-col-space30">
-                    <div class="layui-col-xs4">
-                        <div class="layui-form-item" pane="">
-                            <label class="layui-form-label required">付款方式</label>
-                            <div class="layui-input-block">
-                                @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
-                                    <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
-                                @endforeach
+        @if(empty($customer))
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <h3>付款方式</h3>
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space30">
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item" pane="">
+                                <label class="layui-form-label required">付款方式</label>
+                                <div class="layui-input-block">
+                                    @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
+                                        <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($customer->payment_method) && $customer->payment_method == $method_id) checked @endif>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
-                        @if(isset($customer) && 2 == $customer->payment_method)
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">额度</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="credit" class="layui-input" value="{{$customer->credit or ''}}">
-                                </div>
-                            </div>
-                        @endif
-                        @if(isset($customer) && 3 == $customer->payment_method)
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">月结天数</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="monthly_day" class="layui-input" value="{{$customer->monthly_day or ''}}">
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>联系人</h3>
@@ -329,6 +315,7 @@
                 var $paymentMethodItem = $(data.elem).parents('.layui-form-item');
                 $('input[name=credit]').parents('.layui-form-item').remove();
                 $('input[name=monthly_day]').parents('.layui-form-item').remove();
+                $('textarea[name=reason]').parents('.layui-form-item').remove();
 
                 if (2 == data.value) {
                     var html = '';
@@ -336,6 +323,12 @@
                     html += '<label class="layui-form-label required">额度</label>';
                     html += '<div class="layui-input-block">';
                     html += '<input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度">';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div class="layui-form-item layui-form-text">';
+                    html += '<label class="layui-form-label required">申请原因</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<textarea name="reason" class="layui-textarea" placeholder="申请原因" lay-verify="required" lay-reqText="请输入申请原因"></textarea>';
                     html += '</div>';
                     html += '</div>';
 
@@ -346,6 +339,12 @@
                     html += '<label class="layui-form-label required">月结天数</label>';
                     html += '<div class="layui-input-block">';
                     html += '<input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div class="layui-form-item layui-form-text">';
+                    html += '<label class="layui-form-label required">申请原因</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<textarea name="reason" class="layui-textarea" placeholder="申请原因" lay-verify="required" lay-reqText="请输入申请原因"></textarea>';
                     html += '</div>';
                     html += '</div>';
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Customer;
+use App\Modules\Sale\Models\PaymentMethodApplication;
 use App\Services\WorldService;
 
 class CustomerController extends Controller
@@ -103,9 +104,6 @@ class CustomerController extends Controller
                 'phone' => $request->get('phone', ''),
                 'fax' => $request->get('fax', ''),
                 'tax' => $request->get('tax', 0),
-                'payment_method' => $request->get('payment_method', 0),
-                'credit' => $request->get('credit', 0),
-                'monthly_day' => $request->get('monthly_day', 0),
                 'state_id' => $request->get('state_id', 0),
                 'city_id' => $request->get('city_id', 0),
                 'county_id' => $request->get('county_id', 0),
@@ -126,7 +124,22 @@ class CustomerController extends Controller
                 $customer->update($customer_data);
             }else {
                 $customer_data['manager_id'] = $request->get('in_pool') ? 0 : Auth::user()->id;
+                $customer_data['payment_method'] = 1;
+
                 $customer = Customer::create($customer_data);
+
+                // 如果是货到付款或月结，需要申请
+                if (in_array($request->get('payment_method'), [2, 3])) {
+                    PaymentMethodApplication::create([
+                        'customer_id' => $customer->id,
+                        'payment_method' => $request->get('payment_method'),
+                        'credit' => $request->get('credit', 0),
+                        'monthly_day' => $request->get('monthly_day', 0),
+                        'reason' => $request->get('reason', ''),
+                        'status' => 1,
+                        'user_id' => Auth::user()->id,
+                    ]);
+                }
             }
 
             if (!$customer) {

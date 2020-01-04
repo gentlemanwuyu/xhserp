@@ -41,3 +41,14 @@ Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
 	Route::post('delete', ['as'=>'delete', 'uses'=>'DeliveryOrderController@delete']);
 	Route::get('detail', ['as'=>'detail', 'uses'=>'DeliveryOrderController@detail']);
 });
+
+Route::group(['prefix' => 'paymentMethod', 'as'=>'paymentMethod.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'PaymentMethodController@index']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PaymentMethodController@paginate']);
+	Route::get('form', ['as'=>'form', 'uses'=>'PaymentMethodController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'PaymentMethodController@save']);
+	Route::get('review', ['as'=>'review', 'uses'=>'PaymentMethodController@review']);
+	Route::post('agree', ['as'=>'agree', 'uses'=>'PaymentMethodController@agree']);
+	Route::post('reject', ['as'=>'reject', 'uses'=>'PaymentMethodController@reject']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'PaymentMethodController@delete']);
+});
