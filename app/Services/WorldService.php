@@ -21,26 +21,26 @@ class WorldService
 
     public static function chineseTree($parent_id = 0)
     {
-        if ($tree = Redis::get('erp:world:chinese_tree_' . $parent_id)) {
+        if ($tree = Redis::get('xhserp:world:chinese_tree_' . $parent_id)) {
             $tree = json_decode($tree, true);
             return $tree;
         }
 
         $tree = World::chineseTree($parent_id);
-        Redis::setnx('erp:world:chinese_tree_' . $parent_id, json_encode($tree));
+        Redis::setnx('xhserp:world:chinese_tree_' . $parent_id, json_encode($tree));
 
         return $tree;
     }
 
     public static function countries()
     {
-        $countries = Redis::get('erp:world:countries');
+        $countries = Redis::get('xhserp:world:countries');
         if ($countries) {
             return json_decode($countries, true);
         }
 
         $countries = World::countries();
-        Redis::setnx('erp:world:countries', json_encode($countries));
+        Redis::setnx('xhserp:world:countries', json_encode($countries));
 
         return $countries;
     }
