@@ -7,6 +7,7 @@
         #contactTable .layui-input{border: 0;}
         .layui-input-block>.layui-col-xs4:not(:first-child)>.layui-form-select .layui-input{border-left: 0;}
         .layui-input-block .layui-inline{margin-right: 0;}
+        .layui-card-header a{font-size: 12px;margin-left: 5px;}
     </style>
 @endsection
 @section('content')
@@ -138,13 +139,40 @@
                 </div>
             </div>
         </div>
-        @if(empty($customer))
-            <div class="layui-card">
-                <div class="layui-card-header">
-                    <h3>付款方式</h3>
-                </div>
-                <div class="layui-card-body">
-                    <div class="layui-row layui-col-space30">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <h3 style="display: inline;">付款方式</h3>
+                @if(isset($customer) && !$customer->pendingPaymentMethodApplication)
+                    <a href="javascript:;" erp-event="edit_payment_method">[更改]</a>
+                @endif
+            </div>
+            <div class="layui-card-body">
+                <div class="layui-row layui-col-space30">
+                    @if(isset($customer))
+                        <div class="layui-col-xs4">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">付款方式</label>
+                                <div class="layui-input-block">
+                                    <span class="erp-form-span">{{$customer->payment_method_name}}</span>
+                                </div>
+                            </div>
+                            @if(2 == $customer->payment_method)
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">额度</label>
+                                    <div class="layui-input-block">
+                                        <span class="erp-form-span">{{$customer->credit}}</span>
+                                    </div>
+                                </div>
+                            @elseif(3 == $customer->payment_method)
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">月结天数</label>
+                                    <div class="layui-input-block">
+                                        <span class="erp-form-span">{{$customer->monthly_day}}</span>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @else
                         <div class="layui-col-xs4">
                             <div class="layui-form-item" pane="">
                                 <label class="layui-form-label required">付款方式</label>
@@ -155,10 +183,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
-        @endif
+        </div>
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3>联系人</h3>
@@ -206,6 +234,74 @@
         @endif
         layui.use(['form'], function () {
             var form = layui.form
+                    // 更改付款方式监听
+                    ,listenEditPaymentMethod = function () {
+                $('*[erp-event=edit_payment_method]').on('click', function () {
+                    var $this = $(this)
+                            ,$cardBody = $this.parents('.layui-card').find('.layui-card-body');
+
+                    $this.attr('erp-event', 'reset_payment_method').html('[撤销]');
+
+                    var html = '';
+                    html += '<div class="layui-row layui-col-space30">';
+                    html += '<div class="layui-col-xs4">';
+                    html += '<div class="layui-form-item" pane="">';
+                    html += '<label class="layui-form-label required">付款方式</label>';
+                    html += '<div class="layui-input-block">';
+                    $.each(payment_methods, function (method_id, method_name) {
+                        html += '<input type="radio" name="payment_method" value="' + method_id + '" title="' + method_name + '" lay-verify="checkReq" lay-reqText="请选择付款方式" lay-filter="payment_method">';
+                    });
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+
+                    $cardBody.html(html);
+                    form.render('radio', 'customer');
+                    listenPaymentMethodRadio();
+                    listenResetPaymentMethod();
+                });
+            }
+                    ,listenResetPaymentMethod = function () {
+                $('*[erp-event=reset_payment_method]').on('click', function () {
+                    var $this = $(this)
+                            ,$cardBody = $this.parents('.layui-card').find('.layui-card-body');
+
+                    $this.attr('erp-event', 'edit_payment_method').html('[更改]');
+
+                    var html = '';
+                    if (customer) {
+                        html += '<div class="layui-row layui-col-space30">';
+                        html += '<div class="layui-col-xs4">';
+                        html += '<div class="layui-form-item">';
+                        html += '<label class="layui-form-label">付款方式</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<span class="erp-form-span">' + customer.payment_method_name + '</span>';
+                        html += '</div>';
+                        html += '</div>';
+                        if (2 == customer.payment_method) {
+                            html += '<div class="layui-form-item">';
+                            html += '<label class="layui-form-label">额度</label>';
+                            html += '<div class="layui-input-block">';
+                            html += '<span class="erp-form-span">' + customer.credit + '</span>';
+                            html += '</div>';
+                            html += '</div>';
+                        }else if (3 == customer.payment_method) {
+                            html += '<div class="layui-form-item">';
+                            html += '<label class="layui-form-label">月结天数</label>';
+                            html += '<div class="layui-input-block">';
+                            html += '<span class="erp-form-span">' + customer.monthly_day + '</span>';
+                            html += '</div>';
+                            html += '</div>';
+                        }
+                        html += '</div>';
+                        html += '</div>';
+                    }
+
+                    $cardBody.html(html);
+                    listenEditPaymentMethod();
+                });
+            }
                     // 付款方式单选监听
                     ,listenPaymentMethodRadio = function () {
                 form.on('radio(payment_method)', function(data){
@@ -251,40 +347,7 @@
             };
 
             listenPaymentMethodRadio();
-
-            form.on('switch(in_pool)', function(data){
-                var checked = data.elem.checked
-                        ,$paymentMethodCard = $('input[name=payment_method]').parents('.layui-card')
-                        ,$baseInfoCard = $(data.elem).parents('.layui-card');
-
-                if (checked) {
-                    $paymentMethodCard.remove();
-                }else if (!customer || 0 == customer.manager_id) {
-                    var html = '';
-                    html += '<div class="layui-card">';
-                    html += '<div class="layui-card-header">';
-                    html += '<h3>付款方式</h3>';
-                    html += '</div>';
-                    html += '<div class="layui-card-body">';
-                    html += '<div class="layui-row layui-col-space30">';
-                    html += '<div class="layui-col-xs4">';
-                    html += '<div class="layui-form-item" pane="">';
-                    html += '<label class="layui-form-label required">付款方式</label>';
-                    html += '<div class="layui-input-block">';
-                    $.each(payment_methods, function (method_id, method_name) {
-                        html += '<input type="radio" name="payment_method" value="' + method_id + '" title="' + method_name + '" lay-verify="checkReq" lay-reqText="请选择付款方式" lay-filter="payment_method">';
-                    });
-                    html += '</div>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '</div>';
-                    $baseInfoCard.after(html);
-                    form.render('radio', 'customer');
-                    listenPaymentMethodRadio();
-                }
-            });
+            listenEditPaymentMethod();
 
             $('button[lay-event=addContact]').on('click', function () {
                 var $body = $('#contactTable').find('tbody')

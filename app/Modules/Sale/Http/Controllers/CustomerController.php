@@ -31,6 +31,7 @@ class CustomerController extends Controller
         $data = compact('chinese_regions');
         if ($request->get('customer_id')) {
             $customer = Customer::find($request->get('customer_id'));
+            $customer->setAppends(['payment_method_name']);
             $data['customer'] = $customer;
         }
 
@@ -124,10 +125,23 @@ class CustomerController extends Controller
                     $customer_data['payment_method'] = 1;
                     $customer_data['credit'] = 0;
                     $customer_data['monthly_day'] = 0;
-                }elseif (empty($customer->manager_id)) {
-                    $customer_data['manager_id'] = Auth::user()->id;
-                    // 如果是货到付款或月结，需要申请
-                    if (in_array($request->get('payment_method'), [2, 3])) {
+                }else{
+                    if (empty($customer->manager_id)) {
+                        $customer_data['manager_id'] = Auth::user()->id;
+                    }
+
+                    if (1 == $request->get('payment_method')) {
+                        // 将这个客户的付款方式申请删除
+                        PaymentMethodApplication::where('customer_id', $customer->id)->whereIn('status', [1, 2])->delete();
+                        // 将付款方式改为现金
+                        $customer_data['payment_method'] = 1;
+                        $customer_data['credit'] = 0;
+                        $customer_data['monthly_day'] = 0;
+                    }elseif (in_array($request->get('payment_method'), [2, 3])) {
+                        if ($customer->pendingPaymentMethodApplication) {
+                            throw new \Exception("已存在付款方式申请，不可重复提交。");
+                        }
+
                         PaymentMethodApplication::create([
                             'customer_id' => $customer->id,
                             'payment_method' => $request->get('payment_method'),
@@ -139,6 +153,7 @@ class CustomerController extends Controller
                         ]);
                     }
                 }
+
                 $customer->update($customer_data);
             }else {
                 $customer_data['manager_id'] = $request->get('in_pool') ? 0 : Auth::user()->id;
@@ -161,7 +176,7 @@ class CustomerController extends Controller
             }
 
             if (!$customer) {
-                return response()->json(['status' => 'fail', 'msg' => '客户保存失败']);
+                throw new \Exception("客户保存失败");
             }
 
             // 同步联系人
