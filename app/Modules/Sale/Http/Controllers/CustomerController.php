@@ -31,6 +31,7 @@ class CustomerController extends Controller
         $data = compact('chinese_regions');
         if ($request->get('customer_id')) {
             $customer = Customer::find($request->get('customer_id'));
+            $customer->pendingPaymentMethodApplication;
             $customer->setAppends(['payment_method_name']);
             $data['customer'] = $customer;
         }

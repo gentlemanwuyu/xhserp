@@ -349,6 +349,76 @@
             listenPaymentMethodRadio();
             listenEditPaymentMethod();
 
+            form.on('switch(in_pool)', function(data){
+                var checked = data.elem.checked
+                        ,$baseInfoCard = $(data.elem).parents('.layui-card')
+                        ,$paymentMethodCard = $baseInfoCard.next('.layui-card');
+
+                if (customer) {
+                    var html = '';
+                    html += '<div class="layui-row layui-col-space30">';
+                    html += '<div class="layui-col-xs4">';
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label">付款方式</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<span class="erp-form-span">' + customer.payment_method_name + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    if (2 == customer.payment_method) {
+                        html += '<div class="layui-form-item">';
+                        html += '<label class="layui-form-label">额度</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<span class="erp-form-span">' + customer.credit + '</span>';
+                        html += '</div>';
+                        html += '</div>';
+                    }else if (3 == customer.payment_method) {
+                        html += '<div class="layui-form-item">';
+                        html += '<label class="layui-form-label">月结天数</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<span class="erp-form-span">' + customer.monthly_day + '</span>';
+                        html += '</div>';
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                    html += '</div>';
+                    $paymentMethodCard.find('.layui-card-body').html(html);
+                    $paymentMethodCard.find('.layui-card-header a').remove();
+
+                    if (!checked && !customer.pending_payment_method_application) {
+                        $paymentMethodCard.find('.layui-card-header').append('<a href="javascript:;" erp-event="edit_payment_method">[更改]</a>');
+                        listenEditPaymentMethod();
+                    }
+                }else {
+                    if (checked) {
+                        $paymentMethodCard.remove();
+                    }else {
+                        var html = '';
+                        html += '<div class="layui-card">';
+                        html += '<div class="layui-card-header">';
+                        html += '<h3>付款方式</h3>';
+                        html += '</div>';
+                        html += '<div class="layui-card-body">';
+                        html += '<div class="layui-row layui-col-space30">';
+                        html += '<div class="layui-col-xs4">';
+                        html += '<div class="layui-form-item" pane="">';
+                        html += '<label class="layui-form-label required">付款方式</label>';
+                        html += '<div class="layui-input-block">';
+                        $.each(payment_methods, function (method_id, method_name) {
+                            html += '<input type="radio" name="payment_method" value="' + method_id + '" title="' + method_name + '" lay-verify="checkReq" lay-reqText="请选择付款方式" lay-filter="payment_method">';
+                        });
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        $baseInfoCard.after(html);
+                        form.render('radio', 'customer');
+                        listenPaymentMethodRadio();
+                    }
+                }
+            });
+
             $('button[lay-event=addContact]').on('click', function () {
                 var $body = $('#contactTable').find('tbody')
                         ,html = ''
