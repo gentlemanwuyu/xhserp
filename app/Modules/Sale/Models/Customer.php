@@ -146,4 +146,9 @@ class Customer extends Model
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
+
+    public function pendingPaymentMethodApplication()
+    {
+        return $this->hasOne(PaymentMethodApplication::class)->whereIn('status', [1, 2])->orderBy('id', 'desc');
+    }
 }
