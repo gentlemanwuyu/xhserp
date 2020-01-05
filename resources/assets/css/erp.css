@@ -1,3 +1,5 @@
+a{color: #1e9fff;}
+a:hover{color: #FF5722;}
 .required:after { content: "*"; color: #ff2556; margin-left: 3px; }
 
 /* dtree自定义样式 */
