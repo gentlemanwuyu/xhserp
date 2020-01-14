@@ -32,12 +32,12 @@ class GoodsTableSeeder extends Seeder
     {
         $products = Product::whereIn('id', [1, 3, 5, 6, 7, 8])->get();
         $category_relations = [
-            1 => 46,
-            3 => 47,
-            5 => 47,
-            6 => 50,
-            7 => 58,
-            8 => 60,
+            1 => 75,
+            3 => 76,
+            5 => 76,
+            6 => 79,
+            7 => 91,
+            8 => 93,
         ];
         foreach ($products as $product) {
             $goods = Goods::create([
@@ -70,7 +70,7 @@ class GoodsTableSeeder extends Seeder
     public function comboSeeder()
     {
         // 滚轮片144
-        $goods = Goods::create(['code' => 'xhsglpbj144', 'name' => '包胶滚轮片144', 'type' => Goods::COMBO, 'category_id' => 59,]);
+        $goods = Goods::create(['code' => 'xhsglpbj144', 'name' => '包胶滚轮片144', 'type' => Goods::COMBO, 'category_id' => 92,]);
         ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 11, 'quantity' => 1,]);
         ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 12, 'quantity' => 1,]);
         $goods_sku1 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsglpbj144a', 'lowest_price' => 0.6, 'msrp' => 1.2,]);
