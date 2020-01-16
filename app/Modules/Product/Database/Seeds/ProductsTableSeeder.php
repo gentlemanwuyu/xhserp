@@ -78,7 +78,7 @@ class ProductsTableSeeder extends Seeder
 
         $d2 = Product::create(['code' => 'xhslptpv162', 'name' => '孟山都滚轮片162', 'category_id' => 39,]);
         $d2_s1 = ProductSku::create(['product_id' => $d2->id, 'code' => 'xhslptpv162a', 'weight' => 25, 'cost_price' => 0.6,]);
-        Inventory::create(['sku_id' => $d2_s1->id, 'stock' => 324, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+        Inventory::create(['sku_id' => $d2_s1->id, 'stock' => 1248, 'highest_stock' => 5000, 'lowest_stock' => 2000]);
         $d2_s2 = ProductSku::create(['product_id' => $d2->id, 'code' => 'xhslptpv162b', 'weight' => 25, 'cost_price' => 0.6,]);
         Inventory::create(['sku_id' => $d2_s2->id, 'stock' => 1024, 'highest_stock' => 5000, 'lowest_stock' => 500]);
 
@@ -119,18 +119,18 @@ class ProductsTableSeeder extends Seeder
 
         $r3 = Product::create(['code' => 'xhsllj011jq', 'name' => '流量计胶圈', 'category_id' => 69,]);
         $r3_s1 = ProductSku::create(['product_id' => $r3->id, 'code' => 'xhspz565jqpvc', 'weight' => 40, 'cost_price' => 0.25,]);
-        Inventory::create(['sku_id' => $r3_s1->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $r3_s1->id, 'stock' => mt_rand(500, 5000), 'highest_stock' => 5000, 'lowest_stock' => 500]);
         $r3_s2 = ProductSku::create(['product_id' => $r3->id, 'code' => 'xhspz565jqtpv', 'weight' => 40, 'cost_price' => 0.25,]);
-        Inventory::create(['sku_id' => $r3_s2->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $r3_s2->id, 'stock' => mt_rand(500, 5000), 'highest_stock' => 5000, 'lowest_stock' => 500]);
 
         // 喷咀
         $n1 = Product::create(['code' => 'xhspz565head', 'name' => '565喷咀头', 'category_id' => 54,]);
         $n1_s1 = ProductSku::create(['product_id' => $n1->id, 'code' => 'xhspz565heada', 'weight' => 40, 'cost_price' => 0.8,]);
         Inventory::create(['sku_id' => $n1_s1->id, 'stock' => 36, 'highest_stock' => 500, 'lowest_stock' => 50]);
         $n1_s2 = ProductSku::create(['product_id' => $n1->id, 'code' => 'xhspz565headb', 'weight' => 40, 'cost_price' => 0.8,]);
-        Inventory::create(['sku_id' => $n1_s2->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $n1_s2->id, 'stock' => mt_rand(500, 5000), 'highest_stock' => 5000, 'lowest_stock' => 500]);
         $n1_s3 = ProductSku::create(['product_id' => $n1->id, 'code' => 'xhspz565headc', 'weight' => 40, 'cost_price' => 0.8,]);
-        Inventory::create(['sku_id' => $n1_s3->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $n1_s3->id, 'stock' => mt_rand(500, 5000), 'highest_stock' => 5000, 'lowest_stock' => 500]);
 
         $n2 = Product::create(['code' => 'xhspz565bottom', 'name' => '565喷咀底座', 'category_id' => 56,]);
         $n2_s1 = ProductSku::create(['product_id' => $n2->id, 'code' => 'xhspz565bottoma', 'weight' => 40, 'cost_price' => 0.8,]);
@@ -143,36 +143,36 @@ class ProductsTableSeeder extends Seeder
         // 流量计
         $f1 = Product::create(['code' => 'xhsllj011sg', 'name' => '流量计011视管', 'category_id' => 15,]);
         $f1_s1 = ProductSku::create(['product_id' => $f1->id, 'code' => 'xhsllj011sgpc', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f1_s1->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f1_s1->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
         $f1_s2 = ProductSku::create(['product_id' => $f1->id, 'code' => 'xhsllj011sgpvc', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f1_s2->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f1_s2->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
         $f1_s3 = ProductSku::create(['product_id' => $f1->id, 'code' => 'xhsllj011sgpsu', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f1_s3->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f1_s3->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
 
         $f2 = Product::create(['code' => 'xhsllj011dg', 'name' => '流量计011导轨', 'category_id' => 24,]);
         $f2_s1 = ProductSku::create(['product_id' => $f2->id, 'code' => 'xhsllj011dgsus316', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f2_s1->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f2_s1->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
         $f2_s2 = ProductSku::create(['product_id' => $f2->id, 'code' => 'xhsllj011dgtxb', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f2_s2->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f2_s2->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
 
         $f3 = Product::create(['code' => 'xhsllj011zz', 'name' => '流量计011转子', 'category_id' => 20,]);
         $f3_s1 = ProductSku::create(['product_id' => $f3->id, 'code' => 'xhsllj011zzsus316', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f3_s1->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f3_s1->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
         $f3_s2 = ProductSku::create(['product_id' => $f3->id, 'code' => 'xhsllj011zztfl', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f3_s2->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f3_s2->id, 'stock' => mt_rand(100, 1000), 'highest_stock' => 1000, 'lowest_stock' => 100]);
 
         $f4 = Product::create(['code' => 'xhsllj011lm', 'name' => '流量计011螺母', 'category_id' => 26,]);
         $f4_s1 = ProductSku::create(['product_id' => $f4->id, 'code' => 'xhsllj011lm316', 'weight' => 40, 'cost_price' => 6,]);
-        Inventory::create(['sku_id' => $f4_s1->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f4_s1->id, 'stock' => mt_rand(500, 2000), 'highest_stock' => 2000, 'lowest_stock' => 500]);
 
         $f5 = Product::create(['code' => 'xhsllj011jt', 'name' => '流量计011接头', 'category_id' => 27,]);
         $f5_s1 = ProductSku::create(['product_id' => $f5->id, 'code' => 'xhsllj011jtpvc', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f5_s1->id, 'stock' => 23, 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f5_s1->id, 'stock' => 199, 'highest_stock' => 1000, 'lowest_stock' => 200]);
         $f5_s2 = ProductSku::create(['product_id' => $f5->id, 'code' => 'xhsllj011jtpp', 'weight' => 40, 'cost_price' => 25,]);
-        Inventory::create(['sku_id' => $f5_s2->id, 'stock' => 11, 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f5_s2->id, 'stock' => 182, 'highest_stock' => 1000, 'lowest_stock' => 200]);
 
         $f6 = Product::create(['code' => 'xhsllj011zsk', 'name' => '流量计011指示扣', 'category_id' => 30,]);
         $f6_s1 = ProductSku::create(['product_id' => $f6->id, 'code' => 'xhsllj011zsk001', 'weight' => 40, 'cost_price' => 0.5,]);
-        Inventory::create(['sku_id' => $f6_s1->id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
+        Inventory::create(['sku_id' => $f6_s1->id, 'stock' => mt_rand(5000, 10000), 'highest_stock' => 10000, 'lowest_stock' => 5000]);
     }
 }
