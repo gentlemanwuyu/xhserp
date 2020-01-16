@@ -58,6 +58,15 @@
                                 </select>
                             </div>
                         </div>
+                        <?php $customer = isset($order) ? $order->customer : null; ?>
+                        @if($customer && 2 == $customer->payment_method)
+                            <div class="layui-form-item" id="remained_credit_item">
+                                <label class="layui-form-label">剩余额度</label>
+                                <div class="layui-input-block">
+                                    <span class="erp-form-span">{{$customer->remained_credit}}</span>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -265,14 +274,33 @@
 
             // 监听客戶选择框
             form.on('select(customer)', function (data) {
-                var payment_method = '', tax = '';
+                var payment_method = ''
+                        ,tax = ''
+                        ,$paymentMethodSelect = $('select[name=payment_method]')
+                        ,$taxSelect = $('select[name=tax]');
                 if (data.value) {
-                    payment_method = customers[data.value]['payment_method'];
-                    tax = customers[data.value]['tax'];
+                    var customer = customers[data.value];
+
+                    payment_method = customer['payment_method'];
+                    tax = customer['tax'];
+                    if (2 == customer['payment_method']) {
+                        var html = '';
+                        html += '<div class="layui-form-item" id="remained_credit_item">';
+                        html += '<label class="layui-form-label">剩余额度</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<span class="erp-form-span">' + customer.remained_credit + '</span>';
+                        html += '</div>';
+                        html += '</div>';
+                        $taxSelect.parents('.layui-form-item').after(html);
+                    }else {
+                        $('#remained_credit_item').remove();
+                    }
+                }else {
+                    $('#remained_credit_item').remove();
                 }
 
-                $('select[name=payment_method]').val(payment_method);
-                $('select[name=tax]').val(tax);
+                $paymentMethodSelect.val(payment_method);
+                $taxSelect.val(tax);
                 form.render('select', 'order');
             });
 

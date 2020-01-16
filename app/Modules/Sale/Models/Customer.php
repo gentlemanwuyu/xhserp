@@ -137,6 +137,38 @@ class Customer extends Model
         return array_sum(array_column($collections, 'remained_amount'));
     }
 
+    /**
+     * 进行中的订单
+     *
+     * @return mixed
+     */
+    public function processingOrder()
+    {
+        return $this->hasMany(Order::class)->whereIn('status', [3, 4])->where('payment_status', 1);
+    }
+
+    /**
+     * 剩余额度
+     *
+     * @return mixed|null
+     */
+    public function getRemainedCreditAttribute()
+    {
+        if (2 != $this->payment_method) {
+            return null;
+        }
+
+        $used_credit = 0;
+        $orders = $this->processingOrder;
+        foreach ($orders as $order) {
+            foreach ($order->items as $item) {
+                $used_credit += $item->price * ($item->quantity - $item->paid_quantity);
+            }
+        }
+
+        return $this->credit - $used_credit + $this->total_remained_amount;
+    }
+
     public function getTaxNameAttribute()
     {
         return isset(self::$taxes[$this->tax]) ? self::$taxes[$this->tax]['display'] : '';

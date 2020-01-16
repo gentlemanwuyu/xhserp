@@ -28,7 +28,11 @@ class OrderController extends Controller
 
     public function form(Request $request)
     {
-        $customers = Customer::all(['id', 'name', 'payment_method', 'tax'])->pluck(null, 'id');
+        $customers = Customer::all()->pluck(null, 'id')->map(function ($customer) {
+            $customer->setAppends(['remained_credit']);
+
+            return $customer;
+        });
         $goods = Goods::all()->map(function ($g) {
             $g->skus;
             return $g;
