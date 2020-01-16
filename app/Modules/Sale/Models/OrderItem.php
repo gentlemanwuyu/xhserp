@@ -28,4 +28,32 @@ class OrderItem extends Model
     {
         return $this->belongsTo(GoodsSku::class, 'sku_id');
     }
+
+    /**
+     * 关联发货Item
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deliveryItems()
+    {
+        return $this->hasMany(DeliveryOrderItem::class);
+    }
+
+    /**
+     * 已付款数量
+     *
+     * @return int
+     */
+    public function getPaidQuantityAttribute()
+    {
+        $quantity = 0;
+
+        foreach ($this->deliveryItems as $delivery_item) {
+            if (1 == $delivery_item->is_paid) {
+                $quantity = $quantity + $delivery_item->quantity;
+            }
+        }
+
+        return $quantity;
+    }
 }

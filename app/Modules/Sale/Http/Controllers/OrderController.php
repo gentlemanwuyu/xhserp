@@ -104,13 +104,20 @@ class OrderController extends Controller
             }elseif (2 == $request->get('payment_method')) {
                 if (2 == $customer->payment_method) {
                     // 判断是否超过额度
-                    $orders = Order::where('customer_id', $request->get('customer_id'))->whereIn('status', [3, 4])->get();
+                    $orders = Order::where('customer_id', $request->get('customer_id'))
+                        ->whereIn('status', [3, 4])
+                        ->where('payment_status', 1)
+                        ->get();
                     $used_credit = 0; // 已使用额度
-                    $orders->each(function ($order) use (&$used_credit) {
-                        $order->items->each(function ($item) use (&$used_credit) {
-                            $used_credit += $item->quantity * $item->price;
-                        });
-                    });
+                    foreach ($orders as $order) {
+                        foreach ($order->items as $item) {
+                            $used_credit += $item->price * ($item->quantity - $item->paid_quantity);
+                        }
+                    }
+
+                    // 已使用额度要减去付款剩余金额
+                    $used_credit = $used_credit - $customer->total_remained_amount;
+
                     $current_amount = 0; // 当前订单得金额
                     foreach ($request->get('items') as $item) {
                         $current_amount += $item['quantity'] * $item['price'];
