@@ -70,7 +70,7 @@ class OrderController extends Controller
         foreach ($paginate as $order) {
             $order->items->map(function ($item) {
                 $item->goods;
-                $item->sku;
+                $item->sku->setAppends(['stock']);
 
                 return $item;
             });
