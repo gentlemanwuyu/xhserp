@@ -11,6 +11,7 @@ namespace App\Modules\Goods\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Warehouse\Models\Inventory;
+use App\Modules\Sale\Models\OrderItem;
 
 class GoodsSku extends Model
 {
@@ -56,5 +57,30 @@ class GoodsSku extends Model
         }else {
             return null;
         }
+    }
+
+    /**
+     * 需求数量
+     *
+     * @return int
+     */
+    public function getRequiredQuantityAttribute()
+    {
+        $items = OrderItem::leftJoin('orders AS o', 'o.id', '=', 'order_items.order_id')
+            ->where('o.status', 3)
+            ->where('order_items.sku_id', $this->id)
+            ->select(['order_items.*'])
+            ->get();
+
+        $quantity = 0;
+        if (!$items->isEmpty()) {
+            foreach ($items as $item) {
+                $delivery_quantity = array_sum(array_column($item->deliveryItems->toArray(), 'quantity'));
+
+                $quantity += $item->quantity - $delivery_quantity;
+            }
+        }
+
+        return $quantity;
     }
 }

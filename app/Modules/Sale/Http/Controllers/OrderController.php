@@ -34,7 +34,11 @@ class OrderController extends Controller
             return $customer;
         });
         $goods = Goods::all()->map(function ($g) {
-            $g->skus;
+            $g->skus->map(function ($sku) {
+                $sku->setAppends(['required_quantity']);
+
+                return $sku;
+            });
             return $g;
         })->pluck(null, 'id');
         $data = compact('customers', 'goods');
