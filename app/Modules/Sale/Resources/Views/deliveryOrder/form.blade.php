@@ -123,6 +123,9 @@
                         @if(isset($delivery_order))
                             <?php $index = 1; ?>
                             @foreach($delivery_order->items as $item)
+                                <?php
+                                    $order_item = $item->orderItem;
+                                ?>
                                 <tr data-flag="{{$item->id}}">
                                     <td erp-col="index">{{$index++}}</td>
                                     <td erp-col="order">
@@ -144,12 +147,12 @@
                                     <td erp-col="title">
                                         <input type="text" name="items[{{$item->id}}][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input" value="{{$item->title or ''}}">
                                     </td>
-                                    <td erp-col="unit">{{$item->orderItem->unit or ''}}</td>
+                                    <td erp-col="unit">{{$order_item->unit or ''}}</td>
                                     <td erp-col="quantity">
-                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$item->quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
+                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$order_item->pending_delivery_quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
                                     </td>
-                                    <td erp-col="price">{{$item->orderItem->price or ''}}</td>
-                                    <td erp-col="amount">{{$item->orderItem->price * $item->quantity}}</td>
+                                    <td erp-col="price">{{$order_item->price or ''}}</td>
+                                    <td erp-col="amount">{{$order_item->price * $item->quantity}}</td>
                                     <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                                 </tr>
                             @endforeach
@@ -217,7 +220,7 @@
                         $titleInput.val(items[data.value]['title']);
                         $unitTd.html(items[data.value]['unit']);
                         $priceTd.html(items[data.value]['price']);
-                        $quantityInput.attr('placeholder', '待出货数量:' + items[data.value]['quantity']);
+                        $quantityInput.attr('placeholder', '待出货数量:' + items[data.value]['pending_delivery_quantity']);
                     }else {
                         $titleInput.val('');
                         $unitTd.html('');

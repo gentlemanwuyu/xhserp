@@ -40,6 +40,21 @@ class OrderItem extends Model
     }
 
     /**
+     * 待发货数量
+     *
+     * @return mixed
+     */
+    public function getPendingDeliveryQuantityAttribute()
+    {
+        $quantity = 0;
+        foreach ($this->deliveryItems as $deliveryItem) {
+            $quantity += $deliveryItem->quantity;
+        }
+
+        return $this->quantity - $quantity;
+    }
+
+    /**
      * 已付款数量
      *
      * @return int

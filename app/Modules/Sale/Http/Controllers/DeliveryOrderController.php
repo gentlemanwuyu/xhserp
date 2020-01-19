@@ -40,7 +40,11 @@ class DeliveryOrderController extends Controller
         }
 
         $orders = Order::where('customer_id', $customer->id)->where('status', 3)->get()->pluck(null, 'id')->map(function ($o) {
-            $o->pis = $o->pendingItems->pluck(null, 'id');
+            $o->pis = $o->pendingItems->map(function ($item) {
+                $item->setAppends(['pending_delivery_quantity']);
+
+                return $item;
+            })->pluck(null, 'id');
 
             return $o;
         });
