@@ -63,7 +63,9 @@
                                     <label class="layui-form-label">是否代收</label>
                                     <div class="layui-input-block" style="display: flex;">
                                         <input type="checkbox" name="is_collected" lay-filter="is_collected" lay-skin="switch" lay-text="是|否" value="1" @if(1 == $delivery_order->is_collected) checked @endif>
-                                        <input type="text" name="collected_amount" placeholder="代收金额" class="erp-after-switch-input @if(1 != $delivery_order->is_collected) layui-hide @endif" @if(1 == $delivery_order->is_collected) value="{{(float)$delivery_order->collected_amount ?: ''}}" @endif>
+                                        @if(1 == $delivery_order->is_collected)
+                                            <input type="text" name="collected_amount" class="erp-after-switch-input" placeholder="代收金额" lay-verify="required" lay-reqText="请输入代收金额" value="{{$delivery_order->collected_amount}}">
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -260,11 +262,12 @@
                     // 监听是否代收开关
                     ,listenIsCollected = function () {
                 form.on('switch(is_collected)', function (data) {
-                    var $collected_amount = $('input[name=collected_amount]');
+                    var $is_collected = $(data.elem);
                     if (data.elem.checked) {
-                        $collected_amount.removeClass('layui-hide').val('');
+                        var html = '<input type="text" name="collected_amount" class="erp-after-switch-input" placeholder="代收金额" lay-verify="required" lay-reqText="请输入代收金额">';
+                        $is_collected.after(html);
                     }else {
-                        $collected_amount.addClass('layui-hide').val('');
+                        $is_collected.siblings('input[name=collected_amount]').remove();
                     }
                 })
             }
