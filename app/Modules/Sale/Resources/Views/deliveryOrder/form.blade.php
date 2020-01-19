@@ -146,7 +146,7 @@
                                     </td>
                                     <td erp-col="unit">{{$item->orderItem->unit or ''}}</td>
                                     <td erp-col="quantity">
-                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
+                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$item->quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
                                     </td>
                                     <td erp-col="price">{{$item->orderItem->price or ''}}</td>
                                     <td erp-col="amount">{{$item->orderItem->price * $item->quantity}}</td>
