@@ -428,10 +428,11 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("出货单添加成功", {icon: 1, time: 2000});
-                            location.reload();
+                            layer.msg("出货单保存成功", {icon: 1, time: 2000}, function () {
+                                location.reload();
+                            });
                         } else {
-                            layer.msg("出货单添加失败:"+data.msg, {icon: 2, time: 2000});
+                            layer.msg("出货单保存失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },
