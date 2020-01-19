@@ -132,7 +132,7 @@ class Customer extends Model
      */
     public function getTotalRemainedAmountAttribute()
     {
-        $collections = Collection::where('is_finished', 0)->get()->toArray();
+        $collections = Collection::where('customer_id', $this->id)->where('is_finished', 0)->get()->toArray();
 
         return array_sum(array_column($collections, 'remained_amount'));
     }

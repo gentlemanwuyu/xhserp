@@ -93,7 +93,7 @@ class CollectionController extends Controller
             DB::beginTransaction();
             Collection::create($collection_data);
             // 未抵扣的付款单
-            $remained_collections = Collection::where('is_finished', 0)->orderBy('created_at', 'asc')->get();
+            $remained_collections = Collection::where('customer_id', $request->get('customer_id'))->where('is_finished', 0)->orderBy('created_at', 'asc')->get();
 
             if ($request->get('checked_doi_ids')) {
                 foreach ($request->get('checked_doi_ids') as $doi_id) {
