@@ -81,7 +81,6 @@
                     <tr>
                         <th width="50">序号</th>
                         <th width="150">商品</th>
-                        <th width="100">商品编号</th>
                         <th width="150">SKU</th>
                         <th>标题</th>
                         <th width="50">单位</th>
@@ -99,7 +98,7 @@
                         @foreach($order->items as $item)
                             <tr data-flag="{{$item->id}}">
                                 <td erp-col="index">{{$index++}}</td>
-                                <td>
+                                <td erp-col="goods">
                                     <select name="items[{{$item->id}}][goods_id]" lay-filter="goods" lay-search="" lay-verify="required" lay-reqText="请选择商品">
                                         <option value="">请选择商品</option>
                                         @foreach($goods as $g)
@@ -107,22 +106,24 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td erp-col="code">{{$item->goods->code or ''}}</td>
                                 <td erp-col="sku">
-                                    <select name="items[{{$item->id}}][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">
+                                    <select name="items[{{$item->id}}][sku_id]" lay-filter="sku" lay-search="" lay-verify="required" lay-reqText="请选择SKU">
                                         <option value="">请选择SKU</option>
                                         @foreach($goods[$item->goods_id]->skus as $sku)
-                                            <option value="{{$sku->id}}" @if($item->sku_id == $sku->id) selected @endif>{{$sku->code}}</option>
+                                            <option value="{{$sku->id}}" data-valid_stock="{{$sku->stock - $sku->required_quantity}}" @if($item->sku_id == $sku->id) selected @endif>{{$sku->code}}</option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td erp-col="title"><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
-                                <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
-                                <td erp-col="quantity"><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="可用数量:{{$item->sku->stock - $item->sku->required_number}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
-                                <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
+                                <td erp-col="unit"><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
+                                <td erp-col="quantity">
+                                    <?php $item_sku = $item->sku; ?>
+                                    <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="可用数量:{{$item_sku->stock - $item_sku->required_number}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}">
+                                </td>
+                                <td erp-col="price"><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
                                 <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
-                                <td><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
-                                <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
+                                <td erp-col="delivery_date"><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
+                                <td erp-col="note"><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                             </tr>
                         @endforeach
@@ -159,14 +160,17 @@
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=sku]').html(html);
-                        $td.siblings('td[erp-col=code]').html(goods[data.value]['code']);
                         $td.siblings('td[erp-col=title]').find('input[type=text]').val(goods[data.value]['name']);
                     }else {
                         $td.siblings('td[erp-col=sku]').html('');
-                        $td.siblings('td[erp-col=code]').html('');
                         $td.siblings('td[erp-col=title]').find('input[type=text]').val('');
                     }
-                    $td.siblings('td[erp-col=quantity]').find('input[type=text]').attr('placeholder', '数量');
+                    $td.siblings('td[erp-col=unit]').find('input[type=text]').val('');
+                    $td.siblings('td[erp-col=quantity]').find('input[type=text]').attr('placeholder', '数量').val('');
+                    $td.siblings('td[erp-col=price]').find('input[type=text]').val('');
+                    $td.siblings('td[erp-col=amount]').html('');
+                    $td.siblings('td[erp-col=delivery_date]').find('input[type=text]').val('');
+                    $td.siblings('td[erp-col=note]').find('input[type=text]').val('');
 
                     form.render('select', 'order');
                     listenSelectSku();
@@ -179,10 +183,15 @@
                     if (data.value) {
                         var $selectedOption = $(data.elem).find('option:selected')
                                 ,valid_stock = $selectedOption.attr('data-valid_stock');
-                        $tr.find('td[erp-col=quantity] input[type=text]').attr('placeholder', '可用数量:' + valid_stock);
+                        $tr.find('td[erp-col=quantity]').find('input[type=text]').attr('placeholder', '可用数量:' + valid_stock).val('');
                     }else {
-                        $tr.find('td[erp-col=quantity] input[type=text]').attr('placeholder', '数量');
+                        $tr.find('td[erp-col=quantity]').find('input[type=text]').attr('placeholder', '数量').val('');
                     }
+                    $tr.find('td[erp-col=unit]').find('input[type=text]').val('');
+                    $tr.find('td[erp-col=price]').find('input[type=text]').val('');
+                    $tr.find('td[erp-col=amount]').html('');
+                    $tr.find('td[erp-col=delivery_date]').find('input[type=text]').val('');
+                    $tr.find('td[erp-col=note]').find('input[type=text]').val('');
                 });
             }
                     // 监听价格数量输入框
@@ -236,16 +245,13 @@
                 html += $body.children('tr').length + 1;
                 html += '</td>';
                 // 选择商品
-                html += '<td>';
+                html += '<td erp-col="goods">';
                 html += '<select name="items[' + flag + '][goods_id]" lay-filter="goods" lay-search="" lay-verify="required" lay-reqText="请选择商品">';
                 html += '<option value="">请选择商品</option>';
                 $.each(goods, function (_, g) {
                     html += '<option value="' + g.id + '">' + g.name + '</option>';
                 });
                 html += '</select>';
-                html += '</td>';
-                // 商品编号
-                html += '<td erp-col="code">';
                 html += '</td>';
                 // 选择SKU
                 html += '<td erp-col="sku">';
@@ -255,7 +261,7 @@
                 html += '<input type="text" name="items[' + flag + '][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input">';
                 html += '</td>';
                 // 单位
-                html += '<td>';
+                html += '<td erp-col="unit">';
                 html += '<input type="text" name="items[' + flag + '][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input">';
                 html += '</td>';
                 // 数量
@@ -263,18 +269,18 @@
                 html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input">';
                 html += '</td>';
                 // 单价
-                html += '<td>';
+                html += '<td erp-col="price">';
                 html += '<input type="text" name="items[' + flag + '][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input">';
                 html += '</td>';
                 // 总价
                 html += '<td erp-col="amount">';
                 html += '</td>';
                 // 交期
-                html += '<td>';
+                html += '<td erp-col="delivery_date">';
                 html += '<input type="text" name="items[' + flag + '][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input">';
                 html += '</td>';
                 // 备注
-                html += '<td>';
+                html += '<td erp-col="note">';
                 html += '<input type="text" name="items[' + flag + '][note]" placeholder="备注" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
