@@ -14,15 +14,14 @@
                 <div class="layui-row layui-col-space30">
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">客户</label>
+                            <label class="layui-form-label required">客户</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$customer->name}}</span>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">结余金额</label>
-                            <div class="layui-input-block">
-                                <span class="erp-form-span">{{$customer->total_remained_amount}}</span>
+                                <select name="customer_id" lay-filter="customer" lay-search lay-verify="required" lay-reqText="请选择客户">
+                                    <option value="">请选择客户</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{$customer->id}}">{{$customer->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -36,9 +35,9 @@
                             <div class="layui-input-block">
                                 <select name="method" lay-filter="method" lay-verify="required" lay-reqText="请选择收款方式">
                                     <option value="">请选择收款方式</option>
-                                    <option value="1">现金</option>
-                                    <option value="2">汇款</option>
-                                    <option value="3">支票/汇票</option>
+                                    @foreach(\App\Modules\Finance\Models\Collection::$methods as $method_id => $method_name)
+                                        <option value="{{$method_id}}">{{$method_name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -46,9 +45,9 @@
                 </div>
             </div>
         </div>
-        <div class="layui-card">
+        <div class="layui-card layui-hide" id="unpaidDetailCard">
             <div class="layui-card-header">
-                <h3>收款明细</h3>
+                <h3>抵扣明细</h3>
             </div>
             <div class="layui-card-body">
                 <table id="detail" lay-filter="detail"></table>
@@ -61,14 +60,13 @@
 @section('scripts')
     <script>
         var users = <?= json_encode($users); ?>
-                ,accounts = <?= json_encode($accounts); ?>
-                ,total_remained_amount =  <?= json_encode($customer->total_remained_amount); ?>;
+                ,customers = <?= json_encode($customers); ?>
+                ,accounts = <?= json_encode($accounts); ?>;
         layui.use(['form', 'table'], function () {
             var form = layui.form
                     ,table = layui.table
-                    ,tableIns = table.render({
+                    ,tableOpts = {
                 elem: '#detail'
-                ,data: <?= json_encode($customer->unpaid_items); ?>
                 ,page: false
                 ,totalRow: true
                 ,cols: [
@@ -80,29 +78,36 @@
                         {field: 'delivery_code', title: '出货单编号', align: 'center'},
                         {field: 'delivery_quantity', title: '出货数量', align: 'center'},
                         {field: 'price', title: '单价', align: 'center'},
-                        {field: 'amount', title: '总价', align: 'center', totalRow: true}
+                        {field: 'amount', title: '总价', align: 'center', totalRow: true},
+                        {field: 'delivery_date', title: '出货日期', align: 'center', templet: function (d) {
+                            return moment(d.delivery_at).format('YYYY-MM-DD');
+                        }}
                     ]
                 ]
-                ,done: function(res, curr, count){
+            };
 
+            // 客户选择框联动
+            form.on('select(customer)', function (data) {
+                $('#totalRemainedAmountDiv').remove();
+                if (data.value) {
+                    var customer = customers[data.value], html = '';
+                    html += '<div class="layui-form-item" id="totalRemainedAmountDiv">';
+                    html += '<label class="layui-form-label">结余金额</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<span class="erp-form-span">' + customer.total_remained_amount + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    $(data.elem).parents('.layui-form-item').after(html);
+
+                    $('#unpaidDetailCard').removeClass('layui-hide');
+                    tableOpts.data = customer['unpaid_items'];
+                    table.render(tableOpts);
+                }else {
+                    $('#unpaidDetailCard').addClass('layui-hide');
                 }
             });
 
-            table.on('checkbox(detail)', function (obj) {
-                var checkStatus = table.checkStatus('detail')
-                        ,checkedAmount = 0
-                        ,$amountInput = $('input[name=amount]')
-                        ,inputAmount = $amountInput.val() ? parseFloat($amountInput.val()) : 0;
-                checkStatus.data.forEach(function (item) {
-                    checkedAmount += parseFloat(item.price) * parseInt(item.delivery_quantity);
-                });
-
-                if (checkedAmount > inputAmount + total_remained_amount) {
-                    layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
-                    return false;
-                }
-            });
-
+            // 付款方式选择框联动
             form.on('select(method)', function (data) {
                 $('select[name=collect_user_id]').parents('.layui-form-item').remove();
                 $('select[name=account_id]').parents('.layui-form-item').remove();
@@ -136,6 +141,23 @@
                 form.render('select', 'collection');
             });
 
+            table.on('checkbox(detail)', function (obj) {
+                var checkStatus = table.checkStatus('detail')
+                        ,checkedAmount = 0
+                        ,$amountInput = $('input[name=amount]')
+                        ,inputAmount = $amountInput.val() ? parseFloat($amountInput.val()) : 0
+                        ,customer_id = $('select[name=customer_id]').val()
+                        ,total_remained_amount = customers[customer_id]['total_remained_amount'];
+                checkStatus.data.forEach(function (item) {
+                    checkedAmount += parseFloat(item.price) * parseInt(item.delivery_quantity);
+                });
+
+                if (checkedAmount > inputAmount + total_remained_amount) {
+                    layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
+                    return false;
+                }
+            });
+
             // 提交收款单
             form.on('submit(collection)', function (form_data) {
                 var data = form_data.field;
@@ -149,7 +171,6 @@
                 var checkStatus = table.checkStatus('detail'), doi_ids = array_column(checkStatus.data, 'delivery_order_item_id');
 
                 data.checked_doi_ids = doi_ids;
-                data.customer_id = "{{$customer_id}}";
 
                 layer.confirm("收款单提交后不可修改，确认要提交吗？", {icon: 3, title:"确认"}, function (index) {
                     layer.close(index);

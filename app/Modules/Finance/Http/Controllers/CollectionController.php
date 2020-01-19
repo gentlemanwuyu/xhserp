@@ -62,10 +62,14 @@ class CollectionController extends Controller
     public function form(Request $request)
     {
         $users = User::where('is_admin', 0)->get();
-        $customer = Customer::find($request->get('customer_id'));
+        $customers = Customer::all()->map(function ($customer) {
+            $customer->setAppends(['total_remained_amount', 'unpaid_items']);
+
+            return $customer;
+        })->pluck(null, 'id');
         $accounts = Account::all();
 
-        return view('finance::collection.form', compact('users', 'customer', 'accounts'));
+        return view('finance::collection.form', compact('users', 'customers', 'accounts'));
     }
 
     public function save(Request $request)
