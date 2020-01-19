@@ -247,6 +247,26 @@
                         $quantityInput.attr('placeholder', '数量');
                     }
                     $td.siblings('td[erp-col=amount]').html('');
+
+                    // 重新判断所有的item选择框的option是否要disabled掉
+                    $('select[lay-filter=item]').each(function (_, select) {
+                        var otherSelectedItemIds = [];
+                        $('select[lay-filter=item]').not(this).each(function (_, other) {
+                            var otherSelectedItemId = $(other).val();
+                            if (otherSelectedItemId) {
+                                otherSelectedItemIds.push(parseInt(otherSelectedItemId));
+                            }
+                        });
+
+                        $(select).find('option').each(function () {
+                            if (this.value && -1 < otherSelectedItemIds.indexOf(parseInt(this.value))) {
+                                $(this).prop('disabled', true);
+                            }else {
+                                $(this).prop('disabled', false);
+                            }
+                        });
+                    });
+                    form.render('select', 'delivery_order');
                 });
             }
                     // 监听是否代收开关
