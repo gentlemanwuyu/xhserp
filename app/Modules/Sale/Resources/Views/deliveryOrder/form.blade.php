@@ -79,7 +79,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">收货人</label>
                             <div class="layui-input-block">
-                                <input type="text" name="consignee" lay-verify="required" lay-reqText="请输入收货人" class="layui-input" value="{{$delivery_order->consignee or ''}}">
+                                <input type="text" name="consignee" lay-verify="required" lay-reqText="请输入收货人" class="layui-input" value="{{$delivery_order->consignee or ''}}" autocomplete="off">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -193,6 +193,11 @@
                     }else {
                         $td.siblings('td[erp-col=item]').html('');
                     }
+                    $td.siblings('td[erp-col=title]').find('input').val('');
+                    $td.siblings('td[erp-col=unit]').html('');
+                    $td.siblings('td[erp-col=price]').html('');
+                    $td.siblings('td[erp-col=quantity]').find('input').val('');
+                    $td.siblings('td[erp-col=amount]').html('');
                     form.render('select', 'delivery_order');
                 });
             }
@@ -219,6 +224,7 @@
                         $priceTd.html('');
                         $quantityInput.attr('placeholder', '数量');
                     }
+                    $td.siblings('td[erp-col=amount]').html('');
                 });
             }
                     // 监听是否代收开关
@@ -245,7 +251,7 @@
                         $tr.find('td[erp-col=amount]').html('');
                     }
                 });
-            }
+            };
 
             $('button[lay-event=addItem]').on('click', function () {
                 var $body = $('#detailTable').find('tbody')
