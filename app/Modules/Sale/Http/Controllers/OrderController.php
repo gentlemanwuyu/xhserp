@@ -35,7 +35,7 @@ class OrderController extends Controller
         });
         $goods = Goods::all()->map(function ($g) {
             $g->skus->map(function ($sku) {
-                $sku->setAppends(['required_quantity']);
+                $sku->setAppends(['required_quantity', 'stock']);
 
                 return $sku;
             });

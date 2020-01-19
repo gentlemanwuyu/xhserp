@@ -118,7 +118,7 @@
                                 </td>
                                 <td erp-col="title"><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
                                 <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
-                                <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
+                                <td erp-col="quantity"><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="可用数量:{{$item->sku->stock - $item->sku->required_number}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
                                 <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
                                 <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
                                 <td><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
@@ -145,17 +145,17 @@
         layui.use(['form', 'laydate'], function () {
             var form = layui.form
                     ,laydate = layui.laydate
-            // 监听商品选择框
+                    // 监听商品选择框
                     ,listenSelectGoods = function () {
                 form.on('select(goods)', function(data){
                     var $td = $(data.elem).parent('td')
                             ,flag = $td.parent('tr').attr('data-flag');
                     if (data.value) {
                         var html = '';
-                        html += '<select name="items[' + flag + '][sku_id]" lay-search="" lay-verify="required" lay-reqText="请选择SKU">';
+                        html += '<select name="items[' + flag + '][sku_id]" lay-filter="sku" lay-search="" lay-verify="required" lay-reqText="请选择SKU">';
                         html += '<option value="">请选择SKU</option>';
                         goods[data.value]['skus'].forEach(function (sku) {
-                            html += '<option value="' + sku.id + '">' + sku.code + '</option>';
+                            html += '<option value="' + sku.id + '" data-valid_stock="' + (sku.stock - sku.required_quantity) + '">' + sku.code + '</option>';
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=sku]').html(html);
@@ -166,10 +166,26 @@
                         $td.siblings('td[erp-col=code]').html('');
                         $td.siblings('td[erp-col=title]').find('input[type=text]').val('');
                     }
+                    $td.siblings('td[erp-col=quantity]').find('input[type=text]').attr('placeholder', '数量');
+
                     form.render('select', 'order');
+                    listenSelectSku();
                 });
             }
-            // 监听价格数量输入框
+                    // 监听Sku选择框
+                    ,listenSelectSku = function () {
+                form.on('select(sku)', function(data){
+                    var $tr = $(data.elem).parents('tr');
+                    if (data.value) {
+                        var $selectedOption = $(data.elem).find('option:selected')
+                                ,valid_stock = $selectedOption.attr('data-valid_stock');
+                        $tr.find('td[erp-col=quantity] input[type=text]').attr('placeholder', '可用数量:' + valid_stock);
+                    }else {
+                        $tr.find('td[erp-col=quantity] input[type=text]').attr('placeholder', '数量');
+                    }
+                });
+            }
+                    // 监听价格数量输入框
                     ,listenPriceQuantityInput = function () {
                 $('input[ lay-filter=quantity]').on('keyup', function () {
                     var $tr = $(this).parents('tr')
@@ -194,7 +210,7 @@
                     }
                 });
             }
-            // 绑定日期插件
+                    // 绑定日期插件
                     ,bindLayDate = function () {
                 $('input[lay-filter=delivery_date]').each(function () {
                     laydate.render({
@@ -206,6 +222,7 @@
 
             // 页面初始化绑定事件
             listenSelectGoods();
+            listenSelectSku();
             listenPriceQuantityInput();
             bindLayDate();
 
@@ -242,7 +259,7 @@
                 html += '<input type="text" name="items[' + flag + '][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input">';
                 html += '</td>';
                 // 数量
-                html += '<td>';
+                html += '<td erp-col="quantity">';
                 html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input">';
                 html += '</td>';
                 // 单价
