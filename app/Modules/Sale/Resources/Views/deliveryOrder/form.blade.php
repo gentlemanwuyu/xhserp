@@ -121,10 +121,20 @@
                     </thead>
                     <tbody>
                         @if(isset($delivery_order))
-                            <?php $index = 1; ?>
-                            @foreach($delivery_order->items as $item)
+                            <?php
+                                $index = 1;
+                                $delivery_order_items = $delivery_order->items;
+                            ?>
+                            @foreach($delivery_order_items as $item)
                                 <?php
                                     $order_item = $item->orderItem;
+                                    // 其他订单Item ID
+                                    $otherOrderItemIds = [];
+                                    foreach ($delivery_order_items as $doi) {
+                                        if ($doi->order_item_id != $item->order_item_id) {
+                                            $otherOrderItemIds[] = $doi->order_item_id;
+                                        }
+                                    }
                                 ?>
                                 <tr data-flag="{{$item->id}}">
                                     <td erp-col="index">{{$index++}}</td>
@@ -139,8 +149,8 @@
                                     <td erp-col="item">
                                         <select name="items[{{$item->id}}][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">
                                             <option value="">请选择Item</option>
-                                            @foreach($orders[$item->order_id]->items as $order_item)
-                                                <option value="{{$order_item->id}}" @if($item->order_item_id == $order_item->id) selected @endif>{{$order_item->title}}</option>
+                                            @foreach($orders[$item->order_id]->items as $oi)
+                                                <option value="{{$oi->id}}" @if($item->order_item_id == $oi->id) selected @elseif(in_array($oi->id, $otherOrderItemIds)) disabled @endif>{{$oi->title}}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -183,12 +193,21 @@
                 form.on('select(order)', function(data){
                     var $td = $(data.elem).parent('td')
                             ,flag = $td.parent('tr').attr('data-flag');
+
+                    // 计算哪些Item已选择过
+                    var selectedItemIds = [];
+                    $('select[lay-filter=item]').each(function (_, select) {
+                        var selectedItemId = $(select).val();
+                        if (selectedItemId) {
+                            selectedItemIds.push(parseInt(selectedItemId));
+                        }
+                    });
                     if (data.value) {
                         var html = '';
                         html += '<select name="items[' + flag + '][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">';
                         html += '<option value="">请选择Item</option>';
-                        $.each(orders[data.value]['pis'], function (_, item) {
-                            html += '<option value="' + item.id + '">' + item.title + '</option>';
+                        $.each(orders[data.value]['pis'], function (_, item) {console.log(selectedItemIds.indexOf(item.id), item.id, selectedItemIds)
+                            html += '<option value="' + item.id + '"' + (-1 < selectedItemIds.indexOf(item.id) ? ' disabled' : '') + '>' + item.title + '</option>';
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=item]').html(html);
