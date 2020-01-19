@@ -102,4 +102,14 @@ class DeliveryOrder extends Model
     {
         return 1 == $this->is_collected ? '是' : '否';
     }
+
+    public function getTotalAmountAttribute()
+    {
+        $total_amount = 0;
+        foreach ($this->items as $item) {
+            $total_amount += $item->quantity * $item->orderItem->price;
+        }
+
+        return $total_amount;
+    }
 }

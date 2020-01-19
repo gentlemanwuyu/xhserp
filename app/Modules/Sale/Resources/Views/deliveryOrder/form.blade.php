@@ -5,7 +5,6 @@
         #detailTable tbody td{padding: 0;}
         #detailTable tbody tr{height: 40px;}
         #detailTable .layui-input{border: 0;}
-
     </style>
 @endsection
 @section('content')
@@ -162,6 +161,17 @@
                             @endforeach
                         @endif
                     </tbody>
+                    <tr class="erp-total-row">
+                        <td erp-col="index">总计</td>
+                        <td erp-col="order"></td>
+                        <td erp-col="item"></td>
+                        <td erp-col="title"></td>
+                        <td erp-col="unit"></td>
+                        <td erp-col="quantity"></td>
+                        <td erp-col="price"></td>
+                        <td erp-col="amount">{{isset($delivery_order) ? $delivery_order->total_amount : ''}}</td>
+                        <td></td>
+                    </tr>
                 </table>
             </div>
             <div class="layui-card-body">
@@ -279,10 +289,20 @@
                             ,price = $tr.find('td[erp-col=price]').html();
                     if (new RegExp(/^\d{1,}$/).test(quantity) && price && !isNaN(price)) {
                         var amount = parseInt(quantity) * parseFloat(price);
-                        $tr.find('td[erp-col=amount]').html(amount.toFixed(2));
+                        $tr.find('td[erp-col=amount]').html(amount);
                     }else {
                         $tr.find('td[erp-col=amount]').html('');
                     }
+
+                    // 计算汇总金额
+                    var total_amount = 0;
+                    $(this).parents('tbody').find('td[erp-col=amount]').each(function (_, amountTd) {
+                        var amount = parseFloat($(amountTd).html());
+                        if (!isNaN(amount)) {
+                            total_amount += amount;
+                        }
+                    });
+                    $('.erp-total-row').find('td[erp-col=amount]').html(total_amount);
                 });
             };
 

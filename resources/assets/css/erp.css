@@ -47,3 +47,6 @@ td[data-field=action] i.layui-icon{color: #009688;}
 .erp-info-table{background-color: inherit;}
 .erp-info-table tr>td:nth-child(2){text-align: left; background-color: #fff;}
 .erp-info-table tr>td:first-child{width: 110px; text-align: right;}
+
+/* 静态表格样式 */
+.erp-total-row{background-color: #f2f2f2;}
