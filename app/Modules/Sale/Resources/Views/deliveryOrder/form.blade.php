@@ -123,18 +123,10 @@
                         @if(isset($delivery_order))
                             <?php
                                 $index = 1;
-                                $delivery_order_items = $delivery_order->items;
                             ?>
-                            @foreach($delivery_order_items as $item)
+                            @foreach($delivery_order->items as $item)
                                 <?php
                                     $order_item = $item->orderItem;
-                                    // 其他订单Item ID
-                                    $otherOrderItemIds = [];
-                                    foreach ($delivery_order_items as $doi) {
-                                        if ($doi->order_item_id != $item->order_item_id) {
-                                            $otherOrderItemIds[] = $doi->order_item_id;
-                                        }
-                                    }
                                 ?>
                                 <tr data-flag="{{$item->id}}">
                                     <td erp-col="index">{{$index++}}</td>
@@ -150,7 +142,7 @@
                                         <select name="items[{{$item->id}}][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">
                                             <option value="">请选择Item</option>
                                             @foreach($orders[$item->order_id]->items as $oi)
-                                                <option value="{{$oi->id}}" @if($item->order_item_id == $oi->id) selected @elseif(in_array($oi->id, $otherOrderItemIds)) disabled @endif>{{$oi->title}}</option>
+                                                <option value="{{$oi->id}}" @if($item->order_item_id == $oi->id) selected @endif>{{$oi->title}}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -188,26 +180,40 @@
         }).use(['form', 'autocomplete'], function () {
             var form = layui.form
                     ,autocomplete = layui.autocomplete
+                    // 检查Item选择框
+                    ,checkItemSelect = function () {
+                // 判断所有的item选择框的option是否要disabled掉
+                $('select[lay-filter=item]').each(function (_, select) {
+                    var otherSelectedItemIds = [];
+                    $('select[lay-filter=item]').not(this).each(function (_, other) {
+                        var otherSelectedItemId = $(other).val();
+                        if (otherSelectedItemId) {
+                            otherSelectedItemIds.push(parseInt(otherSelectedItemId));
+                        }
+                    });
+
+                    $(select).find('option').each(function () {
+                        if (this.value && -1 < otherSelectedItemIds.indexOf(parseInt(this.value))) {
+                            $(this).prop('disabled', true);
+                        }else {
+                            $(this).prop('disabled', false);
+                        }
+                    });
+                });
+                form.render('select', 'delivery_order');
+            }
                     // 监听订单选择框
                     ,listenSelectOrder = function () {
                 form.on('select(order)', function(data){
                     var $td = $(data.elem).parent('td')
                             ,flag = $td.parent('tr').attr('data-flag');
 
-                    // 计算哪些Item已选择过
-                    var selectedItemIds = [];
-                    $('select[lay-filter=item]').each(function (_, select) {
-                        var selectedItemId = $(select).val();
-                        if (selectedItemId) {
-                            selectedItemIds.push(parseInt(selectedItemId));
-                        }
-                    });
                     if (data.value) {
                         var html = '';
                         html += '<select name="items[' + flag + '][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">';
                         html += '<option value="">请选择Item</option>';
-                        $.each(orders[data.value]['pis'], function (_, item) {console.log(selectedItemIds.indexOf(item.id), item.id, selectedItemIds)
-                            html += '<option value="' + item.id + '"' + (-1 < selectedItemIds.indexOf(item.id) ? ' disabled' : '') + '>' + item.title + '</option>';
+                        $.each(orders[data.value]['pis'], function (_, item) {
+                            html += '<option value="' + item.id + '">' + item.title + '</option>';
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=item]').html(html);
@@ -221,6 +227,7 @@
                     $td.siblings('td[erp-col=quantity]').find('input').val('');
                     $td.siblings('td[erp-col=amount]').html('');
                     form.render('select', 'delivery_order');
+                    checkItemSelect();
                 });
             }
                     // 监听订单Item选择框
@@ -247,26 +254,7 @@
                         $quantityInput.attr('placeholder', '数量');
                     }
                     $td.siblings('td[erp-col=amount]').html('');
-
-                    // 重新判断所有的item选择框的option是否要disabled掉
-                    $('select[lay-filter=item]').each(function (_, select) {
-                        var otherSelectedItemIds = [];
-                        $('select[lay-filter=item]').not(this).each(function (_, other) {
-                            var otherSelectedItemId = $(other).val();
-                            if (otherSelectedItemId) {
-                                otherSelectedItemIds.push(parseInt(otherSelectedItemId));
-                            }
-                        });
-
-                        $(select).find('option').each(function () {
-                            if (this.value && -1 < otherSelectedItemIds.indexOf(parseInt(this.value))) {
-                                $(this).prop('disabled', true);
-                            }else {
-                                $(this).prop('disabled', false);
-                            }
-                        });
-                    });
-                    form.render('select', 'delivery_order');
+                    checkItemSelect();
                 });
             }
                     // 监听是否代收开关
@@ -346,6 +334,7 @@
             listenIsCollected();
             listenSelectOrder();
             listenSelectItem();
+            checkItemSelect();
             listenQuantityInput();
 
             // 监听物流方式
