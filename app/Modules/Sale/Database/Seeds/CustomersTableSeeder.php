@@ -90,5 +90,21 @@ class CustomersTableSeeder extends Seeder
             'manager_id' => '6',
         ]);
         CustomerContact::create(['customer_id' => $customer->id, 'name' => '邓先生', 'position' => '采购副总监', 'phone' => '13800138000']);
+
+        $customer = Customer::create([
+            'name' => '东莞杭兴',
+            'code' => 'xhsjx003',
+            'company' => '东莞市杭兴机械有限公司',
+            'intro' => '',
+            'phone' => '',
+            'fax' => '',
+            'tax' => 1,
+            'payment_method' => 1,
+            'state_id' => '1935',
+            'city_id' => '2060',
+            'street_address' => '长安镇上沙沙湾街42号',
+            'manager_id' => '10',
+        ]);
+        CustomerContact::create(['customer_id' => $customer->id, 'name' => '王成渠', 'position' => '老板', 'phone' => '13711964532']);
     }
 }
