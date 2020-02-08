@@ -61,8 +61,13 @@ class DeliveryOrder extends Model
                 $item->update($item_data);
             }
 
-            // 判断是否超出订单Item的数量
             $order_item = $item->orderItem;
+            // 判断是否超出库存数量
+            if ($order_item->sku->stock < $item->quantity) {
+                throw new \Exception("[{$order_item->title}]库存不足");
+            }
+
+            // 判断是否超出订单Item的数量
             if (0 > $order_item->pending_delivery_quantity) {
                 throw new \Exception("[{$order_item->title}]出货数量不可超出订单数量");
             }

@@ -258,7 +258,7 @@
                         $titleInput.val(items[data.value]['title']);
                         $unitTd.html(items[data.value]['unit']);
                         $priceTd.html(items[data.value]['price']);
-                        $quantityInput.attr('placeholder', '待出货数量:' + items[data.value]['pending_delivery_quantity']);
+                        $quantityInput.attr('placeholder', '待出货:' + items[data.value]['pending_delivery_quantity'] + ', 库存:' + items[data.value]['sku']['stock']);
                     }else {
                         $titleInput.val('');
                         $unitTd.html('');
