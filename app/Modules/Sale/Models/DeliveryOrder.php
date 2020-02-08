@@ -12,12 +12,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Index\Models\User;
 use App\Modules\Warehouse\Models\Express;
+use App\Traits\CodeTrait;
 
 class DeliveryOrder extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CodeTrait;
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+
+    const CODE_PREFIX = 'xhssdo';
 
     static $delivery_methods = [
         1 => '客户自取',

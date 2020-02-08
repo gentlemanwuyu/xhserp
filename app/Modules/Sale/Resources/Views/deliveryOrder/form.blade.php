@@ -31,7 +31,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">出货单号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入出货单号" class="layui-input" value="{{$delivery_order->code or ''}}">
+                                <input type="text" name="code" placeholder="出货单号" lay-verify="required" lay-reqText="请输入出货单号" class="layui-input" value="{{isset($delivery_order) ? $delivery_order->code : (empty($auto_code) ? '' : $auto_code)}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -120,7 +120,7 @@
                         <th width="60">操作</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="items">
                         @if(isset($delivery_order))
                             <?php
                                 $index = 1;
@@ -275,7 +275,7 @@
                     var $is_collected = $(data.elem);
                     if (data.elem.checked) {
                         var html = '<input type="text" name="collected_amount" class="erp-after-switch-input" placeholder="代收金额" lay-verify="required" lay-reqText="请输入代收金额">';
-                        $is_collected.after(html);
+                        $is_collected.parent().append(html);
                     }else {
                         $is_collected.siblings('input[name=collected_amount]').remove();
                     }
@@ -307,7 +307,7 @@
             };
 
             $('button[lay-event=addItem]').on('click', function () {
-                var $body = $('#detailTable').find('tbody')
+                var $body = $('#detailTable').find('tbody.items')
                         ,html = ''
                         ,flag = Date.now();
                 html += '<tr data-flag="' + flag + '">';

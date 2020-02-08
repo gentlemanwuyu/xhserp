@@ -32,6 +32,7 @@ class DeliveryOrderController extends Controller
         $expresses = Express::all(['id', 'name']);
         $data = compact('expresses');
         if (!empty($request->get('customer_id'))) {
+            $data['auto_code'] = DeliveryOrder::codeGenerator();
             $customer = Customer::find($request->get('customer_id'));
         }elseif (!empty($request->get('delivery_order_id'))) {
             $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
