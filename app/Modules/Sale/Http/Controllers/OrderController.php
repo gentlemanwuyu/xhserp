@@ -98,13 +98,19 @@ class OrderController extends Controller
         try {
             $order_data = [
                 'code' => $request->get('code', ''),
-                'customer_id' => $request->get('customer_id'),
                 'payment_method' => $request->get('payment_method'),
                 'tax' => $request->get('tax'),
             ];
 
-            $customer = Customer::find($request->get('customer_id'));
-            if (!$customer) {
+            $order = Order::find($request->get('order_id'));
+            if ($request->get('customer_id')) {
+                $order_data['customer_id'] = $request->get('customer_id');
+                $customer = Customer::find($request->get('customer_id'));
+            }elseif ($order) {
+                $customer = $order->customer;
+            }
+
+            if (empty($customer)) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该客户']);
             }
 
@@ -149,8 +155,6 @@ class OrderController extends Controller
             if (3 == $order_data['status']) {
                 $order_data['payment_status'] = 1;
             }
-
-            $order = Order::find($request->get('order_id'));
 
             DB::beginTransaction();
             if (!$order) {
@@ -225,7 +229,7 @@ class OrderController extends Controller
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 3]);
+            $order->update(['status' => 3, 'payment_status' => 1]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
