@@ -45,6 +45,8 @@ class OrderController extends Controller
         if ($request->get('order_id')) {
             $order = Order::find($request->get('order_id'));
             $data['order'] = $order;
+        }else {
+            $data['auto_code'] = Order::codeGenerator();
         }
 
         return view('sale::order.form', $data);

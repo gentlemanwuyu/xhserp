@@ -22,7 +22,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">订单号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入订单号" class="layui-input" value="{{$order->code or ''}}">
+                                <input type="text" name="code" placeholder="订单号" lay-verify="required" lay-reqText="请输入订单号" class="layui-input" value="{{isset($order) ? $order->code : (empty($auto_code) ? '' : $auto_code)}}">
                             </div>
                         </div>
                         <div class="layui-form-item">

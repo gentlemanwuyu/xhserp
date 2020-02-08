@@ -11,12 +11,15 @@ namespace App\Modules\Sale\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Index\Models\User;
+use App\Traits\CodeTrait;
 
 class Order extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CodeTrait;
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+
+    const CODE_PREFIX = 'xhsso';
 
     static $statuses = [
         1 => '待审核',
