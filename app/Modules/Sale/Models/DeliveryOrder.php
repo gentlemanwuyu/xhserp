@@ -56,7 +56,7 @@ class DeliveryOrder extends Model
 
             if (!$item) {
                 $item_data['delivery_order_id'] = $this->id;
-                DeliveryOrderItem::create($item_data);
+                $item = DeliveryOrderItem::create($item_data);
             }else {
                 $item->update($item_data);
             }
