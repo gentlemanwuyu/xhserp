@@ -119,6 +119,9 @@ class DeliveryOrderController extends Controller
                 $data['status'] = 1;
                 $delivery_order = DeliveryOrder::create($data);
             }else {
+                if (1 != $delivery_order->status) {
+                    throw new \Exception("非待出货状态的出货单不可编辑");
+                }
                 $delivery_order->update($data);
             }
 
@@ -133,7 +136,7 @@ class DeliveryOrderController extends Controller
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
 
