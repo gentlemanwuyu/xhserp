@@ -80,12 +80,12 @@
                     <thead>
                     <tr>
                         <th width="50">序号</th>
-                        <th width="150">商品</th>
-                        <th width="150">SKU</th>
-                        <th>标题</th>
-                        <th width="50">单位</th>
-                        <th width="100">数量</th>
-                        <th width="100">单价</th>
+                        <th width="150" class="required">商品</th>
+                        <th width="150" class="required">SKU</th>
+                        <th class="required">标题</th>
+                        <th width="50" class="required">单位</th>
+                        <th width="100" class="required">数量</th>
+                        <th width="100" class="required">单价</th>
                         <th width="100">总价</th>
                         <th width="100">交期</th>
                         <th>备注</th>

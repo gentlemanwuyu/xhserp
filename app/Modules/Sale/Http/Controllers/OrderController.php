@@ -106,6 +106,15 @@ class OrderController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该客户']);
             }
 
+            // 判断订单号是否存在
+            $query = Order::where('code', $request->get('code'));
+            if ($request->get('order_id')) {
+                $query = $query->where('id', '!=', $request->get('order_id'));
+            }
+            if ($query->first()) {
+                return response()->json(['status' => 'fail', 'msg' => '订单号[' . $request->get('code') . ']已存在']);
+            }
+
             // 分析订单需要进入什么状态
             if (1 == $request->get('payment_method')) {
                 // 如果付款方式是现金，直接进入已通过状态
