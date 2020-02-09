@@ -73,8 +73,8 @@
                 cols: [
                     [
                         {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
-                        {field: 'code', title: '出货单编号', align: 'center', fixed: 'left'},
-                        {field: 'customer_name', title: '客户', align: 'center', fixed: 'left', templet: function (d) {
+                        {field: 'code', title: '出货单编号', width: 200, align: 'center', fixed: 'left'},
+                        {field: 'customer_name', title: '客户', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return d.customer.name;
                         }},
                         {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},

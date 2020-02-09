@@ -4,7 +4,9 @@ namespace App\Modules\Finance\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Sale\Models\Customer;
+use App\Modules\Finance\Models\Collection;
 use App\Modules\Sale\Models\DeliveryOrder;
 
 class PendingCollectionController extends Controller
@@ -47,5 +49,36 @@ class PendingCollectionController extends Controller
         }
 
         return response()->json($paginate);
+    }
+
+    public function deduction(Request $request)
+    {
+        $collections = Collection::where('customer_id', $request->get('customer_id'))
+            ->where('is_finished', 0)
+            ->orderBy('id', 'desc')
+            ->get();
+        $customer = Customer::find($request->get('customer_id'));
+        $customer->setAppends(['total_remained_amount', 'unpaid_items']);
+
+        return view('finance::pendingCollection.deduction', compact('collections', 'customer'));
+    }
+
+    public function deduct(Request $request)
+    {
+        try {
+            $customer = Customer::find($request->get('customer_id'));
+            if (!$customer) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该客户']);
+            }
+
+            DB::beginTransaction();
+            $customer->deduct($request->get('checked_doi_ids'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
     }
 }

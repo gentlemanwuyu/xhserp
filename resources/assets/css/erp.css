@@ -18,6 +18,9 @@ a:hover{color: #FF5722;}
 .dtree-nav-item .layui-icon-rate-solid {position: absolute;top: 0;left: -15px;}
 .dtree-nav-item .layui-icon-rate {position: absolute;top: 0;left: -15px;}
 
+/* 表格合计行样式 */
+.erp-total-row{background-color: #f2f2f2;}
+
 /* 表格内列表样式 */
 .erp-table-list-ul, .erp-table-list-ul-first{display: table-row}
 .erp-table-list-li, .erp-table-list-li-first{display: table-cell}
