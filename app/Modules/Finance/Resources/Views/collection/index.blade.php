@@ -70,7 +70,7 @@
                         {field: 'remained_amount', title: '结余金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return parseFloat(d.remained_amount) ? d.remained_amount : '';
                         }},
-                        {field: 'creator', title: '创建人', align: 'center', templet: function (d) {
+                        {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
                         {field: 'detail', title: '抵扣明细', width: 710, align: 'center', templet: function (d) {
@@ -130,14 +130,14 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
                         // 未完成抵扣的付款单才可以修改
-                        if (0 == data.is_finished) {
-                            actions.push({
-                                title: "编辑",
-                                event: function () {
-                                    parent.layui.index.openTabsPage("{{route('finance::collection.form')}}?collection_id=" + data.id, '编辑收款单[' + data.id + ']');
-                                }
-                            });
-                        }
+                        {{--if (0 == data.is_finished) {--}}
+                            {{--actions.push({--}}
+                                {{--title: "编辑",--}}
+                                {{--event: function () {--}}
+                                    {{--parent.layui.index.openTabsPage("{{route('finance::collection.form')}}?collection_id=" + data.id, '编辑收款单[' + data.id + ']');--}}
+                                {{--}--}}
+                            {{--});--}}
+                        {{--}--}}
 
                         return actions;
                     });
