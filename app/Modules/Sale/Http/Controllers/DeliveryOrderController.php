@@ -40,16 +40,30 @@ class DeliveryOrderController extends Controller
             $customer = $delivery_order->customer;
         }
 
-        $orders = Order::where('customer_id', $customer->id)->where('status', 3)->get()->pluck(null, 'id')->map(function ($o) {
-            $o->pis = $o->pendingItems->map(function ($item) {
-                $item->setAppends(['pending_delivery_quantity']);
-                $item->sku->setAppends(['stock']);
+        $orders = Order::where('customer_id', $customer->id)
+            ->where('status', 3)
+            ->get()
+            ->pluck(null, 'id')
+            ->map(function ($o) {
+                $pis = $o->pendingItems->map(function ($item) {
+                    $item->setAppends(['pending_delivery_quantity']);
 
-                return $item;
-            })->pluck(null, 'id');
+                    if (0 >= $item->pending_delivery_quantity) {
+                        return null;
+                    }
 
-            return $o;
-        });
+                    $item->sku->setAppends(['stock']);
+
+                    return $item;
+                })->filter()->pluck(null, 'id');
+
+                if ($pis->isEmpty()) {
+                    return null;
+                }
+
+                $o->pis = $pis;
+                return $o;
+            })->filter();
         $data['customer'] = $customer;
         $data['orders'] = $orders;
 
