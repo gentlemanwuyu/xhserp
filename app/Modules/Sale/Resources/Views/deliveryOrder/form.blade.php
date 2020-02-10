@@ -156,7 +156,7 @@
                                     </td>
                                     <td erp-col="price">{{$order_item->price or ''}}</td>
                                     <td erp-col="amount">{{$order_item->price * $item->quantity}}</td>
-                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" erp-event="deleteRow">删除</button></td>
                                 </tr>
                             @endforeach
                         @endif
@@ -304,6 +304,29 @@
                     });
                     $('.erp-total-row').find('td[erp-col=amount]').html(total_amount);
                 });
+            }
+                    // 监听删除行
+                    ,listenDeleteRow = function () {
+                $('*[erp-event=deleteRow]').on('click', function () {
+                    deleteRow(this);
+                    var totalAmount = 0
+                            ,$detailTable = $('#detailTable')
+                            ,$items = $detailTable.find('tbody.items tr')
+                            ,$totalAmountTd = $detailTable.find('tr.erp-total-row td[erp-col=amount]');
+                    $items.find('td[erp-col=amount]').each(function (_, td) {
+                        var amount = $(td).html();
+                        if (0 < amount.length) {
+                            amount = parseFloat(amount);
+                            totalAmount += amount;
+                        }
+                    });
+
+                    if (totalAmount) {
+                        $totalAmountTd.html(totalAmount);
+                    }else {
+                        $totalAmountTd.html('');
+                    }
+                });
             };
 
             $('button[lay-event=addItem]').on('click', function () {
@@ -345,7 +368,7 @@
                 html += '<td erp-col="amount">';
                 html += '</td>';
                 html += '<td>';
-                html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>';
+                html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" erp-event="deleteRow">删除</button>';
                 html += '</td>';
                 html += '</tr>';
 
@@ -353,12 +376,14 @@
                 form.render();
                 listenSelectOrder();
                 listenQuantityInput();
+                listenDeleteRow();
             });
             listenIsCollected();
             listenSelectOrder();
             listenSelectItem();
             checkItemSelect();
             listenQuantityInput();
+            listenDeleteRow();
 
             // 监听物流方式
             form.on('select(delivery_method)', function (data) {
