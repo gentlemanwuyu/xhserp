@@ -37,6 +37,8 @@ class OrderController extends Controller
         if ($request->get('order_id')) {
             $order = PurchaseOrder::find($request->get('order_id'));
             $data['order'] = $order;
+        }else {
+            $data['auto_code'] = PurchaseOrder::codeGenerator();
         }
 
         return view('purchase::order.form', $data);
