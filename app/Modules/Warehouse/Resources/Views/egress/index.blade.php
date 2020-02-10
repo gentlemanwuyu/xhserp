@@ -61,6 +61,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::deliveryOrder.paginate')}}",
+                where: {status: 1},
                 page: true,
                 parseData: function (res) {
                     return {
@@ -178,6 +179,8 @@
             };
 
             table.render(tableOpts);
+
+            form.val('search', {status: 1});
 
             laydate.render({
                 elem: 'input[name=created_at_between]'
