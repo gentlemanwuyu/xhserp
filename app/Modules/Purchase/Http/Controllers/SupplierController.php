@@ -64,6 +64,26 @@ class SupplierController extends Controller
     public function save(Request $request)
     {
         try {
+            // code去重判断
+            $query = Supplier::where('code', $request->get('code'));
+            if ($request->get('supplier_id')) {
+                $query = $query->where('id', '!=', $request->get('supplier_id'));
+            }
+            $code_exists = $query->first();
+            if ($code_exists) {
+                return response()->json(['status' => 'fail', 'msg' => '供应商编号[' . $request->get('code') . ']已存在']);
+            }
+
+            // name去重判断
+            $query = Supplier::where('name', $request->get('name'));
+            if ($request->get('supplier_id')) {
+                $query = $query->where('id', '!=', $request->get('supplier_id'));
+            }
+            $name_exists = $query->first();
+            if ($name_exists) {
+                return response()->json(['status' => 'fail', 'msg' => '供应商名称[' . $request->get('name') . ']已存在']);
+            }
+
             $supplier_data = [
                 'code' => $request->get('code', ''),
                 'name' => $request->get('name', ''),
