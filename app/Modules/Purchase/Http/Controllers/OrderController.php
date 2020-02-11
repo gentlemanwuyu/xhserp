@@ -90,13 +90,21 @@ class OrderController extends Controller
         try {
             $order_data = [
                 'code' => $request->get('code', ''),
-                'supplier_id' => $request->get('supplier_id'),
                 'payment_method' => $request->get('payment_method'),
                 'tax' => $request->get('tax'),
                 'status' => 1,
             ];
 
             $order = PurchaseOrder::find($request->get('order_id'));
+            if ($request->get('supplier_id')) {
+                $order_data['supplier_id'] = $request->get('supplier_id');
+                $supplier = Supplier::find($request->get('supplier_id'));
+            }elseif ($order) {
+                $supplier = $order->supplier;
+            }
+            if (empty($supplier)) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该供应商']);
+            }
 
             DB::beginTransaction();
             if (!$order) {
@@ -117,7 +125,7 @@ class OrderController extends Controller
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
 

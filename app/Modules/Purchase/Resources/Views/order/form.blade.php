@@ -20,20 +20,24 @@
                 <div class="layui-row layui-col-space30">
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">订单号</label>
+                            <label class="layui-form-label @if(!isset($order)) required @endif">供应商</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" placeholder="订单号" lay-verify="required" lay-reqText="请输入订单号" class="layui-input" value="{{isset($order) ? $order->code : (empty($auto_code) ? '' : $auto_code)}}">
+                                @if(isset($order))
+                                    <span class="erp-form-span">{{$order->supplier->name}}</span>
+                                @else
+                                    <select name="supplier_id" lay-search="" lay-filter="supplier" lay-verify="required" lay-reqText="请选择供应商">
+                                        <option value="">请选择供应商</option>
+                                        @foreach($suppliers as $supplier)
+                                            <option value="{{$supplier->id}}" @if(isset($order->supplier_id) && $supplier->id == $order->supplier_id) selected @endif>{{$supplier->name}}</option>
+                                        @endforeach
+                                    </select>
+                                @endif
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">供应商</label>
+                            <label class="layui-form-label required">订单号</label>
                             <div class="layui-input-block">
-                                <select name="supplier_id" lay-search="" lay-filter="supplier" lay-verify="required" lay-reqText="请选择供应商">
-                                    <option value="">请选择供应商</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{$supplier->id}}" @if(isset($order->supplier_id) && $supplier->id == $order->supplier_id) selected @endif>{{$supplier->name}}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="code" placeholder="订单号" lay-verify="required" lay-reqText="请输入订单号" class="layui-input" value="{{isset($order) ? $order->code : (empty($auto_code) ? '' : $auto_code)}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
