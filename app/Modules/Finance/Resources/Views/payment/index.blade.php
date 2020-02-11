@@ -26,6 +26,7 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a class="layui-btn layui-btn-normal" lay-href="{{route('finance::payment.form')}}">添加付款单</a>
             </div>
         </div>
     </form>

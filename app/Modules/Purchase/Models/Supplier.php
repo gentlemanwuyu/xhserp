@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Finance\Models\Payment;
+use App\Modules\Finance\Models\PaymentItem;
 
 class Supplier extends Model
 {
@@ -31,6 +32,78 @@ class Supplier extends Model
         2 => ['display' => '3%', 'rate' => 0.03],
         3 => ['display' => '17%', 'rate' => 0.17],
     ];
+
+    /**
+     * 抵扣应付款明细
+     *
+     * @param $entry_ids
+     * @return $this|bool
+     * @throws \Exception
+     */
+    public function deduct($entry_ids)
+    {
+        if (!is_array($entry_ids)) {
+            return false;
+        }
+
+        // 未抵扣的付款单
+        $remained_payments = Payment::where('supplier_id', $this->id)
+            ->where('is_finished', 0)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        foreach ($entry_ids as $entry_id) {
+            $entry = SkuEntry::find($entry_id);
+            $order_item = $entry->orderItem;
+            // 需要抵扣的金额
+            $amount = $order_item->price * $entry->quantity;
+            $remained_payment = $remained_payments->first();
+            while ($remained_payment) {
+                if ($amount <= $remained_payment->remained_amount) {
+                    // 剩余未抵扣的金额
+                    $remained_amount = $remained_payment->remained_amount;
+                    PaymentItem::create([
+                        'payment_id' => $remained_payment->id,
+                        'entry_id' => $entry_id,
+                        'amount' => $amount,
+                    ]);
+                    $remained_amount -= $amount;
+                    $remained_payment->remained_amount = $remained_amount;
+                    if (0 == $remained_amount) {
+                        $remained_payment->is_finished = 1;
+                    }
+
+                    $remained_payment->save();
+                    $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
+                }else {
+                    PaymentItem::create([
+                        'payment_id' => $remained_payment->id,
+                        'entry_id' => $entry_id,
+                        'amount' => $remained_payment->remained_amount,
+                    ]);
+                    $amount -= $remained_payment->remained_amount;
+                    // 该付款单已经抵扣完
+                    $remained_payment->remained_amount = 0;
+                    $remained_payment->is_finished = 1;
+                    $remained_payment->save();
+                    // 将该付款单弹出
+                    $remained_payments->shift();
+                    $remained_payment = $remained_payments->first();
+                }
+                if (0 == $amount) {
+                    break;
+                }
+            }
+
+            if ($amount > 0) {
+                throw new \Exception("选中的明细金额不可大于付款金额");
+            }
+            $entry->is_paid = 1;
+            $entry->save();
+        }
+
+        return $this;
+    }
 
     public function contacts()
     {
@@ -96,7 +169,7 @@ class Supplier extends Model
      */
     public function getTotalRemainedAmountAttribute()
     {
-        $payments = Payment::where('is_finished', 0)->get()->toArray();
+        $payments = Payment::where('supplier_id', $this->id)->where('is_finished', 0)->get()->toArray();
 
         return array_sum(array_column($payments, 'remained_amount'));
     }

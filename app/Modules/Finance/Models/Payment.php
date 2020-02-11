@@ -19,6 +19,12 @@ class Payment extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    static $methods = [
+        1 => '现金',
+        2 => '汇款',
+        3 => '支票/汇票',
+    ];
+
     public function items()
     {
         return $this->hasMany(PaymentItem::class);
