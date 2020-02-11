@@ -162,6 +162,9 @@
                             <dd>
                                 <a lay-href="{{route('sale::deliveryOrder.index')}}"><i class="layui-icon layui-icon-form"></i>出货单管理</a>
                             </dd>
+                            <dd>
+                                <a lay-href="{{route('sale::returnOrder.index')}}"><i class="layui-icon layui-icon-form"></i>退货单管理</a>
+                            </dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">

@@ -52,3 +52,7 @@ Route::group(['prefix' => 'paymentMethod', 'as'=>'paymentMethod.'], function (){
 	Route::post('reject', ['as'=>'reject', 'uses'=>'PaymentMethodController@reject']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'PaymentMethodController@delete']);
 });
+
+Route::group(['prefix' => 'returnOrder', 'as'=>'returnOrder.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'ReturnOrderController@index']);
+});
