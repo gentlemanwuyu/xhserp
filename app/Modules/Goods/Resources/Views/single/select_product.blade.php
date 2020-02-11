@@ -74,7 +74,7 @@
                         }},
                         {field: 'created_at', title: '创建时间', align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', align: 'center'},
-                        {field: 'action', title: '操作', width: '5%', align: 'center', toolbar: "#action"}
+                        {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}
                     ]
                 ]
                 ,done: function(res, curr, count){
