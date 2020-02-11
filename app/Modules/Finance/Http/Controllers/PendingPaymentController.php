@@ -4,8 +4,10 @@ namespace App\Modules\Finance\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Purchase\Models\Supplier;
+use App\Modules\Finance\Models\Payment;
 
 class PendingPaymentController extends Controller
 {
@@ -46,5 +48,36 @@ class PendingPaymentController extends Controller
         }
 
         return response()->json($paginate);
+    }
+
+    public function deduction(Request $request)
+    {
+        $payments = Payment::where('supplier_id', $request->get('supplier_id'))
+            ->where('is_finished', 0)
+            ->orderBy('id', 'desc')
+            ->get();
+        $supplier = Supplier::find($request->get('supplier_id'));
+        $supplier->setAppends(['total_remained_amount', 'unpaid_items']);
+
+        return view('finance::pendingPayment.deduction', compact('payments', 'supplier'));
+    }
+
+    public function deduct(Request $request)
+    {
+        try {
+            $supplier = Supplier::find($request->get('supplier_id'));
+            if (!$supplier) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该供应商']);
+            }
+
+            DB::beginTransaction();
+            $supplier->deduct($request->get('checked_entry_ids'));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
     }
 }

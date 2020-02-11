@@ -124,9 +124,9 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
                         actions.push({
-                            title: "付款",
+                            title: "抵扣",
                             event: function () {
-                                parent.layui.index.openTabsPage("{{route('finance::payment.form')}}?supplier_id=" + data.id, '付款单[' + data.id + ']');
+                                parent.layui.index.openTabsPage("{{route('finance::pendingPayment.deduction')}}?supplier_id=" + data.id, '抵扣应付款[' + data.id + ']');
                             }
                         });
 

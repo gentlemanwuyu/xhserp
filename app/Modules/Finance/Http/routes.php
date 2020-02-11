@@ -35,6 +35,8 @@ Route::group(['prefix' => 'payment', 'as'=>'payment.'], function (){
 Route::group(['prefix' => 'pendingPayment', 'as'=>'pendingPayment.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'PendingPaymentController@index']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PendingPaymentController@paginate']);
+	Route::get('deduction', ['as'=>'deduction', 'uses'=>'PendingPaymentController@deduction']);
+	Route::post('deduct', ['as'=>'deduct', 'uses'=>'PendingPaymentController@deduct']);
 });
 
 Route::group(['prefix' => 'account', 'as'=>'account.'], function (){

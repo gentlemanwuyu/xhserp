@@ -39,4 +39,9 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getMethodNameAttribute()
+    {
+        return isset(self::$methods[$this->method]) ? self::$methods[$this->method] : '';
+    }
 }
