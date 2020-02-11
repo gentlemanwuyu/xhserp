@@ -45,6 +45,13 @@ class EntryController extends Controller
     public function form(Request $request)
     {
         $sku = ProductSku::find($request->get('sku_id'));
+        $sku->pois = $sku->purchase_order_items
+            ->map(function ($item) {
+                $item->order->supplier;
+
+                return $item;
+            })
+            ->pluck(null, 'id');
 
         return view('warehouse::entry.form', compact('sku'));
     }
