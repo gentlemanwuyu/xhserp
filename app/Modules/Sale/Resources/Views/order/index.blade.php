@@ -182,6 +182,18 @@
                                     parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.form')}}?customer_id=" + data.customer_id, '添加出货单[' + data.customer_id + ']');
                                 }
                             });
+                        }
+
+                        if (-1 < [3, 4].indexOf(data.status) && data.has_delivery) {
+                            actions.push({
+                                title: "退货",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('sale::returnOrder.form')}}?order_id=" + data.id, '添加退货单[' + data.id + ']');
+                                }
+                            });
+                        }
+
+                        if (3 == data.status) {
                             actions.push({
                                 title: "取消",
                                 event: function() {

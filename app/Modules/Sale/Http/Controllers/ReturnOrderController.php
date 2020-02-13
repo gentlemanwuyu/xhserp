@@ -16,4 +16,9 @@ class ReturnOrderController extends Controller
     {
         return view('sale::returnOrder.index');
     }
+
+    public function form(Request $request)
+    {
+        return view('sale::returnOrder.form');
+    }
 }

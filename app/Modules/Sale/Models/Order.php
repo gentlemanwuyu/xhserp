@@ -100,4 +100,20 @@ class Order extends Model
     {
         return isset(Customer::$taxes[$this->tax]) ? Customer::$taxes[$this->tax]['display'] : '';
     }
+
+    /**
+     * 是否有出货
+     *
+     * @return bool
+     */
+    public function getHasDeliveryAttribute()
+    {
+        $delivery_order_items = DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
+            ->whereNull('delivery_orders.deleted_at')
+            ->where('delivery_orders.status', 2)
+            ->where('doi.order_id', $this->id)
+            ->pluck('delivery_orders.id');
+
+        return $delivery_order_items->isEmpty() ? false : true;
+    }
 }
