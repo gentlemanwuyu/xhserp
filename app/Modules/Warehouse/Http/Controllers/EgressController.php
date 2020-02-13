@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Events\EgressFinished;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\DeliveryOrder;
@@ -79,6 +80,8 @@ class EgressController extends Controller
                     }
                 }
             });
+
+            event(new EgressFinished($request->get('delivery_order_id')));
 
             DB::commit();
             return response()->json(['status' => 'success']);
