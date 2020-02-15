@@ -56,4 +56,5 @@ Route::group(['prefix' => 'paymentMethod', 'as'=>'paymentMethod.'], function (){
 Route::group(['prefix' => 'returnOrder', 'as'=>'returnOrder.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'ReturnOrderController@index']);
 	Route::get('form', ['as'=>'form', 'uses'=>'ReturnOrderController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'ReturnOrderController@save']);
 });

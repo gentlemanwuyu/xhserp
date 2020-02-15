@@ -55,6 +55,21 @@ class OrderItem extends Model
     }
 
     /**
+     * 已完成出货的数量
+     *
+     * @return number
+     */
+    public function getDeliveriedQuantityAttribute()
+    {
+        $deliveriedItems = DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
+            ->where('delivery_orders.status', 2)
+            ->where('doi.order_item_id', $this->id)
+            ->pluck('quantity');
+
+        return array_sum($deliveriedItems->toArray());
+    }
+
+    /**
      * 已付款数量
      *
      * @return int
