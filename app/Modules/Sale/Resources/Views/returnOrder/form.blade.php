@@ -88,7 +88,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">退货单号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" placeholder="退货单号" lay-verify="required" lay-reqText="请输入退货单号" class="layui-input">
+                                <input type="text" name="code" placeholder="退货单号" lay-verify="required" lay-reqText="请输入退货单号" class="layui-input"  value="{{isset($return_order) ? $return_order->code : (empty($auto_code) ? '' : $auto_code)}}">
                             </div>
                         </div>
                         <div class="layui-form-item">

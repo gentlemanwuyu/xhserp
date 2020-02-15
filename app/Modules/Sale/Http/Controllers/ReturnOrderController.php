@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Sale\Models\Order;
+use App\Modules\Sale\Models\ReturnOrder;
 
 class ReturnOrderController extends Controller
 {
@@ -29,7 +30,15 @@ class ReturnOrderController extends Controller
             })
             ->pluck(null, 'id');
 
-        return view('sale::returnOrder.form', compact('order'));
+        $data = compact('order');
+        if ($request->get('return_order_id')) {
+            $return_order = ReturnOrder::find($request->get('return_order_id'));
+            $data['return_order'] = $return_order;
+        }else {
+            $data['auto_code'] = ReturnOrder::codeGenerator();
+        }
+
+        return view('sale::returnOrder.form', $data);
     }
 
     public function save(Request $request)
