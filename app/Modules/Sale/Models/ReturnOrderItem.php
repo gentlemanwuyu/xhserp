@@ -13,4 +13,9 @@ use Illuminate\Database\Eloquent\Model;
 class ReturnOrderItem extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function orderItem()
+    {
+        return $this->belongsTo(OrderItem::class);
+    }
 }

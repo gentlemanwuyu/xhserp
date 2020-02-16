@@ -35,6 +35,43 @@ class ReturnOrder extends Model
         3 => '退货退款',
     ];
 
+    public function syncItems($items)
+    {
+        if (!$items || !is_array($items)) {
+            return false;
+        }
+
+        // 将不在请求中的item删除
+        ReturnOrderItem::where('return_order_id', $this->id)->whereNotIn('id', array_keys($items))->get()->map(function ($item) {
+            $item->delete();
+        });
+
+        foreach ($items as $flag => $item) {
+            $item_data = [
+                'order_item_id' => $item['order_item_id'],
+                'quantity' => $item['quantity'],
+                'received_quantity' => $item['received_quantity'],
+            ];
+
+            $item = ReturnOrderItem::find($flag);
+
+            if (!$item) {
+                $item_data['return_order_id'] = $this->id;
+                $item = ReturnOrderItem::create($item_data);
+            }else {
+                $item->update($item_data);
+            }
+
+            $order_item = $item->orderItem;
+            // 判断是否超出已出货数量
+            if ($order_item->deliveried_quantity < $item->quantity) {
+                throw new \Exception("[{$order_item->title}]退货数量不可超出已出货数量");
+            }
+        }
+
+        return $this;
+    }
+
     public function items()
     {
         return $this->hasMany(ReturnOrderItem::class);
