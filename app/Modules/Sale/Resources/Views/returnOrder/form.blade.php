@@ -96,9 +96,9 @@
                             <div class="layui-input-block">
                                 <select name="method" lay-verify="required" lay-reqText="请选择退货方式">
                                     <option value="">请选择退货方式</option>
-                                    <option value="1">换货</option>
-                                    <option value="2">退货(货款下次抵扣)</option>
-                                    <option value="3">退货退款</option>
+                                    @foreach(\App\Modules\Sale\Models\ReturnOrder::$methods as $method_id => $method_name)
+                                        <option value="{{$method_id}}">{{$method_name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

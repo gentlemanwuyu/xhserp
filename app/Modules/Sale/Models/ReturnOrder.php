@@ -29,6 +29,12 @@ class ReturnOrder extends Model
         5 => '已取消',
     ];
 
+    static $methods = [
+        1 => '换货',
+        2 => '退货(货款下次抵扣)',
+        3 => '退货退款',
+    ];
+
     public function items()
     {
         return $this->hasMany(ReturnOrderItem::class);
