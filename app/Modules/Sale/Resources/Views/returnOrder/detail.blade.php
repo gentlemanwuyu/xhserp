@@ -111,52 +111,58 @@
             var form = layui.form;
 
             $('button[erp-action=agree]').on('click', function () {
-                var load_index = layer.load();
-                $.ajax({
-                    method: "post",
-                    url: "{{route('sale::returnOrder.agree')}}",
-                    data: {return_order_id: "{{$return_order_id or ''}}"},
-                    success: function (data) {
-                        layer.close(load_index);
-                        if ('success' == data.status) {
-                            layer.msg("退货单已通过", {icon: 1, time: 2000}, function(){
-                                parent.layui.admin.closeThisTabs();
-                            });
-                        } else {
-                            layer.msg("退货单审核失败:" + data.msg, {icon: 2, time: 2000});
+                layer.confirm("确认要通过该退货单吗？", {icon: 3, title:"确认"}, function (index) {
+                    layer.close(index);
+                    var load_index = layer.load();
+                    $.ajax({
+                        method: "post",
+                        url: "{{route('sale::returnOrder.agree')}}",
+                        data: {return_order_id: "{{$return_order_id or ''}}"},
+                        success: function (data) {
+                            layer.close(load_index);
+                            if ('success' == data.status) {
+                                layer.msg("退货单已通过", {icon: 1, time: 2000}, function(){
+                                    parent.layui.admin.closeThisTabs();
+                                });
+                            } else {
+                                layer.msg("退货单审核失败:" + data.msg, {icon: 2, time: 2000});
+                                return false;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.close(load_index);
+                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
                             return false;
                         }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                        return false;
-                    }
+                    });
                 });
             });
 
             $('button[erp-action=reject]').on('click', function () {
-                var load_index = layer.load();
-                $.ajax({
-                    method: "post",
-                    url: "{{route('sale::returnOrder.reject')}}",
-                    data: {return_order_id: "{{$return_order_id or ''}}"},
-                    success: function (data) {
-                        layer.close(load_index);
-                        if ('success' == data.status) {
-                            layer.msg("退货单已驳回", {icon: 1, time: 2000}, function(){
-                                parent.layui.admin.closeThisTabs();
-                            });
-                        } else {
-                            layer.msg("退货单审核失败:" + data.msg, {icon: 2, time: 2000});
+                layer.prompt({title: '驳回原因'}, function(value, index, elem){
+                    layer.close(index);
+                    var load_index = layer.load();
+                    $.ajax({
+                        method: "post",
+                        url: "{{route('sale::returnOrder.reject')}}",
+                        data: {return_order_id: "{{$return_order_id or ''}}", 'reason': value},
+                        success: function (data) {
+                            layer.close(load_index);
+                            if ('success' == data.status) {
+                                layer.msg("退货单已驳回", {icon: 1, time: 2000}, function(){
+                                    parent.layui.admin.closeThisTabs();
+                                });
+                            } else {
+                                layer.msg("退货单审核失败:" + data.msg, {icon: 2, time: 2000});
+                                return false;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.close(load_index);
+                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
                             return false;
                         }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                        return false;
-                    }
+                    });
                 });
             });
         });

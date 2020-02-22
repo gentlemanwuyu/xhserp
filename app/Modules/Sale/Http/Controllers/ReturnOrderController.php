@@ -137,7 +137,22 @@ class ReturnOrderController extends Controller
 
     public function agree(Request $request)
     {
+        try {
+            $return_order = ReturnOrder::find($request->get('return_order_id'));
 
+            if (!$return_order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该退货单']);
+            }
+            if (1 != $return_order->status) {
+                return response()->json(['status' => 'fail', 'msg' => '该退货单不是待审核状态，禁止操作']);
+            }
+
+            $return_order->update(['status' => 3]);
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
     }
 
     public function reject(Request $request)
