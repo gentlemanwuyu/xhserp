@@ -10,6 +10,7 @@ use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Sale\Models\ReturnOrder;
+use App\Modules\Sale\Models\ReturnOrderLog;
 
 class ReturnOrderController extends Controller
 {
@@ -147,17 +148,49 @@ class ReturnOrderController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '该退货单不是待审核状态，禁止操作']);
             }
 
+            DB::beginTransaction();
             $return_order->update(['status' => 3]);
+            ReturnOrderLog::create([
+                'return_order_id' => $return_order->id,
+                'action' => 1,
+                'user_id' => Auth::user()->id,
+            ]);
 
+            DB::commit();
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
 
     public function reject(Request $request)
     {
+        try {
+            $return_order = ReturnOrder::find($request->get('return_order_id'));
 
+            if (!$return_order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该退货单']);
+            }
+            if (1 != $return_order->status) {
+                return response()->json(['status' => 'fail', 'msg' => '该退货单不是待审核状态，禁止操作']);
+            }
+
+            DB::beginTransaction();
+            $return_order->update(['status' => 2]);
+            ReturnOrderLog::create([
+                'return_order_id' => $return_order->id,
+                'action' => 2,
+                'content' => $request->get('reason'),
+                'user_id' => Auth::user()->id,
+            ]);
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
     }
 
     public function delete(Request $request)
