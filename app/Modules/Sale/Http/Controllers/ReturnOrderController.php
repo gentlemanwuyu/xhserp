@@ -135,6 +135,16 @@ class ReturnOrderController extends Controller
         return view('sale::returnOrder.detail', compact('return_order'));
     }
 
+    public function agree(Request $request)
+    {
+
+    }
+
+    public function reject(Request $request)
+    {
+
+    }
+
     public function delete(Request $request)
     {
         try {

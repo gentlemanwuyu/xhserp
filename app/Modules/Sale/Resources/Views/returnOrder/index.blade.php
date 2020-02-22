@@ -156,11 +156,20 @@
                             }
                         });
 
-                        if (1 == data.status) {
+                        if (-1 < [1, 2].indexOf(data.status)) {
                             actions.push({
                                 title: "编辑",
                                 event: function () {
-                                    parent.layui.index.openTabsPage("{{route('sale::returnOrder.form')}}?reutrn_order_id=" + data.id, '编辑退货单[' + data.id + ']');
+                                    parent.layui.index.openTabsPage("{{route('sale::returnOrder.form')}}?return_order_id=" + data.id, '编辑退货单[' + data.id + ']');
+                                }
+                            });
+                        }
+
+                        if (1 == data.status) {
+                            actions.push({
+                                title: "审核",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('sale::returnOrder.detail')}}?action=review&return_order_id=" + data.id, '编辑退货单[' + data.id + ']');
                                 }
                             });
                         }

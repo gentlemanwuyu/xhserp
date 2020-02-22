@@ -59,5 +59,7 @@ Route::group(['prefix' => 'returnOrder', 'as'=>'returnOrder.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'ReturnOrderController@save']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'ReturnOrderController@paginate']);
 	Route::get('detail', ['as'=>'detail', 'uses'=>'ReturnOrderController@detail']);
+	Route::post('agree', ['as'=>'agree', 'uses'=>'ReturnOrderController@agree']);
+	Route::post('reject', ['as'=>'reject', 'uses'=>'ReturnOrderController@reject']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'ReturnOrderController@delete']);
 });
