@@ -82,8 +82,18 @@ class ReturnOrder extends Model
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
     }
 
+    public function getMethodNameAttribute()
+    {
+        return isset(self::$methods[$this->method]) ? self::$methods[$this->method] : '';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

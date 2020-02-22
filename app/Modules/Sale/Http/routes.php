@@ -57,4 +57,7 @@ Route::group(['prefix' => 'returnOrder', 'as'=>'returnOrder.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'ReturnOrderController@index']);
 	Route::get('form', ['as'=>'form', 'uses'=>'ReturnOrderController@form']);
 	Route::post('save', ['as'=>'save', 'uses'=>'ReturnOrderController@save']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'ReturnOrderController@paginate']);
+	Route::get('detail', ['as'=>'detail', 'uses'=>'ReturnOrderController@detail']);
+	Route::post('delete', ['as'=>'delete', 'uses'=>'ReturnOrderController@delete']);
 });
