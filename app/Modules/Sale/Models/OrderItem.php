@@ -19,6 +19,11 @@ class OrderItem extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
     public function goods()
     {
         return $this->belongsTo(Goods::class);

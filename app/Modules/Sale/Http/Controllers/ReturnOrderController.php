@@ -68,7 +68,16 @@ class ReturnOrderController extends Controller
 
     public function form(Request $request)
     {
-        $order = Order::find($request->get('order_id'));
+        $data = [];
+        if ($request->get('return_order_id')) {
+            $return_order = ReturnOrder::find($request->get('return_order_id'));
+            $data['return_order'] = $return_order;
+            $order = $return_order->order;
+        }else {
+            $data['auto_code'] = ReturnOrder::codeGenerator();
+            $order = Order::find($request->get('order_id'));
+        }
+
         $order->indexItems = $order->items
             ->map(function ($item) {
                 $item->setAppends(['deliveried_quantity']);
@@ -76,14 +85,7 @@ class ReturnOrderController extends Controller
                 return $item;
             })
             ->pluck(null, 'id');
-
-        $data = compact('order');
-        if ($request->get('return_order_id')) {
-            $return_order = ReturnOrder::find($request->get('return_order_id'));
-            $data['return_order'] = $return_order;
-        }else {
-            $data['auto_code'] = ReturnOrder::codeGenerator();
-        }
+        $data['order'] = $order;
 
         return view('sale::returnOrder.form', $data);
     }
@@ -95,6 +97,7 @@ class ReturnOrderController extends Controller
                 'code' => $request->get('code', ''),
                 'method' => $request->get('method', 0),
                 'reason' => $request->get('reason', ''),
+                'status' => 1,
             ];
             if ($request->get('order_id')) {
                 $data['order_id'] = $request->get('order_id');
@@ -105,7 +108,6 @@ class ReturnOrderController extends Controller
             DB::beginTransaction();
             if (!$return_order) {
                 $data['user_id'] = Auth::user()->id;
-                $data['status'] = 1;
                 $return_order = ReturnOrder::create($data);
             }else {
                 if (!in_array($return_order->status, [1, 2])) {

@@ -11,6 +11,8 @@
     <form class="layui-form layui-form-pane" lay-filter="returnOrder">
         @if(isset($order_id))
             <input type="hidden" name="order_id" value="{{$order_id}}">
+        @elseif(isset($return_order_id))
+            <input type="hidden" name="return_order_id" value="{{$return_order_id}}">
         @endif
         <div class="layui-card">
             <div class="layui-card-header">
@@ -97,7 +99,7 @@
                                 <select name="method" lay-verify="required" lay-reqText="请选择退货方式">
                                     <option value="">请选择退货方式</option>
                                     @foreach(\App\Modules\Sale\Models\ReturnOrder::$methods as $method_id => $method_name)
-                                        <option value="{{$method_id}}">{{$method_name}}</option>
+                                        <option value="{{$method_id}}" @if(isset($return_order) && $return_order->method == $method_id) selected @endif>{{$method_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -105,7 +107,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label required">退货原因</label>
                             <div class="layui-input-block">
-                                <textarea name="reason" class="layui-textarea" lay-verify="required" lay-reqText="请输入退货原因"></textarea>
+                                <textarea name="reason" class="layui-textarea" lay-verify="required" lay-reqText="请输入退货原因">{{$return_order->reason or ''}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -133,7 +135,38 @@
                     </tr>
                     </thead>
                     <tbody>
-
+                        @if(isset($return_order))
+                            <?php $i = 1; ?>
+                            @foreach($return_order->items as $item)
+                                <?php
+                                    $orderItem = $item->orderItem;
+                                    $o = $orderItem->order;
+                                ?>
+                                <tr data-flag="{{$item->id}}">
+                                    <td erp-col="index">{{$i++}}</td>
+                                    <td erp-col="orderItem">
+                                        <select name="items[{{$item->id}}][order_item_id]" lay-filter="orderItem" lay-verify="required" lay-reqText="请选择订单Item">
+                                            <option value="">请选择订单Item</option>
+                                            @foreach($o->items as $oi)
+                                                <option value="{{$oi->id}}" @if($item->order_item_id == $oi->id) selected @endif>{{$oi->title}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td erp-col="goods">{{$orderItem->goods->name}}</td>
+                                    <td erp-col="sku">{{$orderItem->sku->code}}</td>
+                                    <td erp-col="unit">{{$orderItem->unit}}</td>
+                                    <td erp-col="orderQuantity">{{$orderItem->quantity}}</td>
+                                    <td erp-col="deliveriedQuantity">{{$orderItem->deliveried_quantity}}</td>
+                                    <td erp-col="quantity">
+                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" oninput="value=value.replace(/[^\d]/g, '')" value="{{$item->quantity}}">
+                                    </td>
+                                    <td erp-col="receivedQuantity">
+                                        <input type="text" name="items[{{$item->id}}][received_quantity]" lay-filter="receivedQuantity" placeholder="实收数量" lay-verify="required" lay-reqText="请输入实收数量" class="layui-input" value="{{$item->received_quantity}}">
+                                    </td>
+                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -290,11 +323,11 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("退货单添加成功", {icon: 1, time: 2000}, function () {
+                            layer.msg("退货单保存成功", {icon: 1, time: 2000}, function () {
                                 location.reload();
                             });
                         } else {
-                            layer.msg("退货单添加失败:"+data.msg, {icon: 2, time: 2000});
+                            layer.msg("退货单保存失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },
