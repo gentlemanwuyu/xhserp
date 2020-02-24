@@ -126,6 +126,9 @@
                                 <a lay-href="{{route('warehouse::egress.index')}}"><i class="layui-icon layui-icon-template-1"></i>出库管理</a>
                             </dd>
                             <dd>
+                                <a lay-href="{{route('warehouse::saleReturn.index')}}"><i class="layui-icon layui-icon-template-1"></i>销售退货管理</a>
+                            </dd>
+                            <dd>
                                 <a lay-href="{{route('warehouse::express.index')}}"><i class="layui-icon layui-icon-release"></i>快递管理</a>
                             </dd>
                         </dl>
