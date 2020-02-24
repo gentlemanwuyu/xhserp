@@ -31,7 +31,7 @@ class ReturnOrderController extends Controller
     {
         $query = ReturnOrder::leftJoin('orders AS o', 'o.id', '=', 'return_orders.order_id');
         if ($request->get('code')) {
-            $query = $query->where('return_orderscode', $request->get('code'));
+            $query = $query->where('return_orders.code', $request->get('code'));
         }
         if ($request->get('customer_id')) {
             $query = $query->where('o.customer_id', $request->get('customer_id'));

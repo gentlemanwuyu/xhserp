@@ -35,6 +35,7 @@ Route::group(['prefix' => 'egress', 'as'=>'egress.'], function (){
 
 Route::group(['prefix' => 'saleReturn', 'as'=>'saleReturn.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'SaleReturnController@index']);
+	Route::get('form', ['as'=>'form', 'uses'=>'SaleReturnController@form']);
 });
 
 Route::group(['prefix' => 'express', 'as'=>'express.'], function (){

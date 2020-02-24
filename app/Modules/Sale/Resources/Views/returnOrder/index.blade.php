@@ -90,7 +90,7 @@
                             return total_amount;
                         }},
                         {field: 'reason', title: '退货原因', width: 150, align: 'center'},
-                        {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {console.log(d)
+                        {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
                         {field: 'detail', title: '退货明细', width: 750, align: 'center', templet: function (d) {
