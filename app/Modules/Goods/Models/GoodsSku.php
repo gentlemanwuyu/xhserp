@@ -83,4 +83,46 @@ class GoodsSku extends Model
 
         return $quantity;
     }
+
+    /**
+     * 增加库存
+     *
+     * @param $quantity
+     * @return $this
+     * @throws \Exception
+     */
+    public function increase($quantity)
+    {
+        $goods = $this->goods;
+
+        if (1 == $goods->type) {
+            $product_sku_id = SingleSkuProductSku::where('goods_sku_id', $this->id)->value('product_sku_id');
+            $inventory = Inventory::where('sku_id', $product_sku_id)->first();
+            if (!$inventory) {
+                throw new \Exception("没有找到产品{$product_sku_id}的库存信息");
+            }
+
+            $inventory->stock += $quantity;
+            $inventory->save();
+        }elseif (2 == $goods->type) {
+            $product_sku_ids = array_column(ComboSkuProductSku::where('goods_sku_id', $this->id)->get(['product_id', 'product_sku_id'])->toArray(), 'product_id', 'product_sku_id');
+
+            foreach ($product_sku_ids as $product_sku_id => $product_id) {
+                $inventory = Inventory::where('sku_id', $product_sku_id)->first();
+                if (!$inventory) {
+                    throw new \Exception("没有找到产品{$product_sku_id}的库存信息");
+                }
+
+                $combo_product = ComboProduct::where('goods_id', $goods->id)->where('product_id', $product_id)->first();
+                if (!$combo_product) {
+                    throw new \Exception("商品{$goods->id}对应产品{$product_id}的记录");
+                }
+
+                $inventory->stock += $quantity * $combo_product->quantity;
+                $inventory->save();
+            }
+        }
+
+        return $this;
+    }
 }

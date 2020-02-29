@@ -15,7 +15,7 @@ class CreateReturnOrderLogs extends Migration
 		Schema::create('return_order_logs', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('return_order_id')->default(0)->comment('退货单ID');
-			$table->tinyInteger('action')->default(0)->comment('操作，1为通过，2为驳回');
+			$table->tinyInteger('action')->default(0)->comment('操作，1为通过，2为驳回，3为处理');
 			$table->text('content')->default('')->comment('内容');
 			$table->integer('user_id')->default(0)->comment('操作人ID');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');

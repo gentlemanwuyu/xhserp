@@ -17,5 +17,6 @@ class ReturnOrderLog extends Model
     static $actions = [
         1 => '同意',
         2 => '驳回',
+        3 => '处理',
     ];
 }

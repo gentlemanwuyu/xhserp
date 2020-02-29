@@ -47,11 +47,12 @@ class ReturnOrder extends Model
         });
 
         foreach ($items as $flag => $item) {
-            $item_data = [
-                'order_item_id' => $item['order_item_id'],
-                'quantity' => $item['quantity'],
-                'received_quantity' => $item['received_quantity'],
-            ];
+            $item_data = array_only($item, [
+                'order_item_id',
+                'quantity',
+                'received_quantity',
+                'entry_quantity',
+            ]);
 
             $item = ReturnOrderItem::find($flag);
 
