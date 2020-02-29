@@ -9,6 +9,7 @@
 namespace App\Modules\Sale\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Index\Models\User;
 
 class ReturnOrderLog extends Model
 {
@@ -19,4 +20,9 @@ class ReturnOrderLog extends Model
         2 => '驳回',
         3 => '处理',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

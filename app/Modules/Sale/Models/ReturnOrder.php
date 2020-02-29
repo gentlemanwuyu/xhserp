@@ -97,4 +97,14 @@ class ReturnOrder extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    /**
+     * 处理日志
+     *
+     * @return mixed
+     */
+    public function handleLog()
+    {
+        return $this->hasOne(ReturnOrderLog::class)->where('action', 3)->orderBy('id', 'desc');
+    }
 }

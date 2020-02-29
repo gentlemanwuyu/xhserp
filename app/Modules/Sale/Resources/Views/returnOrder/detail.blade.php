@@ -26,6 +26,16 @@
                             <td>状态</td>
                             <td>{{$return_order->status_name}}</td>
                         </tr>
+                        @if(4 == $return_order->status)
+                            <tr>
+                                <td>处理意见</td>
+                                <td>{{$return_order->handleLog->content or ''}}</td>
+                            </tr>
+                            <tr>
+                                <td>处理人</td>
+                                <td>{{$return_order->handleLog->user->name or ''}}</td>
+                            </tr>
+                        @endif
                     </table>
                 </div>
                 <div class="layui-col-xs4">
@@ -72,8 +82,11 @@
                     <th>订单数量</th>
                     <th>已出货数量</th>
                     <th>退货数量</th>
+                    @if(4 == $return_order->status)
+                        <th>入库数量</th>
+                    @endif
                     <th>单位</th>
-                    <th>单价</th>
+                    <th>价格</th>
                     <th>总价</th>
                 </tr>
                 </thead>
@@ -88,7 +101,10 @@
                         <td>{{$orderItem->title or ''}}</td>
                         <td>{{$orderItem->quantity or ''}}</td>
                         <td>{{$orderItem->deliveried_quantity or ''}}</td>
-                        <td>{{$item->quantity or ''}}</td>
+                        <td>{{$item->quantity}}</td>
+                        @if(4 == $return_order->status)
+                            <td>{{$item->entry_quantity}}</td>
+                        @endif
                         <td>{{$orderItem->unit or ''}}</td>
                         <td>{{$orderItem->price or ''}}</td>
                         <td>{{$item->quantity * $orderItem->price}}</td>
