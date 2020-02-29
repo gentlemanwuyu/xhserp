@@ -33,7 +33,7 @@ class DeliveryOrdersTableSeeder extends Seeder
             'delivery_order_id' => $delivery_order->id,
             'order_id' => 3,
             'order_item_id' => 6,
-            'title' => 'PP单面隔膜压力表7KG',
+            'title' => 'PP单面隔膜压力表10KG',
             'quantity' => 20,
         ]);
         DeliveryOrderItem::create([
@@ -41,7 +41,7 @@ class DeliveryOrdersTableSeeder extends Seeder
             'order_id' => 3,
             'order_item_id' => 7,
             'title' => 'kingspring流量计011 150JPM',
-            'quantity' => 30,
+            'quantity' => 10,
         ]);
 
         $delivery_order = DeliveryOrder::create([
