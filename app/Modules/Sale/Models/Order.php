@@ -102,6 +102,18 @@ class Order extends Model
     }
 
     /**
+     * 订单是否可退货
+     *
+     * @return bool
+     */
+    public function getReturnableAttribute()
+    {
+        return !$this->items->filter(function ($item) {
+            return $item->returnable_quantity;
+        })->isEmpty();
+    }
+
+    /**
      * 是否有出货
      *
      * @return bool

@@ -184,7 +184,7 @@
                             });
                         }
 
-                        if (-1 < [3, 4].indexOf(data.status) && data.has_delivery) {
+                        if (-1 < [3, 4].indexOf(data.status) && data.returnable) {
                             actions.push({
                                 title: "退货",
                                 event: function () {
