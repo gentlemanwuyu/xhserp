@@ -129,6 +129,7 @@
                         <th width="50">单位</th>
                         <th width="100">订单数量</th>
                         <th width="100">已出货数量</th>
+                        <th width="100">可退数量</th>
                         <th width="100" class="required">退货数量</th>
                         <th width="100" class="required">实收数量</th>
                         <th width="60">操作</th>
@@ -157,6 +158,7 @@
                                     <td erp-col="unit">{{$orderItem->unit}}</td>
                                     <td erp-col="orderQuantity">{{$orderItem->quantity}}</td>
                                     <td erp-col="deliveriedQuantity">{{$orderItem->deliveried_quantity}}</td>
+                                    <td erp-col="returnableQuantity">{{$orderItem->returnable_quantity}}</td>
                                     <td erp-col="quantity">
                                         <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" oninput="value=value.replace(/[^\d]/g, '')" value="{{$item->quantity}}">
                                     </td>
@@ -180,7 +182,7 @@
 @endsection
 @section('scripts')
     <script>
-        var items = <?= json_encode($order->indexItems); ?>;
+        var items = <?= json_encode($order->returnable_items); ?>;
         layui.use(['form'], function () {
             var form = layui.form
                     // 检查Item选择框
@@ -218,6 +220,7 @@
                         $td.siblings('td[erp-col=unit]').html(orderItem.unit);
                         $td.siblings('td[erp-col=orderQuantity]').html(orderItem.quantity);
                         $td.siblings('td[erp-col=deliveriedQuantity]').html(orderItem.deliveried_quantity);
+                        $td.siblings('td[erp-col=returnableQuantity]').html(orderItem.returnable_quantity);
 
                     }else {
                         $td.siblings('td[erp-col=goods]').html('');
@@ -225,6 +228,7 @@
                         $td.siblings('td[erp-col=unit]').html('');
                         $td.siblings('td[erp-col=orderQuantity]').html('');
                         $td.siblings('td[erp-col=deliveriedQuantity]').html('');
+                        $td.siblings('td[erp-col=returnableQuantity]').html('');
                     }
 
                     $td.siblings('td[erp-col=quantity]').find('input[lay-filter=quantity]').val('');
@@ -244,9 +248,9 @@
 
                     var orderItemId = $td.siblings('td[erp-col=orderItem]').find('select[lay-filter=orderItem]').val()
                             ,orderItem = items[orderItemId]
-                            ,deliveriedQuantity = parseInt(orderItem.deliveried_quantity);
-                    if (parseInt(this.value) > deliveriedQuantity) {
-                        layer.msg("退货数量不能大于已出货数量", {icon: 5, shift: 6});
+                            ,returnableQuantity = parseInt(orderItem.returnable_quantity);
+                    if (parseInt(this.value) > returnableQuantity) {
+                        layer.msg("退货数量不能大于可退数量", {icon: 5, shift: 6});
                         return false;
                     }
                 });
@@ -281,6 +285,7 @@
                 html += '<td erp-col="unit"></td>';
                 html += '<td erp-col="orderQuantity"></td>';
                 html += '<td erp-col="deliveriedQuantity"></td>';
+                html += '<td erp-col="returnableQuantity"></td>';
                 // 退货数量
                 html += '<td erp-col="quantity">';
                 html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" oninput="value=value.replace(\/[\^\\\d]/g, \'\')">';

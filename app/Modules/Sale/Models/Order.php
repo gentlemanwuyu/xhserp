@@ -81,6 +81,11 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getPaymentMethodNameAttribute()
     {
         return isset(Customer::$payment_methods[$this->payment_method]) ? Customer::$payment_methods[$this->payment_method] : '';
@@ -89,11 +94,6 @@ class Order extends Model
     public function getStatusNameAttribute()
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function getTaxNameAttribute()

@@ -64,8 +64,8 @@ class ReturnOrder extends Model
 
             $order_item = $item->orderItem;
             // 判断是否超出已出货数量
-            if ($order_item->deliveried_quantity < $item->quantity) {
-                throw new \Exception("[{$order_item->title}]退货数量不可超出已出货数量");
+            if ($order_item->returnable_quantity < $item->quantity) {
+                throw new \Exception("[{$order_item->title}]退货数量不可超出可退数量");
             }
         }
 

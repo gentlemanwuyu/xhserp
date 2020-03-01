@@ -75,6 +75,20 @@ class OrderItem extends Model
     }
 
     /**
+     * 可退数量
+     *
+     * @return int
+     */
+    public function getReturnableQuantityAttribute()
+    {
+        $returned_items = ReturnOrderItem::where('order_item_id', $this->id)->pluck('quantity');
+
+        $returned_quantity = array_sum($returned_items->toArray());
+
+        return $this->deliveried_quantity - $returned_quantity;
+    }
+
+    /**
      * 已付款数量
      *
      * @return int

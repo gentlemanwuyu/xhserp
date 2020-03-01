@@ -78,13 +78,14 @@ class ReturnOrderController extends Controller
             $order = Order::find($request->get('order_id'));
         }
 
-        $order->indexItems = $order->items
-            ->map(function ($item) {
-                $item->setAppends(['deliveried_quantity']);
+        // 可退Item
+        $order->returnable_items = $order->items->filter(function ($item) {
+            return $item->returnable_quantity;
+        })->map(function ($item) {
+            $item->setAppends(['deliveried_quantity', 'returnable_quantity']);
+            return $item;
+        })->pluck(null, 'id');
 
-                return $item;
-            })
-            ->pluck(null, 'id');
         $data['order'] = $order;
 
         return view('sale::returnOrder.form', $data);
