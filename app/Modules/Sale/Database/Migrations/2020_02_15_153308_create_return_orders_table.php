@@ -16,7 +16,7 @@ class CreateReturnOrdersTable extends Migration
 			$table->increments('id');
 			$table->integer('order_id')->default(0)->comment('订单ID');
 			$table->string('code')->default('')->comment('退货单编号');
-			$table->tinyInteger('method')->default(0)->comment('退货方式，1为换货，2为退货(货款下次抵扣)，3为退货退款');
+			$table->tinyInteger('method')->default(0)->comment('退货方式，1为换货，2为退货');
 			$table->text('reason')->default('')->comment('退货原因');
 			$table->tinyInteger('status')->default(0)->comment('退货单状态，1为待审核，2为已驳回，3为已通过，4为已完成，5为已取消');
 			$table->integer('user_id')->default(0)->comment('创建人ID');

@@ -31,8 +31,7 @@ class ReturnOrder extends Model
 
     static $methods = [
         1 => '换货',
-        2 => '退货(货款下次抵扣)',
-        3 => '退货退款',
+        2 => '退货',
     ];
 
     public function syncItems($items)

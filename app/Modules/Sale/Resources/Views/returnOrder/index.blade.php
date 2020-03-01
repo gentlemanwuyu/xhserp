@@ -80,7 +80,7 @@
                         {field: 'customer_name', title: '订单编号', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return d.order.code;
                         }},
-                        {field: 'method_name', title: '退货方式', width: 200, align: 'center', fixed: 'left'},
+                        {field: 'method_name', title: '退货方式', width: 100, align: 'center', fixed: 'left'},
                         {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},
                         {field: 'total_amount', title: '总金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
