@@ -121,45 +121,45 @@
                     </tr>
                     </thead>
                     <tbody class="items">
-                        @if(isset($delivery_order))
+                    @if(isset($delivery_order))
+                        <?php
+                        $index = 1;
+                        ?>
+                        @foreach($delivery_order->items as $item)
                             <?php
-                                $index = 1;
+                            $order_item = $item->orderItem;
                             ?>
-                            @foreach($delivery_order->items as $item)
-                                <?php
-                                    $order_item = $item->orderItem;
-                                ?>
-                                <tr data-flag="{{$item->id}}">
-                                    <td erp-col="index">{{$index++}}</td>
-                                    <td erp-col="order">
-                                        <select name="items[{{$item->id}}][order_id]" lay-filter="order" lay-search="" lay-verify="required" lay-reqText="请选择订单">
-                                            <option value="">请选择订单</option>
-                                            @foreach($orders as $order)
-                                                <option value="{{$order->id}}" @if($item->order_id == $order->id) selected @endif>{{$order->code}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td erp-col="item">
-                                        <select name="items[{{$item->id}}][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">
-                                            <option value="">请选择Item</option>
-                                            @foreach($orders[$item->order_id]->items as $oi)
-                                                <option value="{{$oi->id}}" @if($item->order_item_id == $oi->id) selected @endif>{{$oi->title}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td erp-col="title">
-                                        <input type="text" name="items[{{$item->id}}][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input" value="{{$item->title or ''}}">
-                                    </td>
-                                    <td erp-col="unit">{{$order_item->unit or ''}}</td>
-                                    <td erp-col="quantity">
-                                        <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$order_item->pending_delivery_quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
-                                    </td>
-                                    <td erp-col="price">{{$order_item->price or ''}}</td>
-                                    <td erp-col="amount">{{$order_item->price * $item->quantity}}</td>
-                                    <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" erp-event="deleteRow">删除</button></td>
-                                </tr>
-                            @endforeach
-                        @endif
+                            <tr data-flag="{{$item->id}}">
+                                <td erp-col="index">{{$index++}}</td>
+                                <td erp-col="order">
+                                    <select name="items[{{$item->id}}][order_id]" lay-filter="order" lay-search="" lay-verify="required" lay-reqText="请选择订单">
+                                        <option value="">请选择订单</option>
+                                        @foreach($orders as $order)
+                                            <option value="{{$order->id}}" @if($item->order_id == $order->id) selected @endif>{{$order->code}}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td erp-col="item">
+                                    <select name="items[{{$item->id}}][item_id]" lay-filter="item" lay-verify="required" lay-reqText="请选择Item">
+                                        <option value="">请选择Item</option>
+                                        @foreach($orders[$item->order_id]->items as $oi)
+                                            <option value="{{$oi->id}}" @if($item->order_item_id == $oi->id) selected @endif>{{$oi->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td erp-col="title">
+                                    <input type="text" name="items[{{$item->id}}][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input" value="{{$item->title or ''}}">
+                                </td>
+                                <td erp-col="unit">{{$order_item->unit or ''}}</td>
+                                <td erp-col="quantity">
+                                    <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$order_item->pending_delivery_quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
+                                </td>
+                                <td erp-col="price">{{$order_item->price or ''}}</td>
+                                <td erp-col="amount">{{$order_item->price * $item->quantity}}</td>
+                                <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" erp-event="deleteRow">删除</button></td>
+                            </tr>
+                        @endforeach
+                    @endif
                     </tbody>
                     <tr class="erp-total-row">
                         <td erp-col="index">总计</td>
@@ -192,7 +192,7 @@
         }).use(['form', 'autocomplete'], function () {
             var form = layui.form
                     ,autocomplete = layui.autocomplete
-                    // 检查Item选择框
+            // 检查Item选择框
                     ,checkItemSelect = function () {
                 // 判断所有的item选择框的option是否要disabled掉
                 $('select[lay-filter=item]').each(function (_, select) {
@@ -214,7 +214,7 @@
                 });
                 form.render('select', 'delivery_order');
             }
-                    // 监听订单选择框
+            // 监听订单选择框
                     ,listenSelectOrder = function () {
                 form.on('select(order)', function(data){
                     var $td = $(data.elem).parent('td')
@@ -242,7 +242,7 @@
                     checkItemSelect();
                 });
             }
-                    // 监听订单Item选择框
+            // 监听订单Item选择框
                     ,listenSelectItem = function () {
                 form.on('select(item)', function(data){
                     var $td = $(data.elem).parent('td')
@@ -258,7 +258,8 @@
                         $titleInput.val(items[data.value]['title']);
                         $unitTd.html(items[data.value]['unit']);
                         $priceTd.html(items[data.value]['price']);
-                        $quantityInput.attr('placeholder', '待出货:' + items[data.value]['pending_delivery_quantity'] + ', 库存:' + items[data.value]['sku']['stock']);
+                        var pending_delivery_quantity = parseInt(items[data.value]['pending_delivery_quantity']) + parseInt(items[data.value]['pending_exchange_quantity']);
+                        $quantityInput.attr('placeholder', '待出货:' + pending_delivery_quantity + ', 库存:' + items[data.value]['sku']['stock']);
                     }else {
                         $titleInput.val('');
                         $unitTd.html('');

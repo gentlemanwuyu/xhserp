@@ -19,6 +19,7 @@ class CreateReturnOrderItemsTable extends Migration
 			$table->integer('quantity')->default(0)->comment('数量');
 			$table->integer('received_quantity')->default(0)->comment('实收数量');
 			$table->integer('entry_quantity')->default(0)->comment('入库数量');
+			$table->integer('delivery_quantity')->default(0)->comment('出货数量，对换货订单有效');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->comment('最后更新时间');
 

@@ -30,7 +30,7 @@ class DeliveryOrder extends Model
 
     static $statuses = [
         1 => '待出货',
-        2 => '完成',
+        2 => '已完成',
     ];
 
     public function syncItems($items)
@@ -52,6 +52,12 @@ class DeliveryOrder extends Model
                 'quantity' => $item['quantity'],
             ];
 
+            $order_item = OrderItem::find($item['order_id']);
+            // 判断是否超出库存数量
+            if ($order_item->sku->stock < $item['quantity']) {
+                throw new \Exception("[{$order_item->title}]库存不足");
+            }
+
             $item = DeliveryOrderItem::find($flag);
 
             if (!$item) {
@@ -62,14 +68,11 @@ class DeliveryOrder extends Model
             }
 
             $order_item = $item->orderItem;
-            // 判断是否超出库存数量
-            if ($order_item->sku->stock < $item->quantity) {
-                throw new \Exception("[{$order_item->title}]库存不足");
-            }
+
 
             // 判断是否超出订单Item的数量
             if (0 > $order_item->pending_delivery_quantity) {
-                throw new \Exception("[{$order_item->title}]出货数量不可超出订单数量");
+                throw new \Exception("[{$order_item->title}]出货数量不可超出待发货数量");
             }
         }
 

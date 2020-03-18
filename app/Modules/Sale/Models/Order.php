@@ -102,6 +102,25 @@ class Order extends Model
     }
 
     /**
+     * 订单是否需要出货
+     *
+     * @return bool
+     */
+    public function getDeliverableAttribute()
+    {
+        $deliverable = false;
+
+        $this->items->each(function ($order_item) use (&$deliverable) {
+            if (0 < $order_item->pending_delivery_quantity + $order_item->pending_exchange_quantity) {
+                $deliverable = true;
+                return false;
+            }
+        });
+
+        return $deliverable;
+    }
+
+    /**
      * 订单是否可退货
      *
      * @return bool

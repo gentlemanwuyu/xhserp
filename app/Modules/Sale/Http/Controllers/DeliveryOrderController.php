@@ -17,7 +17,7 @@ class DeliveryOrderController extends Controller
     public function __construct()
     {
 
-	}
+    }
 
     public function index(Request $request)
     {
@@ -41,14 +41,16 @@ class DeliveryOrderController extends Controller
         }
 
         $orders = Order::where('customer_id', $customer->id)
-            ->where('status', 3)
+            ->where(function ($query) {
+                $query->where('status', 3)->orWhere('exchange_status', 1);
+            })
             ->get()
             ->pluck(null, 'id')
             ->map(function ($o) {
                 $pis = $o->pendingItems->map(function ($item) {
-                    $item->setAppends(['pending_delivery_quantity']);
-
-                    if (0 >= $item->pending_delivery_quantity) {
+                    $item->setAppends(['pending_delivery_quantity', 'pending_exchange_quantity']);
+                    // 待出货数量+待换货数量 <= 0的item过滤掉
+                    if (0 >= $item->pending_delivery_quantity + $item->pending_exchange_quantity) {
                         return null;
                     }
 

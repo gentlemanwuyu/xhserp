@@ -15,6 +15,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         'App\Events\EgressFinished' => [
             'App\Listeners\EgressFinishedOrderListener',
+            'App\Listeners\EgressFinishedReturnOrderListener',
         ],
     ];
 

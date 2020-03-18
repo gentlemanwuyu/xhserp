@@ -25,8 +25,9 @@ class ReturnOrder extends Model
         1 => '待审核',
         2 => '已驳回',
         3 => '已通过',
-        4 => '已完成',
-        5 => '已取消',
+        4 => '已入库',
+        5 => '已完成',
+        6 => '已取消',
     ];
 
     static $methods = [
@@ -56,16 +57,24 @@ class ReturnOrder extends Model
             $item = ReturnOrderItem::find($flag);
 
             if (!$item) {
+                // 判断是否超出已出货数量
+                $order_item = OrderItem::find($item_data['order_item_id']);
+                if ($order_item->returnable_quantity < $item_data['quantity']) {
+                    throw new \Exception("[{$order_item->title}]退货数量[{$item_data['quantity']}]不可超出可退数量[{$order_item->returnable_quantity}]");
+                }
+
                 $item_data['return_order_id'] = $this->id;
                 $item = ReturnOrderItem::create($item_data);
             }else {
+                // 判断是否超出已出货数量
+                if (!empty($item_data['quantity'])) {
+                    $order_item = $item->orderItem;
+                    $returnable_quantity = $order_item->returnable_quantity + $item->quantity;
+                    if ($item_data['quantity'] > $returnable_quantity) {
+                        throw new \Exception("[{$order_item->title}]退货数量[{$item_data['quantity']}]不可超出可退数量[{$returnable_quantity}]");
+                    }
+                }
                 $item->update($item_data);
-            }
-
-            $order_item = $item->orderItem;
-            // 判断是否超出已出货数量
-            if ($order_item->returnable_quantity < $item->quantity) {
-                throw new \Exception("[{$order_item->title}]退货数量不可超出可退数量");
             }
         }
 

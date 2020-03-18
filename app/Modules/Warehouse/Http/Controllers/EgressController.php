@@ -9,10 +9,6 @@ use App\Events\EgressFinished;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\DeliveryOrder;
-use App\Modules\Goods\Models\ComboProduct;
-use App\Modules\Goods\Models\SingleSkuProductSku;
-use App\Modules\Goods\Models\ComboSkuProductSku;
-use App\Modules\Warehouse\Models\Inventory;
 
 class EgressController extends Controller
 {
@@ -46,7 +42,7 @@ class EgressController extends Controller
             $delivery_order->items->each(function ($item) {
                 $goods_sku = $item->orderItem->sku;
                 $goods_sku->reduce($item->quantity);
-
+                $item->assignQuantity(); // 分配数量
             });
 
             event(new EgressFinished($request->get('delivery_order_id')));

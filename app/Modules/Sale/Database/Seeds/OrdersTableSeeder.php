@@ -16,7 +16,7 @@ class OrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $order = Order::create(['code' => 'xhspo20191211001', 'customer_id' => 1, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 5]);
+        $order = Order::create(['code' => 'xhsso20191211001', 'customer_id' => 1, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 5]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -40,7 +40,7 @@ class OrdersTableSeeder extends Seeder
             'delivery_status' => 1,
         ]);
 
-        $order = Order::create(['code' => 'xhspo20191211001', 'customer_id' => 3, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 6]);
+        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 6]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -75,7 +75,7 @@ class OrdersTableSeeder extends Seeder
             'delivery_status' => 1,
         ]);
 
-        $order = Order::create(['code' => 'xhspo20191211001', 'customer_id' => 2, 'payment_method' => 2, 'tax' => 1, 'status' => 3, 'payment_status' => 1, 'user_id' => 7]);
+        $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => 2, 'tax' => 1, 'status' => 3, 'payment_status' => 1, 'user_id' => 7]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,

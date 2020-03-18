@@ -17,7 +17,7 @@ class SaleReturnController extends Controller
     public function __construct()
     {
 
-	}
+    }
 
     public function index()
     {
@@ -60,6 +60,12 @@ class SaleReturnController extends Controller
             $return_order->save();
             // 同步item
             $return_order->syncItems($request->get('items'));
+            // 更新订单的exchange_status字段
+            if (1 == $return_order->method) {
+                $order = $return_order->order;
+                $order->exchange_status = 1;
+                $order->save();
+            }
             // 更新库存
             foreach ($request->get('items') as $roii => $item) {
                 $return_order_item = ReturnOrderItem::find($roii);

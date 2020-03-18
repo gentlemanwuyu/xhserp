@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function __construct()
     {
 
-	}
+    }
 
     public function index(Request $request)
     {
@@ -81,13 +81,13 @@ class OrderController extends Controller
             $order->items->map(function ($item) {
                 $item->goods;
                 $item->sku->setAppends(['stock']);
-                $item->setAppends(['pending_delivery_quantity']);
+                $item->setAppends(['pending_delivery_quantity', 'pending_exchange_quantity']);
 
                 return $item;
             });
             $order->customer;
             $order->user;
-            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable']);
+            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable', 'deliverable']);
         }
 
         return response()->json($paginate);

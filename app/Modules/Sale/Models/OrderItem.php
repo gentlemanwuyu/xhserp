@@ -45,18 +45,33 @@ class OrderItem extends Model
     }
 
     /**
+     * 待换货Item
+     *
+     * @return mixed
+     */
+    public function pendingExchangeItems()
+    {
+        return $this->hasMany(ReturnOrderItem::class)
+            ->leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
+            ->where('ro.method', 1)
+            ->where('ro.status', 4)
+            ->whereRaw('return_order_items.quantity > return_order_items.delivery_quantity')
+            ->select(['return_order_items.*'])
+            ->orderBy('return_order_items.id', 'asc');
+    }
+
+    /**
      * 待发货数量
      *
      * @return mixed
      */
     public function getPendingDeliveryQuantityAttribute()
     {
-        $quantity = 0;
-        foreach ($this->deliveryItems as $deliveryItem) {
-            $quantity += $deliveryItem->quantity;
-        }
+        $deliveryItems = $this->deliveryItems;
 
-        return $this->quantity - $quantity;
+        $real_delivery_quantity = $deliveryItems->isEmpty() ? 0 : array_sum($deliveryItems->pluck('real_quantity')->toArray());
+
+        return $this->quantity + $this->pending_exchange_quantity - $real_delivery_quantity;
     }
 
     /**
@@ -72,6 +87,41 @@ class OrderItem extends Model
             ->pluck('quantity');
 
         return array_sum($deliveriedItems->toArray());
+    }
+
+    /**
+     * 换货数量
+     *
+     * @return number
+     */
+    public function getExchangeQuantityAttribute()
+    {
+        $exchange_items = ReturnOrder::leftJoin('return_order_items AS roi', 'roi.return_order_id', '=', 'return_orders.id')
+            ->where('roi.order_item_id', $this->id)
+            ->where('return_orders.method', 1)
+            ->pluck('roi.quantity');
+
+        return array_sum($exchange_items->toArray());
+    }
+
+    /**
+     * 待换货数量
+     *
+     * @return int
+     */
+    public function getPendingExchangeQuantityAttribute()
+    {
+        $pending_exchange_quantity = 0;
+        ReturnOrder::leftJoin('return_order_items AS roi', 'roi.return_order_id', '=', 'return_orders.id')
+            ->where('roi.order_item_id', $this->id)
+            ->where('return_orders.method', 1)
+            ->where('return_orders.status', 4)
+            ->get(['roi.id AS return_order_item_id', 'roi.quantity', 'roi.delivery_quantity'])
+            ->each(function ($return_order_item) use (&$pending_exchange_quantity) {
+                $pending_exchange_quantity += $return_order_item->quantity - $return_order_item->delivery_quantity;
+            });
+
+        return $pending_exchange_quantity;
     }
 
     /**
