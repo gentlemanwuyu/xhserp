@@ -81,21 +81,27 @@
                     if ('success' == data.status) {
                         window.location.href = "/";
                     } else {
-                        layer.msg(data.msg, {icon:2});
+                        layer.msg(data.msg, {icon: 5, shift: 6});
                         $('input[name=captcha]').val('');
-                        $('#captcha').attr('src', '{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?'+Math.random());
+                        $('#captcha').attr('src', '{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?' + Math.random());
                         return false;
                     }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     $('input[name=captcha]').val('');
-                    $('#captcha').attr('src', '{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?'+Math.random());
-                    layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                    $('#captcha').attr('src', '{{\Mews\Captcha\Facades\Captcha::src('woozee')}}?' + Math.random());
+                    layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 5, shift: 6});
                     return false;
                 }
             });
 
             return false;
+        });
+
+        $(document).keyup(function(event){
+            if(event.keyCode == 13){
+                $('form[lay-filter=login] button[lay-submit]').click();
+            }
         });
     });
 </script>
