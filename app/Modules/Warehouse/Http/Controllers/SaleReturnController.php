@@ -58,7 +58,7 @@ class SaleReturnController extends Controller
             // 更新退货单状态
             $return_order->status = 4;
             $return_order->save();
-            // 同步item
+            // 同步item入库数量
             $return_order->syncItems($request->get('items'));
             // 更新订单的exchange_status字段
             if (1 == $return_order->method) {

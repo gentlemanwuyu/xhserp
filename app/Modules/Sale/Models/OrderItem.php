@@ -61,7 +61,7 @@ class OrderItem extends Model
     }
 
     /**
-     * 待发货数量
+     * 待出货数量
      *
      * @return mixed
      */
