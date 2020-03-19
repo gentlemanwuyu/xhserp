@@ -35,6 +35,16 @@ td[data-field=detail] .layui-table-cell{height: auto;}
 
 td[data-field=action] i.layui-icon{color: #009688;}
 
+/* 静态表格内列表样式 */
+.erp-static-table-list{padding: 0!important;}
+.erp-static-table-list span:first-child{padding-top: 5px; padding-bottom: 5px; line-height: 28px; display: block;}
+.erp-static-table-list-ul, .erp-static-table-list-ul-first{display: table-row}
+.erp-static-table-list-li, .erp-static-table-list-li-first{display: table-cell}
+.erp-static-table-list-ul{border-top: 1px solid #e6e6e6;}
+.erp-static-table-list-ul-first{border-top: none;}
+.erp-static-table-list-li{padding-top: 5px; padding-bottom: 5px; border-left: 1px solid #e6e6e6; line-height: 28px;}
+.erp-static-table-list-li-first{border-left: none;}
+
 /* 表单样式 */
 .layui-form-item[pane], .layui-form-pane .layui-form-item{background-color: #fff;}
 .layui-form-pane .erp-form-button-item{background-color: inherit;}
