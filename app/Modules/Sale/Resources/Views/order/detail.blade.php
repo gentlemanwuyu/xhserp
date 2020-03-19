@@ -75,6 +75,53 @@
             </table>
         </div>
     </div>
+    <?php $deliveryItems = $order->deliveryItems; ?>
+    @if(!$deliveryItems->isEmpty())
+        <div class="erp-detail">
+            <div class="erp-detail-title">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>出货记录</legend>
+                </fieldset>
+            </div>
+            <div class="erp-detail-content">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>订单Item</th>
+                        <th>出货单号</th>
+                        <th>出货单状态</th>
+                        <th>单位</th>
+                        <th>出货数量</th>
+                        <th>单价</th>
+                        <th>总价</th>
+                        <th>出货时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $index = 1; ?>
+                    @foreach($deliveryItems as $deliveryItem)
+                        <?php
+                            $deliveryOrder = $deliveryItem->deliveryOrder;
+                            $orderItem = $deliveryItem->orderItem;
+                        ?>
+                        <tr>
+                            <td>{{$index++}}</td>
+                            <td>{{$orderItem->title or ''}}</td>
+                            <td>{{$deliveryOrder->code or ''}}</td>
+                            <td>{{$deliveryOrder->status_name or ''}}</td>
+                            <td>{{$orderItem->unit or ''}}</td>
+                            <td>{{$deliveryItem->quantity or ''}}</td>
+                            <td>{{$orderItem->price or ''}}</td>
+                            <td>{{$orderItem->price * $deliveryItem->quantity}}</td>
+                            <td>{{$deliveryOrder->finished_at or ''}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
     <div class="layui-row @if(!(isset($action) && 'review' == $action)) layui-hide @endif">
         <form class="layui-form">
             <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>

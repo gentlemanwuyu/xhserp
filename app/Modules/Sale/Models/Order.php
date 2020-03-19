@@ -76,6 +76,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id')->where('delivery_status', 1);
     }
 
+    public function deliveryItems()
+    {
+        return $this->hasMany(DeliveryOrderItem::class)->OrderBy('id', 'desc');
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

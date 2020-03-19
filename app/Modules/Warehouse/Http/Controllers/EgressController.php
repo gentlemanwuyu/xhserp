@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Events\EgressFinished;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Index\Models\User;
@@ -36,6 +37,7 @@ class EgressController extends Controller
 
             DB::beginTransaction();
             $delivery_order->status = 2;
+            $delivery_order->finished_at = Carbon::now()->toDateTimeString();
             $delivery_order->save();
 
             // 减少对应的产品数量
