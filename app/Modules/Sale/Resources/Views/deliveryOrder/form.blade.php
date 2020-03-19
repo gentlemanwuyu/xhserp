@@ -258,8 +258,7 @@
                         $titleInput.val(items[data.value]['title']);
                         $unitTd.html(items[data.value]['unit']);
                         $priceTd.html(items[data.value]['price']);
-                        var pending_delivery_quantity = parseInt(items[data.value]['pending_delivery_quantity']) + parseInt(items[data.value]['pending_exchange_quantity']);
-                        $quantityInput.attr('placeholder', '待出货:' + pending_delivery_quantity + ', 库存:' + items[data.value]['sku']['stock']);
+                        $quantityInput.attr('placeholder', '待出货:' + items[data.value]['pending_delivery_quantity'] + ', 库存:' + items[data.value]['sku']['stock']);
                     }else {
                         $titleInput.val('');
                         $unitTd.html('');
@@ -284,7 +283,7 @@
             }
                     // 监听数量输入框
                     ,listenQuantityInput = function () {
-                $('input[ lay-filter=quantity]').on('keyup', function () {
+                $('input[lay-filter=quantity]').on('keyup', function () {
                     var $tr = $(this).parents('tr')
                             ,quantity = this.value
                             ,price = $tr.find('td[erp-col=price]').html();

@@ -52,27 +52,28 @@ class DeliveryOrder extends Model
                 'quantity' => $item['quantity'],
             ];
 
-            $order_item = OrderItem::find($item['order_id']);
+            $order_item = OrderItem::find($item['item_id']);
             // 判断是否超出库存数量
             if ($order_item->sku->stock < $item['quantity']) {
                 throw new \Exception("[{$order_item->title}]库存不足");
             }
 
-            $item = DeliveryOrderItem::find($flag);
+            $delivery_order_item = DeliveryOrderItem::find($flag);
 
-            if (!$item) {
-                $item_data['delivery_order_id'] = $this->id;
-                $item = DeliveryOrderItem::create($item_data);
-            }else {
-                $item->update($item_data);
+            // 判断是否超出订单Item的待发货数量
+            $pending_delivery_quantity = $order_item->pending_delivery_quantity;
+            if ($delivery_order_item) {
+                $pending_delivery_quantity += $delivery_order_item->quantity;
+            }
+            if ($item['quantity'] > $pending_delivery_quantity) {
+                throw new \Exception("[{$order_item->title}]出货数量[{$item['quantity']}]不可超出待出货数量[{$pending_delivery_quantity}]");
             }
 
-            $order_item = $item->orderItem;
-
-
-            // 判断是否超出订单Item的数量
-            if (0 > $order_item->pending_delivery_quantity) {
-                throw new \Exception("[{$order_item->title}]出货数量不可超出待发货数量");
+            if (!$delivery_order_item) {
+                $item_data['delivery_order_id'] = $this->id;
+                $delivery_order_item = DeliveryOrderItem::create($item_data);
+            }else {
+                $delivery_order_item->update($item_data);
             }
         }
 

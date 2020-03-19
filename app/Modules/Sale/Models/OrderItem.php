@@ -60,6 +60,13 @@ class OrderItem extends Model
             ->orderBy('return_order_items.id', 'asc');
     }
 
+    public function getDeliveryQuantityAttribute()
+    {
+        $deliveryItems = $this->deliveryItems;
+
+        return $deliveryItems->isEmpty() ? 0 : array_sum($deliveryItems->pluck('quantity')->toArray());
+    }
+
     /**
      * 待出货数量
      *
@@ -67,11 +74,8 @@ class OrderItem extends Model
      */
     public function getPendingDeliveryQuantityAttribute()
     {
-        $deliveryItems = $this->deliveryItems;
-
-        $real_delivery_quantity = $deliveryItems->isEmpty() ? 0 : array_sum($deliveryItems->pluck('real_quantity')->toArray());
-
-        return $this->quantity + $this->pending_exchange_quantity - $real_delivery_quantity;
+        // 订单数量 + 已入库的换货数量 - 出货数量
+        return $this->quantity + $this->entry_exchange_quantity - $this->delivery_quantity;
     }
 
     /**
@@ -90,15 +94,16 @@ class OrderItem extends Model
     }
 
     /**
-     * 换货数量
+     * 已入库的换货数量
      *
      * @return number
      */
-    public function getExchangeQuantityAttribute()
+    public function getEntryExchangeQuantityAttribute()
     {
         $exchange_items = ReturnOrder::leftJoin('return_order_items AS roi', 'roi.return_order_id', '=', 'return_orders.id')
             ->where('roi.order_item_id', $this->id)
             ->where('return_orders.method', 1)
+            ->where('return_orders.status', 4)
             ->pluck('roi.quantity');
 
         return array_sum($exchange_items->toArray());

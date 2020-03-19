@@ -45,6 +45,7 @@ class DeliveryOrderItem extends Model
                     'return_order_item_id' => $pending_exchange_item->id,
                     'quantity' => $remained_quantity,
                 ]);
+                $remained_quantity = 0;
             }else {
                 $pending_exchange_item->delivery_quantity += $pending_exchange_quantity;
                 $pending_exchange_item->save();
@@ -54,9 +55,10 @@ class DeliveryOrderItem extends Model
                     'quantity' => $pending_exchange_quantity,
                 ]);
                 $remained_quantity -= $pending_exchange_quantity;
-                if (0 >= $remained_quantity) {
-                    break;
-                }
+            }
+            // 如果还有数量剩下，则继续循环抵扣
+            if (0 >= $remained_quantity) {
+                break;
             }
         }
         // 如果抵扣完还有数量剩下，那么这个就是真实的出货数量
