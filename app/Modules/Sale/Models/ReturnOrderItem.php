@@ -18,4 +18,9 @@ class ReturnOrderItem extends Model
     {
         return $this->belongsTo(OrderItem::class);
     }
+
+    public function returnOrder()
+    {
+        return $this->belongsTo(ReturnOrder::class);
+    }
 }

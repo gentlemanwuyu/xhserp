@@ -42,16 +42,10 @@ class EgressFinishedOrderListener implements ShouldQueue
                 $order = Order::find($order_id);
                 $is_finished = true;
                 foreach ($order->items as $item) {
-                    $delivery_quantities = DeliveryOrder::leftjoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
-                        ->whereNull('delivery_orders.deleted_at')
-                        ->where('delivery_orders.status', 2)
-                        ->where('doi.order_item_id', $item->id)
-                        ->pluck('doi.quantity');
-
-                    $delivery_quantities = array_sum($delivery_quantities->toArray());
-                    if ($delivery_quantities < $item->quantity) {
+                    // 如果已出货数量 - 已入库的换货数量 < 订单Item的数量，则说明还没完成出货
+                    if ($item->deliveried_quantity - $item->entry_exchange_quantity < $item->quantity) {
                         $is_finished = false;
-                        continue;
+                        break;
                     }
                 }
 
@@ -63,6 +57,7 @@ class EgressFinishedOrderListener implements ShouldQueue
             }
         }catch (\Exception $e) {
             Log::info("[EgressFinishedOrderListener]事件发生异常:" . $e->getMessage());
+            throw new \Exception("系统内部出错，请联系程序猿！");
         }
     }
 }

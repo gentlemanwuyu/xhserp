@@ -12,7 +12,7 @@ use App\Events\EgressFinished;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Modules\Sale\Models\ReturnOrderItem;
-use App\Modules\Sale\Models\DeliveryOrderItem;
+use App\Modules\Sale\Models\DeliveryOrderItemExchange;
 
 class EgressFinishedReturnOrderListener implements ShouldQueue
 {
@@ -34,9 +34,9 @@ class EgressFinishedReturnOrderListener implements ShouldQueue
     public function handle(EgressFinished $event)
     {
         try {
-            $return_order_item_ids = DeliveryOrderItem::leftJoin('delivery_order_item_exchanges AS doie', 'doie.delivery_order_item_id', '=', 'delivery_order_items.id')
-                ->where('delivery_order_items.delivery_order_id', $event->delivery_order_id)
-                ->pluck('doie.return_order_item_id')
+            $return_order_item_ids = DeliveryOrderItemExchange::leftJoin('delivery_order_items AS doi', 'doi.id', '=','delivery_order_item_exchanges.delivery_order_item_id')
+                ->where('doi.delivery_order_id', $event->delivery_order_id)
+                ->pluck('delivery_order_item_exchanges.return_order_item_id')
                 ->toArray();
             $return_order_item_ids = array_unique($return_order_item_ids);
             $return_order_ids = [];
@@ -68,6 +68,7 @@ class EgressFinishedReturnOrderListener implements ShouldQueue
             }
         }catch (\Exception $e) {
             Log::info("[EgressFinishedReturnOrderListener]事件发生异常:" . $e->getMessage());
+            throw new \Exception("系统内部出错，请联系程序猿！");
         }
     }
 }
