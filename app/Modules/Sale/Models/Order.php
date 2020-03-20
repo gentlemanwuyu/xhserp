@@ -56,7 +56,6 @@ class Order extends Model
 
             if (!$order_item) {
                 $item_data['order_id'] = $this->id;
-                $item_data['delivery_status'] = 1;
                 OrderItem::create($item_data);
             }else {
                 $order_item->update($item_data);
@@ -69,11 +68,6 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
-    }
-
-    public function pendingItems()
-    {
-        return $this->hasMany(OrderItem::class, 'order_id')->where('delivery_status', 1);
     }
 
     public function deliveryItems()

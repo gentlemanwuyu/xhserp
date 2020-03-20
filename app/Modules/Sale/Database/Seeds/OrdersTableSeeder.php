@@ -26,7 +26,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '50',
             'price' => 65,
             'delivery_date' => '2019-12-25',
-            'delivery_status' => 1,
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -37,7 +36,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '10',
             'price' => 350,
             'delivery_date' => '2019-12-25',
-            'delivery_status' => 1,
         ]);
 
         $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 6]);
@@ -50,7 +48,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '50',
             'price' => 65,
             'delivery_date' => '2019-12-25',
-            'delivery_status' => 1,
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -61,7 +58,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '10',
             'price' => 350,
             'delivery_date' => '2019-12-25',
-            'delivery_status' => 1,
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -72,7 +68,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '300',
             'price' => 1.5,
             'delivery_date' => '2019-12-18',
-            'delivery_status' => 1,
         ]);
 
         $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => 2, 'tax' => 1, 'status' => 3, 'payment_status' => 1, 'user_id' => 7]);
@@ -85,7 +80,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '50',
             'price' => 65,
             'delivery_date' => '2019-12-25',
-            'delivery_status' => 1,
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -96,7 +90,6 @@ class OrdersTableSeeder extends Seeder
             'quantity' => '10',
             'price' => 350,
             'delivery_date' => '2019-12-25',
-            'delivery_status' => 1,
         ]);
     }
 }
