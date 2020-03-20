@@ -60,13 +60,6 @@ class OrderItem extends Model
             ->orderBy('return_order_items.id', 'asc');
     }
 
-    public function getDeliveryQuantityAttribute()
-    {
-        $deliveryItems = $this->deliveryItems;
-
-        return $deliveryItems->isEmpty() ? 0 : array_sum($deliveryItems->pluck('quantity')->toArray());
-    }
-
     /**
      * 待出货数量
      *
