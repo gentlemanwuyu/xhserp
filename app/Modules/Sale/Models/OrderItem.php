@@ -103,7 +103,7 @@ class OrderItem extends Model
         $exchange_items = ReturnOrder::leftJoin('return_order_items AS roi', 'roi.return_order_id', '=', 'return_orders.id')
             ->where('roi.order_item_id', $this->id)
             ->where('return_orders.method', 1)
-            ->where('return_orders.status', 4)
+            ->whereIn('return_orders.status', [4, 5])
             ->pluck('roi.quantity');
 
         return array_sum($exchange_items->toArray());

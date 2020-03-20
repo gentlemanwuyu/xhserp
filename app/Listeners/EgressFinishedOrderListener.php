@@ -40,6 +40,7 @@ class EgressFinishedOrderListener implements ShouldQueue
             $order_ids = array_unique($order_ids);
             foreach ($order_ids as $order_id) {
                 $order = Order::find($order_id);
+                // 判断是否已完成出货
                 $is_finished = true;
                 foreach ($order->items as $item) {
                     // 如果已出货数量 - 已入库的换货数量 < 订单Item的数量，则说明还没完成出货
@@ -53,6 +54,23 @@ class EgressFinishedOrderListener implements ShouldQueue
                     $order->status = 4;
                     $order->save();
                     Log::info("订单[{$order->id}]已经完成出货，状态改为[4]");
+                }
+
+                // 判断订单的exchange_status字段是否要修改为0（即是否已完成换货）
+                $is_exchanged = true;
+                foreach ($order->entryExchangeReturnOrders as $returnOrder) {
+                    foreach ($returnOrder->items as $roi) {
+                        if ($roi->quantity > $roi->delivery_quantity) {
+                            // 如果换货Item的数量大于出货数量，说明还没出完货
+                            $is_exchanged = false;
+                            break 2; // 直接终止订单的循环
+                        }
+                    }
+                }
+                if ($is_exchanged) {
+                    $order->exchange_status = 0;
+                    $order->save();
+                    Log::info("订单[{$order->id}]已经完成换货，换货状态改为[0]");
                 }
             }
         }catch (\Exception $e) {

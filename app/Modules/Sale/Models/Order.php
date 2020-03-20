@@ -80,6 +80,11 @@ class Order extends Model
         return $this->hasMany(ReturnOrder::class)->OrderBy('id', 'desc');
     }
 
+    public function entryExchangeReturnOrders()
+    {
+        return $this->hasMany(ReturnOrder::class)->where('method', 1)->where('status', 4)->OrderBy('id', 'desc');
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
