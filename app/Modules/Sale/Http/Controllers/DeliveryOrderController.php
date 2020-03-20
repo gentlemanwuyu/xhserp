@@ -48,9 +48,9 @@ class DeliveryOrderController extends Controller
             ->pluck(null, 'id')
             ->map(function ($o) {
                 $pis = $o->pendingItems->map(function ($item) {
-                    $item->setAppends(['pending_delivery_quantity', 'pending_exchange_quantity']);
-                    // 待出货数量+待换货数量 <= 0的item过滤掉
-                    if (0 >= $item->pending_delivery_quantity + $item->pending_exchange_quantity) {
+                    $item->setAppends(['pending_delivery_quantity']);
+                    // 待出货数量 <= 0的item过滤掉
+                    if (0 >= $item->pending_delivery_quantity) {
                         return null;
                     }
 

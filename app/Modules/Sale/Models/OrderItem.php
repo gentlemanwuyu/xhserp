@@ -110,26 +110,6 @@ class OrderItem extends Model
     }
 
     /**
-     * 待换货数量
-     *
-     * @return int
-     */
-    public function getPendingExchangeQuantityAttribute()
-    {
-        $pending_exchange_quantity = 0;
-        ReturnOrder::leftJoin('return_order_items AS roi', 'roi.return_order_id', '=', 'return_orders.id')
-            ->where('roi.order_item_id', $this->id)
-            ->where('return_orders.method', 1)
-            ->where('return_orders.status', 4)
-            ->get(['roi.id AS return_order_item_id', 'roi.quantity', 'roi.delivery_quantity'])
-            ->each(function ($return_order_item) use (&$pending_exchange_quantity) {
-                $pending_exchange_quantity += $return_order_item->quantity - $return_order_item->delivery_quantity;
-            });
-
-        return $pending_exchange_quantity;
-    }
-
-    /**
      * 可退数量
      *
      * @return int

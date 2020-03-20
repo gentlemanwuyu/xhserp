@@ -121,7 +121,7 @@ class Order extends Model
         $deliverable = false;
 
         $this->items->each(function ($order_item) use (&$deliverable) {
-            if (0 < $order_item->pending_delivery_quantity + $order_item->pending_exchange_quantity) {
+            if (0 < $order_item->pending_delivery_quantity) {
                 $deliverable = true;
                 return false;
             }
