@@ -61,6 +61,18 @@ class OrderItem extends Model
     }
 
     /**
+     * 出货数量，包含已出货的和待出货的
+     *
+     * @return int|number
+     */
+    public function getDeliveryQuantityAttribute()
+    {
+        $deliveryItems = $this->deliveryItems;
+
+        return $deliveryItems->isEmpty() ? 0 : array_sum($deliveryItems->pluck('quantity')->toArray());
+    }
+
+    /**
      * 待出货数量
      *
      * @return mixed
