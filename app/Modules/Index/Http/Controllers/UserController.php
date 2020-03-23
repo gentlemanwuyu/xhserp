@@ -32,8 +32,7 @@ class UserController extends Controller
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
         foreach ($paginate as $user) {
-            $gender = $user->gender;
-            $user->gender = $gender;
+            $user->setAppends(['gender']);
         }
 
         return response()->json($paginate);

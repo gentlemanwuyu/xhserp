@@ -32,3 +32,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], func
     Route::get('password_form', ['as'=>'password_form', 'uses'=>'UserController@passwordForm']);
     Route::post('reset_password', ['as'=>'reset_password', 'uses'=>'UserController@resetPassword']);
 });
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'config', 'as'=>'config.'], function (){
+    Route::get('index', ['as'=>'index', 'uses'=>'ConfigController@index']);
+    Route::get('paginate', ['as'=>'paginate', 'uses'=>'ConfigController@paginate']);
+    Route::get('form', ['as'=>'form', 'uses'=>'ConfigController@form']);
+    Route::post('save', ['as'=>'save', 'uses'=>'ConfigController@save']);
+    Route::post('delete', ['as'=>'delete', 'uses'=>'ConfigController@delete']);
+});

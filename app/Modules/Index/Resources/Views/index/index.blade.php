@@ -203,7 +203,10 @@
                                 <a lay-href="{{route('index::user.index')}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
                             </dd>
                             <dd>
-                                <a lay-href="{{route('index::index.logs')}}"><i class="layui-icon layui-icon-log"></i>Laravel日志</a>
+                                <a lay-href="{{route('index::config.index')}}"><i class="layui-icon layui-icon-set-sm"></i>系统配置</a>
+                            </dd>
+                            <dd>
+                                <a lay-href="{{route('index::index.logs')}}"><i class="layui-icon layui-icon-log"></i>系统日志</a>
                             </dd>
                         </dl>
                     </li>
