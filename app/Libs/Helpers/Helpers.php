@@ -68,3 +68,21 @@ if (! function_exists('get_sys_configs')) {
         return $sys_configs;
     }
 }
+
+if (! function_exists('flush_sys_configs')) {
+    /**
+     * 刷新系统配置缓存
+     *
+     * @param $module
+     * @return object
+     */
+    function flush_sys_configs()
+    {
+        Redis::del('erp:system:configs');
+
+        $sys_configs = array_column(Config::all(['key', 'value'])->toArray(), 'value', 'key');
+        Redis::setnx('erp:system:configs', json_encode($sys_configs));
+
+        return true;
+    }
+}

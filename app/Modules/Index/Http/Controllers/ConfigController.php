@@ -58,6 +58,8 @@ class ConfigController extends Controller
             }
 
             Config::updateOrCreate(['id' => $request->get('config_id')], $data);
+            // 刷新缓存
+            flush_sys_configs();
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
