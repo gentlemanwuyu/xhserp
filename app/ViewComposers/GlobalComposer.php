@@ -16,5 +16,6 @@ class GlobalComposer
     {
         // 每个模板都带着所有的请求参数
         $view->with(request()->all());
+        $view->with(['sys_configs' => get_sys_configs()]);
     }
 }

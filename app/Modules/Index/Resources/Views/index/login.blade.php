@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>登录 | 汉生集团管理系统</title>
+    <title>{{$sys_configs['APP_NAME'] or 'ERP系统'}}</title>
     <link rel="stylesheet" href="{{asset('/assets/layui-src/dist/css/layui.css')}}" media="all">
     <link rel="stylesheet" href="{{asset('/assets/layuiadmin/style/login.css')}}" media="all">
     <style>
@@ -24,7 +24,7 @@
     <div class="layadmin-user-login-main">
         <div class="layadmin-user-login-box layadmin-user-login-header">
             <img src="{{asset('/assets/images/xhs-logo.png')}}" alt="logo">
-            <h2>汉生集团管理系统</h2>
+            <h2>{{$sys_configs['APP_NAME'] or 'ERP系统'}}</h2>
         </div>
         <form class="layui-form" lay-filter="login">
             <input name="_token" type="hidden" value="{!! csrf_token() !!}" />
