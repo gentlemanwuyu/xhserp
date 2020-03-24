@@ -43,7 +43,7 @@ class InventoryController extends Controller
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'fail', 'msg' => '[' . get_class($e) . ']' . $e->getMessage()]);
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
 }
