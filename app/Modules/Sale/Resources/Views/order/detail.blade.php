@@ -52,6 +52,7 @@
                     <th>总价</th>
                     <th>交期</th>
                     <th>备注</th>
+                    <th>最后更新时间</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -69,6 +70,7 @@
                         <td>{{$item->quantity * $item->price}}</td>
                         <td>{{$item->delivery_date or ''}}</td>
                         <td>{{$item->note or ''}}</td>
+                        <td>{{$item->updated_at or ''}}</td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -96,6 +98,7 @@
                         <th>单价</th>
                         <th>总价</th>
                         <th>出货时间</th>
+                        <th>最后更新时间</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -115,6 +118,7 @@
                             <td>{{$orderItem->price or ''}}</td>
                             <td>{{$orderItem->price * $deliveryItem->quantity}}</td>
                             <td>{{$deliveryOrder->finished_at or ''}}</td>
+                            <td>{{$deliveryOrder->updated_at or ''}}</td>
                         </tr>
                     @endforeach
                     </tbody>
