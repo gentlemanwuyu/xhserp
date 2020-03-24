@@ -87,7 +87,10 @@
                         <th width="100">已出货数量</th>
                         <th width="100">退货数量</th>
                         <th width="100">实收数量</th>
-                        <th width="100" class="required">入库数量</th>
+                        <th width="150">
+                            <span class="required">入库数量</span>
+                            <a class="layui-btn layui-btn-xs" erp-event="input_all" style="margin-left: 5px;">全部</a>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -140,6 +143,15 @@
 
             // 页面初始化绑定事件
             listenEntryQuantity();
+
+            $('*[erp-event=input_all]').on('click', function () {
+                $(this).parents('.layui-table').find('tbody tr').each(function () {
+                    var $tr = $(this)
+                            ,receivedQuantity = $tr.find('td[erp-col=receivedQuantity]').html();
+
+                    $tr.find('td[erp-col=entryQuantity] input').val(receivedQuantity);
+                });
+            });
 
             // 提交订单
             form.on('submit(returnOrder)', function (form_data) {
