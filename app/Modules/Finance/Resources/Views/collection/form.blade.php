@@ -77,6 +77,7 @@
                         {field: 'order_quantity', title: '订单数量', align: 'center'},
                         {field: 'delivery_code', title: '出货单编号', align: 'center'},
                         {field: 'delivery_quantity', title: '出货数量', align: 'center'},
+                        {field: 'real_quantity', title: '真实数量', align: 'center'},
                         {field: 'price', title: '单价', align: 'center'},
                         {field: 'amount', title: '总价', align: 'center', totalRow: true},
                         {field: 'delivery_date', title: '出货日期', align: 'center', templet: function (d) {
@@ -84,6 +85,13 @@
                         }}
                     ]
                 ]
+                ,done: function(res, curr, count){
+                    var $table = $('*[lay-id=' + this.id + ']')
+                            ,$realQuantityTh = $table.find('.layui-table-header th[data-field=real_quantity]');
+                    $realQuantityTh.find('span').mouseover(function (e) {
+                        layer.tips('出货数量减去换货数量为真实数量', this, {tips: 1});
+                    });
+                }
             };
 
             // 客户选择框联动

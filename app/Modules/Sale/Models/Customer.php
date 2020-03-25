@@ -185,6 +185,7 @@ class Customer extends Model
             ->where('delivery_orders.status', '2')
             ->where('delivery_orders.customer_id', $this->id)
             ->where('doi.is_paid', 0)
+            ->where('doi.real_quantity', '>', 0)
             ->get([
                 'doi.id AS delivery_order_item_id',
                 'o.code AS order_code',
@@ -192,9 +193,10 @@ class Customer extends Model
                 'oi.price',
                 'oi.quantity AS order_quantity',
                 'doi.quantity AS delivery_quantity',
+                'doi.real_quantity',
                 'delivery_orders.code AS delivery_code',
                 'doi.created_at AS delivery_at',
-                DB::raw('doi.quantity * oi.price AS amount'),
+                DB::raw('doi.real_quantity * oi.price AS amount'),
             ]);
     }
 
