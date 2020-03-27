@@ -81,6 +81,59 @@ class ReturnOrder extends Model
         return $this;
     }
 
+    /**
+     * 退货方式为退货的抵扣逻辑（财务方面）
+     *
+     * @return $this
+     */
+    public function backDeduction()
+    {
+        if (4 != $this->status || 2 != $this->method) {
+            throw new \Exception("退货单[{$this->id}]退货状态不是已入库或者退货方式不是\"退货\"");
+        }
+
+        // 首先，看看有无相同的已出货Item可以抵扣（发货早的先抵扣）
+        $is_finished = true;
+        foreach ($this->items as $roi) {
+            $remained_back_quantity = $roi->quantity;
+            $order_item = $roi->orderItem;
+            foreach ($order_item->payableDeliveryItems as $payableDeliveryItem) {
+                if ($remained_back_quantity <= 0) {
+                    break;
+                }
+                if ($payableDeliveryItem->real_quantity >= $remained_back_quantity) {
+                    // 如果发货单Item的数量大于等于剩余退货数量，则减去退货数量
+                    DeliveryOrderItemBack::create([
+                        'delivery_order_item_id' => $payableDeliveryItem->id,
+                        'return_order_item_id' => $roi->id,
+                        'quantity' => $remained_back_quantity,
+                    ]);
+                    $remained_back_quantity = 0;
+                }else {
+                    // 如果发货单Item的数量小于剩余退货数量，则全部用于退货，剩余退货数量减去这个Item的真实数量，进行下一次循环
+                    DeliveryOrderItemBack::create([
+                        'delivery_order_item_id' => $payableDeliveryItem->id,
+                        'return_order_item_id' => $roi->id,
+                        'quantity' => $payableDeliveryItem->real_quantity,
+                    ]);
+                    $remained_back_quantity -= $payableDeliveryItem->real_quantity;
+                }
+            }
+
+            // 如果还有剩余退货数量未抵扣，退货单的状态就不能改为已完成
+            if (0 < $remained_back_quantity) {
+                $is_finished = false;
+            }
+        }
+
+        if ($is_finished) {
+            $this->status = 5;
+            $this->save();
+        }
+
+        return $this;
+    }
+
     public function items()
     {
         return $this->hasMany(ReturnOrderItem::class);

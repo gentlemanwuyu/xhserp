@@ -10,6 +10,7 @@ namespace App\Modules\Sale\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Goods\Models\GoodsSku;
 
@@ -58,6 +59,29 @@ class OrderItem extends Model
             ->whereRaw('return_order_items.quantity > return_order_items.delivery_quantity')
             ->select(['return_order_items.*'])
             ->orderBy('return_order_items.id', 'asc');
+    }
+
+    /**
+     * 需要付款的发货单Item
+     *
+     * @return mixed
+     */
+    public function payableDeliveryItems()
+    {
+        return $this->hasMany(DeliveryOrderItem::class)
+            ->leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
+            ->leftJoin('delivery_order_item_backs AS doib', 'doib.delivery_order_item_id', '=', 'delivery_order_items.id')
+            ->where('do.status', 2)
+            ->where('delivery_order_items.is_paid', 0)
+            ->where('delivery_order_items.real_quantity', '>', 0)
+            ->select([
+                'delivery_order_items.*',
+                DB::raw('IFNULL(SUM(doib.quantity), 0) AS back_quantity')
+            ])
+            ->orderBy('delivery_order_items.id', 'asc')
+            ->groupBy('delivery_order_items.id')
+            ->havingRaw('back_quantity < delivery_order_items.real_quantity');
+
     }
 
     /**

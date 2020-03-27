@@ -60,12 +60,17 @@ class SaleReturnController extends Controller
             $return_order->save();
             // 同步item入库数量
             $return_order->syncItems($request->get('items'));
-            // 更新订单的exchange_status字段
+
             if (1 == $return_order->method) {
+                // 如果退货方式为换货，更新订单的exchange_status字段
                 $order = $return_order->order;
                 $order->exchange_status = 1;
                 $order->save();
+            }elseif (2 == $return_order->method) {
+                // 如果退货方式为退货
+                $return_order->backDeduction();
             }
+
             // 更新库存
             foreach ($request->get('items') as $roii => $item) {
                 $return_order_item = ReturnOrderItem::find($roii);
