@@ -176,28 +176,33 @@ class Customer extends Model
      *
      * @return mixed
      */
-    public function getUnpaidItemsAttribute()
+    public function unpaidItems()
     {
-        return DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
-            ->leftJoin('orders AS o', 'o.id', '=', 'doi.order_id')
-            ->leftJoin('order_items AS oi', 'oi.id', '=', 'doi.order_item_id')
+        return $this->hasManyThrough(DeliveryOrderItem::class, DeliveryOrder::class)
+            ->leftJoin('orders AS o', 'o.id', '=', 'delivery_order_items.order_id')
+            ->leftJoin('order_items AS oi', 'oi.id', '=', 'delivery_order_items.order_item_id')
             ->leftJoin('goods_skus AS gs', 'gs.id', '=', 'oi.sku_id')
+            ->leftJoin('delivery_order_item_backs AS doib', 'doib.delivery_order_item_id', '=', 'delivery_order_items.id')
             ->where('delivery_orders.status', '2')
             ->where('delivery_orders.customer_id', $this->id)
-            ->where('doi.is_paid', 0)
-            ->where('doi.real_quantity', '>', 0)
-            ->get([
-                'doi.id AS delivery_order_item_id',
+            ->where('delivery_order_items.is_paid', 0)
+            ->where('delivery_order_items.real_quantity', '>', 0)
+            ->select([
+                'delivery_order_items.id AS delivery_order_item_id',
                 'o.code AS order_code',
                 'gs.code AS sku_code',
                 'oi.price',
                 'oi.quantity AS order_quantity',
-                'doi.quantity AS delivery_quantity',
-                'doi.real_quantity',
+                'delivery_order_items.quantity AS delivery_quantity',
+                'delivery_order_items.real_quantity',
                 'delivery_orders.code AS delivery_code',
-                'doi.created_at AS delivery_at',
-                DB::raw('doi.real_quantity * oi.price AS amount'),
-            ]);
+                'delivery_order_items.created_at AS delivery_at',
+                DB::raw('IFNULL(SUM(doib.quantity), 0) AS back_quantity'),
+                DB::raw('delivery_order_items.real_quantity * oi.price AS amount'),
+            ])
+            ->orderBy('delivery_order_items.id', 'asc')
+            ->groupBy('delivery_order_items.id')
+            ->havingRaw('back_quantity < delivery_order_items.real_quantity');
     }
 
     /**

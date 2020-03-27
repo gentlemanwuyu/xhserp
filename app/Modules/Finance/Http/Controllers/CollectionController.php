@@ -63,7 +63,8 @@ class CollectionController extends Controller
     {
         $users = User::where('is_admin', 0)->get();
         $customers = Customer::all()->map(function ($customer) {
-            $customer->setAppends(['total_remained_amount', 'unpaid_items']);
+            $customer->unpaidItems;
+            $customer->setAppends(['total_remained_amount']);
 
             return $customer;
         })->pluck(null, 'id');
