@@ -198,7 +198,7 @@ class Customer extends Model
                 'delivery_orders.code AS delivery_code',
                 'delivery_order_items.created_at AS delivery_at',
                 DB::raw('IFNULL(SUM(doib.quantity), 0) AS back_quantity'),
-                DB::raw('delivery_order_items.real_quantity * oi.price AS amount'),
+                DB::raw('(delivery_order_items.real_quantity - IFNULL(SUM(doib.quantity), 0)) * oi.price AS amount'),
             ])
             ->orderBy('delivery_order_items.id', 'asc')
             ->groupBy('delivery_order_items.id')

@@ -71,25 +71,33 @@
                 ,totalRow: true
                 ,cols: [
                     [
-                        {type: 'checkbox', field: 'check', width: 100, totalRowText: '合计'},
+                        {type: 'checkbox', field: 'check', width: 60, totalRowText: '合计'},
                         {field: 'order_code', title: '订单编号', align: 'center'},
                         {field: 'sku_code', title: 'SKU', align: 'center'},
-                        {field: 'order_quantity', title: '订单数量', align: 'center'},
+                        {field: 'order_quantity', title: '订单数量', width: 100, align: 'center'},
                         {field: 'delivery_code', title: '出货单编号', align: 'center'},
-                        {field: 'delivery_quantity', title: '出货数量', align: 'center'},
-                        {field: 'real_quantity', title: '真实数量', align: 'center'},
-                        {field: 'price', title: '单价', align: 'center'},
-                        {field: 'amount', title: '总价', align: 'center', totalRow: true},
-                        {field: 'delivery_date', title: '出货日期', align: 'center', templet: function (d) {
+                        {field: 'delivery_quantity', title: '出货数量', width: 100, align: 'center'},
+                        {field: 'real_quantity', title: '真实数量', width: 100, align: 'center'},
+                        {field: 'back_quantity', title: '退货数量', width: 100, align: 'center'},
+                        {field: 'payable_quantity', title: '应付数量', width: 100, align: 'center', templet: function (d) {
+                            return d.real_quantity - d.back_quantity;
+                        }},
+                        {field: 'price', title: '单价', width: 100, align: 'center'},
+                        {field: 'amount', title: '应付金额', width: 100, align: 'center', totalRow: true},
+                        {field: 'delivery_date', title: '出货日期', width: 150, align: 'center', templet: function (d) {
                             return moment(d.delivery_at).format('YYYY-MM-DD');
                         }}
                     ]
                 ]
                 ,done: function(res, curr, count){
                     var $table = $('*[lay-id=' + this.id + ']')
-                            ,$realQuantityTh = $table.find('.layui-table-header th[data-field=real_quantity]');
+                            ,$realQuantityTh = $table.find('.layui-table-header th[data-field=real_quantity]')
+                            ,$payableQuantityTh = $table.find('.layui-table-header th[data-field=payable_quantity]');
                     $realQuantityTh.find('span').mouseover(function (e) {
                         layer.tips('出货数量减去换货数量为真实数量', this, {tips: 1});
+                    });
+                    $payableQuantityTh.find('span').mouseover(function (e) {
+                        layer.tips('真实数量减去退货数量为应付数量', this, {tips: 1});
                     });
                 }
             };
