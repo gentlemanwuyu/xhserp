@@ -90,7 +90,7 @@ class Customer extends Model
             $delivery_order_item = DeliveryOrderItem::find($doi_id);
             $order_item = $delivery_order_item->orderItem;
             // 需要抵扣的金额
-            $amount = $order_item->price * $delivery_order_item->quantity;
+            $amount = $order_item->price * $delivery_order_item->real_quantity;
             $remained_collection = $remained_collections->first();
             while ($remained_collection) {
                 if ($amount <= $remained_collection->remained_amount) {
@@ -191,6 +191,7 @@ class Customer extends Model
                 'delivery_order_items.id AS delivery_order_item_id',
                 'o.code AS order_code',
                 'gs.code AS sku_code',
+                'oi.title',
                 'oi.price',
                 'oi.quantity AS order_quantity',
                 'delivery_order_items.quantity AS delivery_quantity',
@@ -215,6 +216,41 @@ class Customer extends Model
         $collections = Collection::where('customer_id', $this->id)->where('is_finished', 0)->get()->toArray();
 
         return array_sum(array_column($collections, 'remained_amount'));
+    }
+
+    /**
+     * 退货未抵扣金额
+     *
+     * @return number
+     */
+    public function getTotalUndeductBackAmountAttribute()
+    {
+        $total_undeduct_back_amount = 0;
+
+        $undeductBackItems = ReturnOrderItem::leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
+            ->leftJoin('delivery_order_item_backs AS doib', 'doib.return_order_item_id', '=', 'return_order_items.id')
+            ->leftJoin('order_items AS oi', 'oi.id', '=', 'return_order_items.order_item_id')
+            ->leftJoin('orders AS o', 'o.id', '=', 'oi.order_id')
+            ->whereNull('ro.deleted_at')
+            ->whereNull('o.deleted_at')
+            ->whereNull('oi.deleted_at')
+            ->where('ro.method', 2)
+            ->where('ro.status', 4)
+            ->where('o.customer_id', $this->id)
+            ->select([
+                'oi.price',
+                'return_order_items.quantity AS back_quantity',
+                DB::raw('IFNULL(SUM(doib.quantity), 0) AS deduct_quantity')
+            ])
+            ->groupBy('return_order_items.id')
+            ->havingRaw('back_quantity > deduct_quantity')
+            ->get();
+
+        foreach ($undeductBackItems as $item) {
+            $total_undeduct_back_amount += $item->price * ($item->back_quantity - $item->deduct_quantity);
+        }
+
+        return $total_undeduct_back_amount;
     }
 
     /**
