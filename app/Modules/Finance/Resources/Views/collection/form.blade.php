@@ -105,19 +105,12 @@
             // 客户选择框联动
             form.on('select(customer)', function (data) {
                 $('#totalRemainedAmountDiv').remove();
-                $('#totalUndeductBackAmountDiv').remove();
                 if (data.value) {
                     var customer = customers[data.value], html = '';
                     html += '<div class="layui-form-item" id="totalRemainedAmountDiv">';
                     html += '<label class="layui-form-label">结余金额</label>';
                     html += '<div class="layui-input-block">';
                     html += '<span class="erp-form-span">' + customer.total_remained_amount + '</span>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '<div class="layui-form-item" id="totalUndeductBackAmountDiv">';
-                    html += '<label class="layui-form-label">退货金额</label>';
-                    html += '<div class="layui-input-block">';
-                    html += '<span class="erp-form-span">' + customer.total_undeduct_back_amount + '</span>';
                     html += '</div>';
                     html += '</div>';
                     $(data.elem).parents('.layui-form-item').after(html);
@@ -170,13 +163,12 @@
                         ,$amountInput = $('input[name=amount]')
                         ,inputAmount = $amountInput.val() ? parseFloat($amountInput.val()) : 0
                         ,customer_id = $('select[name=customer_id]').val()
-                        ,total_remained_amount = customers[customer_id]['total_remained_amount']
-                        ,total_undeduct_back_amount = customers[customer_id]['total_undeduct_back_amount'];
+                        ,total_remained_amount = customers[customer_id]['total_remained_amount'];
                 checkStatus.data.forEach(function (item) {
                     checkedAmount += parseFloat(item.price) * (parseInt(item.real_quantity) - parseInt(item.back_quantity));
                 });
 
-                if (checkedAmount > inputAmount + total_remained_amount + total_undeduct_back_amount) {
+                if (checkedAmount > inputAmount + total_remained_amount) {
                     layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
                     return false;
                 }

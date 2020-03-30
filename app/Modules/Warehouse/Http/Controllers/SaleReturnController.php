@@ -66,9 +66,6 @@ class SaleReturnController extends Controller
                 $order = $return_order->order;
                 $order->exchange_status = 1;
                 $order->save();
-            }elseif (2 == $return_order->method) {
-                // 如果退货方式为退货
-                $return_order->backDeduction();
             }
 
             // 更新库存

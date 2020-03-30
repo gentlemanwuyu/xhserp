@@ -70,17 +70,13 @@ class OrderItem extends Model
     {
         return $this->hasMany(DeliveryOrderItem::class)
             ->leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
-            ->leftJoin('delivery_order_item_backs AS doib', 'doib.delivery_order_item_id', '=', 'delivery_order_items.id')
             ->where('do.status', 2)
             ->where('delivery_order_items.is_paid', 0)
             ->where('delivery_order_items.real_quantity', '>', 0)
             ->select([
                 'delivery_order_items.*',
-                DB::raw('IFNULL(SUM(doib.quantity), 0) AS back_quantity')
             ])
-            ->orderBy('delivery_order_items.id', 'asc')
-            ->groupBy('delivery_order_items.id')
-            ->havingRaw('back_quantity < delivery_order_items.real_quantity');
+            ->orderBy('delivery_order_items.id', 'asc');
 
     }
 
