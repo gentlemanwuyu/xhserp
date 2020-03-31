@@ -78,10 +78,6 @@
                         {field: 'delivery_code', title: '出货单编号', align: 'center'},
                         {field: 'delivery_quantity', title: '出货数量', width: 100, align: 'center'},
                         {field: 'real_quantity', title: '真实数量', width: 100, align: 'center'},
-                        {field: 'back_quantity', title: '退货数量', width: 100, align: 'center'},
-                        {field: 'payable_quantity', title: '应付数量', width: 100, align: 'center', templet: function (d) {
-                            return d.real_quantity - d.back_quantity;
-                        }},
                         {field: 'price', title: '单价', width: 100, align: 'center'},
                         {field: 'amount', title: '应付金额', width: 100, align: 'center', totalRow: true},
                         {field: 'delivery_date', title: '出货日期', width: 150, align: 'center', templet: function (d) {
@@ -165,7 +161,7 @@
                         ,customer_id = $('select[name=customer_id]').val()
                         ,total_remained_amount = customers[customer_id]['total_remained_amount'];
                 checkStatus.data.forEach(function (item) {
-                    checkedAmount += parseFloat(item.price) * (parseInt(item.real_quantity) - parseInt(item.back_quantity));
+                    checkedAmount += parseFloat(item.price) * parseInt(item.real_quantity);
                 });
 
                 if (checkedAmount > inputAmount + total_remained_amount) {
