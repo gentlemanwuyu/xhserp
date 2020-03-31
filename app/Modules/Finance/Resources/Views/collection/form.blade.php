@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('css')
     <style>
-
+        #backOrderCard .layui-table th, #backOrderCard .layui-table td{text-align: center;}
     </style>
 @endsection
 @section('content')
@@ -43,6 +43,60 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="layui-card layui-hide" id="backOrderCard">
+            <div class="layui-card-header">
+                <h3>退货单明细</h3>
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>退货单号</th>
+                        <th>退货原因</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                        <th class="erp-static-table-list" style="width: 650px;">
+                            <span>退货明细</span>
+                            <ul class="erp-static-table-list-ul">
+                                <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px; text-align: center;">订单Item</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">订单数量</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">退货数量</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">单价</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">金额</li>
+                            </ul>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $index = 1; ?>
+                    @foreach($customer->backOrders as $returnOrder)
+                        <tr>
+                            <td>{{$index++}}</td>
+                            <td>{{$returnOrder->code or ''}}</td>
+                            <td>{{$returnOrder->reason}}</td>
+                            <td>{{$returnOrder->user->name or ''}}</td>
+                            <td>{{$returnOrder->created_at}}</td>
+                            <td class="erp-static-table-list">
+                                @foreach($returnOrder->items as $k => $returnOrderItem)
+                                    <?php
+                                        $orderItem = $returnOrderItem->orderItem;
+                                    ?>
+                                    <ul class="erp-static-table-list-ul @if(0 == $k) erp-static-table-list-ul-first @endif">
+                                        <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px;">{{$orderItem->title or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->quantity or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$returnOrderItem->quantity or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->price or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->price * $returnOrderItem->quantity}}</li>
+                                    </ul>
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="layui-card layui-hide" id="unpaidDetailCard">
@@ -101,12 +155,20 @@
             // 客户选择框联动
             form.on('select(customer)', function (data) {
                 $('#totalRemainedAmountDiv').remove();
+                $('#backAmountDiv').remove();
                 if (data.value) {
-                    var customer = customers[data.value], html = '';
+                    var customer = customers[data.value];
+                    var html = '';
                     html += '<div class="layui-form-item" id="totalRemainedAmountDiv">';
                     html += '<label class="layui-form-label">结余金额</label>';
                     html += '<div class="layui-input-block">';
                     html += '<span class="erp-form-span">' + customer.total_remained_amount + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div class="layui-form-item" id="backAmountDiv">';
+                    html += '<label class="layui-form-label">退货金额</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<span class="erp-form-span">' + customer.back_amount + '</span>';
                     html += '</div>';
                     html += '</div>';
                     $(data.elem).parents('.layui-form-item').after(html);
@@ -114,8 +176,43 @@
                     $('#unpaidDetailCard').removeClass('layui-hide');
                     tableOpts.data = customer['unpaid_items'];
                     table.render(tableOpts);
+
+                    var $backOrderCard = $('#backOrderCard')
+                            ,$backOrderTable = $backOrderCard.find('.layui-table');
+                    if (0 < customer.back_orders.length) {
+                        var index = 1, html = '';
+                        customer.back_orders.forEach(function (return_order) {
+                            html += '<tr>';
+                            html += '<td>' + (index++) + '</td>';
+                            html += '<td>' + return_order.code + '</td>';
+                            html += '<td>' + return_order.reason + '</td>';
+                            html += '<td>' + return_order.user.name + '</td>';
+                            html += '<td>' + return_order.created_at + '</td>';
+                            html += '<td class="erp-static-table-list">';
+                            return_order.items.forEach(function (return_order_item, key) {
+                                html += '<ul class="erp-static-table-list-ul';
+                                if (0 == key) {
+                                    html += ' erp-static-table-list-ul-first';
+                                }
+                                html += '">';
+                                html += '<li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px;">' + return_order_item.order_item.title + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + return_order_item.order_item.quantity + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + return_order_item.quantity + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + return_order_item.order_item.price + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + (parseInt(return_order_item.quantity) * parseFloat(return_order_item.order_item.price)) + '</li>';
+                                html += '</ul>';
+                            });
+                            html += '</td>';
+                            html += '</tr>';
+                        });
+                        $backOrderTable.find('tbody').html(html);
+                        $backOrderCard.removeClass('layui-hide');
+                    }else {
+                        $backOrderCard.addClass('layui-hide');
+                    }
                 }else {
                     $('#unpaidDetailCard').addClass('layui-hide');
+                    $('#backOrderCard').addClass('layui-hide');
                 }
             });
 

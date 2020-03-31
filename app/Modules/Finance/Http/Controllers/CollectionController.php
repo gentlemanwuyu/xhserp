@@ -64,7 +64,17 @@ class CollectionController extends Controller
         $users = User::where('is_admin', 0)->get();
         $customers = Customer::all()->map(function ($customer) {
             $customer->unpaidItems;
-            $customer->setAppends(['total_remained_amount']);
+            $customer->backOrders->map(function ($return_order) {
+                $return_order->user;
+                $return_order->items->map(function ($return_order_item) {
+                    $return_order_item->orderItem;
+
+                    return $return_order_item;
+                });
+
+                return $return_order;
+            });
+            $customer->setAppends(['total_remained_amount', 'back_amount']);
 
             return $customer;
         })->pluck(null, 'id');

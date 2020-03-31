@@ -203,6 +203,18 @@ class Customer extends Model
     }
 
     /**
+     * 退货单
+     *
+     * @return mixed
+     */
+    public function backOrders()
+    {
+        return $this->hasManyThrough(ReturnOrder::class, Order::class)
+            ->where('return_orders.method', 2)
+            ->where('return_orders.status', 4);
+    }
+
+    /**
      * 付款单剩余金额
      *
      * @return number
@@ -212,6 +224,23 @@ class Customer extends Model
         $collections = Collection::where('customer_id', $this->id)->where('is_finished', 0)->get()->toArray();
 
         return array_sum(array_column($collections, 'remained_amount'));
+    }
+
+    /**
+     * 退货金额
+     *
+     * @return int
+     */
+    public function getBackAmountAttribute()
+    {
+        $back_amount = 0;
+        foreach ($this->backOrders as $return_order) {
+            foreach ($return_order->items as $return_order_item) {
+                $back_amount += $return_order_item->quantity * $return_order_item->orderItem->price;
+            }
+        }
+
+        return $back_amount;
     }
 
     /**
