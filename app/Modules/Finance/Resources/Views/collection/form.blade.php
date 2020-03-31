@@ -141,13 +141,9 @@
                 ]
                 ,done: function(res, curr, count){
                     var $table = $('*[lay-id=' + this.id + ']')
-                            ,$realQuantityTh = $table.find('.layui-table-header th[data-field=real_quantity]')
-                            ,$payableQuantityTh = $table.find('.layui-table-header th[data-field=payable_quantity]');
+                            ,$realQuantityTh = $table.find('.layui-table-header th[data-field=real_quantity]');
                     $realQuantityTh.find('span').mouseover(function (e) {
                         layer.tips('出货数量减去换货数量为真实数量', this, {tips: 1});
-                    });
-                    $payableQuantityTh.find('span').mouseover(function (e) {
-                        layer.tips('真实数量减去退货数量为应付数量', this, {tips: 1});
                     });
                 }
             };
