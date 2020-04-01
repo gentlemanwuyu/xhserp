@@ -10,8 +10,12 @@
 
 namespace App\Events;
 
+use Illuminate\Queue\SerializesModels;
+
 class EgressFinished extends Event
 {
+    use SerializesModels;
+
     /**
      * 出货单ID
      *

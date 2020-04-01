@@ -180,13 +180,13 @@
                                 <a lay-href="{{route('finance::collection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>收款管理</a>
                             </dd>
                             <dd>
-                                <a lay-href="{{route('finance::pendingCollection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>应收款项</a>
+                                <a lay-href="{{route('finance::pendingCollection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>销售应收款</a>
                             </dd>
                             <dd>
                                 <a lay-href="{{route('finance::payment.index')}}"><i class="layui-icon layui-icon-rate"></i>付款管理</a>
                             </dd>
                             <dd>
-                                <a lay-href="{{route('finance::pendingPayment.index')}}"><i class="layui-icon layui-icon-rate"></i>应付款项</a>
+                                <a lay-href="{{route('finance::pendingPayment.index')}}"><i class="layui-icon layui-icon-rate"></i>采购应付款</a>
                             </dd>
                             <dd>
                                 <a lay-href="{{route('finance::account.index')}}"><i class="layui-icon layui-icon-template"></i>账户管理</a>

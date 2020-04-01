@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ChineseRegion;
 use Illuminate\Support\Facades\DB;
+use App\Events\Deducted;
 use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\Collection;
 use App\Modules\Finance\Models\DeliveryOrderItemDeduction;
@@ -76,7 +77,7 @@ class Customer extends Model
      */
     public function deduct($doi_ids)
     {
-        if (!is_array($doi_ids)) {
+        if (!$doi_ids || !is_array($doi_ids)) {
             return false;
         }
 
@@ -175,6 +176,9 @@ class Customer extends Model
             $delivery_order_item->is_paid = 1;
             $delivery_order_item->save();
         }
+
+        // 触发抵扣事件
+        event(new Deducted($doi_ids));
 
         return $this;
     }

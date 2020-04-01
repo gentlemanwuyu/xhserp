@@ -17,6 +17,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\EgressFinishedOrderListener',
             'App\Listeners\EgressFinishedReturnOrderListener',
         ],
+        'App\Events\Deducted' => [
+            'App\Listeners\DeductedOrderListener',
+        ],
     ];
 
     /**
