@@ -25,11 +25,6 @@ class Collection extends Model
         3 => '支票/汇票',
     ];
 
-    public function items()
-    {
-        return $this->hasMany(CollectionItem::class);
-    }
-
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -38,6 +33,11 @@ class Collection extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function deductions()
+    {
+        return $this->hasMany(DeliveryOrderItemDeduction::class);
     }
 
     public function getMethodNameAttribute()

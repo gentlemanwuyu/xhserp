@@ -56,6 +56,7 @@
                         <th>序号</th>
                         <th>退货单号</th>
                         <th>退货原因</th>
+                        <th>未抵扣金额</th>
                         <th>创建人</th>
                         <th>创建时间</th>
                         <th class="erp-static-table-list" style="width: 650px;">
@@ -71,30 +72,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php $index = 1; ?>
-                    @foreach($customer->backOrders as $returnOrder)
-                        <tr>
-                            <td>{{$index++}}</td>
-                            <td>{{$returnOrder->code or ''}}</td>
-                            <td>{{$returnOrder->reason}}</td>
-                            <td>{{$returnOrder->user->name or ''}}</td>
-                            <td>{{$returnOrder->created_at}}</td>
-                            <td class="erp-static-table-list">
-                                @foreach($returnOrder->items as $k => $returnOrderItem)
-                                    <?php
-                                        $orderItem = $returnOrderItem->orderItem;
-                                    ?>
-                                    <ul class="erp-static-table-list-ul @if(0 == $k) erp-static-table-list-ul-first @endif">
-                                        <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px;">{{$orderItem->title or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->quantity or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$returnOrderItem->quantity or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->price or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->price * $returnOrderItem->quantity}}</li>
-                                    </ul>
-                                @endforeach
-                            </td>
-                        </tr>
-                    @endforeach
+
                     </tbody>
                 </table>
             </div>
@@ -182,6 +160,7 @@
                             html += '<td>' + (index++) + '</td>';
                             html += '<td>' + return_order.code + '</td>';
                             html += '<td>' + return_order.reason + '</td>';
+                            html += '<td>' + return_order.undeducted_amount + '</td>';
                             html += '<td>' + return_order.user.name + '</td>';
                             html += '<td>' + return_order.created_at + '</td>';
                             html += '<td class="erp-static-table-list">';
@@ -252,12 +231,13 @@
                         ,$amountInput = $('input[name=amount]')
                         ,inputAmount = $amountInput.val() ? parseFloat($amountInput.val()) : 0
                         ,customer_id = $('select[name=customer_id]').val()
-                        ,total_remained_amount = customers[customer_id]['total_remained_amount'];
+                        ,total_remained_amount = customers[customer_id]['total_remained_amount']
+                        ,back_amount = customers[customer_id]['back_amount'];
                 checkStatus.data.forEach(function (item) {
                     checkedAmount += parseFloat(item.price) * parseInt(item.real_quantity);
                 });
 
-                if (checkedAmount > inputAmount + total_remained_amount) {
+                if (checkedAmount > inputAmount + total_remained_amount + back_amount) {
                     layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
                     return false;
                 }

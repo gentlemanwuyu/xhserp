@@ -14,7 +14,7 @@ use App\Models\ChineseRegion;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\Collection;
-use App\Modules\Finance\Models\CollectionItem;
+use App\Modules\Finance\Models\DeliveryOrderItemDeduction;
 
 class Customer extends Model
 {
@@ -80,6 +80,7 @@ class Customer extends Model
             return false;
         }
 
+        $back_order_amounts = $this->back_order_amounts;
         // 未抵扣的付款单
         $remained_collections = Collection::where('customer_id', $this->id)
             ->where('is_finished', 0)
@@ -91,28 +92,67 @@ class Customer extends Model
             $order_item = $delivery_order_item->orderItem;
             // 需要抵扣的金额
             $amount = $order_item->price * $delivery_order_item->real_quantity;
-            $remained_collection = $remained_collections->first();
-            while ($remained_collection) {
-                if ($amount <= $remained_collection->remained_amount) {
-                    // 剩余未抵扣的金额
-                    $remained_amount = $remained_collection->remained_amount;
-                    CollectionItem::create([
-                        'collection_id' => $remained_collection->id,
-                        'doi_id' => $doi_id,
+
+            // 如果有退货单，先用退货单抵扣
+            foreach ($back_order_amounts as $return_order_id => $return_amount) {
+                $return_order = ReturnOrder::find($return_order_id);
+                if ($amount <= $return_amount) { // 退货单可以完全抵扣出货item金额
+                    DeliveryOrderItemDeduction::create([
+                        'delivery_order_item_id' => $doi_id,
+                        'return_order_id' => $return_order_id,
                         'amount' => $amount,
                     ]);
-                    $remained_amount -= $amount;
-                    $remained_collection->remained_amount = $remained_amount;
-                    if (0 == $remained_amount) {
+                    $delivery_order_item->is_paid = 1;
+                    $delivery_order_item->save();
+
+                    // 退货单剩余未抵扣金额
+                    $remained_return_amount = $return_amount - $amount;
+                    if (0 == $remained_return_amount) {
+                        // 如果刚好抵扣完，则需要将退货单的状态改为已完成，并删除掉这个键值，因为下次还要循环调用
+                        $return_order->status = 5;
+                        $return_order->save();
+                        unset($back_order_amounts[$return_order_id]);
+                    }else {
+                        // 如果没有抵扣完，那么退货单ID对应的值应该减掉相应的金额，用于下次循环调用
+                        $back_order_amounts[$return_order_id] = $remained_return_amount;
+                    }
+                    continue 2; // 直接循环下一个出货单Item
+                }else { // 退货单不够抵扣出货item金额
+                    DeliveryOrderItemDeduction::create([
+                        'delivery_order_item_id' => $doi_id,
+                        'return_order_id' => $return_order_id,
+                        'amount' => $return_amount,
+                    ]);
+                    $amount -= $return_amount;
+                    // 该张退货单已经全部抵扣完
+                    $return_order->status = 5;
+                    $return_order->save();
+                }
+            }
+
+            // 退货单抵扣完后用收款单抵扣
+            $remained_collection = $remained_collections->first();
+            while ($remained_collection) {
+                if ($amount <= $remained_collection->remained_amount) { // 付款单可以完全抵扣
+                    // 剩余未抵扣的金额
+                    $remained_collection_amount = $remained_collection->remained_amount;
+                    DeliveryOrderItemDeduction::create([
+                        'delivery_order_item_id' => $doi_id,
+                        'collection_id' => $remained_collection->id,
+                        'amount' => $amount,
+                    ]);
+                    $remained_collection_amount -= $amount;
+                    $remained_collection->remained_amount = $remained_collection_amount;
+                    if (0 == $remained_collection_amount) {
                         $remained_collection->is_finished = 1;
                     }
 
                     $remained_collection->save();
                     $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
-                }else {
-                    CollectionItem::create([
+                }else { // 付款单不够抵扣
+                    DeliveryOrderItemDeduction::create([
+                        'delivery_order_item_id' => $doi_id,
                         'collection_id' => $remained_collection->id,
-                        'doi_id' => $doi_id,
                         'amount' => $remained_collection->remained_amount,
                     ]);
                     $amount -= $remained_collection->remained_amount;
@@ -215,15 +255,18 @@ class Customer extends Model
     }
 
     /**
-     * 付款单剩余金额
+     * 退货单未抵扣金额，每个订单为一行数据
      *
-     * @return number
+     * @return array
      */
-    public function getTotalRemainedAmountAttribute()
+    public function getBackOrderAmountsAttribute()
     {
-        $collections = Collection::where('customer_id', $this->id)->where('is_finished', 0)->get()->toArray();
+        $back_order_amounts = [];
+        foreach ($this->backOrders as $return_order) {
+            $back_order_amounts[$return_order->id] = $return_order->undeducted_amount;
+        }
 
-        return array_sum(array_column($collections, 'remained_amount'));
+        return $back_order_amounts;
     }
 
     /**
@@ -233,14 +276,19 @@ class Customer extends Model
      */
     public function getBackAmountAttribute()
     {
-        $back_amount = 0;
-        foreach ($this->backOrders as $return_order) {
-            foreach ($return_order->items as $return_order_item) {
-                $back_amount += $return_order_item->quantity * $return_order_item->orderItem->price;
-            }
-        }
+        return array_sum($this->back_order_amounts);
+    }
 
-        return $back_amount;
+    /**
+     * 付款单剩余金额
+     *
+     * @return number
+     */
+    public function getTotalRemainedAmountAttribute()
+    {
+        $collections = Collection::where('customer_id', $this->id)->where('is_finished', 0)->get()->toArray();
+
+        return array_sum(array_column($collections, 'remained_amount'));
     }
 
     /**

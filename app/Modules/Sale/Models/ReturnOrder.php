@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Index\Models\User;
 use App\Traits\CodeTrait;
+use App\Modules\Finance\Models\DeliveryOrderItemDeduction;
 
 class ReturnOrder extends Model
 {
@@ -114,5 +115,32 @@ class ReturnOrder extends Model
     public function handleLog()
     {
         return $this->hasOne(ReturnOrderLog::class)->where('action', 3)->orderBy('id', 'desc');
+    }
+
+    /**
+     * 退货单金额
+     *
+     * @return int
+     */
+    public function getAmountAttribute()
+    {
+        $amount = 0;
+        foreach ($this->items as $roi) {
+            $amount += $roi->quantity * $roi->orderItem->price;
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 未抵扣金额
+     *
+     * @return mixed
+     */
+    public function getUndeductedAmountAttribute()
+    {
+        $deductions = DeliveryOrderItemDeduction::where('return_order_id', $this->id)->pluck('amount')->toArray();
+
+        return $deductions ? $this->amount - array_sum($deductions) : $this->amount;
     }
 }

@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Customer;
-use App\Modules\Sale\Models\DeliveryOrderItem;
 use App\Modules\Finance\Models\Account;
 use App\Modules\Finance\Models\Collection;
-use App\Modules\Finance\Models\CollectionItem;
 
 class CollectionController extends Controller
 {
@@ -45,12 +43,11 @@ class CollectionController extends Controller
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $collection) {
-            $collection->items->map(function ($item) {
-                $deliveryOrderItem = $item->deliveryOrderItem;
-                $deliveryOrderItem->order;
-                $deliveryOrderItem->orderItem;
+            $collection->deductions->map(function ($deduction) {
+                $deduction->deliveryOrderItem->orderItem->order;
 
-                return $item;
+
+                return $deduction;
             });
             $collection->customer;
             $collection->user;
@@ -71,6 +68,7 @@ class CollectionController extends Controller
 
                     return $return_order_item;
                 });
+                $return_order->setAppends(['undeducted_amount']);
 
                 return $return_order;
             });
