@@ -99,7 +99,7 @@
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
-                        {field: 'detail', title: '订单明细', width: 890, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '订单明细', width: 970, align: 'center', templet: function (d) {
                             var html = '';
                             d.items.forEach(function (item, key) {
                                 if (0 == key) {
@@ -115,6 +115,7 @@
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku.stock + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.pending_delivery_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.back_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + amount.toFixed(2) + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + delivery_date + '</li>';
@@ -137,6 +138,7 @@
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">待出货数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">退货数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">价格</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">金额</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">交期</li>';

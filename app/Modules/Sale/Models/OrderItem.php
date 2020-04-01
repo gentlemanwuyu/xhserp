@@ -80,6 +80,15 @@ class OrderItem extends Model
 
     }
 
+    public function backItems()
+    {
+        return $this->hasMany(ReturnOrderItem::class)
+            ->leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
+            ->where('return_order_items.order_item_id', $this->id)
+            ->where('ro.method', 2)
+            ->whereIn('ro.status', [4, 5]);
+    }
+
     /**
      * 出货数量，包含已出货的和待出货的
      *
@@ -164,5 +173,15 @@ class OrderItem extends Model
         }
 
         return $quantity;
+    }
+
+    public function getBackQuantityAttribute()
+    {
+        $back_quantity = 0;
+        foreach ($this->backItems as $return_order_item) {
+            $back_quantity += $return_order_item->quantity;
+        }
+
+        return $back_quantity;
     }
 }
