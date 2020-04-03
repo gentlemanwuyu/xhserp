@@ -28,7 +28,7 @@ class DeductedOrderListener implements ShouldQueue
     {
         foreach ($event->delivery_order_item_ids as $doi_id) {
             $delivery_order_item = DeliveryOrderItem::find($doi_id);
-            $order = $delivery_order_item->deliveryOrder->order;
+            $order = $delivery_order_item->order;
             // 如果订单的支付状态为完成付款，则跳过
             if (2 == $order->payment_status) {
                 continue;

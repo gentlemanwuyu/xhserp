@@ -316,15 +316,17 @@ class Customer extends Model
             return null;
         }
 
-        $used_credit = 0;
-        $orders = $this->processingOrder;
-        foreach ($orders as $order) {
+        $processing_order_amount = 0; // 进行中订单的金额
+        $real_paid_amount = 0;
+        foreach ($this->processingOrder as $order) {
+            $real_paid_amount += $order->real_paid_amount;
             foreach ($order->items as $item) {
-                $used_credit += $item->price * ($item->quantity - $item->paid_quantity);
+                $processing_order_amount += $item->price * ($item->quantity - $item->back_quantity);
             }
         }
 
-        return $this->credit - $used_credit + $this->total_remained_amount;
+        // 剩余额度 = 信用额度 - 进行中订单金额 + 订单付款金额 + 付款单剩余金额 + 已付款完成订单的退款金额
+        return $this->credit - $processing_order_amount + $real_paid_amount + $this->total_remained_amount + $this->finished_order_back_amount;
     }
 
     public function getTaxNameAttribute()
@@ -340,5 +342,33 @@ class Customer extends Model
     public function pendingPaymentMethodApplication()
     {
         return $this->hasOne(PaymentMethodApplication::class)->whereIn('status', [1, 2])->orderBy('id', 'desc');
+    }
+
+    /**
+     * 已付款完成订单的退款金额
+     *
+     * @return int
+     */
+    public function getFinishedOrderBackAmountAttribute()
+    {
+        $back_amount = 0;
+
+        $return_order_items = ReturnOrderItem::leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
+            ->leftJoin('orders AS o', 'o.id', '=', 'ro.order_id')
+            ->leftJoin('order_items AS oi', 'oi.id', '=', 'return_order_items.order_item_id')
+            ->whereNull('ro.deleted_at')
+            ->whereNull('o.deleted_at')
+            ->where('o.customer_id', $this->id)
+            ->where('ro.method', 2)
+            ->where('ro.status', 4)
+            ->where('o.status', 4)
+            ->where('o.payment_status', 2)
+            ->select(['return_order_items.quantity AS back_quantity', 'oi.price'])
+            ->get();
+        foreach ($return_order_items as $item) {
+            $back_amount += $item->back_quantity * $item->price;
+        }
+
+        return $back_amount;
     }
 }

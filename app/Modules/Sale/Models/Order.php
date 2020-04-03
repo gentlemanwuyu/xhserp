@@ -10,8 +10,9 @@ namespace App\Modules\Sale\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Index\Models\User;
 use App\Traits\CodeTrait;
+use App\Modules\Index\Models\User;
+use App\Modules\Finance\Models\DeliveryOrderItemDeduction;
 
 class Order extends Model
 {
@@ -139,5 +140,20 @@ class Order extends Model
         return !$this->items->filter(function ($item) {
             return $item->returnable_quantity;
         })->isEmpty();
+    }
+
+    /**
+     * 真实付款金额
+     *
+     * @return number
+     */
+    public function getRealPaidAmountAttribute()
+    {
+        $real_paids = DeliveryOrderItemDeduction::leftJoin('delivery_order_items AS doi', 'doi.id', '=', 'delivery_order_item_deductions.delivery_order_item_id')
+            ->where('doi.order_id', $this->id)
+            ->where('delivery_order_item_deductions.collection_id', '>', 0)
+            ->pluck('delivery_order_item_deductions.amount');
+
+        return array_sum($real_paids->toArray());
     }
 }

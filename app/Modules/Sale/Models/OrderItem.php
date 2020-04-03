@@ -80,6 +80,11 @@ class OrderItem extends Model
 
     }
 
+    /**
+     * 退货Item，包括已入库的和已完成的
+     *
+     * @return mixed
+     */
     public function backItems()
     {
         return $this->hasMany(ReturnOrderItem::class)
@@ -158,23 +163,10 @@ class OrderItem extends Model
     }
 
     /**
-     * 已付款数量
+     * 退货数量，包括已入库的和已完成的
      *
      * @return int
      */
-    public function getPaidQuantityAttribute()
-    {
-        $quantity = 0;
-
-        foreach ($this->deliveryItems as $delivery_item) {
-            if (1 == $delivery_item->is_paid) {
-                $quantity = $quantity + $delivery_item->quantity;
-            }
-        }
-
-        return $quantity;
-    }
-
     public function getBackQuantityAttribute()
     {
         $back_quantity = 0;
