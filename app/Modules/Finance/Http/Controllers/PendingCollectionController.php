@@ -25,8 +25,10 @@ class PendingCollectionController extends Controller
     {
         $query = DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
             ->leftJoin('customers AS c', 'c.id', '=', 'delivery_orders.customer_id');
-        $query = $query->where('delivery_orders.status', 2);
-        $query = $query->where('doi.is_paid', 0);
+        $query = $query->where('delivery_orders.status', 2)
+            ->where('doi.is_paid', 0)
+            ->where('doi.real_quantity', '>', 0);
+
         if ($request->get('code')) {
             $query = $query->where('c.code', $request->get('code'));
         }
@@ -36,16 +38,16 @@ class PendingCollectionController extends Controller
         if ($request->get('payment_method')) {
             $query = $query->where('c.payment_method', $request->get('payment_method'));
         }
-        $customer_ids = $query->get(['delivery_orders.customer_id']);
-        $customer_ids = array_unique(array_column($customer_ids->toArray(), 'customer_id'));
-
+        $customer_ids = $query->pluck('delivery_orders.customer_id');
+        $customer_ids = array_unique($customer_ids->toArray());
 
         $query = Customer::whereIn('id', $customer_ids);
 
         $paginate = $query->paginate($request->get('limit'));
 
         foreach ($paginate as $customer) {
-            $customer->setAppends(['unpaid_items', 'payment_method_name', 'total_remained_amount']);
+            $customer->unpaidItems;
+            $customer->setAppends(['payment_method_name', 'total_remained_amount']);
         }
 
         return response()->json($paginate);

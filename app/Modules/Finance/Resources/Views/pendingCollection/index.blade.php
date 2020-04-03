@@ -79,7 +79,7 @@
                                 var amount = item.delivery_quantity * item.price;
                                 var delivery_at = null == item.delivery_at ? '' : item.delivery_at;
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.order_code + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 150px;">' + item.sku_code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + item.title + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.order_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.delivery_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.price + '</li>';
@@ -98,7 +98,7 @@
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px; text-align: center;">订单号</li>';
-                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">SKU</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">品名</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">订单数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">价格</li>';
