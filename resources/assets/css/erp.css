@@ -26,7 +26,7 @@ a:hover{color: #FF5722;}
 .erp-table-list-li, .erp-table-list-li-first{}
 .erp-table-list-ul{border-top: 1px solid #e6e6e6;}
 .erp-table-list-ul-first{border-top: none;}
-.erp-table-list-li{padding-top: 5px; padding-bottom: 5px; border-left: 1px solid #e6e6e6; line-height: 28px;}
+.erp-table-list-li{padding: 5px; border-left: 1px solid #e6e6e6; line-height: 28px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .erp-table-list-li-first{border-left: none;}
 th[data-field=detail] .layui-table-cell{height: 38px;padding-top: 5px; padding-bottom: 5px;}
 th[data-field=detail], td[data-field=detail]{padding: 0!important;}
