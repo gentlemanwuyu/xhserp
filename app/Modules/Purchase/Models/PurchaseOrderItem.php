@@ -42,8 +42,8 @@ class PurchaseOrderItem extends Model
      */
     public function getEntriedQuantityAttribute()
     {
-        $entries = SkuEntry::where('order_item_id', $this->id)->get(['quantity'])->toArray();
+        $entries = SkuEntry::where('order_item_id', $this->id)->pluck('quantity')->toArray();
 
-        return array_sum(array_column($entries, 'quantity'));
+        return $entries ? array_sum($entries) : 0;
     }
 }

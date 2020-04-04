@@ -143,7 +143,7 @@
                                 <a lay-href="{{route('purchase::supplier.index')}}"><i class="layui-icon layui-icon-group"></i>供应商管理</a>
                             </dd>
                             <dd>
-                                <a lay-href="{{route('purchase::order.index')}}"><i class="layui-icon layui-icon-form"></i>订单管理</a>
+                                <a lay-href="{{route('purchase::order.index')}}"><i class="layui-icon layui-icon-form"></i>采购订单管理</a>
                             </dd>
                         </dl>
                     </li>
