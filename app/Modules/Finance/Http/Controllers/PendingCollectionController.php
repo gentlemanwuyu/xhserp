@@ -47,7 +47,7 @@ class PendingCollectionController extends Controller
 
         foreach ($paginate as $customer) {
             $customer->unpaidItems;
-            $customer->setAppends(['payment_method_name', 'total_remained_amount']);
+            $customer->setAppends(['payment_method_name', 'total_remained_amount', 'back_amount']);
         }
 
         return response()->json($paginate);
@@ -60,7 +60,8 @@ class PendingCollectionController extends Controller
             ->orderBy('id', 'desc')
             ->get();
         $customer = Customer::find($request->get('customer_id'));
-        $customer->setAppends(['total_remained_amount', 'unpaid_items']);
+        $customer->unpaidItems;
+        $customer->setAppends(['total_remained_amount', 'back_amount']);
 
         return view('finance::pendingCollection.deduction', compact('collections', 'customer'));
     }

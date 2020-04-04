@@ -5,55 +5,92 @@
     </style>
 @endsection
 @section('content')
-    <div class="layui-card">
-        <div class="layui-card-header">
-            <h3>收款单列表</h3>
+    <div class="layui-row layui-col-space30">
+        <div class="layui-col-xs4">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <h3>收款/退货信息</h3>
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form layui-form-pane">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">可抵扣金额</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->total_remained_amount + $customer->back_amount}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">结余金额</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->total_remained_amount}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">退货金额</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->back_amount}}</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="layui-card-body">
-            <table class="layui-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>收款时间</th>
-                    <th>收款方式</th>
-                    <th>收款金额</th>
-                    <th>剩余金额</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($collections as $collection)
-                    <tr>
-                        <td>{{$collection->id}}</td>
-                        <td>{{$collection->created_at}}</td>
-                        <td>{{$collection->method_name}}</td>
-                        <td>{{$collection->amount}}</td>
-                        <td>{{$collection->remained_amount}}</td>
-                    </tr>
-                @endforeach
-                <tr class="erp-total-row">
-                    <td>合计</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{$customer->total_remained_amount or ''}}</td>
-                </tr>
-                </tbody>
-            </table>
+        @if(!$collections->isEmpty())
+            <div class="layui-col-xs8">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <h3>收款明细</h3>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-table" style="margin: 0;">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>收款时间</th>
+                            <th>收款方式</th>
+                            <th>收款金额</th>
+                            <th>剩余金额</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($collections as $collection)
+                            <tr>
+                                <td>{{$collection->id}}</td>
+                                <td>{{$collection->created_at}}</td>
+                                <td>{{$collection->method_name}}</td>
+                                <td>{{$collection->amount}}</td>
+                                <td>{{$collection->remained_amount}}</td>
+                            </tr>
+                        @endforeach
+                        <tr class="erp-total-row">
+                            <td>合计</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{$customer->total_remained_amount or ''}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+        @endif
     </div>
-    <form class="layui-form layui-form-pane" lay-filter="deduction">
-        <input type="hidden" name="customer_id" value="{{$customer_id or ''}}">
-        <div class="layui-card" id="unpaidDetailCard">
-            <div class="layui-card-header">
-                <h3>应收款明细</h3>
+    <div class="layui-row">
+        <form class="layui-form layui-form-pane" lay-filter="deduction">
+            <input type="hidden" name="customer_id" value="{{$customer_id or ''}}">
+            <div class="layui-card" id="unpaidDetailCard">
+                <div class="layui-card-header">
+                    <h3>应收款明细</h3>
+                </div>
+                <div class="layui-card-body">
+                    <table id="detail" lay-filter="detail"></table>
+                </div>
             </div>
-            <div class="layui-card-body">
-                <table id="detail" lay-filter="detail"></table>
-            </div>
-        </div>
-        <button type="button" class="layui-btn" lay-submit lay-filter="deduction">提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </form>
+            <button type="button" class="layui-btn" lay-submit lay-filter="deduction">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </form>
+    </div>
 @endsection
 @section('scripts')
     <script>
@@ -88,13 +125,14 @@
             table.on('checkbox(detail)', function (obj) {
                 var checkStatus = table.checkStatus('detail')
                         ,checkedAmount = 0
-                        ,total_remained_amount = customer.total_remained_amount;
+                        ,total_remained_amount = customer.total_remained_amount
+                        ,back_amount = customer.back_amount;
                 checkStatus.data.forEach(function (item) {
                     checkedAmount += parseFloat(item.price) * parseInt(item.delivery_quantity);
                 });
 
-                if (checkedAmount > total_remained_amount) {
-                    layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
+                if (checkedAmount > total_remained_amount + back_amount) {
+                    layer.msg("选中的明细金额不可大于可抵扣金额", {icon: 5, shift: 6});
                     return false;
                 }
             });

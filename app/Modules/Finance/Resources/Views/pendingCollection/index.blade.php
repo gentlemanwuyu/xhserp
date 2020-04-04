@@ -66,6 +66,7 @@
                             return total_amount;
                         }},
                         {field: 'total_remained_amount', title: '结余金额', width: 100, align: 'center'},
+                        {field: 'back_amount', title: '退货金额', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'detail', title: '出货明细', width: 950, align: 'center', templet: function (d) {
                             var html = '';
