@@ -93,4 +93,14 @@ class PurchaseOrder extends Model
     {
         return isset(Supplier::$taxes[$this->tax]) ? Supplier::$taxes[$this->tax]['display'] : '';
     }
+
+    /**
+     * 是否可退
+     *
+     * @return bool
+     */
+    public function getReturnableAttribute()
+    {
+        return true;
+    }
 }

@@ -169,6 +169,16 @@
                                 }
                             });
                         }
+
+                        if (-1 < [3, 4].indexOf(data.status) && data.returnable) {
+                            actions.push({
+                                title: "退货",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('purchase::returnOrder.form')}}?order_id=" + data.id, '添加采购退货单[' + data.id + ']');
+                                }
+                            });
+                        }
+
                         if (3 == data.status) {
                             actions.push({
                                 title: "取消",
