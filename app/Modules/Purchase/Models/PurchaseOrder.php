@@ -66,7 +66,7 @@ class PurchaseOrder extends Model
 
     public function items()
     {
-        return $this->hasMany(PurchaseOrderItem::class, 'order_id');
+        return $this->hasMany(PurchaseOrderItem::class);
     }
 
     public function supplier()

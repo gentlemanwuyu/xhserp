@@ -14,7 +14,7 @@ class CreatePurchaseOrderItemsTable extends Migration
 	{
 		Schema::create('purchase_order_items', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('order_id')->default(0)->comment('订单ID');
+			$table->integer('purchase_order_id')->default(0)->comment('订单ID');
 			$table->integer('product_id')->default(0)->comment('产品ID');
 			$table->integer('sku_id')->default(0)->comment('SKU ID');
 			$table->string('title')->default('')->comment('标题');
@@ -28,7 +28,7 @@ class CreatePurchaseOrderItemsTable extends Migration
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->comment('最后更新时间');
 			$table->timestamp('deleted_at')->nullable()->comment('删除时间');
 
-			$table->index('order_id');
+			$table->index('purchase_order_id');
 			$table->index('product_id');
 			$table->index('sku_id');
 		});

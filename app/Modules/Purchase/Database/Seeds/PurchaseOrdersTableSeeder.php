@@ -18,7 +18,7 @@ class PurchaseOrdersTableSeeder extends Seeder
     {
         $order = PurchaseOrder::create(['code' => 'xhspo20191210001', 'supplier_id' => 1, 'payment_method' => 1, 'tax' => 1, 'status' => 3, 'user_id' => 2]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 7,
             'sku_id' => 19,
             'title' => 'pp滚轮片124A',
@@ -29,7 +29,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 7,
             'sku_id' => 20,
             'title' => 'pp滚轮片124B',
@@ -40,7 +40,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 7,
             'sku_id' => 21,
             'title' => 'pp滚轮片124C',
@@ -53,7 +53,7 @@ class PurchaseOrdersTableSeeder extends Seeder
 
         $order = PurchaseOrder::create(['code' => 'xhspo20191210002', 'supplier_id' => 1, 'payment_method' => 1, 'tax' => 1, 'status' => 1, 'user_id' => 3]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 11,
             'sku_id' => 29,
             'title' => '包胶滚轮片144骨架A',
@@ -64,7 +64,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 11,
             'sku_id' => 30,
             'title' => '包胶滚轮片144骨架B',
@@ -76,7 +76,7 @@ class PurchaseOrdersTableSeeder extends Seeder
         ]);
         $order = PurchaseOrder::create(['code' => 'xhspo20191210003', 'supplier_id' => 2, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'user_id' => 4]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 15,
             'sku_id' => 38,
             'title' => '565喷咀头A',
@@ -87,7 +87,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'delivery_status' => 1,
         ]);
         PurchaseOrderItem::create([
-            'order_id' => $order->id,
+            'purchase_order_id' => $order->id,
             'product_id' => 16,
             'sku_id' => 42,
             'title' => '565喷咀底座B',

@@ -26,4 +26,9 @@ class PurchaseReturnOrder extends Model
         3 => '已完成',
         4 => '已取消',
     ];
+
+    static $methods = [
+        1 => '换货',
+        2 => '退货',
+    ];
 }
