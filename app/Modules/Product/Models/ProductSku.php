@@ -31,24 +31,25 @@ class ProductSku extends Model
         return $this->hasOne(Inventory::class, 'sku_id');
     }
 
+    /**
+     * 采购订单Items
+     *
+     * @return mixed
+     */
+    public function purchaseOrderItems()
+    {
+        return $this->hasMany(PurchaseOrderItem::class, 'sku_id')
+            ->leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
+            ->where('purchase_order_items.sku_id', $this->id)
+            ->where('po.status', 3)
+            ->where('purchase_order_items.delivery_status', 1)
+            ->select(['purchase_order_items.*']);
+    }
+
     public function getSingleSkuAttribute()
     {
         $goods_sku_id = SingleSkuProductSku::where('product_sku_id', $this->id)->value('goods_sku_id');
 
         return $goods_sku_id ? GoodsSku::find($goods_sku_id) : null;
-    }
-
-    public function getPurchaseOrderItemsAttribute()
-    {
-        return PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.order_id')
-            ->where('purchase_order_items.sku_id', $this->id)
-            ->where('po.status', 3)
-            ->where('purchase_order_items.delivery_status', 1)
-            ->get(['purchase_order_items.*'])
-            ->map(function ($order_item) {
-                $order_item->order->supplier;
-                $order_item->setAppends(['entried_quantity']);
-                return $order_item;
-            });
     }
 }

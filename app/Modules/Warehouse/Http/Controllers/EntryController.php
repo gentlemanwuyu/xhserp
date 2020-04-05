@@ -26,7 +26,7 @@ class EntryController extends Controller
 
     public function paginate(Request $request)
     {
-        $sku_ids = PurchaseOrder::leftJoin('purchase_order_items AS poi', 'poi.order_id', '=', 'purchase_orders.id')
+        $sku_ids = PurchaseOrder::leftJoin('purchase_order_items AS poi', 'poi.purchase_order_id', '=', 'purchase_orders.id')
             ->where('purchase_orders.status', 3)
             ->where('poi.delivery_status', 1)
             ->pluck('poi.sku_id')->toArray();
@@ -36,7 +36,12 @@ class EntryController extends Controller
         foreach ($paginate as $sku) {
             $sku->product->category;
             $sku->inventory;
-            $sku->setAppends(['purchase_order_items']);
+            $sku->purchaseOrderItems->map(function ($po_items) {
+                $po_items->purchaseOrder->supplier;
+                $po_items->setAppends(['entried_quantity']);
+
+                return $po_items;
+            });
         }
 
         return response()->json($paginate);

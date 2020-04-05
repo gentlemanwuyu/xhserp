@@ -57,8 +57,8 @@
                                 }
 
                                 var delivery_date = null == order_item.delivery_date ? '' : order_item.delivery_date;
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + order_item.order.supplier.name + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 200px;">' + order_item.order.code + '</li>';
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + order_item.purchase_order.supplier.name + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 200px;">' + order_item.purchase_order.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + order_item.quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + (order_item.quantity - order_item.entried_quantity) + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(order_item.created_at).format('YYYY-MM-DD') + '</li>';
