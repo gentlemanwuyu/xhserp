@@ -11,6 +11,7 @@ namespace App\Modules\Purchase\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use App\Models\ChineseRegion;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Finance\Models\Payment;
 use App\Modules\Finance\Models\PaymentItem;
@@ -110,6 +111,21 @@ class Supplier extends Model
         return $this->hasMany(SupplierContact::class);
     }
 
+    public function state()
+    {
+        return $this->belongsTo(ChineseRegion::class, 'state_id');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(ChineseRegion::class, 'city_id');
+    }
+
+    public function county()
+    {
+        return $this->belongsTo(ChineseRegion::class, 'county_id');
+    }
+
     public function getPaymentMethodNameAttribute()
     {
         return isset(self::$payment_methods[$this->payment_method]) ? self::$payment_methods[$this->payment_method] : '';
@@ -177,5 +193,27 @@ class Supplier extends Model
     public function getTaxNameAttribute()
     {
         return isset(self::$taxes[$this->tax]) ? self::$taxes[$this->tax]['display'] : '';
+    }
+
+    /**
+     * 完整地址
+     *
+     * @return string
+     */
+    public function getFullAddressAttribute()
+    {
+        $full_address = '';
+        if ($this->state_id) {
+            $full_address .= $this->state->name;
+        }
+        if ($this->city_id) {
+            $full_address .= $this->city->name;
+        }
+        if ($this->county_id) {
+            $full_address .= $this->county->name;
+        }
+        $full_address .= $this->street_address;
+
+        return $full_address;
     }
 }

@@ -30,9 +30,9 @@ class PurchaseOrderItem extends Model
         return $this->belongsTo(ProductSku::class, 'sku_id');
     }
 
-    public function order()
+    public function purchaseOrder()
     {
-        return $this->belongsTo(PurchaseOrder::class, 'order_id');
+        return $this->belongsTo(PurchaseOrder::class);
     }
 
     /**
@@ -42,8 +42,30 @@ class PurchaseOrderItem extends Model
      */
     public function getEntriedQuantityAttribute()
     {
-        $entries = SkuEntry::where('order_item_id', $this->id)->pluck('quantity')->toArray();
+        $entries = SkuEntry::where('purchase_order_item_id', $this->id)->pluck('quantity')->toArray();
 
         return $entries ? array_sum($entries) : 0;
+    }
+
+    /**
+     * 已退货数量
+     *
+     * @return int|number
+     */
+    public function getReturnedQuantityAttribute()
+    {
+        $returned_quantities = PurchaseReturnOrderItem::where('purchase_order_item_id', $this->id)->pluck('quantity')->toArray();
+
+        return $returned_quantities ? array_sum($returned_quantities) : 0;
+    }
+
+    /**
+     * 可退数量 = 已入库数量 - 已退数量
+     *
+     * @return mixed
+     */
+    public function getReturnableQuantityAttribute()
+    {
+        return $this->entried_quantity - $this->returned_quantity;
     }
 }

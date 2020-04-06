@@ -34,4 +34,5 @@ Route::group(['prefix' => 'order', 'as'=>'order.'], function (){
 
 Route::group(['prefix' => 'returnOrder', 'as'=>'returnOrder.'], function (){
 	Route::get('form', ['as'=>'form', 'uses'=>'ReturnOrderController@form']);
+	Route::post('save', ['as'=>'save', 'uses'=>'ReturnOrderController@save']);
 });

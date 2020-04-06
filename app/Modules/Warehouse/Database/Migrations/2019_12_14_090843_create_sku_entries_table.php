@@ -17,6 +17,7 @@ class CreateSkuEntriesTable extends Migration
 			$table->integer('sku_id')->default(0)->comment('SkuID');
 			$table->integer('purchase_order_item_id')->default(0)->comment('订单itemID');
 			$table->integer('quantity')->default(0)->comment('入库数量');
+			$table->integer('real_quantity')->default(0)->comment('真实数量');
 			$table->enum('is_paid', [0, 1])->default(0)->comment('是否已付款, 1为已付款');
 			$table->integer('user_id')->default(0)->comment('操作人ID');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');

@@ -18,6 +18,11 @@ class CreatePurchaseReturnOrdersTable extends Migration
 			$table->string('code')->default('')->comment('退货单编号');
 			$table->tinyInteger('method')->default(0)->comment('退货方式，1为换货，2为退货');
 			$table->text('reason')->default('')->comment('退货原因');
+			$table->tinyInteger('delivery_method')->default(0)->comment('出货方式');
+			$table->integer('express_id')->default(0)->comment('快递公司ID');
+			$table->text('address')->default('')->comment('地址');
+			$table->string('consignee')->default('')->comment('收货人');
+			$table->string('consignee_phone')->default('')->comment('收货人电话');
 			$table->tinyInteger('status')->default(0)->comment('退货单状态，1为已通过，2为已出库，3为已完成，4为已取消');
 			$table->integer('user_id')->default(0)->comment('创建人ID');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');
