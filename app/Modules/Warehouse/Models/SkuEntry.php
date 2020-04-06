@@ -15,8 +15,8 @@ class SkuEntry extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function orderItem()
+    public function purchaseOrderItem()
     {
-        return $this->belongsTo(PurchaseOrderItem::class, 'order_item_id');
+        return $this->belongsTo(PurchaseOrderItem::class);
     }
 }

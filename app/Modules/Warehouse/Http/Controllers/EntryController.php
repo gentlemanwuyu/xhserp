@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Events\Entried;
 use App\Modules\Product\Models\ProductSku;
 use App\Modules\Purchase\Models\PurchaseOrder;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
@@ -50,9 +51,10 @@ class EntryController extends Controller
     public function form(Request $request)
     {
         $sku = ProductSku::find($request->get('sku_id'));
-        $sku->pois = $sku->purchase_order_items
+        $sku->pois = $sku->purchaseOrderItems
             ->map(function ($item) {
-                $item->order->supplier;
+                $item->purchaseOrder->supplier;
+                $item->setAppends(['entried_quantity']);
 
                 return $item;
             })
@@ -70,9 +72,9 @@ class EntryController extends Controller
             }
 
             DB::beginTransaction();
-            SkuEntry::create([
+            $entry = SkuEntry::create([
                 'sku_id' => $order_item->sku_id,
-                'order_item_id' => $request->get('order_item_id'),
+                'purchase_order_item_id' => $request->get('order_item_id'),
                 'quantity' => $request->get('quantity'),
                 'user_id' => Auth::user()->id,
             ]);
@@ -87,18 +89,7 @@ class EntryController extends Controller
                 $inventory->save();
             }
 
-            // 检查是否已经全部入库
-            $entries = SkuEntry::where('order_item_id', $request->get('order_item_id'))->get(['quantity']);
-            $entried_quantity = array_sum(array_column($entries->toArray(), 'quantity'));
-            if ($entried_quantity >= $order_item->quantity) {
-                $order_item->delivery_status = 2;
-                $order_item->save();
-            }
-            // 检查订单是否已完成
-            $unfinished_order_items = PurchaseOrderItem::where('order_id', $order_item->order_id)->where('delivery_status', '!=', 2)->get(['id', 'order_id', 'delivery_status']);
-            if ($unfinished_order_items->isEmpty()) {
-                PurchaseOrder::where('id', $order_item->order_id)->update(['status' => 4]);
-            }
+            event(new Entried($entry->id));
 
             DB::commit();
             return response()->json(['status' => 'success']);
