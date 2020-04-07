@@ -73,7 +73,7 @@ class OrderController extends Controller
             $order->items->map(function ($item) {
                 $item->product;
                 $item->sku;
-                $item->setAppends(['entried_quantity']);
+                $item->setAppends(['entried_quantity', 'pending_entry_quantity', 'back_quantity']);
 
                 return $item;
             });

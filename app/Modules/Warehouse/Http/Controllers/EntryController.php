@@ -39,7 +39,7 @@ class EntryController extends Controller
             $sku->inventory;
             $sku->purchaseOrderItems->map(function ($po_items) {
                 $po_items->purchaseOrder->supplier;
-                $po_items->setAppends(['entried_quantity']);
+                $po_items->setAppends(['entried_quantity', 'pending_entry_quantity']);
 
                 return $po_items;
             });
@@ -54,7 +54,7 @@ class EntryController extends Controller
         $sku->pois = $sku->purchaseOrderItems
             ->map(function ($item) {
                 $item->purchaseOrder->supplier;
-                $item->setAppends(['entried_quantity']);
+                $item->setAppends(['entried_quantity', 'pending_entry_quantity']);
 
                 return $item;
             })

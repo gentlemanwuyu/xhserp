@@ -15,7 +15,7 @@
                                     <option value="">请选择订单</option>
                                     @foreach($sku->pois as $order_item)
                                         <?php $order = $order_item->purchaseOrder; ?>
-                                        <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->quantity - $order_item->entried_quantity}})</option>
+                                        <option value="{{$order_item->id}}">{{$order->code}} (供应商: {{$order->supplier->name or ''}}, 待入库数量: {{$order_item->pending_entry_quantity}})</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -43,9 +43,7 @@
             form.on('select(orderItem)', function (data) {
                 var $formItem = $(data.elem).parents('.layui-form-item');
                 if (data.value) {
-                    var orderItem = order_items[data.value]
-                            ,pendingQuantity = parseInt(orderItem['quantity']) - parseInt(orderItem['entried_quantity'])
-                            ,html = '';
+                    var orderItem = order_items[data.value], html = '';
                     html += '<div class="layui-form-item" erp-form-item="supplier">';
                     html += '<label class="layui-form-label">供应商</label>';
                     html += '<div class="layui-input-block">';
@@ -55,7 +53,7 @@
                     html += '<div class="layui-form-item" erp-form-item="pendingQuantity">';
                     html += '<label class="layui-form-label">待入库</label>';
                     html += '<div class="layui-input-block">';
-                    html += '<span class="erp-form-span">' + pendingQuantity + '</span>';
+                    html += '<span class="erp-form-span">' + orderItem.pending_entry_quantity + '</span>';
                     html += '</div>';
                     html += '</div>';
                     $formItem.after(html);
@@ -66,8 +64,8 @@
             });
 
             form.on('submit(entry)', function (form_data) {
-                var quantity = parseInt(form_data.field.quantity);
-                var pending_quantity = parseInt(order_items[form_data.field.order_item_id]['quantity']) - parseInt(order_items[form_data.field.order_item_id]['entried_quantity']);
+                var quantity = parseInt(form_data.field.quantity)
+                        ,pending_quantity = order_items[form_data.field.order_item_id]['pending_entry_quantity'];
 
                 if (quantity > pending_quantity) {
                     layer.msg("入库数量不能大于待入库数量", {icon: 5, shift: 6});

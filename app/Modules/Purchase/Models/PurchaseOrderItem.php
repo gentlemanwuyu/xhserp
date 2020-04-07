@@ -47,25 +47,58 @@ class PurchaseOrderItem extends Model
         return $entries ? array_sum($entries) : 0;
     }
 
-    /**
-     * 已退货数量
-     *
-     * @return int|number
-     */
-    public function getReturnedQuantityAttribute()
+    public function getBackQuantityAttribute()
     {
-        $returned_quantities = PurchaseReturnOrderItem::where('purchase_order_item_id', $this->id)->pluck('quantity')->toArray();
+        $back_quantities = PurchaseReturnOrderItem::leftJoin('purchase_return_orders AS pro', 'pro.id', '=', 'purchase_return_order_items.purchase_return_order_id')
+            ->where('purchase_order_item_id', $this->id)
+            ->where('pro.method', 2)
+            ->where('pro.status', 2)
+            ->pluck('quantity')
+            ->toArray();
 
-        return $returned_quantities ? array_sum($returned_quantities) : 0;
+        return $back_quantities ? array_sum($back_quantities) : 0;
     }
 
     /**
-     * 可退数量 = 已入库数量 - 已退数量
+     * 可退数量 = 已入库数量 - 退货数量
      *
      * @return mixed
      */
     public function getReturnableQuantityAttribute()
     {
-        return $this->entried_quantity - $this->returned_quantity;
+        $return_quantities = PurchaseReturnOrderItem::where('purchase_order_item_id', $this->id)->pluck('quantity')->toArray();
+
+        $return_quantity = $return_quantities ? array_sum($return_quantities) : 0;
+
+        return $this->entried_quantity - $return_quantity;
+    }
+
+    /**
+     * 已出库的换货数量
+     *
+     * @return int|number
+     */
+    public function getEgressExchangeQuantityAttribute()
+    {
+        $egress_exchange_quantities = PurchaseReturnOrderItem::leftJoin('purchase_return_orders AS pro', 'pro.id', '=', 'purchase_return_order_items.purchase_return_order_id')
+            ->where('purchase_return_order_items.purchase_order_item_id', $this->id)
+            ->whereNull('pro.deleted_at')
+            ->where('pro.method', 1)
+            ->where('pro.status', 2)
+            ->pluck('quantity')
+            ->toArray();
+
+        return $egress_exchange_quantities ? array_sum($egress_exchange_quantities) : 0;
+    }
+
+    /**
+     * 待入库数量
+     *
+     * @return mixed
+     */
+    public function getPendingEntryQuantityAttribute()
+    {
+        // 订单数量 + 已出库的换货数量 - 已入库数量
+        return $this->quantity + $this->egress_exchange_quantity - $this->entried_quantity;
     }
 }
