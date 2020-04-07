@@ -145,6 +145,9 @@
                             <dd>
                                 <a lay-href="{{route('purchase::order.index')}}"><i class="layui-icon layui-icon-form"></i>采购订单管理</a>
                             </dd>
+                            <dd>
+                                <a lay-href="{{route('purchase::returnOrder.index')}}"><i class="layui-icon layui-icon-form"></i>采购退货单管理</a>
+                            </dd>
                         </dl>
                     </li>
                     <li class="layui-nav-item">

@@ -11,6 +11,7 @@ namespace App\Modules\Purchase\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CodeTrait;
+use App\Modules\Index\Models\User;
 
 class PurchaseReturnOrder extends Model
 {
@@ -81,5 +82,30 @@ class PurchaseReturnOrder extends Model
         }
 
         return $this;
+    }
+
+    public function items()
+    {
+        return $this->hasMany(PurchaseReturnOrderItem::class);
+    }
+
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(PurchaseOrder::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
+    }
+
+    public function getMethodNameAttribute()
+    {
+        return isset(self::$methods[$this->method]) ? self::$methods[$this->method] : '';
     }
 }
