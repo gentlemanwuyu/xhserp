@@ -39,6 +39,11 @@ Route::group(['prefix' => 'saleReturn', 'as'=>'saleReturn.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'SaleReturnController@save']);
 });
 
+Route::group(['prefix' => 'purchaseReturn', 'as'=>'purchaseReturn.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'PurchaseReturnController@index']);
+	Route::post('egress', ['as'=>'egress', 'uses'=>'PurchaseReturnController@egress']);
+});
+
 Route::group(['prefix' => 'express', 'as'=>'express.'], function (){
 	Route::get('index', ['as'=>'index', 'uses'=>'ExpressController@index']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'ExpressController@paginate']);
