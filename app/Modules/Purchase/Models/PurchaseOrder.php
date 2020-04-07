@@ -54,7 +54,6 @@ class PurchaseOrder extends Model
             $order_item = PurchaseOrderItem::find($flag);
             if (!$order_item) {
                 $item_data['order_id'] = $this->id;
-                $item_data['delivery_status'] = 1;
                 PurchaseOrderItem::create($item_data);
             }else {
                 $order_item->update($item_data);

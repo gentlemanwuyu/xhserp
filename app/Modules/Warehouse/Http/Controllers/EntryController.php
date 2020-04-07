@@ -27,17 +27,25 @@ class EntryController extends Controller
 
     public function paginate(Request $request)
     {
-        $sku_ids = PurchaseOrder::leftJoin('purchase_order_items AS poi', 'poi.purchase_order_id', '=', 'purchase_orders.id')
-            ->where('purchase_orders.status', 3)
-            ->where('poi.delivery_status', 1)
-            ->pluck('poi.sku_id')->toArray();
+        $sku_ids = [];
+        $purchase_order_items = PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
+            ->whereNull('po.deleted_at')
+            ->where('po.status', 3)
+            ->get();
+        foreach ($purchase_order_items as $poi) {
+            if (0 < $poi->pending_entry_quantity) {
+                $sku_ids[] = $poi->sku_id;
+            }
+        }
 
-        $paginate = ProductSku::whereIn('id', $sku_ids)->paginate($request->get('limit'));
+        $paginate = ProductSku::whereIn('id', array_unique($sku_ids))->paginate($request->get('limit'));
 
         foreach ($paginate as $sku) {
             $sku->product->category;
             $sku->inventory;
-            $sku->purchaseOrderItems->map(function ($po_items) {
+            $sku->purchaseOrderItems->filter(function ($po_items) {
+                return 0 < $po_items->pending_entry_quantity;
+            })->map(function ($po_items) {
                 $po_items->purchaseOrder->supplier;
                 $po_items->setAppends(['entried_quantity', 'pending_entry_quantity']);
 
@@ -66,7 +74,7 @@ class EntryController extends Controller
     public function save(Request $request)
     {
         try {
-            $order_item = PurchaseOrderItem::where('id', $request->get('order_item_id'))->where('delivery_status', 1)->first();
+            $order_item = PurchaseOrderItem::where('id', $request->get('order_item_id'))->first();
             if (!$order_item) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
