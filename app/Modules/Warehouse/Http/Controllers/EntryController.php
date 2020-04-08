@@ -83,6 +83,7 @@ class EntryController extends Controller
             DB::beginTransaction();
             $entry = SkuEntry::create([
                 'sku_id' => $order_item->sku_id,
+                'purchase_order_id' => $order_item->purchase_order_id,
                 'purchase_order_item_id' => $request->get('order_item_id'),
                 'quantity' => $request->get('quantity'),
                 'user_id' => Auth::user()->id,
