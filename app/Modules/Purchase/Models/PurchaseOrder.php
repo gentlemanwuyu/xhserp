@@ -10,8 +10,9 @@ namespace App\Modules\Purchase\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Index\Models\User;
 use App\Traits\CodeTrait;
+use App\Modules\Index\Models\User;
+use App\Modules\Warehouse\Models\SkuEntry;
 
 class PurchaseOrder extends Model
 {
@@ -78,6 +79,11 @@ class PurchaseOrder extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function purchaseReturnOrders()
+    {
+        return $this->hasMany(PurchaseReturnOrder::class)->OrderBy('id', 'desc');
+    }
+
     /**
      * 已出库的换货退货单
      *
@@ -86,6 +92,11 @@ class PurchaseOrder extends Model
     public function egressExchangeReturnOrders()
     {
         return $this->hasMany(PurchaseReturnOrder::class)->where('method', 1)->where('status', 2)->OrderBy('id', 'desc');
+    }
+
+    public function entryItems()
+    {
+        return $this->hasManyThrough(SkuEntry::class, PurchaseOrderItem::class);
     }
 
     public function getPaymentMethodNameAttribute()

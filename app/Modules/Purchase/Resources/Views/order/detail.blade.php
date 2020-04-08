@@ -75,6 +75,113 @@
             </table>
         </div>
     </div>
+    <?php $entryItems = $order->entryItems; ?>
+    @if(!$entryItems->isEmpty())
+        <div class="erp-detail">
+            <div class="erp-detail-title">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>入库记录</legend>
+                </fieldset>
+            </div>
+            <div class="erp-detail-content">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>采购订单Item</th>
+                        <th>单位</th>
+                        <th>入库数量</th>
+                        <th>真实数量</th>
+                        <th>单价</th>
+                        <th>总价</th>
+                        <th>入库时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $index = 1; ?>
+                    @foreach($entryItems as $entry)
+                        <?php
+                            $purchaseOrderItem = $entry->purchaseOrderItem;
+                        ?>
+                        <tr>
+                            <td>{{$index++}}</td>
+                            <td>{{$purchaseOrderItem->title or ''}}</td>
+                            <td>{{$purchaseOrderItem->unit or ''}}</td>
+                            <td>{{$entry->quantity}}</td>
+                            <td>{{$entry->real_quantity}}</td>
+                            <td>{{$purchaseOrderItem->price or ''}}</td>
+                            <td>{{$purchaseOrderItem->price * $entry->real_quantity}}</td>
+                            <td>{{$entry->created_at}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+    <?php $purchaseReturnOrders = $order->purchaseReturnOrders; ?>
+    @if(!$purchaseReturnOrders->isEmpty())
+        <div class="erp-detail">
+            <div class="erp-detail-title">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>退货记录</legend>
+                </fieldset>
+            </div>
+            <div class="erp-detail-content">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>退货单号</th>
+                        <th>退货方式</th>
+                        <th>退货原因</th>
+                        <th>状态</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                        <th class="erp-static-table-list" style="width: 650px;">
+                            <span>退货明细</span>
+                            <ul class="erp-static-table-list-ul">
+                                <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px; text-align: center;">订单Item</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">订单数量</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">退货数量</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">单价</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">金额</li>
+                            </ul>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $index = 1; ?>
+                    @foreach($purchaseReturnOrders as $purchaseReturnOrder)
+                        <tr>
+                            <td>{{$index++}}</td>
+                            <td>{{$purchaseReturnOrder->code or ''}}</td>
+                            <td>{{$purchaseReturnOrder->method_name}}</td>
+                            <td>{{$purchaseReturnOrder->reason}}</td>
+                            <td>{{$purchaseReturnOrder->status_name or ''}}</td>
+                            <td>{{$purchaseReturnOrder->user->name or ''}}</td>
+                            <td>{{$purchaseReturnOrder->created_at}}</td>
+                            <td class="erp-static-table-list">
+                                @foreach($purchaseReturnOrder->items as $k => $purchaseReturnOrderItem)
+                                    <?php
+                                        $purchaseOrderItem = $purchaseReturnOrderItem->purchaseOrderItem;
+                                    ?>
+                                    <ul class="erp-static-table-list-ul @if(0 == $k) erp-static-table-list-ul-first @endif">
+                                        <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px;">{{$purchaseOrderItem->title or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseOrderItem->quantity or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseReturnOrderItem->quantity or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseOrderItem->price or ''}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseOrderItem->price * $purchaseReturnOrderItem->quantity}}</li>
+                                    </ul>
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
     <div class="layui-row @if(!(isset($action) && 'review' == $action)) layui-hide @endif">
         <form class="layui-form">
             <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>
