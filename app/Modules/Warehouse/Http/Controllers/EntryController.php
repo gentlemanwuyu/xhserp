@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Events\Entried;
 use App\Modules\Product\Models\ProductSku;
-use App\Modules\Purchase\Models\PurchaseOrder;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Warehouse\Models\Inventory;
@@ -86,6 +85,8 @@ class EntryController extends Controller
                 'quantity' => $request->get('quantity'),
                 'user_id' => Auth::user()->id,
             ]);
+            // 分配数量
+            $entry->assignQuantity();
             $inventory = Inventory::where('sku_id', $order_item->sku_id)->first();
             if (!$inventory) {
                 Inventory::create([

@@ -10,6 +10,7 @@ namespace App\Modules\Purchase\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Product\Models\Product;
 use App\Modules\Product\Models\ProductSku;
 use App\Modules\Warehouse\Models\SkuEntry;
@@ -33,6 +34,27 @@ class PurchaseOrderItem extends Model
     public function purchaseOrder()
     {
         return $this->belongsTo(PurchaseOrder::class);
+    }
+
+    /**
+     * 待换货Item
+     *
+     * @return mixed
+     */
+    public function pendingExchangeItems()
+    {
+        return $this->hasMany(PurchaseReturnOrderItem::class)
+            ->leftJoin('purchase_return_orders AS pro', 'pro.id', '=', 'purchase_return_order_items.purchase_return_order_id')
+            ->leftJoin('sku_entry_exchanges AS see', 'see.purchase_return_order_item_id', '=', 'purchase_return_order_items.id')
+            ->where('pro.method', 1)
+            ->where('pro.status', 2)
+            ->select([
+                'purchase_return_order_items.*',
+                DB::raw('IFNULL(SUM(see.quantity), 0) AS entried_quantity')
+            ])
+            ->groupBy('purchase_return_order_items.id')
+            ->havingRaw('purchase_return_order_items.quantity > entried_quantity')
+            ->orderBy('purchase_return_order_items.id', 'asc');
     }
 
     /**
