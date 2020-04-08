@@ -16,9 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Database\Events\QueryExecuted' => [
             'App\Listeners\QueryListener',
         ],
-        'App\Events\EgressFinished' => [
-            'App\Listeners\EgressFinishedOrderListener',
-            'App\Listeners\EgressFinishedReturnOrderListener',
+        'App\Events\Egressed' => [
+            'App\Listeners\EgressedOrderListener',
+            'App\Listeners\EgressedReturnOrderListener',
         ],
         'App\Events\Deducted' => [
             'App\Listeners\DeductedOrderListener',

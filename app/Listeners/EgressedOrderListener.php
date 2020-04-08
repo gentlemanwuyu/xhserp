@@ -2,21 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: Woozee
- * Date: 2020/2/13
- * Time: 21:15
+ * Date: 2020/4/8
+ * Time: 14:19
  */
 
 namespace App\Listeners;
 
-use App\Events\EgressFinished;
-use Illuminate\Support\Facades\DB;
+use App\Events\Egressed;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Modules\Sale\Models\Order;
-use App\Modules\Sale\Models\DeliveryOrder;
 use App\Modules\Sale\Models\DeliveryOrderItem;
 
-class EgressFinishedOrderListener implements ShouldQueue
+class EgressedOrderListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -31,9 +29,9 @@ class EgressFinishedOrderListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param EgressFinished $event
+     * @param Egressed $event
      */
-    public function handle(EgressFinished $event)
+    public function handle(Egressed $event)
     {
         try {
             $order_ids = DeliveryOrderItem::where('delivery_order_id', $event->delivery_order_id)->pluck('order_id')->toArray();
@@ -74,7 +72,7 @@ class EgressFinishedOrderListener implements ShouldQueue
                 }
             }
         }catch (\Exception $e) {
-            Log::info("[EgressFinishedOrderListener]事件发生异常:" . $e->getMessage());
+            Log::info("[EgressedOrderListener]事件发生异常:" . $e->getMessage());
             throw new \Exception("系统内部出错，请联系程序猿！");
         }
     }

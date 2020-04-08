@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Events\EgressFinished;
+use App\Events\Egressed;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\DeliveryOrder;
@@ -47,7 +47,7 @@ class EgressController extends Controller
                 $item->assignQuantity(); // 分配数量
             });
 
-            event(new EgressFinished($request->get('delivery_order_id')));
+            event(new Egressed($request->get('delivery_order_id')));
 
             DB::commit();
             return response()->json(['status' => 'success']);

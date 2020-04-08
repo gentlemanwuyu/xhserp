@@ -1,18 +1,16 @@
 <?php
 /**
- * 出货完成事件
- *
  * Created by PhpStorm.
  * User: Woozee
- * Date: 2020/2/13
- * Time: 21:11
+ * Date: 2020/4/8
+ * Time: 14:13
  */
 
 namespace App\Events;
 
 use Illuminate\Queue\SerializesModels;
 
-class EgressFinished extends Event
+class Egressed extends Event
 {
     use SerializesModels;
 

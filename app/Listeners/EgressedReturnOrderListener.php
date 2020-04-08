@@ -2,19 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: Woozee
- * Date: 2020/3/8
- * Time: 12:58
+ * Date: 2020/4/8
+ * Time: 14:20
  */
 
 namespace App\Listeners;
 
-use App\Events\EgressFinished;
+use App\Events\Egressed;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Modules\Sale\Models\ReturnOrderItem;
 use App\Modules\Sale\Models\DeliveryOrderItemExchange;
 
-class EgressFinishedReturnOrderListener implements ShouldQueue
+class EgressedReturnOrderListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -29,9 +29,9 @@ class EgressFinishedReturnOrderListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param EgressFinished $event
+     * @param Egressed $event
      */
-    public function handle(EgressFinished $event)
+    public function handle(Egressed $event)
     {
         try {
             $return_order_item_ids = DeliveryOrderItemExchange::leftJoin('delivery_order_items AS doi', 'doi.id', '=','delivery_order_item_exchanges.delivery_order_item_id')
@@ -67,7 +67,7 @@ class EgressFinishedReturnOrderListener implements ShouldQueue
                 }
             }
         }catch (\Exception $e) {
-            Log::info("[EgressFinishedReturnOrderListener]事件发生异常:" . $e->getMessage());
+            Log::info("[EgressedReturnOrderListener]事件发生异常:" . $e->getMessage());
             throw new \Exception("系统内部出错，请联系程序猿！");
         }
     }
