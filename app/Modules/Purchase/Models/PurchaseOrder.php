@@ -78,6 +78,16 @@ class PurchaseOrder extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * 已出库的换货退货单
+     *
+     * @return mixed
+     */
+    public function egressExchangeReturnOrders()
+    {
+        return $this->hasMany(PurchaseReturnOrder::class)->where('method', 1)->where('status', 2)->OrderBy('id', 'desc');
+    }
+
     public function getPaymentMethodNameAttribute()
     {
         return isset(Supplier::$payment_methods[$this->payment_method]) ? Supplier::$payment_methods[$this->payment_method] : '';

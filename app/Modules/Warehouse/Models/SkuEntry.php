@@ -20,6 +20,11 @@ class SkuEntry extends Model
         return $this->belongsTo(PurchaseOrderItem::class);
     }
 
+    public function exchanges()
+    {
+        return $this->hasMany(SkuEntryExchange::class, 'entry_id');
+    }
+
     /**
      * 分配数量(换货优先)
      *

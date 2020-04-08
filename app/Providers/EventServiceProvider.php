@@ -24,6 +24,7 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\DeductedOrderListener',
         ],
         'App\Events\Entried' => [
+            'App\Listeners\EntriedPurchaseReturnOrderListener',
             'App\Listeners\EntriedPurchaseOrderListener',
         ],
     ];
