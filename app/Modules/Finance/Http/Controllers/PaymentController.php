@@ -10,8 +10,6 @@ use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\Account;
 use App\Modules\Purchase\Models\Supplier;
 use App\Modules\Finance\Models\Payment;
-use App\Modules\Finance\Models\PaymentItem;
-use App\Modules\Warehouse\Models\SkuEntry;
 
 class PaymentController extends Controller
 {

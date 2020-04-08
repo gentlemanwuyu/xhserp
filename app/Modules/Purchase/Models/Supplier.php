@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ChineseRegion;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Finance\Models\Payment;
-use App\Modules\Finance\Models\PaymentItem;
+use App\Modules\Finance\Models\SkuEntryDeduction;
 
 class Supplier extends Model
 {
@@ -43,10 +43,11 @@ class Supplier extends Model
      */
     public function deduct($entry_ids)
     {
-        if (!is_array($entry_ids)) {
+        if (!$entry_ids || !is_array($entry_ids)) {
             return false;
         }
 
+        $back_order_amounts = $this->back_order_amounts;
         // 未抵扣的付款单
         $remained_payments = Payment::where('supplier_id', $this->id)
             ->where('is_finished', 0)
@@ -55,33 +56,73 @@ class Supplier extends Model
 
         foreach ($entry_ids as $entry_id) {
             $entry = SkuEntry::find($entry_id);
-            $order_item = $entry->orderItem;
+            $purchase_order_item = $entry->purchaseOrderItem;
             // 需要抵扣的金额
-            $amount = $order_item->price * $entry->quantity;
-            $remained_payment = $remained_payments->first();
-            while ($remained_payment) {
-                if ($amount <= $remained_payment->remained_amount) {
-                    // 剩余未抵扣的金额
-                    $remained_amount = $remained_payment->remained_amount;
-                    PaymentItem::create([
-                        'payment_id' => $remained_payment->id,
-                        'entry_id' => $entry_id,
+            $amount = $purchase_order_item->price * $entry->real_quantity;
+
+            // 如果有退货单，先用退货单抵扣
+            foreach ($back_order_amounts as $purchase_return_order_id => $back_amount) {
+                $purchase_return_order = PurchaseReturnOrder::find($purchase_return_order_id);
+                if ($amount <= $back_amount) { // 退货单可以完全抵扣入库金额
+                    SkuEntryDeduction::create([
+                        'sku_entry_id' => $entry_id,
+                        'purchase_return_order_id' => $purchase_return_order_id,
                         'amount' => $amount,
                     ]);
-                    $remained_amount -= $amount;
-                    $remained_payment->remained_amount = $remained_amount;
-                    if (0 == $remained_amount) {
+                    $entry->is_paid = 1;
+                    $entry->save();
+
+                    // 退货单剩余未抵扣金额
+                    $remained_back_amount = $back_amount - $amount;
+                    if (0 == $remained_back_amount) {
+                        // 如果刚好抵扣完，则需要将退货单的状态改为已完成，并删除掉这个键值，因为下次还要循环调用
+                        $purchase_return_order->status = 3;
+                        $purchase_return_order->save();
+                        unset($back_order_amounts[$purchase_return_order_id]);
+                    }else {
+                        // 如果没有抵扣完，那么退货单ID对应的值应该减掉相应的金额，用于下次循环调用
+                        $back_order_amounts[$purchase_return_order] = $remained_back_amount;
+                    }
+                    continue 2; // 直接循环下一个entry
+                }else { // 退货单不够抵扣入库金额
+                    SkuEntryDeduction::create([
+                        'sku_entry_id' => $entry_id,
+                        'purchase_return_order_id' => $purchase_return_order_id,
+                        'amount' => $back_amount,
+                    ]);
+                    $amount -= $purchase_return_order_id;
+                    // 该张退货单已经全部抵扣完
+                    $purchase_return_order->status = 3;
+                    $purchase_return_order->save();
+                }
+            }
+
+            // 退货单抵扣完后用付款单抵扣
+            $remained_payment = $remained_payments->first();
+            while ($remained_payment) {
+                if ($amount <= $remained_payment->remained_amount) { // 付款单可以完全抵扣
+                    // 剩余未抵扣的金额
+                    $remained_payment_amount = $remained_payment->remained_amount;
+                    SkuEntryDeduction::create([
+                        'sku_entry_id' => $entry_id,
+                        'payment_id' => $remained_payment->id,
+                        'amount' => $amount,
+                    ]);
+                    $remained_payment_amount -= $amount;
+                    $remained_payment->remained_amount = $remained_payment_amount;
+                    if (0 == $remained_payment_amount) {
                         $remained_payment->is_finished = 1;
                     }
 
                     $remained_payment->save();
                     $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
-                }else {
-                    PaymentItem::create([
+                }else { // 收款单不够抵扣
+                    SkuEntryDeduction::create([
+                        'sku_entry_id' => $entry_id,
                         'payment_id' => $remained_payment->id,
-                        'entry_id' => $entry_id,
                         'amount' => $remained_payment->remained_amount,
                     ]);
+
                     $amount -= $remained_payment->remained_amount;
                     // 该付款单已经抵扣完
                     $remained_payment->remained_amount = 0;

@@ -134,7 +134,7 @@ class Customer extends Model
             // 退货单抵扣完后用收款单抵扣
             $remained_collection = $remained_collections->first();
             while ($remained_collection) {
-                if ($amount <= $remained_collection->remained_amount) { // 付款单可以完全抵扣
+                if ($amount <= $remained_collection->remained_amount) { // 收款单可以完全抵扣
                     // 剩余未抵扣的金额
                     $remained_collection_amount = $remained_collection->remained_amount;
                     DeliveryOrderItemDeduction::create([
@@ -150,7 +150,7 @@ class Customer extends Model
 
                     $remained_collection->save();
                     $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
-                }else { // 付款单不够抵扣
+                }else { // 收款单不够抵扣
                     DeliveryOrderItemDeduction::create([
                         'delivery_order_item_id' => $doi_id,
                         'collection_id' => $remained_collection->id,
