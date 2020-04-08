@@ -41,7 +41,9 @@ class ProductSku extends Model
         return $this->hasMany(PurchaseOrderItem::class, 'sku_id')
             ->leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
             ->where('purchase_order_items.sku_id', $this->id)
-            ->where('po.status', 3)
+            ->where(function ($query) {
+                $query->where('po.status', 3)->orWhere('po.exchange_status', 1);
+            })
             ->select(['purchase_order_items.*']);
     }
 

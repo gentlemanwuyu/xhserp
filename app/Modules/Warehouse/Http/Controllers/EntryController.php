@@ -29,8 +29,10 @@ class EntryController extends Controller
         $sku_ids = [];
         $purchase_order_items = PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
             ->whereNull('po.deleted_at')
-            ->where('po.status', 3)
-            ->get();
+            ->where(function ($query) {
+                $query->where('po.status', 3)->orWhere('po.exchange_status', 1);
+            })
+            ->get(['purchase_order_items.*']);
         foreach ($purchase_order_items as $poi) {
             if (0 < $poi->pending_entry_quantity) {
                 $sku_ids[] = $poi->sku_id;
@@ -42,7 +44,7 @@ class EntryController extends Controller
         foreach ($paginate as $sku) {
             $sku->product->category;
             $sku->inventory;
-            $sku->purchaseOrderItems->filter(function ($po_items) {
+            $sku->pois = $sku->purchaseOrderItems->filter(function ($po_items) {
                 return 0 < $po_items->pending_entry_quantity;
             })->map(function ($po_items) {
                 $po_items->purchaseOrder->supplier;

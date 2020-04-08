@@ -49,7 +49,7 @@
                         }},
                         {field: 'detail', title: '订单明细', width: 720, align: 'center', templet: function (d) {
                             var html = '';
-                            d.purchase_order_items.forEach(function (order_item, key) {
+                            d.pois.forEach(function (order_item, key) {
                                 if (0 == key) {
                                     html += '<ul class="erp-table-list-ul erp-table-list-ul-first">';
                                 }else {
