@@ -106,7 +106,7 @@ class PurchaseOrderItem extends Model
             ->where('purchase_return_order_items.purchase_order_item_id', $this->id)
             ->whereNull('pro.deleted_at')
             ->where('pro.method', 1)
-            ->where('pro.status', 2)
+            ->whereIn('pro.status', [2, 3])
             ->pluck('quantity')
             ->toArray();
 
