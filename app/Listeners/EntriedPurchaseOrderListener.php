@@ -34,20 +34,16 @@ class EntriedPurchaseOrderListener implements ShouldQueue
                 throw new \Exception("找不到对应的入库记录, entry_id:{$event->entry_id}");
             }
 
-            $purchase_order_item = $entry->purchaseOrderItem;
-            $purchase_order = $purchase_order_item->purchaseOrder;
+            $purchase_order = $entry->purchaseOrderItem->purchaseOrder;
 
-            // 检查是否已经全部入库
-            $entry_quantities = SkuEntry::where('purchase_order_item_id', $entry->purchase_order_item_id)->pluck('quantity')->toArray();
-            $entried_quantity = array_sum($entry_quantities);
-            if ($entried_quantity >= $purchase_order_item->quantity) {
-                $purchase_order_item->delivery_status = 2;
-                $purchase_order_item->save();
+            $is_finished = true;
+            foreach ($purchase_order->items as $purchase_order_item) {
+                if (0 < $purchase_order_item->pending_entry_quantity) {
+                    $is_finished = false;
+                }
             }
 
-            // 检查订单是否已完成
-            $unfinished_order_items = PurchaseOrderItem::where('purchase_order_id', $purchase_order_item->purchase_order_id)->where('delivery_status', '!=', 2)->get(['id', 'purchase_order_id', 'delivery_status']);
-            if ($unfinished_order_items->isEmpty()) {
+            if ($is_finished) {
                 $purchase_order->status = 4;
                 $purchase_order->save();
                 Log::info("[EntriedPurchaseOrderListener]采购订单[{$purchase_order->id}]已全部完成入库，状态改为4.");
