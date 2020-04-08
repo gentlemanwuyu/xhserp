@@ -90,10 +90,11 @@ class Supplier extends Model
                         'purchase_return_order_id' => $purchase_return_order_id,
                         'amount' => $back_amount,
                     ]);
-                    $amount -= $purchase_return_order_id;
+                    $amount -= $back_amount;
                     // 该张退货单已经全部抵扣完
                     $purchase_return_order->status = 3;
                     $purchase_return_order->save();
+                    unset($back_order_amounts[$purchase_return_order_id]);
                 }
             }
 

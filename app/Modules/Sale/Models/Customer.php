@@ -128,6 +128,7 @@ class Customer extends Model
                     // 该张退货单已经全部抵扣完
                     $return_order->status = 5;
                     $return_order->save();
+                    unset($back_order_amounts[$return_order_id]);
                 }
             }
 
