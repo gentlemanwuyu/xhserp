@@ -100,6 +100,8 @@ class PurchaseOrder extends Model
      */
     public function getReturnableAttribute()
     {
-        return true;
+        return !$this->items->filter(function ($item) {
+            return $item->returnable_quantity;
+        })->isEmpty();
     }
 }
