@@ -45,6 +45,38 @@
                 </div>
             </div>
         </div>
+        <div class="layui-card layui-hide" id="backOrderCard">
+            <div class="layui-card-header">
+                <h3>退货单明细</h3>
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>退货单号</th>
+                        <th>退货原因</th>
+                        <th>未抵扣金额</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                        <th class="erp-static-table-list" style="width: 650px;">
+                            <span>退货明细</span>
+                            <ul class="erp-static-table-list-ul">
+                                <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px; text-align: center;">订单Item</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">订单数量</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">退货数量</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">单价</li>
+                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">金额</li>
+                            </ul>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div class="layui-card layui-hide" id="unpaidDetailCard">
             <div class="layui-card-header">
                 <h3>抵扣明细</h3>
@@ -72,14 +104,15 @@
                 ,cols: [
                     [
                         {type: 'checkbox', field: 'check', width: 100, totalRowText: '合计'},
-                        {field: 'order_code', title: '订单编号', align: 'center'},
+                        {field: 'purchase_order_code', title: '采购订单编号', align: 'center'},
                         {field: 'sku_code', title: 'SKU', align: 'center'},
                         {field: 'order_quantity', title: '订单数量', align: 'center'},
                         {field: 'entry_quantity', title: '入库数量', align: 'center'},
+                        {field: 'real_quantity', title: '真实数量', align: 'center'},
                         {field: 'price', title: '单价', align: 'center'},
                         {field: 'amount', title: '总价', align: 'center', totalRow: true},
-                        {field: 'entry_at', title: '入库时间', align: 'center', templet: function (d) {
-                            return d.entry_id ? moment(d.entry_at).format('YYYY-MM-DD') : '';
+                        {field: 'entried_at', title: '入库时间', align: 'center', templet: function (d) {
+                            return d.entry_id ? moment(d.entried_at).format('YYYY-MM-DD') : '';
                         }}
                     ]
                 ]
@@ -88,6 +121,7 @@
             // 供应商选择框联动
             form.on('select(supplier)', function (data) {
                 $('#totalRemainedAmountDiv').remove();
+                $('#backAmountDiv').remove();
                 if (data.value) {
                     var supplier = suppliers[data.value], html = '';
                     html += '<div class="layui-form-item" id="totalRemainedAmountDiv">';
@@ -96,13 +130,56 @@
                     html += '<span class="erp-form-span">' + supplier.total_remained_amount + '</span>';
                     html += '</div>';
                     html += '</div>';
+                    html += '<div class="layui-form-item" id="backAmountDiv">';
+                    html += '<label class="layui-form-label">退货金额</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<span class="erp-form-span">' + supplier.back_amount + '</span>';
+                    html += '</div>';
+                    html += '</div>';
                     $(data.elem).parents('.layui-form-item').after(html);
 
                     $('#unpaidDetailCard').removeClass('layui-hide');
                     tableOpts.data = supplier['unpaid_items'];
                     table.render(tableOpts);
+
+                    var $backOrderCard = $('#backOrderCard')
+                            ,$backOrderTable = $backOrderCard.find('.layui-table');
+                    if (0 < supplier.back_orders.length) {
+                        var index = 1, html = '';
+                        supplier.back_orders.forEach(function (purchase_return_order) {
+                            html += '<tr>';
+                            html += '<td>' + (index++) + '</td>';
+                            html += '<td>' + purchase_return_order.code + '</td>';
+                            html += '<td>' + purchase_return_order.reason + '</td>';
+                            html += '<td>' + purchase_return_order.undeducted_amount + '</td>';
+                            html += '<td>' + purchase_return_order.user.name + '</td>';
+                            html += '<td>' + purchase_return_order.created_at + '</td>';
+                            html += '<td class="erp-static-table-list">';
+                            purchase_return_order.items.forEach(function (purchase_return_order_item, key) {
+                                var back_amount = parseInt(purchase_return_order_item.quantity) * parseFloat(purchase_return_order_item.purchase_order_item.price);
+                                html += '<ul class="erp-static-table-list-ul';
+                                if (0 == key) {
+                                    html += ' erp-static-table-list-ul-first';
+                                }
+                                html += '">';
+                                html += '<li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px;">' + purchase_return_order_item.purchase_order_item.title + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + purchase_return_order_item.purchase_order_item.quantity + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + purchase_return_order_item.quantity + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + purchase_return_order_item.purchase_order_item.price + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + back_amount.toFixed(2) + '</li>';
+                                html += '</ul>';
+                            });
+                            html += '</td>';
+                            html += '</tr>';
+                        });
+                        $backOrderTable.find('tbody').html(html);
+                        $backOrderCard.removeClass('layui-hide');
+                    }else {
+                        $backOrderCard.addClass('layui-hide');
+                    }
                 }else {
                     $('#unpaidDetailCard').addClass('layui-hide');
+                    $('#backOrderCard').addClass('layui-hide');
                 }
             });
 
@@ -112,12 +189,13 @@
                         ,$amountInput = $('input[name=amount]')
                         ,inputAmount = $amountInput.val() ? parseFloat($amountInput.val()) : 0
                         ,supplier_id = $('select[name=supplier_id]').val()
-                        ,total_remained_amount = suppliers[supplier_id]['total_remained_amount'];
+                        ,total_remained_amount = suppliers[supplier_id]['total_remained_amount']
+                        ,back_amount = suppliers[supplier_id]['back_amount'];
                 checkStatus.data.forEach(function (item) {
-                    checkedAmount += parseFloat(item.price) * parseInt(item.entry_quantity);
+                    checkedAmount += parseFloat(item.price) * parseInt(item.real_quantity);
                 });
 
-                if (checkedAmount > inputAmount + total_remained_amount) {
+                if (checkedAmount > inputAmount + total_remained_amount + back_amount) {
                     layer.msg("选中的明细金额不可大于付款金额", {icon: 5, shift: 6});
                     return false;
                 }

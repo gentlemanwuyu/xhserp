@@ -126,33 +126,73 @@ class Supplier extends Model
         return $this->belongsTo(ChineseRegion::class, 'county_id');
     }
 
-    public function getPaymentMethodNameAttribute()
-    {
-        return isset(self::$payment_methods[$this->payment_method]) ? self::$payment_methods[$this->payment_method] : '';
-    }
-
     /**
      * 未付款Item
      *
      * @return mixed
      */
-    public function getUnpaidItemsAttribute()
+    public function unpaidItems()
     {
-        return SkuEntry::leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.order_item_id')
-            ->leftJoin('purchase_orders AS po', 'po.id', '=', 'poi.order_id')
-            ->leftJoin('product_skus AS ps', 'ps.id', '=', 'sku_entries.sku_id')
-            ->where('po.supplier_id', $this->id)
+        return $this->hasManyThrough(SkuEntry::class, PurchaseOrder::class)
+            ->leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.purchase_order_item_id')
+            ->leftJoin('product_skus AS ps', 'ps.id', '=', 'poi.sku_id')
+            ->where('purchase_orders.supplier_id', $this->id)
             ->where('sku_entries.is_paid', 0)
-            ->get([
+            ->where('sku_entries.real_quantity', '>', 0)
+            ->select([
                 'sku_entries.id AS entry_id',
-                'po.code AS order_code',
+                'purchase_orders.code AS purchase_order_code',
                 'ps.code AS sku_code',
                 'poi.price',
                 'poi.quantity AS order_quantity',
                 'sku_entries.quantity AS entry_quantity',
-                DB::raw('sku_entries.quantity * poi.price AS amount'),
-                'sku_entries.created_at AS entry_at',
-            ]);
+                'sku_entries.real_quantity',
+                DB::raw('sku_entries.real_quantity * poi.price AS amount'),
+                'sku_entries.created_at AS entried_at',
+            ])
+            ->orderBy('sku_entries.id', 'asc');
+    }
+
+    /**
+     * 退货单
+     *
+     * @return mixed
+     */
+    public function backOrders()
+    {
+        return $this->hasManyThrough(PurchaseReturnOrder::class, PurchaseOrder::class)
+            ->where('purchase_return_orders.method', 2)
+            ->where('purchase_return_orders.status', 2);
+    }
+
+    /**
+     * 退货单未抵扣金额，每个订单为一行数据
+     *
+     * @return array
+     */
+    public function getBackOrderAmountsAttribute()
+    {
+        $back_order_amounts = [];
+        foreach ($this->backOrders as $purchase_return_order) {
+            $back_order_amounts[$purchase_return_order->id] = $purchase_return_order->undeducted_amount;
+        }
+
+        return $back_order_amounts;
+    }
+
+    /**
+     * 退货金额
+     *
+     * @return int
+     */
+    public function getBackAmountAttribute()
+    {
+        return array_sum($this->back_order_amounts);
+    }
+
+    public function getPaymentMethodNameAttribute()
+    {
+        return isset(self::$payment_methods[$this->payment_method]) ? self::$payment_methods[$this->payment_method] : '';
     }
 
     public function syncContacts($contacts)

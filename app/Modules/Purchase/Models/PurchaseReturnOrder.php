@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CodeTrait;
 use App\Modules\Index\Models\User;
+use App\Modules\Finance\Models\SkuEntryDeduction;
 
 class PurchaseReturnOrder extends Model
 {
@@ -107,5 +108,32 @@ class PurchaseReturnOrder extends Model
     public function getMethodNameAttribute()
     {
         return isset(self::$methods[$this->method]) ? self::$methods[$this->method] : '';
+    }
+
+    /**
+     * 退货单金额
+     *
+     * @return int
+     */
+    public function getAmountAttribute()
+    {
+        $amount = 0;
+        foreach ($this->items as $proi) {
+            $amount += $proi->quantity * $proi->purchaseOrderItem->price;
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 未抵扣金额
+     *
+     * @return mixed
+     */
+    public function getUndeductedAmountAttribute()
+    {
+        $deductions = SkuEntryDeduction::where('purchase_return_order_id', $this->id)->pluck('amount')->toArray();
+
+        return $deductions ? $this->amount - array_sum($deductions) : $this->amount;
     }
 }

@@ -63,7 +63,19 @@ class PaymentController extends Controller
         $users = User::where('is_admin', 0)->get();
         $suppliers = Supplier::all()
             ->map(function ($supplier) {
-                $supplier->setAppends(['total_remained_amount', 'unpaid_items']);
+                $supplier->unpaidItems;
+                $supplier->backOrders->map(function ($purchase_return_order) {
+                    $purchase_return_order->user;
+                    $purchase_return_order->items->map(function ($purchase_return_order_item) {
+                        $purchase_return_order_item->purchaseOrderItem;
+
+                        return $purchase_return_order_item;
+                    });
+                    $purchase_return_order->setAppends(['undeducted_amount']);
+
+                    return $purchase_return_order;
+                });
+                $supplier->setAppends(['total_remained_amount', 'back_amount']);
 
                 return $supplier;
             })
