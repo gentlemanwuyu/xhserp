@@ -57,4 +57,11 @@ class GoodsController extends Controller
 
         return response()->json($paginate);
     }
+
+    public function detail(Request $request)
+    {
+        $goods = Goods::find($request->get('goods_id'));
+
+        return view('goods::goods.detail', compact('goods'));
+    }
 }

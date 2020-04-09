@@ -137,6 +137,13 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('goods::goods.detail')}}?goods_id=" + data.id, '商品详情[' + data.id + ']');
+                            }
+                        });
+
                         if (1 == data.type) {
                             actions.push({
                                 title: "编辑",

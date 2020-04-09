@@ -14,6 +14,7 @@
 Route::group(['prefix' => 'goods', 'as'=>'goods.'], function (){
 	Route::get('list', ['as'=>'list', 'uses'=>'GoodsController@getList']);
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'GoodsController@paginate']);
+	Route::get('detail', ['as'=>'detail', 'uses'=>'GoodsController@detail']);
 });
 
 Route::group(['prefix' => 'single', 'as'=>'single.'], function (){
