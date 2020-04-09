@@ -33,7 +33,7 @@ class QueryListener
     {
         if (env('APP_ENV', 'production') == 'local') {
             $sql = str_replace("?", "'%s'", $event->sql);
-            $log = vsprintf($sql, $event->bindings);
+            $log = $event->bindings ? vsprintf($sql, $event->bindings) : $sql;
             Log::info($log);
         }
     }
