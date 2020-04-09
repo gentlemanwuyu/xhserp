@@ -82,11 +82,12 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
+                                var entry_amount = item.sku_entry.quantity * item.sku_entry.purchase_order_item.price;
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.sku_entry.purchase_order_item.purchase_order.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.purchase_order_item.quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku_entry.quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku_entry.purchase_order_item.price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.quantity * item.sku_entry.purchase_order_item.price + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + entry_amount.toFixed(2) + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.amount + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(item.sku_entry.created_at).format('YYYY-MM-DD') + '</li>';
                                 html += '</ul>';
