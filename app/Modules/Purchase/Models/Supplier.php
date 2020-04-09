@@ -81,7 +81,7 @@ class Supplier extends Model
                         unset($back_order_amounts[$purchase_return_order_id]);
                     }else {
                         // 如果没有抵扣完，那么退货单ID对应的值应该减掉相应的金额，用于下次循环调用
-                        $back_order_amounts[$purchase_return_order] = $remained_back_amount;
+                        $back_order_amounts[$purchase_return_order_id] = $remained_back_amount;
                     }
                     continue 2; // 直接循环下一个entry
                 }else { // 退货单不够抵扣入库金额
