@@ -75,20 +75,20 @@
                         }},
                         {field: 'detail', title: '抵扣明细', width: 710, align: 'center', templet: function (d) {
                             var html = '';
-                            d.items.forEach(function (item, key) {
+                            d.deductions.forEach(function (item, key) {
                                 if (0 == key) {
                                     html += '<ul class="erp-table-list-ul erp-table-list-ul-first">';
                                 }else {
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.entry.order_item.order.code + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.entry.order_item.quantity + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.entry.quantity + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.entry.order_item.price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.entry.quantity * item.entry.order_item.price + '</li>';
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.sku_entry.purchase_order_item.purchase_order.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.purchase_order_item.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku_entry.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku_entry.purchase_order_item.price + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.quantity * item.sku_entry.purchase_order_item.price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.amount + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(item.entry.created_at).format('YYYY-MM-DD') + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(item.sku_entry.created_at).format('YYYY-MM-DD') + '</li>';
                                 html += '</ul>';
                             });
                             return html;

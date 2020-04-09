@@ -43,9 +43,8 @@ class PaymentController extends Controller
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $payment) {
-            $payment->items->map(function ($item) {
-                $entry = $item->entry;
-                $entry->orderItem->order;
+            $payment->deductions->map(function ($item) {
+                $item->skuEntry->purchaseOrderItem->purchaseOrder;
 
                 return $item;
             });

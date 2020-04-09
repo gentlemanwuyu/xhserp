@@ -25,9 +25,9 @@ class Payment extends Model
         3 => '支票/汇票',
     ];
 
-    public function items()
+    public function deductions()
     {
-        return $this->hasMany(PaymentItem::class);
+        return $this->hasMany(SkuEntryDeduction::class);
     }
 
     public function supplier()
