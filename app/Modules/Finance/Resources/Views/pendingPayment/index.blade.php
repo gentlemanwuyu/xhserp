@@ -66,8 +66,9 @@
                             return total_amount;
                         }},
                         {field: 'total_remained_amount', title: '结余金额', width: 100, align: 'center'},
+                        {field: 'back_amount', title: '退货金额', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
-                        {field: 'detail', title: '出货明细', width: 780, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '出货明细', width: 880, align: 'center', templet: function (d) {
                             var html = '';
                             d.unpaid_items.forEach(function (item, key) {
                                 if (0 == key) {
@@ -76,15 +77,16 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                var amount = item.entry_quantity * item.price;
-                                var entry_at = null == item.entry_at ? '' : item.entry_at;
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.order_code + '</li>';
+                                var amount = item.real_quantity * item.price;
+                                var entried_at = null == item.entried_at ? '' : item.entried_at;
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.purchase_order_code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 150px;">' + item.sku_code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.order_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.entry_quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.real_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + amount.toFixed(2) + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(entry_at).format('YYYY-MM-DD') + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(entried_at).format('YYYY-MM-DD') + '</li>';
                                 html += '</ul>';
                             });
                             return html;
@@ -101,6 +103,7 @@
                         html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">SKU</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">订单数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">入库数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">真实数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">价格</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">金额</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">入库日期</li>';
