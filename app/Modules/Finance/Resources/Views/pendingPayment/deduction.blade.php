@@ -106,10 +106,11 @@
                 ,cols: [
                     [
                         {type: 'checkbox', field: 'check', width: 100, totalRowText: '合计'},
-                        {field: 'order_code', title: '订单编号', align: 'center'},
+                        {field: 'purchase_order_code', title: '订单编号', align: 'center'},
                         {field: 'sku_code', title: 'SKU', align: 'center'},
                         {field: 'order_quantity', title: '订单数量', align: 'center'},
                         {field: 'entry_quantity', title: '入库数量', align: 'center'},
+                        {field: 'real_quantity', title: '真实数量', align: 'center'},
                         {field: 'price', title: '单价', align: 'center'},
                         {field: 'amount', title: '总价', align: 'center', totalRow: true},
                         {field: 'entry_at', title: '入库时间', align: 'center', templet: function (d) {
