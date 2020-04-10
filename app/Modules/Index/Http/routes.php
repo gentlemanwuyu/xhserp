@@ -48,3 +48,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'permission', 'as'=>'permiss
     Route::post('save', ['as'=>'save', 'uses'=>'PermissionController@save']);
     Route::post('delete', ['as'=>'delete', 'uses'=>'PermissionController@delete']);
 });
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'role', 'as'=>'role.'], function (){
+    Route::get('index', ['as'=>'index', 'uses'=>'RoleController@index']);
+    Route::get('paginate', ['as'=>'paginate', 'uses'=>'RoleController@paginate']);
+    Route::get('form', ['as'=>'form', 'uses'=>'RoleController@form']);
+    Route::post('save', ['as'=>'save', 'uses'=>'RoleController@save']);
+    Route::post('delete', ['as'=>'delete', 'uses'=>'RoleController@delete']);
+});
