@@ -173,6 +173,9 @@ return [
 
         // 国家地区数据扩展包
         \Wuyu\World\WorldServiceProvider::class,
+
+        // 权限扩展包
+        \Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*
