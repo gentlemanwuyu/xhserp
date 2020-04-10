@@ -40,3 +40,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'config', 'as'=>'config.'], 
     Route::post('save', ['as'=>'save', 'uses'=>'ConfigController@save']);
     Route::post('delete', ['as'=>'delete', 'uses'=>'ConfigController@delete']);
 });
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'permission', 'as'=>'permission.'], function (){
+    Route::get('index', ['as'=>'index', 'uses'=>'PermissionController@index']);
+    Route::get('paginate', ['as'=>'paginate', 'uses'=>'PermissionController@paginate']);
+    Route::get('form', ['as'=>'form', 'uses'=>'PermissionController@form']);
+    Route::post('save', ['as'=>'save', 'uses'=>'PermissionController@save']);
+    Route::post('delete', ['as'=>'delete', 'uses'=>'PermissionController@delete']);
+});

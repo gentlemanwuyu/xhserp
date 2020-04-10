@@ -17,13 +17,17 @@ class CreatePermissionTables extends Migration
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name')->default('')->unique();
+            $table->string('display_name')->default('')->unique();
             $table->timestamps();
         });
 
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name')->default('')->unique();
+            $table->string('display_name')->default('')->unique();
+            $table->string('route')->default('');
+            $table->tinyInteger('type')->unsigned()->default(0);
             $table->timestamps();
         });
 

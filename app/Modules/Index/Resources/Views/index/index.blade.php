@@ -209,6 +209,9 @@
                                 <a lay-href="{{route('index::user.index')}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
                             </dd>
                             <dd>
+                                <a lay-href="{{route('index::permission.index')}}"><i class="layui-icon layui-icon-vercode"></i>权限管理</a>
+                            </dd>
+                            <dd>
                                 <a lay-href="{{route('index::config.index')}}"><i class="layui-icon layui-icon-set-sm"></i>系统配置</a>
                             </dd>
                             <dd>

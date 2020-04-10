@@ -1,0 +1,81 @@
+<?php
+namespace App\Modules\Index\Http\Controllers;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Modules\Index\Models\Permission;
+
+class PermissionController extends Controller
+{
+    public function __construct()
+    {
+        
+	}
+
+    public function index()
+    {
+        return view('index::permission.index');
+    }
+
+    public function paginate(Request $request)
+    {
+        $query = Permission::query();
+
+        if ($request->get('name')) {
+            $query = $query->where('name', $request->get('name'));
+        }
+        if ($request->get('display_name')) {
+            $query = $query->where('display_name', 'like', '%' . $request->get('display_name') . '%');
+        }
+
+        $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
+
+        return response()->json($paginate);
+    }
+
+    public function form(Request $request)
+    {
+        $data = [];
+        if ($request->get('permission_id')) {
+            $data['permission'] = Permission::find($request->get('permission_id'));
+        }
+
+        return view('index::permission.form', $data);
+    }
+
+    public function save(Request $request)
+    {
+        try {
+            $data = [
+                'type' => $request->get('type', 0),
+                'name' => $request->get('name', ''),
+                'display_name' => $request->get('display_name', ''),
+                'route' => $request->get('route', ''),
+            ];
+
+            Permission::updateOrCreate(['id' => $request->get('permission_id')], $data);
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $permission = Permission::find($request->get('permission_id'));
+
+            if (!$permission) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该权限']);
+            }
+
+            $permission->delete();
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
+    }
+}
