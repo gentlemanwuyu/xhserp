@@ -9,6 +9,7 @@
     "laravel-elixir": "^5.0.0",
     "bootstrap-sass": "^3.0.0",
     "layui-src": "~2.5.5",
-    "moment": "~2.24.0"
+    "moment": "~2.24.0",
+    "xm-select": "git+https://gitee.com/maplemei/xm-select.git"
   }
 }

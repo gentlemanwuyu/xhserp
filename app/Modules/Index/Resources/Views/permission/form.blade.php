@@ -26,17 +26,7 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">父级权限</label>
                                 <div class="layui-input-block">
-                                    <select name="parent_id">
-                                        <option value="">请选择父级权限</option>
-                                        @foreach($tree as $p1)
-                                            <option value="{{$p1['id']}}" @if(isset($permission->parent_id) && $p1['id'] == $permission->parent_id) selected @endif>{{$p1['display_name']}}</option>
-                                            @if(!empty($p1['children']))
-                                                @foreach($p1['children'] as $p2)
-                                                    <option value="{{$p2['id']}}" @if(isset($permission->parent_id) && $p2['id'] == $permission->parent_id) selected @endif>{{$p2['display_name']}}</option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    </select>
+                                    <div id="parent_id_select"></div>
                                 </div>
                             </div>
                         @endif
@@ -68,8 +58,46 @@
 @endsection
 @section('scripts')
     <script>
+        var tree_data = <?= json_encode($tree); ?>, init_parent_id = <?= empty($permission->parent_id) ? '' : $permission->parent_id; ?>;
         layui.use(['form'], function () {
             var form = layui.form;
+
+            xmSelect.render({
+                el: '#parent_id_select',
+                name: 'parent_id',
+                initValue: init_parent_id ? [init_parent_id] : [],
+                model: { label: { type: 'text' } },
+                radio: true,
+                clickClose: true,
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'display_name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    strict: false,
+                    expandedKeys: [ -1 ]
+                },
+                height: 'auto',
+                data: function () {
+                    tree_data.forEach(function (item) {
+                        if (item.children) {
+                            item.children.forEach(function (son) {
+                                if (son.children) {
+                                    son.children.forEach(function (grand_son) {
+                                        grand_son.disabled = true;
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                    return tree_data;
+                }
+            });
 
             form.on('submit(permission)', function (form_data) {
                 var load_index = layer.load();
