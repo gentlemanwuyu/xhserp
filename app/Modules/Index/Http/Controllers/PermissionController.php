@@ -36,7 +36,8 @@ class PermissionController extends Controller
 
     public function form(Request $request)
     {
-        $data = [];
+        $tree = Permission::tree();
+        $data = compact('tree');
         if ($request->get('permission_id')) {
             $data['permission'] = Permission::find($request->get('permission_id'));
         }
@@ -52,6 +53,7 @@ class PermissionController extends Controller
                 'name' => $request->get('name', ''),
                 'display_name' => $request->get('display_name', ''),
                 'route' => $request->get('route', ''),
+                'parent_id' => $request->get('parent_id', 0),
             ];
 
             Permission::updateOrCreate(['id' => $request->get('permission_id')], $data);

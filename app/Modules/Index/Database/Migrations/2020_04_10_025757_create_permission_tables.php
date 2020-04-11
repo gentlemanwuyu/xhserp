@@ -28,7 +28,9 @@ class CreatePermissionTables extends Migration
             $table->string('display_name')->default('')->unique();
             $table->string('route')->default('');
             $table->tinyInteger('type')->unsigned()->default(0);
+            $table->integer('parent_id')->unsigned()->default(0);
             $table->timestamps();
+            $table->index('parent_id');
         });
 
         Schema::create($tableNames['user_has_permissions'], function (Blueprint $table) use ($tableNames, $foreignKeys) {

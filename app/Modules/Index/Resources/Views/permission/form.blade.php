@@ -10,7 +10,7 @@
             </div>
             <div class="layui-card-body">
                 <div class="layui-row layui-col-space30">
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label required">类型</label>
                             <div class="layui-input-block">
@@ -22,6 +22,24 @@
                                 </select>
                             </div>
                         </div>
+                        @if(!empty($tree))
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">父级权限</label>
+                                <div class="layui-input-block">
+                                    <select name="parent_id">
+                                        <option value="">请选择父级权限</option>
+                                        @foreach($tree as $p1)
+                                            <option value="{{$p1['id']}}" @if(isset($permission->parent_id) && $p1['id'] == $permission->parent_id) selected @endif>{{$p1['display_name']}}</option>
+                                            @if(!empty($p1['children']))
+                                                @foreach($p1['children'] as $p2)
+                                                    <option value="{{$p2['id']}}" @if(isset($permission->parent_id) && $p2['id'] == $permission->parent_id) selected @endif>{{$p2['display_name']}}</option>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
                         <div class="layui-form-item">
                             <label class="layui-form-label required">权限名</label>
                             <div class="layui-input-block">
