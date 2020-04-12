@@ -49,6 +49,9 @@
                     {field: 'name', title: '权限名', align: 'center'},
                     {field: 'display_name', title: '显示名称', align: 'center'},
                     {field: 'route', title: '路由', align: 'center'},
+                    {field: 'parent_name', title: '父级权限', align: 'center', templet: function (d) {
+                        return d.parent ? d.parent.display_name : '';
+                    }},
                     {field: 'created_at', title: '创建时间', align: 'center', sort: true},
                     {field: 'updated_at', title: '最后更新时间', align: 'center', sort: true},
                     {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}

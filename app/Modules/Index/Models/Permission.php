@@ -40,4 +40,25 @@ class Permission extends SpatiePermission
 
         return $tree;
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * 递归地查找所有的父级ID
+     *
+     * @return array
+     */
+    public function getParentIdsAttribute()
+    {
+        $parent_ids = [$this->parent_id];
+        $parent = $this->parent;
+        if ($parent) {
+            $parent_ids = array_merge($parent_ids, $parent->parent_ids);
+        }
+
+        return array_filter(array_unique($parent_ids));
+    }
 }

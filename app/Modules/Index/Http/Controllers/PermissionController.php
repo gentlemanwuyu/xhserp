@@ -31,6 +31,11 @@ class PermissionController extends Controller
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
+        foreach ($paginate as $permission) {
+            $permission->parent;
+            $permission->setAppends(['parent_ids']);
+        }
+
         return response()->json($paginate);
     }
 

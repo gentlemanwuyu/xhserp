@@ -22,14 +22,12 @@
                                 </select>
                             </div>
                         </div>
-                        @if(!empty($tree))
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">父级权限</label>
-                                <div class="layui-input-block">
-                                    <div id="parent_id_select"></div>
-                                </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">父级权限</label>
+                            <div class="layui-input-block">
+                                <div id="parent_id_select"></div>
                             </div>
-                        @endif
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">权限名</label>
                             <div class="layui-input-block">
@@ -43,9 +41,9 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label required">路由</label>
+                            <label class="layui-form-label">路由</label>
                             <div class="layui-input-block">
-                                <input type="text" name="route" lay-verify="required" lay-reqText="请输入路由" class="layui-input" value="{{$permission->route or ''}}">
+                                <input type="text" name="route" class="layui-input" value="{{$permission->route or ''}}">
                             </div>
                         </div>
                     </div>
@@ -58,17 +56,21 @@
 @endsection
 @section('scripts')
     <script>
-        var tree_data = <?= json_encode($tree); ?>, init_parent_id = <?= empty($permission->parent_id) ? '' : $permission->parent_id; ?>;
+        var tree_data = <?= json_encode($tree); ?>
+                ,permission = <?= isset($permission) ? json_encode($permission) : 'undefined'; ?>
+                ,parent_ids = <?= isset($permission) ? json_encode($permission->parent_ids) : '[]'; ?>;
         layui.use(['form'], function () {
             var form = layui.form;
 
             xmSelect.render({
                 el: '#parent_id_select',
                 name: 'parent_id',
-                initValue: init_parent_id ? [init_parent_id] : [],
-                model: { label: { type: 'text' } },
+                initValue: permission && permission.parent_id ? [permission.parent_id] : '',
+                tips: '请选择父级权限',
+                model: {icon: 'show',label: {type: 'text'}},
                 radio: true,
                 clickClose: true,
+                filterable: true,
                 theme:{
                     color: '#5FB878'
                 },
@@ -78,16 +80,35 @@
                 },
                 tree: {
                     show: true,
+                    showLine: false,
                     strict: false,
-                    expandedKeys: [ -1 ]
+                    expandedKeys: parent_ids
                 },
                 height: 'auto',
                 data: function () {
                     tree_data.forEach(function (item) {
+                        var is_self_1 = false;
+                        // 将自己和自己下级分类disabled掉
+                        if (permission && permission.id == item.id) {
+                            item.disabled = true;
+                            is_self_1 = true;
+                        }
                         if (item.children) {
+                            item.click = 'SELECT';
                             item.children.forEach(function (son) {
+//                                var is_self_2 = false;
+                                if (is_self_1) {
+                                    son.disabled = true;
+//                                    is_self_2 = true;
+                                }else if (permission && permission.id == son.id) {
+                                    son.disabled = true;
+//                                    is_self_2 = true;
+                                }
+
                                 if (son.children) {
+                                    son.click = 'SELECT';
                                     son.children.forEach(function (grand_son) {
+                                        // 将第三级权限disabled掉
                                         grand_son.disabled = true;
                                     });
                                 }
