@@ -53,6 +53,8 @@ class ErpInstall extends Command
         if ($this->option('seed')) {
             $this->execShellWithPrettyPrint("php artisan module:seed");
         }
+        // 填充权限数据
+        $this->execShellWithPrettyPrint("php artisan index:fill_permission");
     }
 
     /**
