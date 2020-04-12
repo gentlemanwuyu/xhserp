@@ -85,4 +85,28 @@ return [
          */
         'users' => 'user_id',
     ],
+
+    'erp_permissions' => [
+        [ // 分配管理
+            'name' => 'category_management', 'display_name' => '分类管理', 'route' => '', 'type' => 1, 'children' =>
+            [
+                [ // 产品分类
+                    'name' => 'product_category', 'display_name' => '产品分类', 'route' => '', 'type' => 1, 'children' =>
+                    [
+                        ['name' => 'add_product_category', 'display_name' => '添加产品分类', 'route' => '', 'type' => 2],
+                        ['name' => 'edit_product_category', 'display_name' => '编辑产品分类', 'route' => '', 'type' => 2],
+                        ['name' => 'delete_product_category', 'display_name' => '删除产品分类', 'route' => '', 'type' => 2],
+                    ]
+                ],
+                [ // 商品分类
+                    'name' => 'goods_category', 'display_name' => '商品分类', 'route' => '', 'type' => 1, 'children' =>
+                    [
+                        ['name' => 'add_goods_category', 'display_name' => '添加商品分类', 'route' => '', 'type' => 2],
+                        ['name' => 'edit_goods_category', 'display_name' => '编辑商品分类', 'route' => '', 'type' => 2],
+                        ['name' => 'delete_goods_category', 'display_name' => '删除商品分类', 'route' => '', 'type' => 2],
+                    ]
+                ],
+            ]
+        ]
+    ],
 ];
