@@ -4,7 +4,9 @@ namespace App\Modules\Index\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Index\Models\User;
+use App\Modules\Index\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -32,6 +34,7 @@ class UserController extends Controller
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
         foreach ($paginate as $user) {
+            $user->roles;
             $user->setAppends(['gender']);
         }
 
@@ -40,7 +43,9 @@ class UserController extends Controller
 
     public function form(Request $request)
     {
-        $data = [];
+        $roles = Role::all();
+        $data = compact('roles');
+
         if ($request->get('user_id')) {
             $data['user'] = User::find($request->get('user_id'));
         }
@@ -72,10 +77,15 @@ class UserController extends Controller
                 $data['is_admin'] = $request->get('is_admin');
             }
 
-            User::updateOrCreate(['id' => $request->get('user_id')], $data);
+            DB::beginTransaction();
+            $user = User::updateOrCreate(['id' => $request->get('user_id')], $data);
+            $roles = $request->get('roles') ? explode(',', $request->get('roles')) : [];
+            $user->syncRoles($roles);
 
+            DB::commit();
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }

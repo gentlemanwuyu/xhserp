@@ -54,6 +54,12 @@
                                 </div>
                             </div>
                         @endif
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">角色</label>
+                            <div class="layui-input-block">
+                                <div id="roles_select"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -64,11 +70,31 @@
 @endsection
 @section('scripts')
     <script>
+        var roles = <?= json_encode($roles); ?>
+                ,initRoles = <?= isset($user) ? json_encode(array_column($user->roles->toArray(), 'name')) : '[]'; ?>;
         layui.use(['form', 'laydate'], function () {
             var form = layui.form
                     ,laydate = layui.laydate;
             laydate.render({
                 elem: 'input[name=birthday]'
+            });
+
+            xmSelect.render({
+                el: '#roles_select',
+                name: 'roles',
+                initValue: initRoles,
+                tips: '请选择角色',
+                model: {icon: 'show'},
+                filterable: true,
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'display_name',
+                    value: 'name'
+                },
+                height: 'auto',
+                data: roles
             });
 
             form.on('submit(user)', function (form_data) {

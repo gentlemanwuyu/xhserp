@@ -1,4 +1,10 @@
 @extends('layouts.default')
+@section('css')
+    <style>
+        .layui-badge{font-size: 14px;}
+        .layui-badge+.layui-badge{margin-left: 5px;}
+    </style>
+@endsection
 @section('content')
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">
@@ -45,12 +51,20 @@
                     };
                 },
                 cols: [[
-                    {field: 'id', title: 'ID', width: '5%', align: 'center', sort: true, fixed: 'left'},
+                    {field: 'id', title: 'ID', width: 60, align: 'center', sort: true, fixed: 'left'},
                     {field: 'name', title: '用户名', align: 'center'},
-                    {field: 'email', title: '邮箱', align: 'center'},
-                    {field: 'gender', title: '性别', width: '5%', align: 'center'},
+                    {field: 'email', title: '邮箱', width: 200, align: 'center'},
+                    {field: 'gender', title: '性别', width: 60, align: 'center'},
                     {field: 'birthday', title: '生日', align: 'center'},
                     {field: 'telephone', title: '电话', align: 'center'},
+                    {field: 'roles', title: '角色', width: 220, align: 'center', templet: function (d) {
+                        var roles_html = '';
+                        d.roles.forEach(function (role) {
+                            roles_html += '<span class="layui-badge layui-bg-green">' + role.display_name + '</span>';
+                        });
+
+                        return roles_html;
+                    }},
                     {field: 'created_at', title: '创建时间', align: 'center', sort: true},
                     {field: 'updated_at', title: '最后更新时间', align: 'center', sort: true},
                     {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}
