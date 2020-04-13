@@ -58,10 +58,11 @@ class User extends Authenticatable
      */
     public function can($ability, $arguments = [])
     {
-        $parent_result = Parent::can($ability, $arguments);
+        $can = Parent::can($ability, $arguments);
 
-        $is_admin = (bool)1 == $this->is_admin;
+        $local = 'local' == env('APP_ENV');
+        $is_admin = 1 == $this->is_admin;
 
-        return $is_admin || $parent_result;
+        return $local || $is_admin || $can;
     }
 }
