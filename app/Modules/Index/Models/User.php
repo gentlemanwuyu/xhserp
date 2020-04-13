@@ -48,4 +48,20 @@ class User extends Authenticatable
     {
         return isset($this->genders[$this->gender_id]) ? $this->genders[$this->gender_id] : '未知';
     }
+
+    /**
+     * Determine if the entity has a given ability.
+     *
+     * @param  string  $ability
+     * @param  array|mixed  $arguments
+     * @return bool
+     */
+    public function can($ability, $arguments = [])
+    {
+        $parent_result = Parent::can($ability, $arguments);
+
+        $is_admin = (bool)1 == $this->is_admin;
+
+        return $is_admin || $parent_result;
+    }
 }
