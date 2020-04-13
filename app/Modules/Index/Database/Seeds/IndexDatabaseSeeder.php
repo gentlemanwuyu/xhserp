@@ -16,6 +16,7 @@ class IndexDatabaseSeeder extends Seeder
 		Model::unguard();
 
 		 $this->call(UsersTableSeeder::class);
+		 $this->call(RolesTableSeeder::class);
 	}
 
 }

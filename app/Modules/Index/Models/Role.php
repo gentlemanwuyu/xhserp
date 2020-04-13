@@ -13,4 +13,11 @@ use Spatie\Permission\Models\Role as SpatieRole;
 class Role extends SpatieRole
 {
 
+    public function giveAllPermissions()
+    {
+        $permissions = Permission::pluck('name')->toArray();
+        $this->syncPermissions($permissions);
+
+        return $this;
+    }
 }
