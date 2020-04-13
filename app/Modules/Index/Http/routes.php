@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], func
     Route::post('delete', ['as'=>'delete', 'uses'=>'UserController@delete']);
     Route::get('password_form', ['as'=>'password_form', 'uses'=>'UserController@passwordForm']);
     Route::post('reset_password', ['as'=>'reset_password', 'uses'=>'UserController@resetPassword']);
+    Route::get('assign_permission', ['as'=>'assign_permission', 'uses'=>'UserController@assignPermission']);
+    Route::post('assign', ['as'=>'assign', 'uses'=>'UserController@assign']);
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'config', 'as'=>'config.'], function (){

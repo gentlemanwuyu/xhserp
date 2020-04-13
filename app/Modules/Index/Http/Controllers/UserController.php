@@ -5,9 +5,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
 use App\Modules\Index\Models\Role;
-use Illuminate\Support\Facades\Auth;
+use App\Modules\Index\Models\Permission;
 
 class UserController extends Controller
 {
@@ -131,6 +132,36 @@ class UserController extends Controller
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
+    }
+
+    public function assignPermission(Request $request)
+    {
+        $tree = Permission::tree();
+        $user = User::find($request->get('user_id'));
+        $roles_permissions = array_unique(array_column($user->getPermissionsViaRoles()->toArray(), 'name'));
+        $permissions = array_unique(array_column($user->permissions->toArray(), 'name'));
+
+        return view('index::user.assign_permission', compact('tree', 'user', 'roles_permissions', 'permissions'));
+    }
+
+    public function assign(Request $request)
+    {
+        try {
+            $user = User::find($request->get('user_id'));
+
+            if (!$user) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该用户']);
+            }
+
+            DB::beginTransaction();
+            $user->syncPermissions($request->get('permissions', []));
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }

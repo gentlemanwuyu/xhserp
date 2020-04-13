@@ -73,6 +73,12 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
                         actions.push({
+                            title: "分配权限",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('index::user.assign_permission')}}?user_id=" + data.id, '分配用户权限[' + data.id + ']');
+                            }
+                        });
+                        actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('index::user.form')}}?user_id=" + data.id, '编辑用户[' + data.id + ']');
