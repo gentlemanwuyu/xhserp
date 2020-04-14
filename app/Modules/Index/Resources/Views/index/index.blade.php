@@ -72,156 +72,226 @@
                 </div>
 
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+                    @can('category_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-list"></i>
                             <cite>分类管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('product_category')
                             <dd>
                                 <a lay-href="{{route('category::category.tree', ['type' => 1])}}"><i class="layui-icon layui-icon-tree"></i>产品分类</a>
                             </dd>
-                        </dl>
-                        <dl class="layui-nav-child">
+                            @endcan
+                            @can('goods_category')
                             <dd>
                                 <a lay-href="{{route('category::category.tree', ['type' => 2])}}"><i class="layui-icon layui-icon-tree"></i>商品分类</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('product_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-templeate-1"></i>
                             <cite>产品管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('product_list')
                             <dd>
                                 <a lay-href="{{route('product::product.list')}}"><i class="layui-icon layui-icon-template-1"></i>产品列表</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('goods_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-templeate-1"></i>
                             <cite>商品管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('goods_list')
                             <dd>
                                 <a lay-href="{{route('goods::goods.list')}}"><i class="layui-icon layui-icon-template-1"></i>商品列表</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('warehouse_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-component"></i>
                             <cite>仓库管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('stockout_management')
                             <dd>
                                 <a lay-href="{{route('warehouse::stockout.index')}}"><i class="layui-icon layui-icon-template-1"></i>备货管理</a>
                             </dd>
+                            @endcan
+                            @can('entry_management')
                             <dd>
                                 <a lay-href="{{route('warehouse::entry.index')}}"><i class="layui-icon layui-icon-template-1"></i>入库管理</a>
                             </dd>
+                            @endcan
+                            @can('egress_management')
                             <dd>
                                 <a lay-href="{{route('warehouse::egress.index')}}"><i class="layui-icon layui-icon-template-1"></i>出库管理</a>
                             </dd>
+                            @endcan
+                            @can('sale_return_management')
                             <dd>
                                 <a lay-href="{{route('warehouse::saleReturn.index')}}"><i class="layui-icon layui-icon-template-1"></i>销售退货管理</a>
                             </dd>
+                            @endcan
+                            @can('purchase_return_management')
                             <dd>
                                 <a lay-href="{{route('warehouse::purchaseReturn.index')}}"><i class="layui-icon layui-icon-template-1"></i>采购退货管理</a>
                             </dd>
+                            @endcan
+                            @can('express_management')
                             <dd>
                                 <a lay-href="{{route('warehouse::express.index')}}"><i class="layui-icon layui-icon-release"></i>快递管理</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('purchase_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-cart-simple"></i>
                             <cite>采购管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('supplier_management')
                             <dd>
                                 <a lay-href="{{route('purchase::supplier.index')}}"><i class="layui-icon layui-icon-group"></i>供应商管理</a>
                             </dd>
+                            @endcan
+                            @can('purchase_order_management')
                             <dd>
                                 <a lay-href="{{route('purchase::order.index')}}"><i class="layui-icon layui-icon-form"></i>采购订单管理</a>
                             </dd>
+                            @endcan
+                            @can('purchase_return_order_management')
                             <dd>
                                 <a lay-href="{{route('purchase::returnOrder.index')}}"><i class="layui-icon layui-icon-form"></i>采购退货单管理</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('sale_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-cart"></i>
                             <cite>销售管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('customer_management')
                             <dd>
                                 <a lay-href="{{route('sale::customer.index')}}"><i class="layui-icon layui-icon-group"></i>客户管理</a>
                             </dd>
+                            @endcan
+                            @can('payment_method_application')
                             <dd>
                                 <a lay-href="{{route('sale::paymentMethod.index')}}"><i class="layui-icon layui-icon-auz"></i>付款方式申请</a>
                             </dd>
+                            @endcan
+                            @can('order_management')
                             <dd>
                                 <a lay-href="{{route('sale::order.index')}}"><i class="layui-icon layui-icon-form"></i>订单管理</a>
                             </dd>
+                            @endcan
+                            @can('delivery_order_management')
                             <dd>
                                 <a lay-href="{{route('sale::deliveryOrder.index')}}"><i class="layui-icon layui-icon-form"></i>出货单管理</a>
                             </dd>
+                            @endcan
+                            @can('return_order_management')
                             <dd>
                                 <a lay-href="{{route('sale::returnOrder.index')}}"><i class="layui-icon layui-icon-form"></i>退货单管理</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('finance_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-rmb"></i>
                             <cite>财务管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('collection_management')
                             <dd>
                                 <a lay-href="{{route('finance::collection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>收款管理</a>
                             </dd>
+                            @endcan
+                            @can('pending_collection')
                             <dd>
                                 <a lay-href="{{route('finance::pendingCollection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>销售应收款</a>
                             </dd>
+                            @endcan
+                            @can('payment_management')
                             <dd>
                                 <a lay-href="{{route('finance::payment.index')}}"><i class="layui-icon layui-icon-rate"></i>付款管理</a>
                             </dd>
+                            @endcan
+                            @can('pending_payment')
                             <dd>
                                 <a lay-href="{{route('finance::pendingPayment.index')}}"><i class="layui-icon layui-icon-rate"></i>采购应付款</a>
                             </dd>
+                            @endcan
+                            @can('account_management')
                             <dd>
                                 <a lay-href="{{route('finance::account.index')}}"><i class="layui-icon layui-icon-template"></i>账户管理</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
+                    @can('system_management')
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="layui-icon layui-icon-set"></i>
                             <cite>系统管理</cite>
                         </a>
                         <dl class="layui-nav-child">
+                            @can('user_management')
                             <dd>
                                 <a lay-href="{{route('index::user.index')}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
                             </dd>
+                            @endcan
+                            @can('role_management')
                             <dd>
                                 <a lay-href="{{route('index::role.index')}}"><i class="layui-icon layui-icon-username"></i>角色管理</a>
                             </dd>
+                            @endcan
+                            @can('permission_management')
                             <dd>
                                 <a lay-href="{{route('index::permission.index')}}"><i class="layui-icon layui-icon-vercode"></i>权限管理</a>
                             </dd>
+                            @endcan
+                            @can('system_config')
                             <dd>
                                 <a lay-href="{{route('index::config.index')}}"><i class="layui-icon layui-icon-set-sm"></i>系统配置</a>
                             </dd>
+                            @endcan
+                            @can('system_log')
                             <dd>
                                 <a lay-href="{{route('index::index.logs')}}"><i class="layui-icon layui-icon-log"></i>系统日志</a>
                             </dd>
+                            @endcan
                         </dl>
                     </li>
+                    @endcan
                 </ul>
             </div>
         </div>
