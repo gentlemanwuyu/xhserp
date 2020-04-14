@@ -144,22 +144,28 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('delivery_order_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.detail')}}?delivery_order_id=" + data.id, '出货单详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
                         if (1 == data.status) {
+                            @can('edit_delivery_order')
                             actions.push({
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.form')}}?delivery_order_id=" + data.id, '编辑出货单[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
+                        @can('delete_delivery_order')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -189,6 +195,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

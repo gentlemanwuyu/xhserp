@@ -41,7 +41,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_customer')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('sale::customer.form')}}">添加客户</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -141,20 +143,25 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
+                        @can('customer_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('sale::customer.detail')}}?customer_id=" + data.id, '客户详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('edit_customer')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('sale::customer.form')}}?customer_id=" + data.id, '编辑客户[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_customer')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -184,6 +191,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

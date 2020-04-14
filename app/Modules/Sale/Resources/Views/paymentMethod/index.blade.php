@@ -97,24 +97,29 @@
                         var actions = [];
 
                         if (-1 < [1, 2].indexOf(data.status)) {
+                            @can('edit_payment_method_application')
                             actions.push({
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::paymentMethod.form')}}?application_id=" + data.id, '编辑付款方式申请[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (1 == data.status) {
+                            @can('review_payment_method_application')
                             actions.push({
                                 title: "审核",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::paymentMethod.review')}}?application_id=" + data.id, '编辑付款方式申请[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (-1 < [1, 2].indexOf(data.status)) {
+                            @can('delete_payment_method_application')
                             actions.push({
                                 title: "删除",
                                 event: function() {
@@ -145,6 +150,7 @@
                                     });
                                 }
                             });
+                            @endcan
                         }
 
                         return actions;

@@ -234,8 +234,10 @@ return [
                     [
                         ['name' => 'order_detail', 'display_name' => '订单详情', 'route' => '', 'type' => 2],
                         ['name' => 'add_order', 'display_name' => '添加订单', 'route' => '', 'type' => 2],
+                        ['name' => 'review_order', 'display_name' => '审核订单', 'route' => '', 'type' => 2],
                         ['name' => 'edit_order', 'display_name' => '编辑订单', 'route' => '', 'type' => 2],
                         ['name' => 'delete_order', 'display_name' => '删除订单', 'route' => '', 'type' => 2],
+                        ['name' => 'cancel_order', 'display_name' => '取消订单', 'route' => '', 'type' => 2],
                         ['name' => 'order_delivery', 'display_name' => '订单出货', 'route' => '', 'type' => 2],
                         ['name' => 'order_return', 'display_name' => '订单退货', 'route' => '', 'type' => 2],
                     ]

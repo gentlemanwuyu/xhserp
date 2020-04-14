@@ -149,13 +149,17 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('return_order_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('sale::returnOrder.detail')}}?return_order_id=" + data.id, '退货单详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('review_return_order')
                         if (1 == data.status) {
                             actions.push({
                                 title: "审核",
@@ -164,16 +168,20 @@
                                 }
                             });
                         }
+                        @endcan
 
                         if (-1 < [1, 2].indexOf(data.status)) {
+                            @can('edit_return_order')
                             actions.push({
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::returnOrder.form')}}?return_order_id=" + data.id, '编辑退货单[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
+                        @can('delete_return_order')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -203,6 +211,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

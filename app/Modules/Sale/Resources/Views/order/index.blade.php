@@ -45,7 +45,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_order')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('sale::order.form')}}">添加订单</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -161,41 +163,51 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('order_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('sale::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
                         if (1 == data.status) {
+                            @can('review_order')
                             actions.push({
                                 title: "审核",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::order.review')}}?order_id=" + data.id + "&action=review", '订单审核[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (3 == data.status || 1 == data.exchange_status) {
+                            @can('order_delivery')
                             actions.push({
                                 title: "出货",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.form')}}?customer_id=" + data.customer_id, '添加出货单[' + data.customer_id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (-1 < [3, 4].indexOf(data.status) && data.returnable) {
+                            @can('order_return')
                             actions.push({
                                 title: "退货",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::returnOrder.form')}}?order_id=" + data.id, '添加退货单[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (3 == data.status) {
+                            @can('cancel_order')
                             actions.push({
                                 title: "取消",
                                 event: function() {
@@ -225,16 +237,21 @@
                                     });
                                 }
                             });
+                            @endcan
                         }
 
                         if (-1 < [1, 2].indexOf(data.status)) {
+                            @can('edit_order')
                             actions.push({
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('sale::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
+
+                        @can('delete_order')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -264,6 +281,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
