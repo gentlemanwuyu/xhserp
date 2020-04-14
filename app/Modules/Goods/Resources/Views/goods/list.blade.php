@@ -42,8 +42,10 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_goods')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('goods::single.select_product')}}" lay-text="选择产品[单品]">添加单品</a>
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('goods::combo.select_product')}}" lay-text="选择产品[组合]">添加组合</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -137,13 +139,16 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
+                        @can('goods_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('goods::goods.detail')}}?goods_id=" + data.id, '商品详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('edit_goods')
                         if (1 == data.type) {
                             actions.push({
                                 title: "编辑",
@@ -159,7 +164,9 @@
                                 }
                             });
                         }
+                        @endcan
 
+                        @can('delete_goods')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -199,6 +206,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
