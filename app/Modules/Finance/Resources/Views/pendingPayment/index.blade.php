@@ -126,12 +126,15 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('deduct_pending_payment')
                         actions.push({
                             title: "抵扣",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('finance::pendingPayment.deduction')}}?supplier_id=" + data.id, '抵扣应付款[' + data.id + ']');
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

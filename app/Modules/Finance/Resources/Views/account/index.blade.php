@@ -1,6 +1,8 @@
 @extends('layouts.default')
 @section('content')
+    @can('add_account')
     <a class="layui-btn layui-btn-normal" lay-href="{{route('finance::account.form')}}">添加账户</a>
+    @endcan
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
@@ -43,13 +45,17 @@
                 ,done: function(res, curr, count){
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('edit_account')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('finance::account.form')}}?account_id=" + data.id, '编辑账户[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_account')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -79,6 +85,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
