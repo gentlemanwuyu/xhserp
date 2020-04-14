@@ -50,19 +50,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Determine if the entity has a given ability.
+     * 重写方法，本地环境和管理员拥有所有权限
      *
-     * @param  string  $ability
-     * @param  array|mixed  $arguments
+     * @param $permission
      * @return bool
      */
-    public function can($ability, $arguments = [])
+    public function hasPermissionTo($permission)
     {
-        $can = Parent::can($ability, $arguments);
+        if (is_string($permission)) {
+            $permission = app(Permission::class)->findByName($permission);
+        }
+
+        $has_permission = $this->hasDirectPermission($permission) || $this->hasPermissionViaRole($permission);
 
         $local = 'local' == env('APP_ENV');
         $is_admin = 1 == $this->is_admin;
 
-        return $local || $is_admin || $can;
+        return $local || $is_admin || $has_permission;
     }
 }
