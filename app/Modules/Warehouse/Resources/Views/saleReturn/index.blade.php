@@ -129,12 +129,15 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('sale_return_handle')
                         actions.push({
                             title: "处理",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('warehouse::saleReturn.form')}}?return_order_id=" + data.id, '处理销售退货[' + data.id + ']');
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

@@ -1,6 +1,8 @@
 @extends('layouts.default')
 @section('content')
+    @can('add_express')
     <a class="layui-btn layui-btn-normal" erp-action="add">添加快递</a>
+    @endcan
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
@@ -43,69 +45,75 @@
                 ]
                 ,done: function(res, curr, count){
                     dropdown(res.data,function(data) {
-                        return [
-                            {
-                                title: "编辑",
-                                event: function () {
-                                    layer.prompt({
-                                        title: '编辑快递',
-                                        value: data.name
-                                    }, function(value, index, elem){
-                                        layer.close(index);
-                                        var load_index = layer.load();
-                                        $.ajax({
-                                            method: "post",
-                                            url: "{{route('warehouse::express.save')}}",
-                                            data: {name: value, express_id: data.id},
-                                            success: function (data) {
-                                                layer.close(load_index);
-                                                if ('success' == data.status) {
-                                                    layer.msg("快递编辑成功", {icon: 1, time: 2000});
-                                                    tableIns.reload();
-                                                } else {
-                                                    layer.msg("快递编辑失败:"+data.msg, {icon: 2, time: 2000});
-                                                    return false;
-                                                }
-                                            },
-                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                                layer.close(load_index);
-                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                        var actions = [];
+
+                        @can('edit_express')
+                        actions.push({
+                            title: "编辑",
+                            event: function () {
+                                layer.prompt({
+                                    title: '编辑快递',
+                                    value: data.name
+                                }, function(value, index, elem){
+                                    layer.close(index);
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: "{{route('warehouse::express.save')}}",
+                                        data: {name: value, express_id: data.id},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("快递编辑成功", {icon: 1, time: 2000});
+                                                tableIns.reload();
+                                            } else {
+                                                layer.msg("快递编辑失败:"+data.msg, {icon: 2, time: 2000});
                                                 return false;
                                             }
-                                        });
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                            return false;
+                                        }
                                     });
-                                }
-                            },
-                            {
-                                title: "删除",
-                                event: function() {
-                                    layer.confirm("确认要删除该快递？", {icon: 3, title:"确认"}, function (index) {
-                                        layer.close(index);
-                                        var load_index = layer.load();
-                                        $.ajax({
-                                            method: "post",
-                                            url: "{{route('warehouse::express.delete')}}",
-                                            data: {express_id: data.id},
-                                            success: function (data) {
-                                                layer.close(load_index);
-                                                if ('success' == data.status) {
-                                                    layer.msg("快递删除成功", {icon: 1, time: 2000});
-                                                    tableIns.reload();
-                                                } else {
-                                                    layer.msg("快递删除失败:"+data.msg, {icon: 2, time: 2000});
-                                                    return false;
-                                                }
-                                            },
-                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                                layer.close(load_index);
-                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
-                                                return false;
-                                            }
-                                        });
-                                    });
-                                }
+                                });
                             }
-                        ];
+                        });
+                        @endcan
+                        @can('delete_express')
+                        actions.push({
+                            title: "删除",
+                            event: function() {
+                                layer.confirm("确认要删除该快递？", {icon: 3, title:"确认"}, function (index) {
+                                    layer.close(index);
+                                    var load_index = layer.load();
+                                    $.ajax({
+                                        method: "post",
+                                        url: "{{route('warehouse::express.delete')}}",
+                                        data: {express_id: data.id},
+                                        success: function (data) {
+                                            layer.close(load_index);
+                                            if ('success' == data.status) {
+                                                layer.msg("快递删除成功", {icon: 1, time: 2000});
+                                                tableIns.reload();
+                                            } else {
+                                                layer.msg("快递删除失败:"+data.msg, {icon: 2, time: 2000});
+                                                return false;
+                                            }
+                                        },
+                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                            layer.close(load_index);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                            return false;
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                        @endcan
+
+                        return actions;
                     });
                 }
             }

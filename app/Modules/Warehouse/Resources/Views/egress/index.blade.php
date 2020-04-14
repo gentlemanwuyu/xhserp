@@ -133,13 +133,17 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('egress_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.detail')}}?delivery_order_id=" + data.id + '&source=warehouse', '出货单详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('egress_finished')
                         if (1 == data.status) {
                             actions.push({
                                 title: "完成",
@@ -172,6 +176,7 @@
                                 }
                             });
                         }
+                        @endcan
 
                         return actions;
                     });

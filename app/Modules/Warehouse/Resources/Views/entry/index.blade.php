@@ -100,12 +100,14 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+                        @can('entry')
                         actions.push({
                             title: "入库",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('warehouse::entry.form')}}?sku_id=" + data.id, 'SKU入库[' + data.code + ']');
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

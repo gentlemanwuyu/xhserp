@@ -129,6 +129,8 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('purchase_return_egress')
                         actions.push({
                             title: "出库",
                             event: function () {
@@ -159,6 +161,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
