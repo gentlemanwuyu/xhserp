@@ -19,7 +19,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_user')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('index::user.form')}}">添加用户</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -72,19 +74,26 @@
                 ,done: function(res, curr, count){
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('assign_user_permission')
                         actions.push({
                             title: "分配权限",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('index::user.assign_permission')}}?user_id=" + data.id, '分配用户权限[' + data.id + ']');
                             }
                         });
+                        @endcan
+
+                        @can('edit_user')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('index::user.form')}}?user_id=" + data.id, '编辑用户[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_user')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -114,6 +123,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

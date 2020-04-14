@@ -8,7 +8,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_system_config')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('index::config.form')}}">添加配置</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -53,13 +55,17 @@
                 ,done: function(res, curr, count){
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('edit_system_config')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('index::config.form')}}?config_id=" + data.id, '编辑配置[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_system_config')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -89,6 +95,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

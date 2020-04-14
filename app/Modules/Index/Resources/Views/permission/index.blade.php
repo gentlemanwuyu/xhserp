@@ -13,7 +13,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_permission')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('index::permission.form')}}">添加权限</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -59,13 +61,17 @@
                 ,done: function(res, curr, count){
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('edit_permission')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('index::permission.form')}}?permission_id=" + data.id, '编辑权限[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_permission')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -95,6 +101,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
