@@ -24,7 +24,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_supplier')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('purchase::supplier.form')}}">添加供应商</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -117,13 +119,17 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('edit_supplier')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('purchase::supplier.form')}}?supplier_id=" + data.id, '编辑供应商[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_supplier')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -153,6 +159,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

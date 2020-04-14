@@ -45,7 +45,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_purchase_order')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('purchase::order.form')}}">添加订单</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -157,31 +159,40 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('purchase_order_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('purchase::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
                             }
                         });
+                        @endcan
+
                         if (1 == data.status) {
+                            @can('review_purchase_order')
                             actions.push({
                                 title: "审核",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('purchase::order.review')}}?order_id=" + data.id + "&action=review", '订单审核[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (-1 < [3, 4].indexOf(data.status) && data.returnable) {
+                            @can('return_purchase_order')
                             actions.push({
                                 title: "退货",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('purchase::returnOrder.form')}}?purchase_order_id=" + data.id, '添加采购退货单[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
 
                         if (3 == data.status) {
+                            @can('cancel_purchase_order')
                             actions.push({
                                 title: "取消",
                                 event: function() {
@@ -211,16 +222,21 @@
                                     });
                                 }
                             });
+                            @endcan
                         }
 
                         if (-1 < [1, 2].indexOf(data.status)) {
+                            @can('edit_purchase_order')
                             actions.push({
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('purchase::order.form')}}?order_id=" + data.id, '编辑订单[' + data.id + ']');
                                 }
                             });
+                            @endcan
                         }
+
+                        @can('delete_purchase_order')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -250,6 +266,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });

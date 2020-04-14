@@ -193,7 +193,9 @@ return [
                     [
                         ['name' => 'purchase_order_detail', 'display_name' => '采购订单详情', 'route' => '', 'type' => 2],
                         ['name' => 'add_purchase_order', 'display_name' => '添加采购订单', 'route' => '', 'type' => 2],
+                        ['name' => 'review_purchase_order', 'display_name' => '审核采购订单', 'route' => '', 'type' => 2],
                         ['name' => 'return_purchase_order', 'display_name' => '采购订单退货', 'route' => '', 'type' => 2],
+                        ['name' => 'cancel_purchase_order', 'display_name' => '取消采购订单', 'route' => '', 'type' => 2],
                         ['name' => 'edit_purchase_order', 'display_name' => '编辑采购订单', 'route' => '', 'type' => 2],
                         ['name' => 'delete_purchase_order', 'display_name' => '删除采购订单', 'route' => '', 'type' => 2],
                     ]

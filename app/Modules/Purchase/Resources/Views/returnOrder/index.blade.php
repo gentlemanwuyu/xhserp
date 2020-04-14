@@ -149,13 +149,17 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('purchase_return_order_detail')
                         actions.push({
                             title: "详情",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('purchase::returnOrder.detail')}}?purchase_return_order_id=" + data.id, '采购退货单详情[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_purchase_return_order')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -185,6 +189,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
