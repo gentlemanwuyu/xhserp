@@ -3,12 +3,15 @@
     <div class="layui-col-xs-12" style="margin-bottom: 15px;">
         <button type="button" class="layui-btn erp-collapse"  dtree-id="category" dtree-menu="moveDown">展开</button>
         {{--<button type="button" class="layui-btn"  dtree-id="category" dtree-menu="moveUp">收起</button>--}}
-        <button type="button" class="layui-btn layui-btn-normal"  dtree-id="category" dtree-menu="addRoot">添加一级分类</button>
+        @if(1 == $type && \Auth::user()->hasPermissionTo('add_product_category') || 2 == $type && \Auth::user()->hasPermissionTo('add_goods_category'))
+            <button type="button" class="layui-btn layui-btn-normal"  dtree-id="category" dtree-menu="addRoot">添加一级分类</button>
+        @endif
     </div>
     <ul id="category" class="dtree" data-id="0"></ul>
 @endsection
 @section('scripts')
     <script>
+        var type = <?= $type ?>;
         layui.extend({
             dtree: '/assets/dtree/dtree'
         }).use(['dtree'], function(){
@@ -213,6 +216,25 @@
                     loadToolbarBefore: function(buttons, param, $div){
                         if(3 == param.level){
                             buttons.myAdd = "";
+                        }
+
+                        if (1 == type) {
+                            var has_add = <?= json_encode(\Auth::user()->hasPermissionTo('add_product_category')); ?>;
+                            var has_edit = <?= json_encode(\Auth::user()->hasPermissionTo('edit_product_category')); ?>;
+                            var has_delete = <?= json_encode(\Auth::user()->hasPermissionTo('delete_product_category')); ?>;
+                        }else if (2 == type) {
+                            var has_add = <?= json_encode(\Auth::user()->hasPermissionTo('add_goods_category')); ?>;
+                            var has_edit = <?= json_encode(\Auth::user()->hasPermissionTo('edit_goods_category')); ?>;
+                            var has_delete = <?= json_encode(\Auth::user()->hasPermissionTo('delete_goods_category')); ?>;
+                        }
+                        if (!has_add) {
+                            buttons.myAdd = "";
+                        }
+                        if (!has_edit) {
+                            buttons.myEdit = "";
+                        }
+                        if (!has_delete) {
+                            buttons.myDel = "";
                         }
 
                         return buttons;
