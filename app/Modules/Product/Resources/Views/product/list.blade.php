@@ -34,7 +34,9 @@
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                @can('add_product')
                 <a class="layui-btn layui-btn-normal" lay-href="{{route('product::product.form')}}">添加产品</a>
+                @endcan
             </div>
         </div>
     </form>
@@ -137,20 +139,25 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+                        @can('set_inventory')
                         actions.push({
                             title: "库存管理",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('warehouse::inventory.form')}}?product_id=" + data.id, '库存管理[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('edit_product')
                         actions.push({
                             title: "编辑",
                             event: function () {
                                 parent.layui.index.openTabsPage("{{route('product::product.form')}}?product_id=" + data.id, '编辑产品[' + data.id + ']');
                             }
                         });
+                        @endcan
 
+                        @can('delete_product')
                         actions.push({
                             title: "删除",
                             event: function() {
@@ -180,6 +187,7 @@
                                 });
                             }
                         });
+                        @endcan
 
                         return actions;
                     });
