@@ -269,6 +269,11 @@
                                 <a lay-href="{{route('index::user.index')}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
                             </dd>
                             @endcan
+                            @can('organization')
+                            <dd>
+                                <a lay-href="{{route('index::organization.index')}}"><i class="layui-icon layui-icon-engine"></i>组织结构</a>
+                            </dd>
+                            @endcan
                             @can('role_management')
                             <dd>
                                 <a lay-href="{{route('index::role.index')}}"><i class="layui-icon layui-icon-username"></i>角色管理</a>
