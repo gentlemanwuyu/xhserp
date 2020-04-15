@@ -38,12 +38,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">分类</label>
                             <div class="layui-input-block">
-                                <select name="category_id" lay-filter="category" lay-search="" lay-verify="required" lay-reqText="请选择分类">
-                                    <option value="">请选择分类</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{$category->id}}" @if(!empty($goods) && $goods->category_id == $category->id) selected @endif>{{$category->name}}</option>
-                                    @endforeach
-                                </select>
+                                <div id="category_id_select"></div>
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
@@ -118,7 +113,10 @@
 @endsection
 @section('scripts')
     <script>
-        var productSkus = <?= json_encode(array_column($product->skus->toArray(), null,'id')); ?>;
+        var categories = <?= json_encode($categories); ?>
+                ,goods = <?= isset($goods) ? json_encode($goods) : 'undefined'; ?>
+                ,category_parent_ids = <?= isset($goods) ? json_encode($goods->category->parent_ids) : '[]'; ?>
+                ,productSkus = <?= json_encode(array_column($product->skus->toArray(), null,'id')); ?>;
 
         layui.use(['form'], function () {
             var form = layui.form
@@ -160,6 +158,34 @@
 
                 form.render('checkbox', 'single');
             };
+
+            // 分类下拉树
+            xmSelect.render({
+                el: '#category_id_select',
+                name: 'category_id',
+                layVerify: 'required',
+                initValue: goods && goods.category_id ? [goods.category_id] : '',
+                tips: '请选择分类',
+                model: {icon: 'hidden', label: {type: 'text'}},
+                radio: true,
+                clickClose: true,
+                filterable: true,
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    showLine: false,
+                    strict: false,
+                    expandedKeys: category_parent_ids
+                },
+                height: 'auto',
+                data: categories
+            });
 
             // 监听开关
             form.on('switch(enableSku)', function(data){

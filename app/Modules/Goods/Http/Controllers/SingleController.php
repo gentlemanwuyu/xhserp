@@ -54,7 +54,7 @@ class SingleController extends Controller
 
     public function form(Request $request)
     {
-        $categories = Category::where('type', 2)->get();
+        $categories = Category::tree(2);
         $data = compact('categories');
 
         if ($request->get('product_id')) {
@@ -62,6 +62,7 @@ class SingleController extends Controller
             $data['product'] = $product;
         }else {
             $goods = Single::find($request->get('goods_id'));
+            $goods->category->setAppends(['parent_ids']);
             $data['goods'] = $goods;
             $data['product'] = $goods->product;
         }

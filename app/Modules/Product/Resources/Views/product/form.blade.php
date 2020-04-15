@@ -88,6 +88,7 @@
         layui.use(['form'], function () {
             var form = layui.form;
 
+            // 分类下拉树
             xmSelect.render({
                 el: '#category_id_select',
                 name: 'category_id',
