@@ -15,7 +15,7 @@
                     <thead>
                     <tr>
                         <th width="150">SKU编号</th>
-                        <th>库存数量</th>
+                        <th class="required">库存数量</th>
                         <th>最高库存</th>
                         <th>最低库存</th>
                     </tr>
@@ -24,9 +24,9 @@
                     @foreach($product->skus as $sku)
                         <tr>
                             <td>{{$sku->code}}</td>
-                            <td><input type="text" name="inventory[{{$sku->id}}][stock]" class="layui-input" placeholder="库存数量" value="{{$sku->inventory->stock or ''}}"></td>
-                            <td><input type="text" name="inventory[{{$sku->id}}][highest_stock]" class="layui-input" placeholder="最高库存" value="{{$sku->inventory->highest_stock or ''}}"></td>
-                            <td><input type="text" name="inventory[{{$sku->id}}][lowest_stock]" class="layui-input" placeholder="最低库存" value="{{$sku->inventory->lowest_stock or ''}}"></td>
+                            <td><input type="text" name="inventory[{{$sku->id}}][stock]" class="layui-input" placeholder="库存数量(必填)" lay-verify="required" lay-reqText="请输入库存数量" value="{{$sku->inventory->stock or ''}}" oninput="value=value.replace(/[^\d]/g, '')"></td>
+                            <td><input type="text" name="inventory[{{$sku->id}}][highest_stock]" class="layui-input" placeholder="最高库存" value="{{$sku->inventory->highest_stock or ''}}" oninput="value=value.replace(/[^\d]/g, '')"></td>
+                            <td><input type="text" name="inventory[{{$sku->id}}][lowest_stock]" class="layui-input" placeholder="最低库存" value="{{$sku->inventory->lowest_stock or ''}}" oninput="value=value.replace(/[^\d]/g, '')"></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -43,7 +43,6 @@
             var form = layui.form;
 
             form.on('submit(inventory)', function (form_data) {
-
                 var load_index = layer.load();
                 $.ajax({
                     method: "post",
