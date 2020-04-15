@@ -12,7 +12,7 @@
                 <div id="category_ids_select"></div>
             </div>
             <div class="layui-col-xs2">
-                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input" autocomplete="off">
             </div>
         </div>
         <div class="layui-row layui-col-space15">

@@ -161,16 +161,17 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("产品添加成功", {icon:1});
-                            location.reload();
+                            layer.msg("产品保存成功", {icon: 1, time:2000}, function () {
+                                parent.layui.admin.closeThisTabs();
+                            });
                         } else {
-                            layer.msg("产品添加失败:"+data.msg, {icon:2});
+                            layer.msg("产品保存失败:"+data.msg, {icon: 2, time:2000});
                             return false;
                         }
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time:2000});
                         return false;
                     }
                 });
