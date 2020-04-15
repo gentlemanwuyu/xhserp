@@ -8,7 +8,7 @@
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use App\Modules\Index\Models\Config;
 
 if (! function_exists('module_path')) {
@@ -57,13 +57,13 @@ if (! function_exists('get_sys_configs')) {
      */
     function get_sys_configs()
     {
-        if ($sys_configs = Redis::get('erp:system:configs')) {
+        if ($sys_configs = Cache::get('system:configs')) {
             $sys_configs = json_decode($sys_configs, true);
             return $sys_configs;
         }
 
         $sys_configs = array_column(Config::all(['key', 'value'])->toArray(), 'value', 'key');
-        Redis::setnx('erp:system:configs', json_encode($sys_configs));
+        Cache::put('system:configs', json_encode($sys_configs));
 
         return $sys_configs;
     }
@@ -78,10 +78,10 @@ if (! function_exists('flush_sys_configs')) {
      */
     function flush_sys_configs()
     {
-        Redis::del('erp:system:configs');
+        Cache::forget('system:configs');
 
         $sys_configs = array_column(Config::all(['key', 'value'])->toArray(), 'value', 'key');
-        Redis::setnx('erp:system:configs', json_encode($sys_configs));
+        Cache::put('system:configs', json_encode($sys_configs));
 
         return true;
     }

@@ -9,7 +9,7 @@
 namespace App\Services;
 
 use Wuyu\World\Facades\World;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class WorldService
 {
@@ -21,26 +21,26 @@ class WorldService
 
     public static function chineseTree($parent_id = 0)
     {
-        if ($tree = Redis::get('xhserp:world:chinese_tree_' . $parent_id)) {
+        if ($tree = Cache::get('world:chinese_tree_' . $parent_id)) {
             $tree = json_decode($tree, true);
             return $tree;
         }
 
         $tree = World::chineseTree($parent_id);
-        Redis::setnx('xhserp:world:chinese_tree_' . $parent_id, json_encode($tree));
+        Cache::put('world:chinese_tree_' . $parent_id, json_encode($tree));
 
         return $tree;
     }
 
     public static function countries()
     {
-        $countries = Redis::get('xhserp:world:countries');
+        $countries = Cache::get('world:countries');
         if ($countries) {
             return json_decode($countries, true);
         }
 
         $countries = World::countries();
-        Redis::setnx('xhserp:world:countries', json_encode($countries));
+        Cache::put('world:countries', json_encode($countries));
 
         return $countries;
     }
