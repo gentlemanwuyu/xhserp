@@ -121,10 +121,11 @@
                                     success: function (data) {
                                         layer.close(load_index);
                                         if ('success' == data.status) {
-                                            layer.msg("分类添加成功", {icon:1});
-                                            category_tree.refreshTree();
+                                            layer.msg("分类添加成功", {icon: 1, time: 2000}, function () {
+                                                category_tree.refreshTree();
+                                            });
                                         } else {
-                                            layer.msg("分类添加失败:"+data.msg, {icon:2});
+                                            layer.msg("分类添加失败:" + data.msg, {icon: 2});
                                             return false;
                                         }
                                     },
@@ -159,8 +160,9 @@
                                     success: function (data) {
                                         layer.close(load_index);
                                         if ('success' == data.status) {
-                                            layer.msg("分类编辑成功", {icon:1});
-                                            category_tree.refreshTree();
+                                            layer.msg("分类编辑成功", {icon: 1, time: 2000}, function () {
+                                                category_tree.refreshTree();
+                                            });
                                         } else {
                                             layer.msg("分类编辑失败:"+data.msg, {icon:2});
                                             return false;
@@ -195,8 +197,9 @@
                                     success: function (data) {
                                         layer.close(load_index);
                                         if ('success' == data.status) {
-                                            layer.msg("分类删除成功", {icon:1});
-                                            category_tree.refreshTree();
+                                            layer.msg("分类删除成功", {icon: 1, time: 2000}, function () {
+                                                category_tree.refreshTree();
+                                            });
                                         } else {
                                             layer.msg("分类删除失败:"+data.msg, {icon:2});
                                             return false;
