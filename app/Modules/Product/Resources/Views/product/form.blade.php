@@ -31,12 +31,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">分类</label>
                             <div class="layui-input-block">
-                                <select name="category_id" lay-filter="category" lay-search="" lay-verify="required" lay-reqText="请选择分类">
-                                    <option value="">请选择分类</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{$category->id}}" @if(!empty($product->category_id) && $category->id == $product->category_id) selected @endif>{{$category->name}}</option>
-                                    @endforeach
-                                </select>
+                                <div id="category_id_select"></div>
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
@@ -87,8 +82,39 @@
 @endsection
 @section('scripts')
     <script>
+        var categories = <?= json_encode($categories); ?>
+                ,product = <?= isset($product) ? json_encode($product) : 'undefined'; ?>
+                ,category_parent_ids = <?= isset($product) ? json_encode($product->category->parent_ids) : '[]'; ?>;
         layui.use(['form'], function () {
             var form = layui.form;
+
+            xmSelect.render({
+                el: '#category_id_select',
+                name: 'category_id',
+                layVerify: 'required',
+                initValue: product && product.category_id ? [product.category_id] : '',
+                tips: '请选择分类',
+                model: {icon: 'hidden', label: {type: 'text'}},
+                radio: true,
+                clickClose: true,
+                filterable: true,
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    showLine: false,
+                    strict: false,
+                    expandedKeys: category_parent_ids
+                },
+                height: 'auto',
+                data: categories
+            });
+
             $('button[lay-event=addSku]').on('click', function () {
                 var $body = $('#skuTable').find('tbody')
                         ,html = ''

@@ -25,10 +25,11 @@ class ProductController extends Controller
 
     public function form(Request $request)
     {
-        $categories = Category::where('type', 1)->get();
+        $categories = Category::tree(1);
         $data = compact('categories');
         if ($request->get('product_id')) {
             $product = Product::find($request->get('product_id'));
+            $product->category->setAppends(['parent_ids']);
             $data['product'] = $product;
         }
 

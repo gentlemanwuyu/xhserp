@@ -22,6 +22,11 @@ class Category extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
     /**
      * 子分类
      *
@@ -60,5 +65,16 @@ class Category extends Model
         });
 
         return $ids;
+    }
+
+    public function getParentIdsAttribute()
+    {
+        $parent_ids = [$this->parent_id];
+        $parent = $this->parent;
+        if ($parent) {
+            $parent_ids = array_merge($parent_ids, $parent->parent_ids);
+        }
+
+        return array_filter(array_unique($parent_ids));
     }
 }
