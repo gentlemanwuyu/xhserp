@@ -9,22 +9,7 @@
                 <input type="text" name="name" placeholder="品名" class="layui-input">
             </div>
             <div class="layui-col-xs2">
-                <select name="category_id" lay-search="">
-                    <option value="">分类</option>
-                    @foreach($categories as $category)
-                        <option value="{{$category->id}}">{{$category->name}}</option>
-                        @if(!empty($category->children))
-                            @foreach($category->children as $son)
-                                <option value="{{$son->id}}">{{$son->name}}</option>
-                                @if(!empty($son->children))
-                                    @foreach($son->children as $grandson)
-                                        <option value="{{$grandson->id}}">{{$grandson->name}}</option>
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endif
-                    @endforeach
-                </select>
+                <div id="category_ids_select"></div>
             </div>
             <div class="layui-col-xs2">
                 <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
@@ -51,6 +36,7 @@
 @endsection
 @section('scripts')
     <script>
+        var categories = <?= json_encode($categories); ?>;
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
         }).use(['table', 'dropdown', 'laydate', 'form'], function () {
@@ -194,6 +180,29 @@
                 }
             }
                     ,tableIns = table.render(tableOpts);
+
+            // 分类下拉树
+            xmSelect.render({
+                el: '#category_ids_select',
+                name: 'category_ids',
+                tips: '分类',
+                filterable: true,
+                searchTips: '搜索...',
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    showLine: false,
+                    strict: false
+                },
+                height: 'auto',
+                data: categories
+            });
 
             laydate.render({
                 elem: 'input[name=created_at_between]'

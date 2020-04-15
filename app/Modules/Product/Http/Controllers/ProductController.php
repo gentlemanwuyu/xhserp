@@ -45,8 +45,14 @@ class ProductController extends Controller
         if ($request->get('name')) {
             $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
         }
-        if ($request->get('category_id')) {
-            $query = $query->where('category_id', $request->get('category_id'));
+        if ($request->get('category_ids')) {
+            $category_ids = explode(',', $request->get('category_ids'));
+            foreach ($category_ids as $category_id) {
+                $category = Category::find($category_id);
+                $category_ids = array_merge($category_ids, $category->children_ids);
+            }
+
+            $query = $query->whereIn('category_id', array_unique($category_ids));
         }
 
         if ($request->get('created_at_between')) {
