@@ -10,6 +10,7 @@ namespace App\Modules\Index\Console;
 
 use Illuminate\Console\Command;
 use App\Modules\Index\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class FillPermission extends Command
 {
@@ -45,6 +46,8 @@ class FillPermission extends Command
     public function handle()
     {
         try {
+            app(PermissionRegistrar::class)->forgetCachedPermissions();
+
             $permissions = config('laravel-permission.erp_permissions', []);
             foreach ($permissions as $l1) {
                 if (empty($l1['name'])) {
