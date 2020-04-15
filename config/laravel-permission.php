@@ -310,12 +310,12 @@ return [
                         ['name' => 'delete_user', 'display_name' => '删除用户', 'route' => '', 'type' => 2],
                     ]
                 ],
-                [ // 组织结构
-                    'name' => 'organization', 'display_name' => '组织结构', 'route' => '', 'type' => 1, 'children' =>
-                    [
-
-                    ]
-                ],
+//                [ // 组织结构
+//                    'name' => 'organization', 'display_name' => '组织结构', 'route' => '', 'type' => 1, 'children' =>
+//                    [
+//
+//                    ]
+//                ],
                 [ // 角色管理
                     'name' => 'role_management', 'display_name' => '角色管理', 'route' => '', 'type' => 1, 'children' =>
                     [
