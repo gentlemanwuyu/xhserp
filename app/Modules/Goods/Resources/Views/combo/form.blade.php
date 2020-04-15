@@ -154,6 +154,7 @@
                 radio: true,
                 clickClose: true,
                 filterable: true,
+                searchTips: '搜索...',
                 theme:{
                     color: '#5FB878'
                 },

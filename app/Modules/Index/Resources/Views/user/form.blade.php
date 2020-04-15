@@ -86,6 +86,7 @@
                 tips: '请选择角色',
                 model: {icon: 'show'},
                 filterable: true,
+                searchTips: '搜索...',
                 theme:{
                     color: '#5FB878'
                 },
