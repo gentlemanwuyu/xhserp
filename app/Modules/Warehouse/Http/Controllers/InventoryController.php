@@ -34,7 +34,7 @@ class InventoryController extends Controller
                     'highest_stock' => $inventory['highest_stock'] ?: 0,
                     'lowest_stock' => $inventory['lowest_stock'] ?: 0,
                 ];
-                if (!empty($inventory['stock'])) {
+                if (isset($inventory['stock'])) {
                     $data['stock'] = $inventory['stock'];
                 }
 
