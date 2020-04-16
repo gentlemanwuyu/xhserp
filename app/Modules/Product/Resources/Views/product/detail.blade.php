@@ -135,6 +135,8 @@
             layer.open({
                 type: 1,
                 title: null,
+                fix: false,
+                move: '.layui-layer-content',
                 area: '800px',
                 content: html,
                 success: function () {
