@@ -50,12 +50,12 @@ class ProductsTableSeeder extends Seeder
         $p4_s3 = ProductSku::create(['product_id' => $p4->id, 'code' => 'xhsylbpp002-10kg', 'weight' => 93.8, 'cost_price' => 38.8,]);
         Inventory::create(['sku_id' => $p4_s3->id, 'product_id' => $p4_s3->product_id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
 
-        $p5 = Product::create(['code' => 'xhsylbpp002', 'name' => '一体成型压力表', 'category_id' => 3,]);
-        $p5_s1 = ProductSku::create(['product_id' => $p5->id, 'code' => 'xhsylbpp002-4kg', 'weight' => 78.2, 'cost_price' => 36.4,]);
+        $p5 = Product::create(['code' => 'xhsylbpp003', 'name' => '一体成型压力表', 'category_id' => 3,]);
+        $p5_s1 = ProductSku::create(['product_id' => $p5->id, 'code' => 'xhsylbpp003-4kg', 'weight' => 78.2, 'cost_price' => 36.4,]);
         Inventory::create(['sku_id' => $p5_s1->id, 'product_id' => $p5_s1->product_id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
-        $p5_s2 = ProductSku::create(['product_id' => $p5->id, 'code' => 'xhsylbpp002-7kg', 'weight' => 88.5, 'cost_price' => 36.8,]);
+        $p5_s2 = ProductSku::create(['product_id' => $p5->id, 'code' => 'xhsylbpp003-7kg', 'weight' => 88.5, 'cost_price' => 36.8,]);
         Inventory::create(['sku_id' => $p5_s2->id, 'product_id' => $p5_s2->product_id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
-        $p5_s3 = ProductSku::create(['product_id' => $p5->id, 'code' => 'xhsylbpp002-10kg', 'weight' => 93.8, 'cost_price' => 38.8,]);
+        $p5_s3 = ProductSku::create(['product_id' => $p5->id, 'code' => 'xhsylbpp003-10kg', 'weight' => 93.8, 'cost_price' => 38.8,]);
         Inventory::create(['sku_id' => $p5_s3->id, 'product_id' => $p5_s3->product_id, 'stock' => mt_rand(50, 500), 'highest_stock' => 500, 'lowest_stock' => 50]);
 
         //液位开关
