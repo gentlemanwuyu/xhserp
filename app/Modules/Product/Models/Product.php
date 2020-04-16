@@ -18,13 +18,32 @@ class Product extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    /**
+     * 重写delete方法
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        // 删除之前先删除sku
+        foreach ($this->skus as $sku) {
+            $sku->delete();
+        }
+
+        return parent::delete();
+    }
+
     public function syncSkus($skus)
     {
         if ($skus && is_array($skus)) {
             $sku_ids = array_column($this->skus->toArray(), 'id');
             $diff_ids = array_diff($sku_ids, array_keys($skus));
             if ($diff_ids) {
-                ProductSku::whereIn('id', $diff_ids)->delete();
+                foreach ($diff_ids as $sku_id) {
+                    $product_sku = ProductSku::find($sku_id);
+                    $product_sku && $product_sku->delete();
+                }
             }
 
             foreach ($skus as $flag => $data) {
@@ -51,5 +70,21 @@ class Product extends Model
     public function stockoutSkus()
     {
         return $this->hasMany(ProductSku::class)->leftjoin('inventories AS i', 'i.sku_id', '=', 'product_skus.id')->whereRaw('i.stock < i.lowest_stock');
+    }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        foreach ($this->skus as $sku) {
+            if (!$sku->deletable) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

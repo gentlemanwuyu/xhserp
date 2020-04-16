@@ -9,18 +9,33 @@
 namespace App\Modules\Product\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Goods\Models\GoodsSku;
+use App\Modules\Goods\Models\ComboSkuProductSku;
+use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Warehouse\Models\Inventory;
 use App\Modules\Warehouse\Models\InventoryLog;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class ProductSku extends Model
 {
-    use SoftDeletes;
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+    /**
+     * 重写delete方法
+     *
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        // 删除之前先删除inventory
+        $inventory = $this->inventory;
+        if ($inventory) {
+            $inventory->delete();
+        }
+
+        return $this->delete();
+    }
 
     public function product()
     {
@@ -58,5 +73,31 @@ class ProductSku extends Model
         $goods_sku_id = SingleSkuProductSku::where('product_sku_id', $this->id)->value('goods_sku_id');
 
         return $goods_sku_id ? GoodsSku::find($goods_sku_id) : null;
+    }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        // 跟商品有关联的SKU不可删除
+        if (SingleSkuProductSku::where('product_sku_id', $this->id)->exists() || ComboSkuProductSku::where('product_sku_id', $this->id)->exists()) {
+            return false;
+        }
+
+        // 下过采购单的产品不可删除
+        if (PurchaseOrderItem::where('sku_id', $this->id)->exists()) {
+            return false;
+        }
+
+        // 有库存的产品不可删除
+        $inventory = $this->inventory;
+        if ($inventory && 0 < $inventory->stock) {
+            return false;
+        }
+
+        return true;
     }
 }

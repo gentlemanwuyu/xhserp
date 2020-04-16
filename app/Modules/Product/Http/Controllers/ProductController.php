@@ -82,6 +82,7 @@ class ProductController extends Controller
             $product->skus->map(function ($sku) {
                 $sku->inventory;
             });
+            $product->setAppends(['deletable']);
         }
 
         return response()->json($paginate);
@@ -122,30 +123,15 @@ class ProductController extends Controller
             $product = Product::find($request->get('product_id'));
 
             if (!$product) {
-                return response()->json(['status' => 'fail', 'msg' => '没有找到该产品']);
+                throw new \Exception("没有找到该产品");
             }
 
-            // 跟商品关联的产品不可删除
-            if (SingleProduct::where('product_id', $product->id)->exists() || ComboProduct::where('product_id', $product->id)->exists()) {
-                throw new \Exception("该产品有关联的商品，不可删除");
-            }
-
-            // 下过采购单的产品不可删除
-            if (PurchaseOrderItem::where('product_id', $product->id)->exists()) {
-                throw new \Exception("该产品下过采购订单，不可删除");
-            }
-
-            // 有库存的产品不可删除
-            foreach ($product->skus as $product_sku) {
-                $inventory = $product_sku->inventory;
-                if ($inventory && 0 < $inventory->stock) {
-                    throw new \Exception("SKU[{$product_sku->code}]有库存，不可删除");
-                }
+            if (!$product->deletable) {
+                throw new \Exception("该产品不可删除");
             }
 
             DB::beginTransaction();
             $product->delete();
-            ProductSku::where('product_id', $request->get('product_id'))->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);
