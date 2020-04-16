@@ -4,6 +4,7 @@ namespace App\Modules\Product\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Product\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Category\Models\Category;
 use App\Modules\Product\Models\Product;
@@ -72,7 +73,7 @@ class ProductController extends Controller
         return response()->json($paginate);
     }
 
-    public function save(Request $request)
+    public function save(ProductRequest $request)
     {
         try {
             $product_data = [
