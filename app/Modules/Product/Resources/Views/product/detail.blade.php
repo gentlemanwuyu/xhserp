@@ -76,6 +76,7 @@
             var html = '', index = 1;
             html += '<div class="layui-row" style="padding: 15px;">';
             html += '<div class="layui-col-xs12">';
+            html += '<h3 style="text-align: center;">SKU库存变动日志</h3>';
             html += '<table id="log" lay-filter="log" style="margin: 0;">';
             html += '<thead>';
             html += '<tr>';
@@ -136,7 +137,7 @@
                 type: 1,
                 title: null,
                 fix: false,
-                move: '.layui-layer-content',
+                move: '.layui-layer-content h3',
                 area: '800px',
                 content: html,
                 success: function () {
