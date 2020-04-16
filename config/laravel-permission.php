@@ -114,6 +114,7 @@ return [
                 [ // 产品列表
                     'name' => 'product_list', 'display_name' => '产品列表', 'route' => '', 'type' => 1, 'children' =>
                     [
+                        ['name' => 'product_detail', 'display_name' => '产品详情', 'route' => '', 'type' => 2],
                         ['name' => 'set_inventory', 'display_name' => '设置库存', 'route' => '', 'type' => 2],
                         ['name' => 'add_product', 'display_name' => '添加产品', 'route' => '', 'type' => 2],
                         ['name' => 'edit_product', 'display_name' => '编辑产品', 'route' => '', 'type' => 2],

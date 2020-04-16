@@ -17,4 +17,5 @@ Route::group(['prefix' => 'product', 'as'=>'product.'], function (){
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'ProductController@paginate']);
 	Route::post('save', ['as'=>'save', 'uses'=>'ProductController@save']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'ProductController@delete']);
+	Route::get('detail', ['as'=>'detail', 'uses'=>'ProductController@detail']);
 });

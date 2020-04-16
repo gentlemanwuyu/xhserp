@@ -10,16 +10,24 @@ namespace App\Modules\Warehouse\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\Modules\Index\Models\User;
 
 class InventoryLog extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public static function log($ori, $new, $message = '')
     {
         if (!$message) {
             if (!$ori) {
                 $message = '期初库存';
+            }else {
+                $message = '设置库存';
             }
         }
 

@@ -121,4 +121,16 @@ class ProductController extends Controller
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
+
+    public function detail(Request $request)
+    {
+        $product = Product::find($request->get('product_id'));
+        $product->skus->map(function ($product_sku) {
+            $product_sku->inventoryLogs->map(function ($inventory_log) {
+                $inventory_log->user;
+            });
+        });
+
+        return view('product::product.detail', compact('product'));
+    }
 }

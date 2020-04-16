@@ -125,6 +125,15 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+                        @can('product_detail')
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('product::product.detail')}}?product_id=" + data.id, '产品详情[' + data.id + ']');
+                            }
+                        });
+                        @endcan
+
                         @can('set_inventory')
                         actions.push({
                             title: "库存管理",

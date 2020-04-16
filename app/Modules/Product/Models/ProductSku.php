@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Goods\Models\GoodsSku;
 use App\Modules\Warehouse\Models\Inventory;
+use App\Modules\Warehouse\Models\InventoryLog;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class ProductSku extends Model
@@ -29,6 +30,11 @@ class ProductSku extends Model
     public function inventory()
     {
         return $this->hasOne(Inventory::class, 'sku_id');
+    }
+
+    public function inventoryLogs()
+    {
+        return $this->hasMany(InventoryLog::class, 'sku_id')->orderBy('id', 'desc');
     }
 
     /**
