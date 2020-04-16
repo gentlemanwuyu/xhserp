@@ -55,6 +55,8 @@ class Product extends Model
                 ]);
             }
         }
+
+        return $this;
     }
 
     public function category()

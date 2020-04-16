@@ -34,7 +34,7 @@ class ProductSku extends Model
             $inventory->delete();
         }
 
-        return $this->delete();
+        return parent::delete();
     }
 
     public function product()
