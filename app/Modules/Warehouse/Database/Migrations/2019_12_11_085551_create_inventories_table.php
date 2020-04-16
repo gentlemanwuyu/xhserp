@@ -15,6 +15,7 @@ class CreateInventoriesTable extends Migration
 		Schema::create('inventories', function (Blueprint $table) {
 			$table->increments('id');
 			$table->integer('sku_id')->default(0)->comment('SkuID');
+			$table->integer('product_id')->default(0)->comment('产品ID');
 			$table->integer('stock')->default(0)->comment('库存数量');
 			$table->integer('highest_stock')->default(0)->comment('最高库存');
 			$table->integer('lowest_stock')->default(0)->comment('最低库存');
@@ -22,6 +23,7 @@ class CreateInventoriesTable extends Migration
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->comment('最后更新时间');
 
 			$table->unique('sku_id');
+			$table->index('product_id');
 		});
 	}
 

@@ -11,6 +11,7 @@ use App\Modules\Product\Models\Product;
 use App\Modules\Product\Models\ProductSku;
 use App\Modules\Goods\Models\ComboProduct;
 use App\Modules\Goods\Models\SingleProduct;
+use App\Modules\Warehouse\Models\Inventory;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class ProductController extends Controller
@@ -57,6 +58,16 @@ class ProductController extends Controller
             }
 
             $query = $query->whereIn('category_id', array_unique($category_ids));
+        }
+
+        if ($request->get('inventory_init')) {
+            $product_ids = Inventory::pluck('product_id')->toArray();
+            $product_ids = array_unique($product_ids);
+            if (1 == $request->get('inventory_init')) {
+                $query->whereIn('id', $product_ids);
+            }elseif (2 == $request->get('inventory_init')) {
+                $query->whereNotIn('id', $product_ids);
+            }
         }
 
         if ($request->get('created_at_between')) {
