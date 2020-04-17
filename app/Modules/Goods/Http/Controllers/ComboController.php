@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
-use App\Modules\Goods\Models\GoodsSku;
 use App\Modules\Goods\Models\Combo;
 use App\Modules\Goods\Models\ComboProduct;
 use App\Modules\Product\Models\Product;
@@ -115,27 +114,6 @@ class ComboController extends Controller
 
             // 同步sku
             $combo->syncSkus($request->get('skus'));
-
-            DB::commit();
-            return response()->json(['status' => 'success']);
-        }catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
-        }
-    }
-
-    public function delete(Request $request)
-    {
-        try {
-            $combo = Combo::find($request->get('goods_id'));
-
-            if (!$combo) {
-                return response()->json(['status' => 'fail', 'msg' => '没有找到该商品']);
-            }
-
-            DB::beginTransaction();
-            $combo->delete();
-            GoodsSku::where('goods_id', $request->get('goods_id'))->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);

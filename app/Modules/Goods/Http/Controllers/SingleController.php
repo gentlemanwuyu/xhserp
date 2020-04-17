@@ -7,10 +7,8 @@ use Illuminate\Http\Request;
 use App\Modules\Goods\Http\Requests\SingleRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
-use App\Modules\Goods\Models\GoodsSku;
 use App\Modules\Goods\Models\Single;
 use App\Modules\Goods\Models\SingleProduct;
-use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Product\Models\Product;
 use App\Modules\Category\Models\Category;
 
@@ -110,31 +108,6 @@ class SingleController extends Controller
 
             // 同步sku
             $single->syncSkus($request->get('skus'));
-
-            DB::commit();
-            return response()->json(['status' => 'success']);
-        }catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
-        }
-    }
-
-    public function delete(Request $request)
-    {
-        try {
-            $single = Single::find($request->get('goods_id'));
-
-            if (!$single) {
-                return response()->json(['status' => 'fail', 'msg' => '没有找到该商品']);
-            }
-
-            DB::beginTransaction();
-            $single->delete();
-            SingleProduct::where('goods_id', $request->get('goods_id'))->delete();
-            GoodsSku::withTrashed()->where('goods_id', $request->get('goods_id'))->get()->map(function ($goods_sku) {
-                $goods_sku->delete();
-                SingleSkuProductSku::where('goods_sku_id', $goods_sku->id)->delete();
-            });
 
             DB::commit();
             return response()->json(['status' => 'success']);

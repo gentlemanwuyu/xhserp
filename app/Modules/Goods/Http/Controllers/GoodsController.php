@@ -4,6 +4,7 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Category\Models\Category;
 
@@ -58,7 +59,7 @@ class GoodsController extends Controller
 
                 return $sku;
             });
-            $g->setAppends(['type_name']);
+            $g->setAppends(['type_name', 'deletable']);
         }
 
         return response()->json($paginate);
@@ -69,5 +70,28 @@ class GoodsController extends Controller
         $goods = Goods::find($request->get('goods_id'));
 
         return view('goods::goods.detail', compact('goods'));
+    }
+
+    public function delete(Request $request)
+    {
+        try {
+            $goods = Goods::find($request->get('goods_id'));
+
+            if (!$goods) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该商品']);
+            }
+
+            DB::beginTransaction();
+            $goods->skus->map(function ($sku) {
+                $sku->delete();
+            });
+            $goods->delete();
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
     }
 }

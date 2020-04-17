@@ -31,6 +31,18 @@ class Goods extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    public function delete()
+    {
+        // 将对应关系删除掉
+        if (Goods::SINGLE == $this->type) {
+            SingleProduct::where('goods_id', $this->id)->delete();
+        }elseif (Goods::COMBO == $this->type) {
+            GoodsSku::where('goods_id', $this->id)->delete();
+        }
+
+        return parent::delete();
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class)->where('type', 2);
@@ -44,5 +56,16 @@ class Goods extends Model
     public function getTypeNameAttribute()
     {
         return isset(self::$types[$this->type]) ? self::$types[$this->type] : '';
+    }
+
+    public function getDeletableAttribute()
+    {
+        foreach ($this->skus as $goods_sku) {
+            if (!$goods_sku->deletable) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

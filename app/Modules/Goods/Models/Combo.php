@@ -26,7 +26,7 @@ class Combo extends Goods
         // 将不在请求中的sku删除
         foreach ($this->skus as $ori_goods_sku) {
             if (!in_array($ori_goods_sku->id, $indexes)) {
-                $ori_goods_sku->comboDelete();
+                $ori_goods_sku->delete();
             }
         }
 

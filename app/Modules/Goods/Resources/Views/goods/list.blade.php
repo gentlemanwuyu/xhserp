@@ -153,47 +153,40 @@
                         }
                         @endcan
 
-                        @can('delete_goods')
-                        actions.push({
-                            title: "删除",
-                            event: function() {
-                                layer.confirm("确认要删除该商品？", {icon: 3, title:"确认"}, function (index) {
-                                    layer.close(index);
-                                    var deleteUrl;
-                                    if (1 == data.type) {
-                                        deleteUrl = "{{route('goods::single.delete')}}";
-                                    }else if (2 == data.type) {
-                                        deleteUrl = "{{route('goods::combo.delete')}}";
-                                    }else {
-                                        layer.msg("程序出错，请联系开发人员。", {icon: 5, shift: 6});
-                                        return false;
-                                    }
+                        if (data.deletable) {
+                            @can('delete_goods')
+                            actions.push({
+                                    title: "删除",
+                                    event: function() {
+                                        layer.confirm("确认要删除该商品？", {icon: 3, title:"确认"}, function (index) {
+                                            layer.close(index);
 
-                                    var load_index = layer.load();
-                                    $.ajax({
-                                        method: "post",
-                                        url: deleteUrl,
-                                        data: {goods_id: data.id},
-                                        success: function (data) {
-                                            layer.close(load_index);
-                                            if ('success' == data.status) {
-                                                layer.msg("商品删除成功", {icon:1});
-                                                tableIns.reload();
-                                            } else {
-                                                layer.msg("商品删除失败:"+data.msg, {icon:2});
-                                                return false;
-                                            }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                            layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                            return false;
-                                        }
-                                    });
+                                            var load_index = layer.load();
+                                            $.ajax({
+                                                method: "post",
+                                                url: "{{route('goods::goods.delete')}}",
+                                                data: {goods_id: data.id},
+                                                success: function (data) {
+                                                    layer.close(load_index);
+                                                    if ('success' == data.status) {
+                                                        layer.msg("商品删除成功", {icon:1});
+                                                        tableIns.reload();
+                                                    } else {
+                                                        layer.msg("商品删除失败:"+data.msg, {icon:2});
+                                                        return false;
+                                                    }
+                                                },
+                                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                    layer.close(load_index);
+                                                    layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                                    return false;
+                                                }
+                                            });
+                                        });
+                                    }
                                 });
-                            }
-                        });
-                        @endcan
+                            @endcan
+                        }
 
                         return actions;
                     });

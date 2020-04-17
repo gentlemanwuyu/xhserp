@@ -39,7 +39,7 @@ class Single extends Goods
         foreach ($this->skus as $ori_goods_sku) {
             // 如果SKU对应的产品SKU ID不在数组中，则将该SKU删除
             if (!in_array($ori_goods_sku->single_product_sku_id, $product_sku_ids)) {
-                $ori_goods_sku->singleDelete();
+                $ori_goods_sku->delete();
             }
         }
 

@@ -16,18 +16,15 @@ class GoodsSku extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function singleDelete()
+    public function delete()
     {
+        $goods = $this->goods;
         // 将对应关系删除掉
-        SingleSkuProductSku::where('goods_sku_id', $this->id)->delete();
-
-        return parent::delete();
-    }
-
-    public function comboDelete()
-    {
-        // 将对应关系删除掉
-        ComboSkuProductSku::where('goods_sku_id', $this->id)->delete();
+        if (Goods::SINGLE == $goods->type) {
+            SingleSkuProductSku::where('goods_sku_id', $this->id)->delete();
+        }elseif (Goods::COMBO == $goods->type) {
+            ComboSkuProductSku::where('goods_sku_id', $this->id)->delete();
+        }
 
         return parent::delete();
     }
