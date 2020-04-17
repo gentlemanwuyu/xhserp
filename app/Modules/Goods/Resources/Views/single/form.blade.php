@@ -61,7 +61,7 @@
                     <tr>
                         <th rowspan="2" width="8%">
                             是否开启
-                            <input type="checkbox" name="" lay-skin="switch" lay-text="是|否" switch-index="all" lay-filter="enableSku">
+                            <input type="checkbox" lay-skin="switch" lay-text="是|否" switch-index="all" lay-filter="enableSku" @if(isset($goods) && $goods->all_enabled) checked @endif>
                         </th>
                         <th colspan="3">产品信息</th>
                         <th rowspan="2" class="required">SKU编号</th>
@@ -80,8 +80,8 @@
                             <?php
                                 $single_sku = $sku->single_sku;
                             ?>
-                            <tr class="layui-disabled" row-index="{{$sku->id}}">
-                                <td><input type="checkbox" name="" lay-skin="switch" lay-text="是|否" switch-index="{{$sku->id}}" lay-filter="enableSku" @if($single_sku) checked @endif></td>
+                            <tr @if(!$single_sku) class="layui-disabled" @endif row-index="{{$sku->id}}">
+                                <td><input type="checkbox" name="" lay-skin="switch" lay-text="是|否" switch-index="{{$sku->id}}" lay-filter="enableSku" @if($single_sku) checked @endif @if($single_sku && !$single_sku->deletable) disabled @endif></td>
                                 <td>{{$sku->code or ''}}</td>
                                 <td>{{(float)$sku->weight ? $sku->weight : ''}}</td>
                                 <td>{{(float)$sku->cost_price ? $sku->weight : ''}}</td>
@@ -116,7 +116,7 @@
         var categories = <?= json_encode($categories); ?>
                 ,goods = <?= isset($goods) ? json_encode($goods) : 'undefined'; ?>
                 ,category_parent_ids = <?= isset($goods) ? json_encode($goods->category->parent_ids) : '[]'; ?>
-                ,productSkus = <?= json_encode(array_column($product->skus->toArray(), null,'id')); ?>;
+                ,productSkus = <?= json_encode($product->indexSkus); ?>;
 
         layui.use(['form'], function () {
             var form = layui.form
@@ -193,8 +193,10 @@
                 var switchIndex = $(data.elem).attr('switch-index');
 
                 if ('all' == switchIndex) {
-                    $.each(productSkus, function (sku_id, _) {
-                        enableSku(sku_id, data.elem.checked);
+                    $.each(productSkus, function (sku_id, product_sku) {
+                        if (!product_sku.single_sku || product_sku.single_sku.deletable) {
+                            enableSku(sku_id, data.elem.checked);
+                        }
                     });
                 }else {
                     enableSku(switchIndex, data.elem.checked);

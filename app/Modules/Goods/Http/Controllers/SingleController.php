@@ -70,7 +70,13 @@ class SingleController extends Controller
             $goods = Single::find($request->get('goods_id'));
             $goods->category->setAppends(['parent_ids']);
             $data['goods'] = $goods;
-            $data['product'] = $goods->product;
+            $product = $goods->product;
+            $product->indexSkus = $product->skus->map(function ($product_sku) {
+                $product_sku->setAppends(['single_sku']);
+
+                return $product_sku;
+            })->pluck(null, 'id');
+            $data['product'] = $product;
         }
 
         return view('goods::single.form', $data);

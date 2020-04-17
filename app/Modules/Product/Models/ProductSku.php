@@ -71,8 +71,14 @@ class ProductSku extends Model
     public function getSingleSkuAttribute()
     {
         $goods_sku_id = SingleSkuProductSku::where('product_sku_id', $this->id)->value('goods_sku_id');
+        if (!$goods_sku_id) {
+            return null;
+        }
 
-        return $goods_sku_id ? GoodsSku::find($goods_sku_id) : null;
+        $single_sku = GoodsSku::find($goods_sku_id);
+        $single_sku->setAppends(['deletable']);
+
+        return $single_sku;
     }
 
     /**

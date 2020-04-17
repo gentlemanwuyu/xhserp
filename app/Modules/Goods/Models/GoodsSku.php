@@ -85,6 +85,21 @@ class GoodsSku extends Model
     }
 
     /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        // 下过订单的不可删除
+        if (OrderItem::where('sku_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 增加库存
      *
      * @param $quantity

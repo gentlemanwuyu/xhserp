@@ -17,9 +17,9 @@ class Single extends Goods
         return SingleProduct::where('goods_id', $this->id)->value('product_id');
     }
 
-    public function getProductAttribute()
+    public function product()
     {
-        return Product::find($this->product_id);
+        return $this->belongsTo(Product::class);
     }
 
     /**
@@ -61,5 +61,21 @@ class Single extends Goods
             ->delete();
 
         return $this;
+    }
+
+    /**
+     * 是否enable所有的sku
+     *
+     * @return bool
+     */
+    public function getAllEnabledAttribute()
+    {
+        foreach ($this->product->skus as $product_sku) {
+            if (!$product_sku->single_sku) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
