@@ -37,7 +37,7 @@ class PurchaseOrder extends Model
         }
 
         // 将不在请求中的item删除
-        PurchaseOrderItem::where('order_id', $this->id)->whereNotIn('id', array_keys($items))->get()->map(function ($item) {
+        PurchaseOrderItem::where('purchase_order_id', $this->id)->whereNotIn('id', array_keys($items))->get()->map(function ($item) {
             $item->delete();
         });
 
@@ -54,7 +54,7 @@ class PurchaseOrder extends Model
             ];
             $order_item = PurchaseOrderItem::find($flag);
             if (!$order_item) {
-                $item_data['order_id'] = $this->id;
+                $item_data['purchase_order_id'] = $this->id;
                 PurchaseOrderItem::create($item_data);
             }else {
                 $order_item->update($item_data);
