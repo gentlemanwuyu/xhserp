@@ -12,6 +12,11 @@ use App\Modules\Product\Models\Product;
 
 class Single extends Goods
 {
+    /**
+     * product ID，用于与product表的关联
+     *
+     * @return mixed
+     */
     public function getProductIdAttribute()
     {
         return SingleProduct::where('goods_id', $this->id)->value('product_id');
