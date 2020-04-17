@@ -9,15 +9,20 @@
 namespace App\Modules\Goods\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Modules\Warehouse\Models\Inventory;
 use App\Modules\Sale\Models\OrderItem;
 
 class GoodsSku extends Model
 {
-    use SoftDeletes;
-
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function singleDelete()
+    {
+        // 将对应关系删除掉
+        SingleSkuProductSku::where('goods_sku_id', $this->id)->delete();
+
+        return parent::delete();
+    }
 
     public function getProductSkuId($product_id)
     {
@@ -186,5 +191,20 @@ class GoodsSku extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * 单品商品SKU对应的产品SKU ID
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getSingleProductSkuIdAttribute()
+    {
+        if (1 != $this->goods->type) {
+            throw new \Exception("商品类型不是单品，不可调用single_product_sku_id属性");
+        }
+
+        return SingleSkuProductSku::where('goods_sku_id', $this->id)->value('product_sku_id');
     }
 }

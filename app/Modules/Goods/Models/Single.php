@@ -34,6 +34,15 @@ class Single extends Goods
             return false;
         }
 
+        $product_sku_ids = array_keys($skus);
+
+        foreach ($this->skus as $ori_goods_sku) {
+            // 如果SKU对应的产品SKU ID不在数组中，则将该SKU删除
+            if (!in_array($ori_goods_sku->single_product_sku_id, $product_sku_ids)) {
+                $ori_goods_sku->singleDelete();
+            }
+        }
+
         foreach ($skus as $product_sku_id => $item) {
             $goods_sku_id = SingleSkuProductSku::where('product_sku_id', $product_sku_id)->value('goods_sku_id');
             if (!$goods_sku_id) {
@@ -45,20 +54,14 @@ class Single extends Goods
                 ]);
                 SingleSkuProductSku::create(['product_sku_id' => $product_sku_id, 'goods_sku_id' => $goods_sku->id]);
             }else {
-                $goods_sku = GoodsSku::withTrashed()->find($goods_sku_id);
+                $goods_sku = GoodsSku::find($goods_sku_id);
                 $goods_sku->update([
                     'code' => $item['code'],
                     'lowest_price' => $item['lowest_price'],
                     'msrp' => $item['msrp'],
-                    'deleted_at' => null,
                 ]);
             }
         }
-
-        GoodsSku::leftJoin('single_sku_product_skus AS ssps', 'ssps.goods_sku_id', '=', 'goods_skus.id')
-            ->where('goods_skus.goods_id', $this->id)
-            ->whereNotIn('ssps.product_sku_id', array_keys($skus))
-            ->delete();
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Goods\Http\Requests\SingleRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Goods\Models\GoodsSku;
@@ -82,7 +83,7 @@ class SingleController extends Controller
         return view('goods::single.form', $data);
     }
 
-    public function save(Request $request)
+    public function save(SingleRequest $request)
     {
         try {
             $goods_data = [
