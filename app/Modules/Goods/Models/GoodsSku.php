@@ -24,6 +24,14 @@ class GoodsSku extends Model
         return parent::delete();
     }
 
+    public function comboDelete()
+    {
+        // 将对应关系删除掉
+        ComboSkuProductSku::where('goods_sku_id', $this->id)->delete();
+
+        return parent::delete();
+    }
+
     public function getProductSkuId($product_id)
     {
         return ComboSkuProductSku::where('goods_sku_id', $this->id)->where('product_id', $product_id)->value('product_sku_id');

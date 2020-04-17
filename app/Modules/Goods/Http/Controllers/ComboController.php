@@ -102,6 +102,7 @@ class ComboController extends Controller
                 throw new \Exception("商品保存失败");
             }
 
+            // 如果是新建商品，需要将对应关系写入表中
             if (!$request->get('goods_id')) {
                 foreach ($request->get('product_ids') as $product_id => $quantity) {
                     ComboProduct::create([

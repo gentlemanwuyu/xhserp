@@ -88,7 +88,11 @@
                                 @endforeach
                                 <td><input type="text" name="skus[{{$sku->id}}][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" value="{{$sku->lowest_price}}"></td>
                                 <td><input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value="{{(float)$sku->msrp ? $sku->msrp : ''}}"></td>
-                                <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
+                                <td>
+                                    @if($sku->deletable)
+                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     @endif
