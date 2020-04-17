@@ -66,19 +66,18 @@ class SingleController extends Controller
 
         if ($request->get('product_id')) {
             $product = Product::find($request->get('product_id'));
-            $data['product'] = $product;
         }else {
             $goods = Single::find($request->get('goods_id'));
             $goods->category->setAppends(['parent_ids']);
             $data['goods'] = $goods;
             $product = $goods->product;
-            $product->indexSkus = $product->skus->map(function ($product_sku) {
-                $product_sku->setAppends(['single_sku']);
-
-                return $product_sku;
-            })->pluck(null, 'id');
-            $data['product'] = $product;
         }
+        $product->indexSkus = $product->skus->map(function ($product_sku) {
+            $product_sku->setAppends(['single_sku']);
+
+            return $product_sku;
+        })->pluck(null, 'id');
+        $data['product'] = $product;
 
         return view('goods::single.form', $data);
     }

@@ -83,9 +83,10 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
+                                var msrp = parseFloat(sku.msrp);
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + sku.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.lowest_price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.msrp + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + (msrp ? msrp : '') + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.stock + '</li>';
                                 html += '</ul>';
                             });
