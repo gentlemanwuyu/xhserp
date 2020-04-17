@@ -21,7 +21,7 @@ class ComboController extends Controller
 
     public function selectProduct()
     {
-        $categories = Category::where('type', 1)->get();
+        $categories = Category::tree(1);
 
         return view('goods::combo.select_product', compact('categories'));
     }
@@ -32,8 +32,14 @@ class ComboController extends Controller
         if ($request->get('excepted_ids')) {
             $query = $query->whereNotIn('id', $request->get('excepted_ids'));
         }
-        if ($request->get('category_id')) {
-            $query = $query->where('category_id', $request->get('category_id'));
+        if ($request->get('category_ids')) {
+            $category_ids = explode(',', $request->get('category_ids'));
+            foreach ($category_ids as $category_id) {
+                $category = Category::find($category_id);
+                $category_ids = array_merge($category_ids, $category->children_ids);
+            }
+
+            $query = $query->whereIn('category_id', array_unique($category_ids));
         }
         if ($request->get('code')) {
             $query = $query->where('code', $request->get('code'));
