@@ -97,7 +97,7 @@
                                 </td>
                                 <td goods-field="msrp">
                                     @if($single_sku)
-                                        <input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value="{{(float)$single_sku->msrp or ''}}" oninput="value=value.replace(/[^\d.]/g, '')">
+                                        <input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value="{{(float)$single_sku->msrp ?: ''}}" oninput="value=value.replace(/[^\d.]/g, '')">
                                     @endif
                                 </td>
                             </tr>
@@ -227,11 +227,11 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("商品添加成功", {icon: 1, time: 2000}, function(){
+                            layer.msg("商品保存成功", {icon: 1, time: 2000}, function(){
                                 parent.layui.admin.closeThisTabs();
                             });
                         } else {
-                            layer.msg("商品添加失败:"+data.msg, {icon:2});
+                            layer.msg("商品保存失败:"+data.msg, {icon:2});
                             return false;
                         }
                     },
