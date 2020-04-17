@@ -22,7 +22,7 @@ class SingleController extends Controller
 
     public function selectProduct()
     {
-        $categories = Category::where('type', 1)->get();
+        $categories = Category::tree(1);
 
         return view('goods::single.select_product', compact('categories'));
     }
@@ -32,8 +32,14 @@ class SingleController extends Controller
         $query = Product::leftJoin('single_products AS sp', 'sp.product_id', '=', 'products.id');
 
         $query = $query->whereNull('sp.goods_id');
-        if ($request->get('category_id')) {
-            $query = $query->where('products.category_id', $request->get('category_id'));
+        if ($request->get('category_ids')) {
+            $category_ids = explode(',', $request->get('category_ids'));
+            foreach ($category_ids as $category_id) {
+                $category = Category::find($category_id);
+                $category_ids = array_merge($category_ids, $category->children_ids);
+            }
+
+            $query = $query->whereIn('category_id', array_unique($category_ids));
         }
         if ($request->get('code')) {
             $query = $query->where('products.code', $request->get('code'));

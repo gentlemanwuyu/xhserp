@@ -11,12 +11,7 @@
     <form class="layui-form" lay-filter="product">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs2">
-                <select name="category_id" lay-search="">
-                    <option value="">产品分类</option>
-                    @foreach($categories as $category)
-                        <option value="{{$category->id}}">{{$category->name}}</option>
-                    @endforeach
-                </select>
+                <div id="category_ids_select"></div>
             </div>
             <div class="layui-col-xs2"><input type="text" name="code" placeholder="产品编号" autocomplete="off" class="layui-input"></div>
             <div class="layui-col-xs2"><input type="text" name="name" placeholder="品名" autocomplete="off" class="layui-input"></div>
@@ -33,6 +28,7 @@
 @endsection
 @section('scripts')
     <script>
+        var categories = <?= json_encode($categories); ?>;
         layui.use(['table', 'form'], function () {
             var table = layui.table
                     ,form = layui.form
@@ -104,6 +100,29 @@
                 }
             }
                     ,listTable = table.render(listOpts);
+
+            // 分类下拉树
+            xmSelect.render({
+                el: '#category_ids_select',
+                name: 'category_ids',
+                tips: '产品分类',
+                filterable: true,
+                searchTips: '搜索...',
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    showLine: false,
+                    strict: false
+                },
+                height: 'auto',
+                data: categories
+            });
 
             // 产品列表搜索监听
             form.on('submit(product)', function (form_data) {
