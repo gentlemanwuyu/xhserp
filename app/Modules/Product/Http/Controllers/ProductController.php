@@ -8,9 +8,7 @@ use App\Modules\Product\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Category\Models\Category;
 use App\Modules\Product\Models\Product;
-use App\Modules\Product\Models\ProductSku;
-use App\Modules\Goods\Models\ComboProduct;
-use App\Modules\Goods\Models\SingleProduct;
+use App\Modules\Purchase\Models\Supplier;
 use App\Modules\Warehouse\Models\Inventory;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
@@ -143,6 +141,7 @@ class ProductController extends Controller
 
     public function detail(Request $request)
     {
+        $suppliers = Supplier::all();
         $product = Product::find($request->get('product_id'));
         $product->skus->map(function ($product_sku) {
             $product_sku->inventoryLogs->map(function ($inventory_log) {
@@ -150,6 +149,35 @@ class ProductController extends Controller
             });
         });
 
-        return view('product::product.detail', compact('product'));
+        return view('product::product.detail', compact('product', 'suppliers'));
+    }
+
+    public function orderPaginate(Request $request)
+    {
+        $query = PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
+            ->where('product_id', $request->get('product_id'));
+
+        if ($request->get('purchase_order_code')) {
+            $query = $query->where('po.code', $request->get('purchase_order_code'));
+        }
+        if ($request->get('supplier_id')) {
+            $query = $query->where('po.supplier_id', $request->get('supplier_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('purchase_order_items.created_at', '>=', $created_at_between[0] . ' 00:00:00')
+                ->where('purchase_order_items.created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->select(['purchase_order_items.*'])->orderBy('purchase_order_items.id', 'desc')->paginate($request->get('limit'));
+
+        foreach ($paginate as $poi) {
+            $purchaseOrder = $poi->purchaseOrder;
+            $purchaseOrder->supplier;
+            $purchaseOrder->setAppends(['status_name']);
+            $poi->sku->product;
+        }
+
+        return response()->json($paginate);
     }
 }

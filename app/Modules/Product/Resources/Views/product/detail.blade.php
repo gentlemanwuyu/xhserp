@@ -69,6 +69,40 @@
             </table>
         </div>
     </div>
+    <div class="erp-detail">
+        <div class="erp-detail-title">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>采购记录</legend>
+            </fieldset>
+        </div>
+        <div class="erp-detail-content">
+            <form class="layui-form" lay-filter="search">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-xs2">
+                        <input type="text" name="purchase_order_code" placeholder="订单编号" class="layui-input">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <select name="supplier_id" lay-search="">
+                            <option value="">供应商</option>
+                            @foreach($suppliers as $supplier)
+                                <option value="{{$supplier->id}}">{{$supplier->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input" autocomplete="off">
+                    </div>
+                    <div class="layui-col-xs4">
+                        <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+            <table id="list" class="layui-table"  lay-filter="list">
+
+            </table>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script>
@@ -147,5 +181,61 @@
                 }
             });
         };
+
+        layui.use(['table', 'laydate', 'form'], function () {
+            var table = layui.table
+                    ,laydate = layui.laydate
+                    ,form = layui.form
+                    ,tableOpts = {
+                elem: '#list',
+                url: "{{route('product::product.order_paginate')}}?product_id={{$product_id}}",
+                page: true,
+                parseData: function (res) {
+                    return {
+                        "code": 0,
+                        "msg": '',
+                        "count": res.total,
+                        "data": res.data
+                    };
+                },
+                cols: [
+                    [
+                        {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
+                        {field: 'sku_code', title: 'SKU编号', width: 160, align: 'center', fixed: 'left', templet: function (d) {
+                            return d.sku.code;
+                        }},
+                        {field: 'purchase_order_code', title: '订单编号', width: 160, align: 'center', fixed: 'left', templet: function (d) {
+                            return d.purchase_order.code;
+                        }},
+                        {field: 'purchase_order_status', title: '订单状态', width: 100, align: 'center', fixed: 'left', templet: function (d) {
+                            return d.purchase_order.status_name;
+                        }},
+                        {field: 'supplier_name', title: '供应商', width: 120, align: 'center', fixed: 'left', templet: function (d) {
+                            return d.purchase_order.supplier.name;
+                        }},
+                        {field: 'title', title: '品名', align: 'center', fixed: 'left'},
+                        {field: 'unit', title: '单位', width: 60, align: 'center', fixed: 'left'},
+                        {field: 'quantity', title: '数量', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'price', title: '单价', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'amount', title: '金额', width: 120, align: 'center', templet: function (d) {
+                            return d.price * d.quantity;
+                        }},
+                        {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
+                        {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'}
+                    ]
+                ]
+            }
+                    ,tableIns = table.render(tableOpts);
+
+            laydate.render({
+                elem: 'input[name=created_at_between]'
+                ,range: true
+            });
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
+            });
+        });
     </script>
 @endsection
