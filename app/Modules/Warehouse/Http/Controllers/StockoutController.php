@@ -27,6 +27,9 @@ class StockoutController extends Controller
             ->leftjoin('inventories AS i', 'i.sku_id', '=', 'ps.id');
 
         $query = $query->whereRaw('i.stock < i.lowest_stock');
+        if ($request->get('code')) {
+            $query = $query->where('products.code', $request->get('code'));
+        }
         if ($request->get('category_ids')) {
             $category_ids = explode(',', $request->get('category_ids'));
             foreach ($category_ids as $category_id) {

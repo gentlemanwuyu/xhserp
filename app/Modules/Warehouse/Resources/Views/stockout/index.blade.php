@@ -3,6 +3,9 @@
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="产品编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
                 <div id="category_ids_select"></div>
             </div>
             <div class="layui-col-xs4">
