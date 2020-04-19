@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Events\Entried;
-use App\Modules\Product\Models\ProductSku;
-use App\Modules\Purchase\Models\PurchaseOrderItem;
+use App\Modules\Category\Models\Category;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Warehouse\Models\Inventory;
+use App\Modules\Product\Models\ProductSku;
+use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class EntryController extends Controller
 {
@@ -21,7 +22,9 @@ class EntryController extends Controller
 
     public function index()
     {
-        return view('warehouse::entry.index');
+        $categories = Category::tree(1);
+
+        return view('warehouse::entry.index', compact('categories'));
     }
 
     public function paginate(Request $request)
@@ -39,7 +42,24 @@ class EntryController extends Controller
             }
         }
 
-        $paginate = ProductSku::whereIn('id', array_unique($sku_ids))->paginate($request->get('limit'));
+        $query = ProductSku::leftJoin('products AS p', 'p.id', '=', 'product_skus.product_id')
+            ->whereNull('p.deleted_at')
+            ->whereIn('product_skus.id', array_unique($sku_ids));
+
+        if ($request->get('sku_code')) {
+            $query = $query->where('product_skus.code', $request->get('sku_code'));
+        }
+        if ($request->get('category_ids')) {
+            $category_ids = explode(',', $request->get('category_ids'));
+            foreach ($category_ids as $category_id) {
+                $category = Category::find($category_id);
+                $category_ids = array_merge($category_ids, $category->children_ids);
+            }
+
+            $query = $query->whereIn('p.category_id', array_unique($category_ids));
+        }
+
+        $paginate = $query->select(['product_skus.*'])->paginate($request->get('limit'));
 
         foreach ($paginate as $sku) {
             $sku->product->category;

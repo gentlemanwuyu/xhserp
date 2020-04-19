@@ -13,9 +13,6 @@
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
-        <div class="layui-row layui-col-space15">
-
-        </div>
     </form>
     <table id="list" class="layui-table"  lay-filter="list">
 

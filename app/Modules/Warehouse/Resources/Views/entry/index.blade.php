@@ -1,5 +1,19 @@
 @extends('layouts.default')
 @section('content')
+    <form class="layui-form" lay-filter="search">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs2">
+                <input type="text" name="sku_code" placeholder="SKU编号" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
+                <div id="category_ids_select"></div>
+            </div>
+            <div class="layui-col-xs4">
+                <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
     <table id="list" class="layui-table"  lay-filter="list">
 
     </table>
@@ -11,12 +25,14 @@
 @endsection
 @section('scripts')
     <script>
+        var categories = <?= json_encode($categories); ?>;
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
-        }).use(['table', 'dropdown'], function () {
+        }).use(['table', 'dropdown', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,tableIns = table.render({
+                    ,form = layui.form
+                    ,tableOpts = {
                 elem: '#list',
                 url: "{{route('warehouse::entry.paginate')}}",
                 page: true,
@@ -109,9 +125,38 @@
                         });
                         @endcan
 
-                        return actions;
+                                return actions;
                     });
                 }
+            }
+                    ,tableIns = table.render(tableOpts);
+
+            // 分类下拉树
+            xmSelect.render({
+                el: '#category_ids_select',
+                name: 'category_ids',
+                tips: '分类',
+                filterable: true,
+                searchTips: '搜索...',
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    showLine: false,
+                    strict: false
+                },
+                height: 'auto',
+                data: categories
+            });
+
+            form.on('submit(search)', function (form_data) {
+                tableOpts.where = form_data.field;
+                table.render(tableOpts);
             });
         });
     </script>
