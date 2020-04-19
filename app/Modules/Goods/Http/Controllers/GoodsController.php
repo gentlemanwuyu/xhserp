@@ -101,6 +101,7 @@ class GoodsController extends Controller
     public function orderPaginate(Request $request)
     {
         $query = OrderItem::leftJoin('orders AS o', 'o.id', '=', 'order_items.order_id')
+            ->whereNull('o.deleted_at')
             ->where('order_items.goods_id', $request->get('goods_id'));
 
         if ($request->get('order_code')) {

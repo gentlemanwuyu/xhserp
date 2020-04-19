@@ -155,6 +155,7 @@ class ProductController extends Controller
     public function orderPaginate(Request $request)
     {
         $query = PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
+            ->whereNull('po.deleted_at')
             ->where('product_id', $request->get('product_id'));
 
         if ($request->get('purchase_order_code')) {
