@@ -4,6 +4,7 @@ namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Goods\Http\Requests\ComboRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Goods\Models\Combo;
@@ -79,7 +80,7 @@ class ComboController extends Controller
         return view('goods::combo.form', $data);
     }
 
-    public function save(Request $request)
+    public function save(ComboRequest $request)
     {
         try {
             $goods_data = [

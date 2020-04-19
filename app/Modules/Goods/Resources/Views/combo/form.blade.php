@@ -86,8 +86,10 @@
                                         </select>
                                     </td>
                                 @endforeach
-                                <td><input type="text" name="skus[{{$sku->id}}][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" value="{{$sku->lowest_price}}"></td>
-                                <td><input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value="{{(float)$sku->msrp ? $sku->msrp : ''}}"></td>
+                                <td>
+                                    <input type="text" name="skus[{{$sku->id}}][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" value="{{$sku->lowest_price}}" oninput="value=value.replace(/[^\d.]/g, '')">
+                                </td>
+                                <td><input type="text" name="skus[{{$sku->id}}][msrp]" placeholder="建议零售价" class="layui-input" value="{{(float)$sku->msrp ? $sku->msrp : ''}}" oninput="value=value.replace(/[^\d.]/g, '')"></td>
                                 <td>
                                     @if($sku->deletable)
                                         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>
@@ -133,10 +135,10 @@
                     html += '</td>';
                 @endforeach
                 html += '<td>';
-                html += '<input type="text" name="skus[' + sku_flag + '][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">';
                 html += '</td>';
                 html += '<td>';
-                html += '<input type="text" name="skus[' + sku_flag + '][msrp]" placeholder="建议零售价" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][msrp]" placeholder="建议零售价" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">';
                 html += '</td>';
                 html += '<td>';
                 html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>';

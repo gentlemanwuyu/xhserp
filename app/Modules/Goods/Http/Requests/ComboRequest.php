@@ -2,9 +2,9 @@
 namespace App\Modules\Goods\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Modules\Goods\Models\SingleSkuProductSku;
+use App\Modules\Goods\Models\ComboProduct;
 
-class SingleRequest extends FormRequest
+class ComboRequest extends FormRequest
 {
 	protected $messages = [];
 
@@ -16,6 +16,11 @@ class SingleRequest extends FormRequest
 	public function rules()
 	{
 		$inputs = $this->all();
+		if (isset($inputs['product_ids'])) {
+			$product_ids = array_keys($inputs['product_ids']);
+		}else {
+			$product_ids = array_unique(ComboProduct::where('goods_id', $inputs['goods_id'])->pluck('product_id')->toArray());
+		}
 
 		$rules = [
 			'code' => 'required|max:80|unique:goods,code' . ($this->get('goods_id') ? ',' . $this->get('goods_id') : ''),
@@ -25,22 +30,33 @@ class SingleRequest extends FormRequest
 		];
 
 		if (!empty($inputs['skus'])) {
-			foreach ($inputs['skus'] as $product_sku_id => $goods_sku) {
-				$goods_sku_id = SingleSkuProductSku::where('product_sku_id', $product_sku_id)->value('goods_sku_id');
-				$key = 'skus.' . $product_sku_id . '.code';
-				$rules[$key] = 'required|max:80|unique:goods_skus,code' . ($goods_sku_id ? ',' . $goods_sku_id : '');
+			foreach ($inputs['skus'] as $index => $goods_sku) {
+				$key = 'skus.' . $index . '.code';
+				$rules[$key] = 'required|max:80|unique:goods_skus,code' . ($index ? ',' . $index : '');
 				$this->messages = array_merge($this->messages, [
 					$key . '.required' => '请输入SKU编号',
 					$key . '.max' => 'SKU编号不能超过:max个字符',
 					$key . '.unique' => 'SKU编号已存在',
 				]);
-				$key = 'skus.' . $product_sku_id . '.lowest_price';
+				$key = 'skus.' . $index . '.parts';
+				$rules[$key] = 'required';
+				$this->messages = array_merge($this->messages, [
+					$key . '.required' => 'SKU has no parts',
+				]);
+				foreach ($product_ids as $product_id) {
+					$key = 'skus.' . $index . '.parts' . '.' . $product_id;
+					$rules[$key] = 'required';
+					$this->messages = array_merge($this->messages, [
+						$key . '.required' => '请选择产品SKU',
+					]);
+				}
+				$key = 'skus.' . $index . '.lowest_price';
 				$rules[$key] = 'required|numeric';
 				$this->messages = array_merge($this->messages, [
 					$key . '.required' => '最低售价不能为空',
 					$key . '.numeric' => '最低售价必须是数值',
 				]);
-				$key = 'skus.' . $product_sku_id . '.msrp';
+				$key = 'skus.' . $index . '.msrp';
 				$rules[$key] = 'numeric';
 				$this->messages = array_merge($this->messages, [$key . '.numeric' => '建议零售价必须是数值']);
 			}
@@ -59,11 +75,6 @@ class SingleRequest extends FormRequest
 		return true;
 	}
 
-	/**
-	 * 自定义验证信息
-	 *
-	 * @return array
-	 */
 	public function messages()
 	{
 		return array_merge([
