@@ -23,6 +23,7 @@ class CreateDeliveryOrdersTable extends Migration
 			$table->text('address')->default('')->comment('地址');
 			$table->string('consignee')->default('')->comment('收货人');
 			$table->string('consignee_phone')->default('')->comment('收货人电话');
+			$table->string('track_no')->default('')->comment('物流单号');
 			$table->text('note')->default('')->comment('备注');
 			$table->integer('user_id')->default(0)->comment('创建人ID');
 			$table->tinyInteger('status')->default(0)->comment('状态, 1为待出货, 2为完成');

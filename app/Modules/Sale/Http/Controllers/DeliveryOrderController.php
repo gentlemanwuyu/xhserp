@@ -121,6 +121,7 @@ class DeliveryOrderController extends Controller
                 'address' => $request->get('address', ''),
                 'consignee' => $request->get('consignee', ''),
                 'consignee_phone' => $request->get('consignee_phone', ''),
+                'track_no' => $request->get('track_no', ''),
                 'note' => $request->get('note', ''),
             ];
             if ($request->get('customer_id')) {

@@ -58,6 +58,12 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">物流单号</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="track_no" class="layui-input" value="{{$delivery_order->track_no}}">
+                                    </div>
+                                </div>
                                 <div class="layui-form-item" pane="">
                                     <label class="layui-form-label">是否代收</label>
                                     <div class="layui-input-block" style="display: flex;">
@@ -399,6 +405,12 @@
                         html += '<option value="' + express.id + '">' + express.name + '</option>';
                     });
                     html += '</select>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div class="layui-form-item">';
+                    html += '<label class="layui-form-label">物流单号</label>';
+                    html += '<div class="layui-input-block">';
+                    html += '<input type="text" name="track_no" class="layui-input">';
                     html += '</div>';
                     html += '</div>';
                     html += '<div class="layui-form-item" pane="">';
