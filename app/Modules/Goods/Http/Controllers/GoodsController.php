@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
+use App\Modules\Sale\Models\Customer;
+use App\Modules\Sale\Models\OrderItem;
 use App\Modules\Category\Models\Category;
 
 class GoodsController extends Controller
@@ -68,8 +70,9 @@ class GoodsController extends Controller
     public function detail(Request $request)
     {
         $goods = Goods::find($request->get('goods_id'));
+        $customers = Customer::all();
 
-        return view('goods::goods.detail', compact('goods'));
+        return view('goods::goods.detail', compact('goods', 'customers'));
     }
 
     public function delete(Request $request)
@@ -93,5 +96,34 @@ class GoodsController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
+    }
+
+    public function orderPaginate(Request $request)
+    {
+        $query = OrderItem::leftJoin('orders AS o', 'o.id', '=', 'order_items.order_id')
+            ->where('order_items.goods_id', $request->get('goods_id'));
+
+        if ($request->get('order_code')) {
+            $query = $query->where('o.code', $request->get('order_code'));
+        }
+        if ($request->get('customer_id')) {
+            $query = $query->where('o.customer_id', $request->get('customer_id'));
+        }
+        if ($request->get('created_at_between')) {
+            $created_at_between = explode(' - ', $request->get('created_at_between'));
+            $query = $query->where('order_items.created_at', '>=', $created_at_between[0] . ' 00:00:00')
+                ->where('order_items.created_at', '<=', $created_at_between[1] . ' 23:59:59');
+        }
+
+        $paginate = $query->select(['order_items.*'])->orderBy('order_items.id', 'desc')->paginate($request->get('limit'));
+
+        foreach ($paginate as $oi) {
+            $order = $oi->order;
+            $order->customer;
+            $order->setAppends(['status_name']);
+            $oi->sku->goods;
+        }
+
+        return response()->json($paginate);
     }
 }
