@@ -27,8 +27,14 @@ class StockoutController extends Controller
             ->leftjoin('inventories AS i', 'i.sku_id', '=', 'ps.id');
 
         $query = $query->whereRaw('i.stock < i.lowest_stock');
-        if ($request->get('category_id')) {
-            $query = $query->where('category_id', $request->get('category_id'));
+        if ($request->get('category_ids')) {
+            $category_ids = explode(',', $request->get('category_ids'));
+            foreach ($category_ids as $category_id) {
+                $category = Category::find($category_id);
+                $category_ids = array_merge($category_ids, $category->children_ids);
+            }
+
+            $query = $query->whereIn('products.category_id', array_unique($category_ids));
         }
 
         $paginate = $query->select('products.*')->groupBy('products.id')->paginate($request->get('limit'));

@@ -3,22 +3,7 @@
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs2">
-                <select name="category_id" lay-search="">
-                    <option value="">分类</option>
-                    @foreach($categories as $category)
-                        <option value="{{$category->id}}">{{$category->name}}</option>
-                        @if(!empty($category->children))
-                            @foreach($category->children as $son)
-                                <option value="{{$son->id}}">{{$son->name}}</option>
-                                @if(!empty($son->children))
-                                    @foreach($son->children as $grandson)
-                                        <option value="{{$grandson->id}}">{{$grandson->name}}</option>
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endif
-                    @endforeach
-                </select>
+                <div id="category_ids_select"></div>
             </div>
             <div class="layui-col-xs4">
                 <button type="button" class="layui-btn" lay-submit lay-filter="search">搜索</button>
@@ -35,6 +20,7 @@
 @endsection
 @section('scripts')
     <script>
+        var categories = <?= json_encode($categories); ?>;
         layui.use(['table', 'form'], function () {
             var table = layui.table
                     ,form = layui.form
@@ -111,6 +97,29 @@
                 }
             }
                     ,tableIns = table.render(tableOpts);
+
+            // 分类下拉树
+            xmSelect.render({
+                el: '#category_ids_select',
+                name: 'category_ids',
+                tips: '分类',
+                filterable: true,
+                searchTips: '搜索...',
+                theme:{
+                    color: '#5FB878'
+                },
+                prop: {
+                    name: 'name',
+                    value: 'id'
+                },
+                tree: {
+                    show: true,
+                    showLine: false,
+                    strict: false
+                },
+                height: 'auto',
+                data: categories
+            });
 
             form.on('submit(search)', function (form_data) {
                 tableOpts.where = form_data.field;
