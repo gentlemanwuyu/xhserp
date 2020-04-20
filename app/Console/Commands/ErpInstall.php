@@ -46,6 +46,7 @@ class ErpInstall extends Command
     {
         $this->execShellWithPrettyPrint("php artisan migrate");
         $this->execShellWithPrettyPrint("php artisan world:init");
+        $this->execShellWithPrettyPrint("php artisan currency:refresh");
         $this->execShellWithPrettyPrint("php artisan module:migrate");
         $this->execShellWithPrettyPrint("php artisan db:seed");
         $this->createAdminAccount();
