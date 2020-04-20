@@ -38,7 +38,7 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
-                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input" autocomplete="off">
             </div>
         </div>
         <div class="layui-row layui-col-space15">
@@ -95,6 +95,9 @@
                             return total_amount.toFixed(2);
                         }},
                         {field: 'tax_name', title: '税率', width: 100, align: 'center'},
+                        {field: 'currency_name', title: '币种', width: 100, align: 'center', templet: function (d) {
+                            return d.currency.name;
+                        }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';

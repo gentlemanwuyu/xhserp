@@ -62,6 +62,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">币种</label>
+                            <div class="layui-input-block">
+                                <select name="currency_code" lay-search="" lay-verify="required" lay-reqText="请选择币种">
+                                    <option value="">请选择币种</option>
+                                    @foreach($currencies as $currency)
+                                        <option value="{{$currency['code']}}" @if(isset($order) && $currency['code'] == $order->currency_code) selected @endif>{{$currency['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -270,14 +281,16 @@
 
             // 监听供应商选择框
             form.on('select(supplier)', function (data) {
-                var payment_method = '', tax = '';
+                var payment_method = '', tax = '', currency_code = '';
                 if (data.value) {
                     payment_method = suppliers[data.value]['payment_method'];
                     tax = suppliers[data.value]['tax'];
+                    currency_code = suppliers[data.value]['currency_code'];
                 }
 
                 $('select[name=payment_method]').val(payment_method);
                 $('select[name=tax]').val(tax);
+                $('select[name=currency_code]').val(currency_code);
                 form.render('select', 'order');
             });
 
@@ -303,13 +316,12 @@
                     data: form_data.field,
                     success: function (data) {
                         layer.close(load_index);
-                        var action = order_id ? '编辑' : '添加';
                         if ('success' == data.status) {
-                            layer.msg('订单' + action + '成功', {icon: 1, time: 2000}, function(){
-                                location.reload();
+                            layer.msg('订单保存成功', {icon: 1, time: 2000}, function(){
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
-                            layer.msg('订单' + action + '失败:' + data.msg, {icon:2});
+                            layer.msg('订单保存失败:' + data.msg, {icon:2});
                             return false;
                         }
                     },

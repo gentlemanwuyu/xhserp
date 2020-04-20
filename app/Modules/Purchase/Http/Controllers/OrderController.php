@@ -4,6 +4,7 @@ namespace App\Modules\Purchase\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\WorldService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
@@ -28,12 +29,13 @@ class OrderController extends Controller
 
     public function form(Request $request)
     {
-        $suppliers = Supplier::all(['id', 'name', 'payment_method', 'tax'])->pluck(null, 'id');
+        $currencies = WorldService::currencies();
+        $suppliers = Supplier::all(['id', 'name', 'payment_method', 'tax', 'currency_code'])->pluck(null, 'id');
         $products = Product::all()->map(function ($product) {
             $product->skus;
             return $product;
         })->pluck(null, 'id');
-        $data = compact('suppliers', 'products');
+        $data = compact('suppliers', 'products', 'currencies');
         if ($request->get('order_id')) {
             $order = PurchaseOrder::find($request->get('order_id'));
             $data['order'] = $order;
@@ -78,6 +80,7 @@ class OrderController extends Controller
                 return $item;
             });
             $order->supplier;
+            $order->currency;
             $order->user;
             $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable']);
         }
@@ -92,6 +95,7 @@ class OrderController extends Controller
                 'code' => $request->get('code', ''),
                 'payment_method' => $request->get('payment_method'),
                 'tax' => $request->get('tax'),
+                'currency_code' => $request->get('currency_code'),
                 'status' => 1,
             ];
 

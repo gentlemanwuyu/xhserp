@@ -11,6 +11,7 @@ namespace App\Modules\Purchase\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CodeTrait;
+use App\Models\Currency;
 use App\Modules\Index\Models\User;
 use App\Modules\Warehouse\Models\SkuEntry;
 
@@ -72,6 +73,11 @@ class PurchaseOrder extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_code', 'code');
     }
 
     public function user()
