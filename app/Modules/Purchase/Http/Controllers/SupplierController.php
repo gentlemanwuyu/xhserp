@@ -23,7 +23,8 @@ class SupplierController extends Controller
     public function form(Request $request)
     {
         $chinese_regions = WorldService::chineseTree();
-        $data = compact('chinese_regions');
+        $currencies = WorldService::currencies();
+        $data = compact('chinese_regions', 'currencies');
         if ($request->get('supplier_id')) {
             $supplier = Supplier::find($request->get('supplier_id'));
             $data['supplier'] = $supplier;
@@ -54,6 +55,7 @@ class SupplierController extends Controller
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
         foreach ($paginate as $supplier) {
+            $supplier->currency;
             $supplier->contacts;
             $supplier->setAppends(['payment_method_name', 'tax_name']);
         }
@@ -91,6 +93,7 @@ class SupplierController extends Controller
                 'phone' => $request->get('phone', ''),
                 'fax' => $request->get('fax', ''),
                 'tax' => $request->get('tax', 0),
+                'currency_code' => $request->get('currency_code', ''),
                 'payment_method' => $request->get('payment_method', 0),
                 'monthly_day' => $request->get('monthly_day', 0),
                 'state_id' => $request->get('state_id', 0),

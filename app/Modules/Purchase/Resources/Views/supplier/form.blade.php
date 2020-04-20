@@ -63,6 +63,17 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">币种</label>
+                            <div class="layui-input-block">
+                                <select name="currency_code" lay-search="" lay-verify="required" lay-reqText="请选择币种">
+                                    <option value="">请选择币种</option>
+                                    @foreach($currencies as $currency)
+                                        <option value="{{$currency['code']}}" @if(isset($supplier) && $currency['code'] == $supplier->currency_code) selected @endif>{{$currency['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="layui-form-item" pane="">
                             <label class="layui-form-label required">付款方式</label>
                             <div class="layui-input-block">

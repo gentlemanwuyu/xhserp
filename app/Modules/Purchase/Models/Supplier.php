@@ -11,6 +11,7 @@ namespace App\Modules\Purchase\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use App\Models\Currency;
 use App\Models\ChineseRegion;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Finance\Models\Payment;
@@ -146,6 +147,11 @@ class Supplier extends Model
         }
 
         return $this;
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_code', 'code');
     }
 
     public function contacts()

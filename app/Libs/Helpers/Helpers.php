@@ -63,7 +63,7 @@ if (! function_exists('get_sys_configs')) {
         }
 
         $sys_configs = array_column(Config::all(['key', 'value'])->toArray(), 'value', 'key');
-        Cache::put('system:configs', json_encode($sys_configs));
+        Cache::put('system:configs', json_encode($sys_configs), 14400);
 
         return $sys_configs;
     }
@@ -81,7 +81,7 @@ if (! function_exists('flush_sys_configs')) {
         Cache::forget('system:configs');
 
         $sys_configs = array_column(Config::all(['key', 'value'])->toArray(), 'value', 'key');
-        Cache::put('system:configs', json_encode($sys_configs));
+        Cache::put('system:configs', json_encode($sys_configs), 14400);
 
         return true;
     }

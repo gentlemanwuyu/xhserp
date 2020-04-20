@@ -10,6 +10,7 @@ namespace App\Services;
 
 use Wuyu\World\Facades\World;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Currency;
 
 class WorldService
 {
@@ -27,7 +28,7 @@ class WorldService
         }
 
         $tree = World::chineseTree($parent_id);
-        Cache::put('world:chinese_tree_' . $parent_id, json_encode($tree));
+        Cache::forever('world:chinese_tree_' . $parent_id, json_encode($tree));
 
         return $tree;
     }
@@ -40,8 +41,15 @@ class WorldService
         }
 
         $countries = World::countries();
-        Cache::put('world:countries', json_encode($countries));
+        Cache::forever('world:countries', json_encode($countries));
 
         return $countries;
+    }
+
+    public static function currencies()
+    {
+        $currencies = Currency::all();
+
+        return array_column(json_decode(json_encode($currencies), true), null, 'code');
     }
 }
