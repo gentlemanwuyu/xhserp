@@ -17,7 +17,9 @@ class SupplierController extends Controller
 
     public function index()
     {
-        return view('purchase::supplier.index');
+        $currencies = WorldService::currencies();
+
+        return view('purchase::supplier.index', compact('currencies'));
     }
 
     public function form(Request $request)
@@ -45,6 +47,9 @@ class SupplierController extends Controller
         }
         if ($request->get('payment_method')) {
             $query = $query->where('payment_method', $request->get('payment_method'));
+        }
+        if ($request->get('currency_code')) {
+            $query = $query->where('currency_code', $request->get('currency_code'));
         }
 
         if ($request->get('created_at_between')) {
@@ -140,5 +145,12 @@ class SupplierController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
+    }
+
+    public function detail(Request $request)
+    {
+        $supplier = Supplier::find($request->get('supplier_id'));
+
+        return view('purchase::supplier.detail', compact('supplier'));
     }
 }

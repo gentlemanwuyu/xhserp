@@ -9,10 +9,18 @@
                 <input type="text" name="name" placeholder="供应商名称" class="layui-input">
             </div>
             <div class="layui-col-xs2">
-                <select name="payment_method" lay-search="">
+                <select name="payment_method">
                     <option value="">付款方式</option>
                     @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method_name)
                         <option value="{{$method_id}}">{{$method_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
+                <select name="currency_code" lay-search="">
+                    <option value="">币种</option>
+                    @foreach($currencies as $currency_code => $currency)
+                        <option value="{{$currency_code}}">{{$currency['name']}}</option>
                     @endforeach
                 </select>
             </div>
@@ -122,6 +130,15 @@
 
                     dropdown(res.data,function(data) {
                         var actions = [];
+
+                        @can('supplier_detail')
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('purchase::supplier.detail')}}?supplier_id=" + data.id, '供应商详情[' + data.id + ']');
+                            }
+                        });
+                        @endcan
 
                         @can('edit_supplier')
                         actions.push({

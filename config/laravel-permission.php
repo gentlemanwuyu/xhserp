@@ -184,6 +184,7 @@ return [
                 [ // 供应商管理
                     'name' => 'supplier_management', 'display_name' => '供应商管理', 'route' => '', 'type' => 1, 'children' =>
                     [
+                        ['name' => 'supplier_detail', 'display_name' => '供应商详情', 'route' => '', 'type' => 2],
                         ['name' => 'add_supplier', 'display_name' => '添加供应商', 'route' => '', 'type' => 2],
                         ['name' => 'edit_supplier', 'display_name' => '编辑供应商', 'route' => '', 'type' => 2],
                         ['name' => 'delete_supplier', 'display_name' => '删除供应商', 'route' => '', 'type' => 2],
