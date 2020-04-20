@@ -19,8 +19,8 @@
             <div class="layui-col-xs2">
                 <select name="currency_code" lay-search="">
                     <option value="">币种</option>
-                    @foreach($currencies as $currency_code => $currency)
-                        <option value="{{$currency_code}}">{{$currency['name']}}</option>
+                    @foreach($currencies as $currency)
+                        <option value="{{$currency['code']}}">{{$currency['name']}}</option>
                     @endforeach
                 </select>
             </div>
