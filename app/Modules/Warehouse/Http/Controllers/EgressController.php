@@ -38,6 +38,9 @@ class EgressController extends Controller
             DB::beginTransaction();
             $delivery_order->status = 2;
             $delivery_order->finished_at = Carbon::now()->toDateTimeString();
+            if (3 == $delivery_order->delivery_method) {
+                $delivery_order->track_no = $request->get('track_no', '');
+            }
             $delivery_order->save();
 
             // 减少对应的产品数量

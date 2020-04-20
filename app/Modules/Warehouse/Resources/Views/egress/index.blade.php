@@ -148,31 +148,62 @@
                             actions.push({
                                 title: "完成",
                                 event: function () {
-                                    layer.confirm("确认要已完成出货？", {icon: 3, title:"确认"}, function (index) {
-                                        layer.close(index);
-                                        var load_index = layer.load();
-                                        $.ajax({
-                                            method: "post",
-                                            url: "{{route('warehouse::egress.finish')}}",
-                                            data: {delivery_order_id: data.id},
-                                            success: function (res) {
-                                                layer.close(load_index);
-                                                if ('success' == res.status) {
-                                                    layer.msg("完成出货", {icon: 1, time: 2000}, function(){
-                                                        table.render(tableOpts);
-                                                    });
-                                                } else {
-                                                    layer.msg("完成出货失败:" + res.msg, {icon: 2, time: 2000});
+                                    if (3 == data.delivery_method) {
+                                        layer.prompt({
+                                            title: '物流单号',
+                                            value: data.track_no
+                                        }, function(value, index, elem){
+                                            layer.close(index);
+                                            var load_index = layer.load();
+                                            $.ajax({
+                                                method: "post",
+                                                url: "{{route('warehouse::egress.finish')}}",
+                                                data: {delivery_order_id: data.id, track_no: value},
+                                                success: function (res) {
+                                                    layer.close(load_index);
+                                                    if ('success' == res.status) {
+                                                        layer.msg("完成出货", {icon: 1, time: 2000}, function(){
+                                                            table.render(tableOpts);
+                                                        });
+                                                    } else {
+                                                        layer.msg("完成出货失败:" + res.msg, {icon: 2, time: 2000});
+                                                        return false;
+                                                    }
+                                                },
+                                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                    layer.close(load_index);
+                                                    layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                     return false;
                                                 }
-                                            },
-                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                                layer.close(load_index);
-                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
-                                                return false;
-                                            }
+                                            });
                                         });
-                                    });
+                                    }else {
+                                        layer.confirm("确认要已完成出货？", {icon: 3, title:"确认"}, function (index) {
+                                            layer.close(index);
+                                            var load_index = layer.load();
+                                            $.ajax({
+                                                method: "post",
+                                                url: "{{route('warehouse::egress.finish')}}",
+                                                data: {delivery_order_id: data.id},
+                                                success: function (res) {
+                                                    layer.close(load_index);
+                                                    if ('success' == res.status) {
+                                                        layer.msg("完成出货", {icon: 1, time: 2000}, function(){
+                                                            table.render(tableOpts);
+                                                        });
+                                                    } else {
+                                                        layer.msg("完成出货失败:" + res.msg, {icon: 2, time: 2000});
+                                                        return false;
+                                                    }
+                                                },
+                                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                    layer.close(load_index);
+                                                    layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            });
+                                        });
+                                    }
                                 }
                             });
                         }

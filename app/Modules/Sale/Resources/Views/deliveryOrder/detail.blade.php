@@ -22,10 +22,18 @@
                             <td>出货方式</td>
                             <td>{{$delivery_order->delivery_method_name}}</td>
                         </tr>
+                        <tr>
+                            <td>状态</td>
+                            <td>{{$delivery_order->status_name}}</td>
+                        </tr>
                         @if(3 == $delivery_order->delivery_method)
                             <tr>
                                 <td>快递公司</td>
                                 <td>{{$delivery_order->express->name or ''}}</td>
+                            </tr>
+                            <tr>
+                                <td>物流单号</td>
+                                <td>{{$delivery_order->track_no}}</td>
                             </tr>
                             <tr>
                                 <td>是否代收</td>
@@ -115,35 +123,67 @@
 @endsection
 @section('scripts')
     <script>
+        var delivery_order = <?= json_encode($delivery_order); ?>;
         layui.use(['form'], function () {
             var form = layui.form;
 
             $('button[erp-action=finish]').on('click', function () {
-                layer.confirm("确认要已完成出货？", {icon: 3, title:"确认"}, function (index) {
-                    layer.close(index);
-                    var load_index = layer.load();
-                    $.ajax({
-                        method: "post",
-                        url: "{{route('warehouse::egress.finish')}}",
-                        data: {delivery_order_id: "{{$delivery_order_id or ''}}"},
-                        success: function (data) {
-                            layer.close(load_index);
-                            if ('success' == data.status) {
-                                layer.msg("完成出货", {icon: 1, time: 2000}, function(){
-                                    parent.layui.admin.closeThisTabs();
-                                });
-                            } else {
-                                layer.msg("完成出货失败:" + data.msg, {icon: 2, time: 2000});
+                if (3 == delivery_order.delivery_method) {
+                    layer.prompt({
+                        title: '物流单号',
+                        value: delivery_order.track_no
+                    }, function(value, index, elem){
+                        layer.close(index);
+                        var load_index = layer.load();
+                        $.ajax({
+                            method: "post",
+                            url: "{{route('warehouse::egress.finish')}}",
+                            data: {delivery_order_id: delivery_order.id, track_no: value},
+                            success: function (res) {
+                                layer.close(load_index);
+                                if ('success' == res.status) {
+                                    layer.msg("完成出货", {icon: 1, time: 2000}, function(){
+                                        parent.layui.admin.closeThisTabs();
+                                    });
+                                } else {
+                                    layer.msg("完成出货失败:" + res.msg, {icon: 2, time: 2000});
+                                    return false;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                layer.close(load_index);
+                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                 return false;
                             }
-                        },
-                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                            layer.close(load_index);
-                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
-                            return false;
-                        }
+                        });
                     });
-                });
+                }else {
+                    layer.confirm("确认要已完成出货？", {icon: 3, title:"确认"}, function (index) {
+                        layer.close(index);
+                        var load_index = layer.load();
+                        $.ajax({
+                            method: "post",
+                            url: "{{route('warehouse::egress.finish')}}",
+                            data: {delivery_order_id: delivery_order.id},
+                            success: function (res) {
+                                layer.close(load_index);
+                                if ('success' == res.status) {
+                                    layer.msg("完成出货", {icon: 1, time: 2000}, function(){
+                                        parent.layui.admin.closeThisTabs();
+                                    });
+                                } else {
+                                    layer.msg("完成出货失败:" + res.msg, {icon: 2, time: 2000});
+                                    return false;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                layer.close(load_index);
+                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                return false;
+                            }
+                        });
+                    });
+                }
             });
         });
     </script>
