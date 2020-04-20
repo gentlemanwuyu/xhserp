@@ -304,4 +304,14 @@ class Supplier extends Model
 
         return $full_address;
     }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        return !PurchaseOrder::where('supplier_id', $this->id)->exists();
+    }
 }

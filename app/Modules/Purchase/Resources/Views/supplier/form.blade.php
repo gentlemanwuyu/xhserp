@@ -345,11 +345,11 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("供应商添加成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                            layer.msg("供应商保存成功", {icon: 1, time: 2000}, function () {
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
-                            layer.msg("供应商添加失败:"+data.msg, {icon: 2, time: 2000});
+                            layer.msg("供应商保存失败:"+data.msg, {icon: 2, time: 2000});
                             return false;
                         }
                     },

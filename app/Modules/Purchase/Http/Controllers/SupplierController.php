@@ -57,7 +57,7 @@ class SupplierController extends Controller
         foreach ($paginate as $supplier) {
             $supplier->currency;
             $supplier->contacts;
-            $supplier->setAppends(['payment_method_name', 'tax_name']);
+            $supplier->setAppends(['payment_method_name', 'tax_name', 'deletable']);
         }
 
         return response()->json($paginate);
