@@ -11,6 +11,7 @@ use App\Modules\Index\Models\User;
 use App\Modules\Product\Models\Product;
 use App\Modules\Purchase\Models\Supplier;
 use App\Modules\Purchase\Models\PurchaseOrder;
+use App\Modules\Purchase\Models\PurchaseOrderLog;
 
 class OrderController extends Controller
 {
@@ -189,6 +190,12 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 3]);
+            PurchaseOrderLog::create([
+                'purchase_order_id' => $order->id,
+                'action' => 1,
+                'content' => '订单审核通过',
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
@@ -212,6 +219,12 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 2]);
+            PurchaseOrderLog::create([
+                'purchase_order_id' => $order->id,
+                'action' => 2,
+                'content' => $request->get('reason'),
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);

@@ -104,6 +104,11 @@ class PurchaseOrder extends Model
         return $this->hasManyThrough(SkuEntry::class, PurchaseOrderItem::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(PurchaseOrderLog::class)->orderBy('id', 'desc');
+    }
+
     public function getPaymentMethodNameAttribute()
     {
         return isset(Supplier::$payment_methods[$this->payment_method]) ? Supplier::$payment_methods[$this->payment_method] : '';

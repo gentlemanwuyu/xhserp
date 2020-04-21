@@ -34,6 +34,10 @@
                             <td>交期</td>
                             <td>{{$order->delivery_date or ''}}</td>
                         </tr>
+                        <tr>
+                            <td>订单状态</td>
+                            <td>{{$order->status_name or ''}}</td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -188,6 +192,41 @@
             </div>
         </div>
     @endif
+    <?php $purchaseOrderLogs = $order->logs; ?>
+    @if(!$purchaseOrderLogs->isEmpty())
+        <div class="erp-detail">
+            <div class="erp-detail-title">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>订单日志</legend>
+                </fieldset>
+            </div>
+            <div class="erp-detail-content">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>操作</th>
+                        <th>内容</th>
+                        <th>操作人</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $index = 1; ?>
+                    @foreach($purchaseOrderLogs as $log)
+                        <tr>
+                            <td>{{$index++}}</td>
+                            <td>{{$log->action_name}}</td>
+                            <td>{{$log->content}}</td>
+                            <td>{{$log->user->name or ''}}</td>
+                            <td>{{$log->created_at}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
     <div class="layui-row @if(!(isset($action) && 'review' == $action)) layui-hide @endif">
         <form class="layui-form">
             <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>
@@ -226,27 +265,30 @@
             });
 
             $('button[erp-action=reject]').on('click', function () {
-                var load_index = layer.load();
-                $.ajax({
-                    method: "post",
-                    url: "{{route('purchase::order.reject')}}",
-                    data: {order_id: "{{$order_id or ''}}"},
-                    success: function (data) {
-                        layer.close(load_index);
-                        if ('success' == data.status) {
-                            layer.msg("订单已驳回", {icon: 1, time: 2000}, function(){
-                                parent.layui.admin.closeThisTabs();
-                            });
-                        } else {
-                            layer.msg("订单审核失败:" + data.msg, {icon: 2, time: 2000});
+                layer.prompt({title: '驳回原因'}, function(value, index, elem){
+                    layer.close(index);
+                    var load_index = layer.load();
+                    $.ajax({
+                        method: "post",
+                        url: "{{route('purchase::order.reject')}}",
+                        data: {order_id: "{{$order_id or ''}}", reason: value},
+                        success: function (data) {
+                            layer.close(load_index);
+                            if ('success' == data.status) {
+                                layer.msg("订单已驳回", {icon: 1, time: 2000}, function(){
+                                    parent.layui.admin.closeThisTabs();
+                                });
+                            } else {
+                                layer.msg("订单审核失败:" + data.msg, {icon: 2, time: 2000});
+                                return false;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.close(load_index);
+                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
                             return false;
                         }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        layer.close(load_index);
-                        layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                        return false;
-                    }
+                    });
                 });
             });
         });
