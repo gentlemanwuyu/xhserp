@@ -159,6 +159,9 @@ class ReturnOrderController extends Controller
             if (!$purchase_return_order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该采购退货单']);
             }
+            if (1 != $purchase_return_order->status) {
+                return response()->json(['status' => 'fail', 'msg' => '该采购退货单不是已通过状态，禁止删除']);
+            }
 
             DB::beginTransaction();
             $purchase_return_order->items->each(function ($item) {
