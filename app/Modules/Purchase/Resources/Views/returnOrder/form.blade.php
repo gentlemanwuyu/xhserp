@@ -22,21 +22,18 @@
                 <div class="layui-row layui-col-space30">
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
+                            <?php $supplier = $purchase_order->supplier; ?>
                             <label class="layui-form-label">供应商</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$purchase_order->supplier->name}}</span>
+                                <span class="erp-form-span"><a lay-href="{{route('purchase::supplier.detail', ['supplier_id' => $supplier->id])}}" lay-text="供应商详情[{{$supplier->id}}]">{{$supplier->name}}</a></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label">订单号</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$purchase_order->code}}</span>
+                                <span class="erp-form-span"><a lay-href="{{route('purchase::order.detail', ['order_id' => $purchase_order->id])}}" lay-text="采购订单详情[{{$purchase_order->id}}]">{{$purchase_order->code}}</a></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label">订单时间</label>
                             <div class="layui-input-block">
@@ -45,39 +42,6 @@
                         </div>
                     </div>
                 </div>
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th width="50">序号</th>
-                        <th width="150">商品</th>
-                        <th width="150">SKU</th>
-                        <th>标题</th>
-                        <th width="50">单位</th>
-                        <th width="100">数量</th>
-                        <th width="100">单价</th>
-                        <th width="100">总价</th>
-                        <th width="100">已入库数量</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        $i = 1;
-                    ?>
-                    @foreach($purchase_order->items as $item)
-                        <tr>
-                            <td>{{$i++}}</td>
-                            <td>{{$item->product->name}}</td>
-                            <td>{{$item->sku->code}}</td>
-                            <td>{{$item->title}}</td>
-                            <td>{{$item->unit}}</td>
-                            <td>{{$item->quantity}}</td>
-                            <td>{{$item->price}}</td>
-                            <td>{{$item->quantity * $item->price}}</td>
-                            <td>{{$item->entried_quantity}}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
         <div class="layui-card">
@@ -303,6 +267,12 @@
                         html += '</select>';
                         html += '</div>';
                         html += '</div>';
+                        html += '<div class="layui-form-item">';
+                        html += '<label class="layui-form-label">物流单号</label>';
+                        html += '<div class="layui-input-block">';
+                        html += '<input type="text" name="track_no" placeholder="物流单号" class="layui-input">';
+                        html += '</div>';
+                        html += '</div>';
                     }
                     if (-1 < [2, 3].indexOf(delivery_method)) {
                         html += '<div class="layui-form-item">';
@@ -318,7 +288,7 @@
                         html += '</div>';
                         html += '</div>';
                         html += '<div class="layui-form-item">';
-                        html += '<label class="layui-form-label required">收货人电话</label>';
+                        html += '<label class="layui-form-label required">联系电话</label>';
                         html += '<div class="layui-input-block">';
                         html += '<input type="text" name="consignee_phone" placeholder="收货人电话" class="layui-input" lay-verify="required" lay-reqText="请填写收货人电话">';
                         html += '</div>';
@@ -426,7 +396,7 @@
                             layer.close(load_index);
                             if ('success' == data.status) {
                                 layer.msg("退货单保存成功", {icon: 1, time: 2000}, function () {
-                                    location.reload();
+                                    parent.layui.admin.closeThisTabs();
                                 });
                             } else {
                                 layer.msg("退货单保存失败:"+data.msg, {icon: 2, time: 2000});

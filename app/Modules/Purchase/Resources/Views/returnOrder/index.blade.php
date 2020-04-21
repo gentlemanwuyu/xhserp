@@ -80,7 +80,6 @@
                         {field: 'purchase_order_code', title: '采购订单编号', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return d.purchase_order.code;
                         }},
-                        {field: 'method_name', title: '退货方式', width: 100, align: 'center', fixed: 'left'},
                         {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},
                         {field: 'total_amount', title: '总金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
@@ -89,6 +88,7 @@
                             });
                             return total_amount;
                         }},
+                        {field: 'method_name', title: '退货方式', width: 100, align: 'center'},
                         {field: 'reason', title: '退货原因', width: 150, align: 'center'},
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';

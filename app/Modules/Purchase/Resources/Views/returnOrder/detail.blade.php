@@ -34,8 +34,11 @@
                 <div class="layui-col-xs4">
                     <table class="layui-table erp-info-table">
                         <tr>
+                            <?php $supplier = $purchaseOrder->supplier; ?>
                             <td>供应商</td>
-                            <td>{{$purchaseOrder->supplier->name or ''}}</td>
+                            <td>
+                                <a lay-href="{{route('purchase::supplier.detail', ['supplier_id' => $supplier->id])}}" lay-text="供应商详情[{{$supplier->id}}]">{{$supplier->name or ''}}</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>订单编号</td>
@@ -47,6 +50,38 @@
                             <td>下单时间</td>
                             <td>{{$purchaseOrder->created_at or ''}}</td>
                         </tr>
+                    </table>
+                </div>
+                <div class="layui-col-xs4">
+                    <table class="layui-table erp-info-table">
+                        <tr>
+                            <td>出货方式</td>
+                            <td>{{$purchase_return_order->delivery_method_name}}</td>
+                        </tr>
+                        @if(3 == $purchase_return_order->delivery_method)
+                            <tr>
+                                <td>快递公司</td>
+                                <td>{{$purchase_return_order->express->name or ''}}</td>
+                            </tr>
+                            <tr>
+                                <td>物流单号</td>
+                                <td>{{$purchase_return_order->track_no}}</td>
+                            </tr>
+                        @endif
+                        @if(in_array($purchase_return_order->delivery_method, [2, 3]))
+                            <tr>
+                                <td>地址</td>
+                                <td>{{$purchase_return_order->address}}</td>
+                            </tr>
+                            <tr>
+                                <td>收货人</td>
+                                <td>{{$purchase_return_order->consignee}}</td>
+                            </tr>
+                            <tr>
+                                <td>联系电话</td>
+                                <td>{{$purchase_return_order->consignee_phone}}</td>
+                            </tr>
+                        @endif
                     </table>
                 </div>
             </div>

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CodeTrait;
 use App\Modules\Index\Models\User;
+use App\Modules\Warehouse\Models\Express;
 use App\Modules\Finance\Models\SkuEntryDeduction;
 
 class PurchaseReturnOrder extends Model
@@ -95,6 +96,11 @@ class PurchaseReturnOrder extends Model
         return $this->belongsTo(PurchaseOrder::class);
     }
 
+    public function express()
+    {
+        return $this->belongsTo(Express::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -108,6 +114,11 @@ class PurchaseReturnOrder extends Model
     public function getMethodNameAttribute()
     {
         return isset(self::$methods[$this->method]) ? self::$methods[$this->method] : '';
+    }
+
+    public function getDeliveryMethodNameAttribute()
+    {
+        return isset(self::$delivery_methods[$this->delivery_method]) ? self::$delivery_methods[$this->delivery_method] : '';
     }
 
     /**

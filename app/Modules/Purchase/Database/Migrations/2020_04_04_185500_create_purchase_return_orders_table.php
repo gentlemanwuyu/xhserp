@@ -20,6 +20,7 @@ class CreatePurchaseReturnOrdersTable extends Migration
 			$table->text('reason')->default('')->comment('退货原因');
 			$table->tinyInteger('delivery_method')->default(0)->comment('出货方式');
 			$table->integer('express_id')->default(0)->comment('快递公司ID');
+			$table->string('track_no')->default('')->comment('物流单号');
 			$table->text('address')->default('')->comment('地址');
 			$table->string('consignee')->default('')->comment('收货人');
 			$table->string('consignee_phone')->default('')->comment('收货人电话');

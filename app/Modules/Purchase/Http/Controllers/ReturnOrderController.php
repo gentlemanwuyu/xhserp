@@ -88,7 +88,10 @@ class ReturnOrderController extends Controller
         $purchase_order->returnable_items = $purchase_order->items->filter(function ($item) {
             return $item->returnable_quantity;
         })->map(function ($item) {
+            $item->sku;
+            $item->product;
             $item->setAppends(['returnable_quantity', 'entried_quantity']);
+
             return $item;
         })->pluck(null, 'id');
 
@@ -106,6 +109,7 @@ class ReturnOrderController extends Controller
                 'reason' => $request->get('reason', ''),
                 'delivery_method' => $request->get('delivery_method', 0),
                 'express_id' => $request->get('express_id', 0),
+                'track_no' => $request->get('track_no', ''),
                 'address' => $request->get('address', ''),
                 'consignee' => $request->get('consignee', ''),
                 'consignee_phone' => $request->get('consignee_phone', ''),
