@@ -39,6 +39,10 @@
                             <td>{{$customer->tax_name or ''}}</td>
                         </tr>
                         <tr>
+                            <td>币种</td>
+                            <td>{{$customer->currency->name or ''}}</td>
+                        </tr>
+                        <tr>
                             <td>付款方式</td>
                             <td>{{$customer->payment_method_name or ''}}</td>
                         </tr>

@@ -34,7 +34,7 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
-                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input" autocomplete="off">
             </div>
         </div>
         <div class="layui-row layui-col-space15">
@@ -84,11 +84,14 @@
                         {field: 'code', title: '编号', width: 160, align: 'center', fixed: 'left'},
                         {field: 'company', title: '公司', width: 250, align: 'center'},
                         {field: 'tax_name', title: '税率', width: 100, align: 'center'},
+                        {field: 'currency_name', title: '币种', width: 100, align: 'center', templet: function (d) {
+                            return d.currency.name;
+                        }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'manager_name', title: '负责人', width: 100, align: 'center', templet: function (d) {
                             return null == d.manager ? '' : d.manager.name;
                         }},
-                        {field: 'monthly_day', title: '额度', width: 100, align: 'center', templet: function (d) {
+                        {field: 'credit', title: '额度', width: 100, align: 'center', templet: function (d) {
                             return 2 == d.payment_method ? d.credit : '';
                         }},
                         {field: 'monthly_day', title: '月结天数', width: 100, align: 'center', templet: function (d) {

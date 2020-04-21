@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ChineseRegion;
 use Illuminate\Support\Facades\DB;
 use App\Events\Deducted;
+use App\Models\Currency;
 use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\Collection;
 use App\Modules\Finance\Models\DeliveryOrderItemDeduction;
@@ -38,6 +39,11 @@ class Customer extends Model
     public function contacts()
     {
         return $this->hasMany(CustomerContact::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_code', 'code');
     }
 
     public function getPaymentMethodNameAttribute()

@@ -28,7 +28,8 @@ class CustomerController extends Controller
     public function form(Request $request)
     {
         $chinese_regions = WorldService::chineseTree();
-        $data = compact('chinese_regions');
+        $currencies = WorldService::currencies();
+        $data = compact('chinese_regions', 'currencies');
         if ($request->get('customer_id')) {
             $customer = Customer::find($request->get('customer_id'));
             $customer->pendingPaymentMethodApplication;
@@ -70,6 +71,7 @@ class CustomerController extends Controller
         foreach ($paginate as $customer) {
             $customer->contacts;
             $customer->manager;
+            $customer->currency;
             $customer->setAppends(['payment_method_name', 'tax_name']);
         }
 
