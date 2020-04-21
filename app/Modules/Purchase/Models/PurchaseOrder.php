@@ -131,4 +131,14 @@ class PurchaseOrder extends Model
             return $item->returnable_quantity;
         })->isEmpty();
     }
+
+    public function getDeletableAttribute()
+    {
+        // 有入库记录的订单不可删除
+        if (SkuEntry::where('purchase_order_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
+    }
 }

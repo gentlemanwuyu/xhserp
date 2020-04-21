@@ -86,7 +86,7 @@ class OrderController extends Controller
             $order->supplier;
             $order->currency;
             $order->user;
-            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable']);
+            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable', 'deletable']);
         }
 
         return response()->json($paginate);
@@ -143,14 +143,14 @@ class OrderController extends Controller
             $order = PurchaseOrder::find($request->get('order_id'));
 
             if (!$order) {
-                return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该采购订单']);
             }
 
             DB::beginTransaction();
-            $order->delete();
             $order->items->each(function ($item) {
                 $item->delete();
             });
+            $order->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);
