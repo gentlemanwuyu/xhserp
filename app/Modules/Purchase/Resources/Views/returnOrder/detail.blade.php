@@ -134,4 +134,78 @@
             </table>
         </div>
     </div>
+    @if(isset($source) && 'warehouse' == $source && 1 == $purchase_return_order->status)
+        <div class="layui-row">
+            <form class="layui-form">
+                <button type="button" class="layui-btn layui-btn-normal" erp-action="egress">出库</button>
+            </form>
+        </div>
+    @endif
+@endsection
+@section('scripts')
+    <script>
+        var purchase_return_order = <?= json_encode($purchase_return_order); ?>;
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+            $('button[erp-action=egress]').on('click', function () {
+                if (3 == purchase_return_order.delivery_method) {
+                    layer.prompt({
+                        title: '物流单号',
+                        value: purchase_return_order.track_no
+                    }, function(value, index, elem){
+                        layer.close(index);
+                        var load_index = layer.load();
+                        $.ajax({
+                            method: "post",
+                            url: "{{route('warehouse::purchaseReturn.egress')}}",
+                            data: {purchase_return_order_id: purchase_return_order.id, track_no: value},
+                            success: function (res) {
+                                layer.close(load_index);
+                                if ('success' == res.status) {
+                                    layer.msg("采购退货单出库成功", {icon: 1, time: 2000}, function(){
+                                        parent.layui.admin.closeThisTabs();
+                                    });
+                                } else {
+                                    layer.msg("采购退货单出库失败:" + res.msg, {icon: 2, time: 2000});
+                                    return false;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                layer.close(load_index);
+                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                return false;
+                            }
+                        });
+                    });
+                }else {
+                    layer.confirm("确认要出库吗？", {icon: 3, title:"确认"}, function (index) {
+                        layer.close(index);
+                        var load_index = layer.load();
+                        $.ajax({
+                            method: "post",
+                            url: "{{route('warehouse::purchaseReturn.egress')}}",
+                            data: {purchase_return_order_id: purchase_return_order.id},
+                            success: function (res) {
+                                layer.close(load_index);
+                                if ('success' == res.status) {
+                                    layer.msg("采购退货单出库成功", {icon: 1, time: 2000}, function(){
+                                        parent.layui.admin.closeThisTabs();
+                                    });
+                                } else {
+                                    layer.msg("采购退货单出库失败:" + res.msg, {icon: 2, time: 2000});
+                                    return false;
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                layer.close(load_index);
+                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                return false;
+                            }
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 @endsection
