@@ -76,7 +76,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">交期</label>
                             <div class="layui-input-block">
-                                <input type="text" name="delivery_date" lay-filter="delivery_date" placeholder="交期" class="layui-input" autocomplete="off">
+                                <input type="text" name="delivery_date" lay-filter="delivery_date" placeholder="交期" class="layui-input" autocomplete="off" value="{{$order->delivery_date or ''}}">
                             </div>
                         </div>
                     </div>
