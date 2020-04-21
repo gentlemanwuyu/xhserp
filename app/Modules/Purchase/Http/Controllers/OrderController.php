@@ -105,6 +105,12 @@ class OrderController extends Controller
                 'status' => 1,
             ];
 
+            $user = Auth::user();
+            // 如果用户有审核权限，直接进入已通过状态
+            if ($user->hasPermissionTo('review_purchase_order')) {
+                $order_data['status'] = 3;
+            }
+
             $order = PurchaseOrder::find($request->get('order_id'));
             if ($request->get('supplier_id')) {
                 $order_data['supplier_id'] = $request->get('supplier_id');
