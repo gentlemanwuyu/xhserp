@@ -60,7 +60,7 @@ class ReturnOrderController extends Controller
             });
             $pro->purchaseOrder->supplier;
             $pro->user;
-            $pro->setAppends(['status_name', 'method_name']);
+            $pro->setAppends(['status_name', 'method_name', 'delivery_method_name']);
         }
 
         return response()->json($paginate);

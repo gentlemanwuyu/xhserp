@@ -75,6 +75,7 @@
                         }},
                         {field: 'method_name', title: '退货方式', width: 100, align: 'center', fixed: 'left'},
                         {field: 'reason', title: '退货原因', width: 150, align: 'center'},
+                        {field: 'delivery_method_name', title: '出货方式', width: 100, align: 'center'},
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
@@ -134,31 +135,62 @@
                         actions.push({
                             title: "出库",
                             event: function () {
-                                layer.confirm("确认要出库吗？", {icon: 3, title:"确认"}, function (index) {
-                                    layer.close(index);
-                                    var load_index = layer.load();
-                                    $.ajax({
-                                        method: "post",
-                                        url: "{{route('warehouse::purchaseReturn.egress')}}",
-                                        data: {purchase_return_order_id: data.id},
-                                        success: function (data) {
-                                            layer.close(load_index);
-                                            if ('success' == data.status) {
-                                                layer.msg("采购退货单出库成功", {icon: 1, time: 2000}, function () {
-                                                    location.reload();
-                                                });
-                                            } else {
-                                                layer.msg("采购退货单出库失败:"+data.msg, {icon: 2, time: 2000});
+                                if (3 == data.delivery_method) {
+                                    layer.prompt({
+                                        title: '物流单号',
+                                        value: data.track_no
+                                    }, function(value, index, elem){
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('warehouse::purchaseReturn.egress')}}",
+                                            data: {purchase_return_order_id: data.id, track_no: value},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("采购退货单出库成功", {icon: 1, time: 2000}, function () {
+                                                        tableIns.reload();
+                                                    });
+                                                } else {
+                                                    layer.msg("采购退货单出库失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                            layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
-                                            return false;
-                                        }
+                                        });
                                     });
-                                });
+                                }else {
+                                    layer.confirm("确认要出库吗？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('warehouse::purchaseReturn.egress')}}",
+                                            data: {purchase_return_order_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("采购退货单出库成功", {icon: 1, time: 2000}, function () {
+                                                        tableIns.reload();
+                                                    });
+                                                } else {
+                                                    layer.msg("采购退货单出库失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                                return false;
+                                            }
+                                        });
+                                    });
+                                }
                             }
                         });
                         @endcan
@@ -166,9 +198,8 @@
                         return actions;
                     });
                 }
-            };
-
-            table.render(tableOpts);
+            }
+                    ,tableIns = table.render(tableOpts);
 
             laydate.render({
                 elem: 'input[name=created_at_between]'

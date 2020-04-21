@@ -40,6 +40,9 @@ class PurchaseReturnController extends Controller
             DB::beginTransaction();
             // 更新退货单状态
             $purchase_return_order->status = 2;
+            if (3 == $purchase_return_order->delivery_method) {
+                $purchase_return_order->track_no = $request->get('track_no', '');
+            }
             $purchase_return_order->save();
 
             if (1 == $purchase_return_order->method) {
