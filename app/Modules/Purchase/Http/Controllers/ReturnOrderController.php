@@ -161,10 +161,10 @@ class ReturnOrderController extends Controller
             }
 
             DB::beginTransaction();
-            $purchase_return_order->delete();
             $purchase_return_order->items->each(function ($item) {
                 $item->delete();
             });
+            $purchase_return_order->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);
