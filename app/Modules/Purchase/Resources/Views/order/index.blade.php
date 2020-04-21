@@ -107,10 +107,11 @@
                             return d.currency.name;
                         }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
+                        {field: 'delivery_date', title: '交期', width: 120, align: 'center'},
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
-                        {field: 'detail', title: '订单明细', width: 870, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '订单明细', width: 770, align: 'center', templet: function (d) {
                             var html = '';
                             d.items.forEach(function (item, key) {
                                 if (0 == key) {
@@ -128,7 +129,6 @@
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + amount.toFixed(2) + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.pending_entry_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.back_quantity + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + delivery_date + '</li>';
                                 html += '</ul>';
                             });
                             return html;
@@ -150,7 +150,6 @@
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">金额</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">待入库</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">退货数量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">交期</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);
                     }

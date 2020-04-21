@@ -50,7 +50,6 @@ class PurchaseOrder extends Model
                 'unit' => $item['unit'],
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
-                'delivery_date' => $item['delivery_date'] ?: null,
                 'note' => $item['note'],
             ];
             $order_item = PurchaseOrderItem::find($flag);

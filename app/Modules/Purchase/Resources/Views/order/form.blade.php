@@ -73,6 +73,12 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">交期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="delivery_date" lay-filter="delivery_date" placeholder="交期" class="layui-input" autocomplete="off">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,7 +100,6 @@
                         <th width="100">数量</th>
                         <th width="100">单价</th>
                         <th width="100">总价</th>
-                        <th width="100">交期</th>
                         <th>备注</th>
                         <th width="60">操作</th>
                     </tr>
@@ -127,7 +132,6 @@
                                     <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
                                     <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
-                                    <td><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
                                     <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                                 </tr>
@@ -200,21 +204,11 @@
                         $tr.find('td[erp-col=amount]').html('');
                     }
                 });
-            }
-                    // 绑定日期插件
-                    ,bindLayDate = function () {
-                $('input[lay-filter=delivery_date]').each(function () {
-                    laydate.render({
-                        elem: this
-                        ,trigger : 'click'
-                    });
-                })
             };
 
             // 页面初始化绑定事件
             listenSelectProduct();
             listenPriceQuantityInput();
-            bindLayDate();
 
             $('button[lay-event=addItem]').on('click', function () {
                 var $body = $('#detailTable').find('tbody')
@@ -259,10 +253,6 @@
                 // 总价
                 html += '<td erp-col="amount">';
                 html += '</td>';
-                // 交期
-                html += '<td>';
-                html += '<input type="text" name="items[' + flag + '][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input">';
-                html += '</td>';
                 // 备注
                 html += '<td>';
                 html += '<input type="text" name="items[' + flag + '][note]" placeholder="备注" class="layui-input">';
@@ -276,7 +266,6 @@
                 form.render();
                 listenSelectProduct();
                 listenPriceQuantityInput();
-                bindLayDate();
             });
 
             // 监听供应商选择框
@@ -292,6 +281,11 @@
                 $('select[name=tax]').val(tax);
                 $('select[name=currency_code]').val(currency_code);
                 form.render('select', 'order');
+            });
+
+            laydate.render({
+                elem: 'input[lay-filter=delivery_date]'
+                ,trigger : 'click'
             });
 
             // 提交订单

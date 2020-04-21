@@ -26,6 +26,14 @@
                             <td>税率</td>
                             <td>{{$order->tax_name or ''}}</td>
                         </tr>
+                        <tr>
+                            <td>币种</td>
+                            <td>{{$order->currency->name or ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>交期</td>
+                            <td>{{$order->delivery_date or ''}}</td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -50,7 +58,6 @@
                     <th>数量</th>
                     <th>单价</th>
                     <th>总价</th>
-                    <th>交期</th>
                     <th>备注</th>
                 </tr>
                 </thead>
@@ -67,7 +74,6 @@
                         <td>{{$item->quantity or ''}}</td>
                         <td>{{$item->price or ''}}</td>
                         <td>{{$item->quantity * $item->price}}</td>
-                        <td>{{$item->delivery_date or ''}}</td>
                         <td>{{$item->note or ''}}</td>
                     </tr>
                 @endforeach
