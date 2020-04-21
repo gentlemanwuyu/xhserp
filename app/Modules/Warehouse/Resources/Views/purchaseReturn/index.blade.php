@@ -131,6 +131,15 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
+                        @can('purchase_return_order_detail')
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('purchase::returnOrder.detail')}}?source=warehouse&purchase_return_order_id=" + data.id, '采购退货单详情[' + data.id + ']');
+                            }
+                        });
+                        @endcan
+
                         @can('purchase_return_egress')
                         actions.push({
                             title: "出库",

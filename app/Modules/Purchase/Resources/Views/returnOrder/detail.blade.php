@@ -99,13 +99,15 @@
                 <tr>
                     <th>序号</th>
                     <th>采购订单Item</th>
+                    <th>单位</th>
                     <th>订单数量</th>
                     <th>已入库数量</th>
                     <th>退货数量</th>
                     <th>实出数量</th>
-                    <th>单位</th>
-                    <th>价格</th>
-                    <th>总价</th>
+                    @if(!isset($source) || 'warehouse' != $source)
+                        <th>单价</th>
+                        <th>总价</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -117,13 +119,15 @@
                     <tr>
                         <td>{{$index++}}</td>
                         <td>{{$purchaseOrderItem->title or ''}}</td>
+                        <td>{{$purchaseOrderItem->unit or ''}}</td>
                         <td>{{$purchaseOrderItem->quantity or ''}}</td>
                         <td>{{$purchaseOrderItem->entried_quantity or ''}}</td>
                         <td>{{$item->quantity}}</td>
                         <td>{{$item->egress_quantity}}</td>
-                        <td>{{$purchaseOrderItem->unit or ''}}</td>
-                        <td>{{$purchaseOrderItem->price or ''}}</td>
-                        <td>{{$item->quantity * $purchaseOrderItem->price}}</td>
+                        @if(!isset($source) || 'warehouse' != $source)
+                            <td>{{$purchaseOrderItem->price or ''}}</td>
+                            <td>{{$item->quantity * $purchaseOrderItem->price}}</td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>
