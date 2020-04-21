@@ -124,7 +124,7 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             if (!$order) {
-                $order_data['user_id'] = Auth::user()->id;
+                $order_data['user_id'] = $user->id;
                 $order = PurchaseOrder::create($order_data);
             }else {
                 $order->update($order_data);
@@ -254,6 +254,12 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 5]);
+            PurchaseOrderLog::create([
+                'purchase_order_id' => $order->id,
+                'action' => 3,
+                'content' => $request->get('reason'),
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
