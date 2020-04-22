@@ -23,13 +23,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label required">名称</label>
                             <div class="layui-input-block">
-                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="{{$supplier->code or ''}}">
+                                <input type="text" name="name" lay-verify="required" lay-reqText="请输入名称" class="layui-input" value="{{$supplier->name or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入编号" class="layui-input" value="{{$supplier->name or ''}}">
+                                <input type="text" name="code" lay-verify="required" lay-reqText="请输入编号" class="layui-input" value="{{$supplier->code or ''}}">
                             </div>
                         </div>
                         <div class="layui-form-item">
