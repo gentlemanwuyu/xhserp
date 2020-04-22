@@ -153,7 +153,7 @@
         <div class="layui-card">
             <div class="layui-card-header">
                 <h3 style="display: inline;">付款方式</h3>
-                @if(isset($customer) && !$customer->pendingPaymentMethodApplication)
+                @if(isset($customer) && $customer->manager_id && !$customer->pendingPaymentMethodApplication)
                     <a href="javascript:;" erp-event="edit_payment_method">[更改]</a>
                 @endif
             </div>

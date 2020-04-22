@@ -108,6 +108,7 @@ class CustomerController extends Controller
                 'phone' => $request->get('phone', ''),
                 'fax' => $request->get('fax', ''),
                 'tax' => $request->get('tax', 0),
+                'currency_code' => $request->get('currency_code', ''),
                 'state_id' => $request->get('state_id', 0),
                 'city_id' => $request->get('city_id', 0),
                 'county_id' => $request->get('county_id', 0),
