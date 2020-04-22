@@ -92,13 +92,13 @@
                     <thead>
                     <tr>
                         <th width="50">序号</th>
-                        <th width="150">产品</th>
+                        <th width="150" class="required">产品</th>
                         <th width="100">产品编号</th>
-                        <th width="150">SKU</th>
-                        <th>标题</th>
-                        <th width="50">单位</th>
-                        <th width="100">数量</th>
-                        <th width="100">单价</th>
+                        <th width="150" class="required">SKU</th>
+                        <th class="required">标题</th>
+                        <th width="50" class="required">单位</th>
+                        <th width="100" class="required">数量</th>
+                        <th width="100" class="required">单价</th>
                         <th width="100">总价</th>
                         <th>备注</th>
                         <th width="60">操作</th>
@@ -129,8 +129,8 @@
                                     </td>
                                     <td erp-col="title"><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
-                                    <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
-                                    <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
+                                    <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}" oninput="value=value.replace(/[^\d]/g, '')"></td>
+                                    <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}" oninput="value=value.replace(/[^\d.]/g, '')"></td>
                                     <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
                                     <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
                                     <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
@@ -244,11 +244,11 @@
                 html += '</td>';
                 // 数量
                 html += '<td>';
-                html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input">';
+                html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" oninput="value=value.replace(/[^\\d]/g, \'\')">';
                 html += '</td>';
                 // 单价
                 html += '<td>';
-                html += '<input type="text" name="items[' + flag + '][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input">';
+                html += '<input type="text" name="items[' + flag + '][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">';
                 html += '</td>';
                 // 总价
                 html += '<td erp-col="amount">';

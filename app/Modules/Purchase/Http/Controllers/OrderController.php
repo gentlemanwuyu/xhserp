@@ -4,6 +4,7 @@ namespace App\Modules\Purchase\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Purchase\Http\Requests\OrderRequest;
 use App\Services\WorldService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -93,7 +94,7 @@ class OrderController extends Controller
         return response()->json($paginate);
     }
 
-    public function save(Request $request)
+    public function save(OrderRequest $request)
     {
         try {
             $order_data = [

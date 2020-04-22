@@ -81,7 +81,7 @@
                                     <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($supplier->payment_method) && $supplier->payment_method == $method_id) checked @endif>
                                 @endforeach
                                 @if(isset($supplier->payment_method) && 3 == $supplier->payment_method)
-                                    <input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" value="{{$supplier->monthly_day or ''}}" lay-verify="required" lay-reqText="请输入月结天数">
+                                    <input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" value="{{$supplier->monthly_day or ''}}" lay-verify="required" lay-reqText="请输入月结天数" oninput="value=value.replace(/[^\d.]/g, '')">
                                 @endif
                             </div>
                         </div>
@@ -310,7 +310,7 @@
                 if (1 == data.value || 2 == data.value) {
                     $monthlyDay.remove();
                 }else if (3 == data.value && $monthlyDay.length == 0) {
-                    $(data.elem).parent().append('<input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">');
+                    $(data.elem).parent().append('<input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数" oninput="value=value.replace(/[^\\d]/g, \'\')">');
                 }
             });
 
