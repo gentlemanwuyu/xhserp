@@ -23,8 +23,9 @@ class OrderController extends Controller
     {
         $customers = Customer::all();
         $users = User::where('is_admin', 0)->get();
+        $currencies = WorldService::currencies();
 
-        return view('sale::order.index', compact('customers', 'users'));
+        return view('sale::order.index', compact('customers', 'users', 'currencies'));
     }
 
     public function form(Request $request)
@@ -71,6 +72,9 @@ class OrderController extends Controller
         }
         if ($request->get('creator_id')) {
             $query = $query->where('user_id', $request->get('creator_id'));
+        }
+        if ($request->get('currency_code')) {
+            $query = $query->where('currency_code', $request->get('currency_code'));
         }
         if ($request->get('created_at_between')) {
             $created_at_between = explode(' - ', $request->get('created_at_between'));

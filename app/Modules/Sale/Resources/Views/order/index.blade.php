@@ -30,6 +30,14 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
+                <select name="currency_code" lay-search="">
+                    <option value="">币种</option>
+                    @foreach($currencies as $currency)
+                        <option value="{{$currency['code']}}">{{$currency['name']}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
                 <select name="creator_id" lay-search="">
                     <option value="">创建人</option>
                     @foreach($users as $user)
@@ -38,7 +46,7 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
-                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input" autocomplete="off">
             </div>
         </div>
         <div class="layui-row layui-col-space15">
