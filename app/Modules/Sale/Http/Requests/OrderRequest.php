@@ -1,5 +1,5 @@
 <?php
-namespace App\Modules\Purchase\Http\Requests;
+namespace App\Modules\Sale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -19,14 +19,14 @@ class OrderRequest extends FormRequest
 		$rules = [];
 
 		if (empty($inputs['order_id'])) {
-			$rules['supplier_id'] = 'required';
+			$rules['customer_id'] = 'required';
 			$this->messages = array_merge($this->messages, [
-				'supplier_id.required' => '请选择供应商',
+				'customer_id.required' => '请选择客户',
 			]);
 		}
 
 		$rules = array_merge($rules, [
-			'code' => 'required|max:80|unique:purchase_orders,code' . ($this->get('order_id') ? ',' . $this->get('order_id') : ''),
+			'code' => 'required|max:80|unique:orders,code' . ($this->get('order_id') ? ',' . $this->get('order_id') : ''),
 			'payment_method' => 'required',
 			'tax' => 'required',
 			'currency_code' => 'required',
@@ -35,10 +35,10 @@ class OrderRequest extends FormRequest
 
 		if (!empty($inputs['items'])) {
 			foreach ($inputs['items'] as $index => $item) {
-				$key = 'items.' . $index . '.product_id';
+				$key = 'items.' . $index . '.goods_id';
 				$rules[$key] = 'required';
 				$this->messages = array_merge($this->messages, [
-					$key . '.required' => '请选择产品',
+					$key . '.required' => '请选择商品',
 				]);
 				$key = 'items.' . $index . '.sku_id';
 				$rules[$key] = 'required';
@@ -69,6 +69,9 @@ class OrderRequest extends FormRequest
 					$key . '.required' => '请输入单价',
 					$key . '.numeric' => '单价必须是数值',
 				]);
+				$key = 'items.' . $index . '.note';
+				$rules[$key] = 'max:80';
+				$this->messages = array_merge($this->messages, [$key . '.max' => '备注不能超过:max个字符']);
 			}
 		}
 

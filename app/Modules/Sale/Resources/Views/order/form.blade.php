@@ -139,8 +139,8 @@
                                 </td>
                                 <td erp-col="title"><input type="text" name="items[{{$item->id}}][title]" placeholder="标题" lay-verify="required" lay-reqText="请输入标题" class="layui-input" value="{{$item->title or ''}}"></td>
                                 <td erp-col="unit"><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
-                                <td erp-col="quantity"><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="可用数量:{{$item_sku->stock - $item_sku->required_number}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
-                                <td erp-col="price"><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="最低售价:{{$item_sku->lowest_price}}" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
+                                <td erp-col="quantity"><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="可用数量:{{$item_sku->stock - $item_sku->required_number}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}" oninput="value=value.replace(/[^\d]/g, '')"></td>
+                                <td erp-col="price"><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="最低售价:{{$item_sku->lowest_price}}" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}" oninput="value=value.replace(/[^\d.]/g, '')"></td>
                                 <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
                                 <td erp-col="note"><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
@@ -277,11 +277,11 @@
                 html += '</td>';
                 // 数量
                 html += '<td erp-col="quantity">';
-                html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input">';
+                html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" oninput="value=value.replace(/[^\\d]/g, \'\')">';
                 html += '</td>';
                 // 单价
                 html += '<td erp-col="price">';
-                html += '<input type="text" name="items[' + flag + '][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input">';
+                html += '<input type="text" name="items[' + flag + '][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">';
                 html += '</td>';
                 // 总价
                 html += '<td erp-col="amount">';

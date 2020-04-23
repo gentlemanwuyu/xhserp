@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Modules\Index\Models\User;
 use Illuminate\Http\Request;
+use App\Modules\Sale\Http\Requests\OrderRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
@@ -100,7 +101,7 @@ class OrderController extends Controller
         return response()->json($paginate);
     }
 
-    public function save(Request $request)
+    public function save(OrderRequest $request)
     {
         try {
             $order_data = [
