@@ -4,6 +4,7 @@ namespace App\Modules\Sale\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Sale\Http\Requests\CustomerRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
@@ -78,29 +79,9 @@ class CustomerController extends Controller
         return response()->json($paginate);
     }
 
-    public function save(Request $request)
+    public function save(CustomerRequest $request)
     {
         try {
-            // code去重判断
-            $query = Customer::where('code', $request->get('code'));
-            if ($request->get('customer_id')) {
-                $query = $query->where('id', '!=', $request->get('customer_id'));
-            }
-            $code_exists = $query->first();
-            if ($code_exists) {
-                return response()->json(['status' => 'fail', 'msg' => '客户编号[' . $request->get('code') . ']已存在']);
-            }
-
-            // name去重判断
-            $query = Customer::where('name', $request->get('name'));
-            if ($request->get('customer_id')) {
-                $query = $query->where('id', '!=', $request->get('customer_id'));
-            }
-            $name_exists = $query->first();
-            if ($name_exists) {
-                return response()->json(['status' => 'fail', 'msg' => '客户名称[' . $request->get('name') . ']已存在']);
-            }
-
             $customer_data = [
                 'code' => $request->get('code', ''),
                 'name' => $request->get('name', ''),

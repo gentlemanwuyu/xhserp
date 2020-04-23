@@ -1,9 +1,9 @@
 <?php
-namespace App\Modules\Purchase\Http\Requests;
+namespace App\Modules\Sale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SupplierRequest extends FormRequest
+class CustomerRequest extends FormRequest
 {
 	protected $messages = [];
 
@@ -17,24 +17,42 @@ class SupplierRequest extends FormRequest
 		$inputs = $this->all();
 
 		$rules = [
-			'name' => 'required|max:80|unique:suppliers,name' . ($this->get('supplier_id') ? ',' . $this->get('supplier_id') : ''),
-			'code' => 'required|max:80|unique:suppliers,code' . ($this->get('supplier_id') ? ',' . $this->get('supplier_id') : ''),
+			'name' => 'required|max:80|unique:customers,name' . ($this->get('customer_id') ? ',' . $this->get('customer_id') : ''),
+			'code' => 'required|max:80|unique:customers,code' . ($this->get('customer_id') ? ',' . $this->get('customer_id') : ''),
 			'company' => 'max:80',
 			'phone' => 'max:80',
 			'fax' => 'max:80',
 			'tax' => 'required',
 			'currency_code' => 'required',
-			'payment_method' => 'required',
 			'street_address' => 'max:80',
 			'contacts' => 'required',
 		];
 
-		if (3 == $inputs['payment_method']) {
-			$rules['monthly_day'] = 'required|integer';
-			$this->messages = array_merge($this->messages, [
-				'monthly_day.required' => '请输入月结天数',
-				'monthly_day.integer' => '月结天数必须是整数',
-			]);
+		// 如果是新增客户并且不在客户池中，必须选择付款方式
+		if (empty($inputs['customer_id']) && empty($inputs['in_pool'])) {
+			$rules['payment_method'] = 'required';
+			$this->messages = array_merge($this->messages, ['payment_method.required' => '请选择付款方式']);
+		}
+		// 如果选中了付款方式，进一步判断其他字段
+		if (isset($inputs['payment_method'])) {
+			if (2 == $inputs['payment_method']) {
+				$rules['credit'] = 'required|integer';
+				$this->messages = array_merge($this->messages, [
+					'credit.required' => '请输入额度',
+					'credit.integer' => '额度必须是整数',
+				]);
+			}
+			if (3 == $inputs['payment_method']) {
+				$rules['monthly_day'] = 'required|integer';
+				$this->messages = array_merge($this->messages, [
+					'monthly_day.required' => '请输入月结天数',
+					'monthly_day.integer' => '月结天数必须是整数',
+				]);
+			}
+			if (in_array($inputs['payment_method'], [2, 3])) {
+				$rules['reason'] = 'required';
+				$this->messages = array_merge($this->messages, ['reason.required' => '请输入申请原因']);
+			}
 		}
 
 		if (!empty($inputs['contacts'])) {
@@ -85,7 +103,6 @@ class SupplierRequest extends FormRequest
 			'fax.max' => '传真不能超过:max个字符',
 			'tax.required' => '请选择税率',
 			'currency_code.required' => '请选择币种',
-			'payment_method.required' => '请输入付款方式',
 			'street_address.max' => '街道地址不能超过:max个字符',
 			'contacts.required' => '请至少添加一个联系人',
 		], $this->messages);
