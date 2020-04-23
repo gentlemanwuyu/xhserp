@@ -11,6 +11,7 @@ namespace App\Modules\Sale\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CodeTrait;
+use App\Models\Currency;
 use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\DeliveryOrderItemDeduction;
 
@@ -49,7 +50,6 @@ class Order extends Model
                 'unit' => $item['unit'],
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
-                'delivery_date' => $item['delivery_date'] ?: null,
                 'note' => $item['note'],
             ];
 
@@ -89,6 +89,11 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_code', 'code');
     }
 
     public function user()

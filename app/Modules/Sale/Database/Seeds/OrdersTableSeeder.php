@@ -8,6 +8,7 @@
 
 namespace App\Modules\Sale\Database\Seeds;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\OrderItem;
@@ -16,7 +17,7 @@ class OrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $order = Order::create(['code' => 'xhsso20191211001', 'customer_id' => 1, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 5]);
+        $order = Order::create(['code' => 'xhsso20191211001', 'customer_id' => 1, 'payment_method' => 3, 'tax' => 3, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(5)->toDateString() , 'status' => 3, 'payment_status' => 1, 'user_id' => 5]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -25,7 +26,6 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '50',
             'price' => 65,
-            'delivery_date' => '2019-12-25',
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -35,10 +35,9 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '10',
             'price' => 350,
-            'delivery_date' => '2019-12-25',
         ]);
 
-        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => 3, 'tax' => 3, 'status' => 3, 'payment_status' => 1, 'user_id' => 6]);
+        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => 3, 'tax' => 3, 'currency_code' => 'USD', 'delivery_date' => Carbon::now()->addDays(7)->toDateString() , 'status' => 3, 'payment_status' => 1, 'user_id' => 6]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -47,7 +46,6 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '50',
             'price' => 65,
-            'delivery_date' => '2019-12-25',
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -57,7 +55,6 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '10',
             'price' => 350,
-            'delivery_date' => '2019-12-25',
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -67,10 +64,9 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '300',
             'price' => 1.5,
-            'delivery_date' => '2019-12-18',
         ]);
 
-        $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => 2, 'tax' => 1, 'status' => 3, 'payment_status' => 1, 'user_id' => 7]);
+        $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => 2, 'tax' => 1, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(2)->toDateString() , 'status' => 3, 'payment_status' => 1, 'user_id' => 7]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -79,7 +75,6 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '50',
             'price' => 65,
-            'delivery_date' => '2019-12-25',
         ]);
         OrderItem::create([
             'order_id' => $order->id,
@@ -89,7 +84,6 @@ class OrdersTableSeeder extends Seeder
             'unit' => '个',
             'quantity' => '10',
             'price' => 350,
-            'delivery_date' => '2019-12-25',
         ]);
     }
 }

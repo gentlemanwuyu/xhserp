@@ -34,6 +34,15 @@
                                 @endif
                             </div>
                         </div>
+                        <?php $customer = isset($order) ? $order->customer : null; ?>
+                        @if($customer && 2 == $customer->payment_method)
+                            <div class="layui-form-item" id="remained_credit_item">
+                                <label class="layui-form-label">剩余额度</label>
+                                <div class="layui-input-block">
+                                    <span class="erp-form-span">{{$customer->remained_credit}}</span>
+                                </div>
+                            </div>
+                        @endif
                         <div class="layui-form-item">
                             <label class="layui-form-label required">订单号</label>
                             <div class="layui-input-block">
@@ -62,15 +71,23 @@
                                 </select>
                             </div>
                         </div>
-                        <?php $customer = isset($order) ? $order->customer : null; ?>
-                        @if($customer && 2 == $customer->payment_method)
-                            <div class="layui-form-item" id="remained_credit_item">
-                                <label class="layui-form-label">剩余额度</label>
-                                <div class="layui-input-block">
-                                    <span class="erp-form-span">{{$customer->remained_credit}}</span>
-                                </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label required">币种</label>
+                            <div class="layui-input-block">
+                                <select name="currency_code" lay-search="" lay-verify="required" lay-reqText="请选择币种">
+                                    <option value="">请选择币种</option>
+                                    @foreach($currencies as $currency)
+                                        <option value="{{$currency['code']}}" @if(isset($order) && $currency['code'] == $order->currency_code) selected @endif>{{$currency['name']}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        @endif
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">交期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="delivery_date" lay-filter="delivery_date" placeholder="交期" class="layui-input" autocomplete="off" value="{{$order->delivery_date or ''}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,7 +108,6 @@
                         <th width="100" class="required">数量</th>
                         <th width="100" class="required">单价</th>
                         <th width="100">总价</th>
-                        <th width="100">交期</th>
                         <th>备注</th>
                         <th width="60">操作</th>
                     </tr>
@@ -126,7 +142,6 @@
                                 <td erp-col="quantity"><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="可用数量:{{$item_sku->stock - $item_sku->required_number}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}"></td>
                                 <td erp-col="price"><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="最低售价:{{$item_sku->lowest_price}}" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}"></td>
                                 <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
-                                <td erp-col="delivery_date"><input type="text" name="items[{{$item->id}}][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input" value="{{$item->delivery_date or ''}}"></td>
                                 <td erp-col="note"><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                             </tr>
@@ -224,22 +239,12 @@
                         $tr.find('td[erp-col=amount]').html('');
                     }
                 });
-            }
-                    // 绑定日期插件
-                    ,bindLayDate = function () {
-                $('input[lay-filter=delivery_date]').each(function () {
-                    laydate.render({
-                        elem: this
-                        ,trigger : 'click'
-                    });
-                })
             };
 
             // 页面初始化绑定事件
             listenSelectGoods();
             listenSelectSku();
             listenPriceQuantityInput();
-            bindLayDate();
 
             $('button[lay-event=addItem]').on('click', function () {
                 var $body = $('#detailTable').find('tbody')
@@ -281,10 +286,6 @@
                 // 总价
                 html += '<td erp-col="amount">';
                 html += '</td>';
-                // 交期
-                html += '<td erp-col="delivery_date">';
-                html += '<input type="text" name="items[' + flag + '][delivery_date]" lay-filter="delivery_date" placeholder="交期" class="layui-input">';
-                html += '</td>';
                 // 备注
                 html += '<td erp-col="note">';
                 html += '<input type="text" name="items[' + flag + '][note]" placeholder="备注" class="layui-input">';
@@ -298,20 +299,22 @@
                 form.render();
                 listenSelectGoods();
                 listenPriceQuantityInput();
-                bindLayDate();
             });
 
             // 监听客戶选择框
             form.on('select(customer)', function (data) {
                 var payment_method = ''
                         ,tax = ''
+                        ,currency_code = ''
                         ,$paymentMethodSelect = $('select[name=payment_method]')
-                        ,$taxSelect = $('select[name=tax]');
+                        ,$taxSelect = $('select[name=tax]')
+                        ,$currencyCodeSelect = $('select[name=currency_code]');
                 if (data.value) {
                     var customer = customers[data.value];
 
                     payment_method = customer['payment_method'];
                     tax = customer['tax'];
+                    currency_code = customer['currency_code'];
                     if (2 == customer['payment_method']) {
                         var html = '';
                         html += '<div class="layui-form-item" id="remained_credit_item">';
@@ -320,7 +323,7 @@
                         html += '<span class="erp-form-span">' + customer.remained_credit + '</span>';
                         html += '</div>';
                         html += '</div>';
-                        $taxSelect.parents('.layui-form-item').after(html);
+                        $(data.elem).parents('.layui-form-item').after(html);
                     }else {
                         $('#remained_credit_item').remove();
                     }
@@ -330,7 +333,13 @@
 
                 $paymentMethodSelect.val(payment_method);
                 $taxSelect.val(tax);
+                $currencyCodeSelect.val(currency_code);
                 form.render('select', 'order');
+            });
+
+            laydate.render({
+                elem: 'input[lay-filter=delivery_date]'
+                ,trigger : 'click'
             });
 
             // 提交订单
@@ -357,7 +366,7 @@
                         layer.close(load_index);
                         if ('success' == data.status) {
                             layer.msg("订单添加成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
                             layer.msg("订单添加失败:"+data.msg, {icon: 2, time: 2000});

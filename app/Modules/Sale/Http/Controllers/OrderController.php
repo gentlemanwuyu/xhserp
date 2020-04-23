@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Sale\Models\Order;
+use App\Services\WorldService;
 
 class OrderController extends Controller
 {
@@ -28,6 +29,7 @@ class OrderController extends Controller
 
     public function form(Request $request)
     {
+        $currencies = WorldService::currencies();
         $customers = Customer::all()->pluck(null, 'id')->map(function ($customer) {
             $customer->setAppends(['remained_credit']);
 
@@ -41,7 +43,7 @@ class OrderController extends Controller
             });
             return $g;
         })->pluck(null, 'id');
-        $data = compact('customers', 'goods');
+        $data = compact('currencies', 'customers', 'goods');
         if ($request->get('order_id')) {
             $order = Order::find($request->get('order_id'));
             $data['order'] = $order;
@@ -87,6 +89,7 @@ class OrderController extends Controller
             });
             $order->customer;
             $order->user;
+            $order->currency;
             $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable', 'deliverable']);
         }
 
@@ -100,6 +103,8 @@ class OrderController extends Controller
                 'code' => $request->get('code', ''),
                 'payment_method' => $request->get('payment_method'),
                 'tax' => $request->get('tax'),
+                'currency_code' => $request->get('currency_code'),
+                'delivery_date' => $request->get('delivery_date'),
             ];
 
             $order = Order::find($request->get('order_id'));
