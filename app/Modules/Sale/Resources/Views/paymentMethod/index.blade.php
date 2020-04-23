@@ -86,7 +86,6 @@
                             return d.user ? d.user.name : '';
                         }},
                         {field: 'reason', title: '申请原因', align: 'center'},
-                        {field: 'reject_reason', title: '驳回原因', width: 200, align: 'center'},
                         {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
                         {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'},
                         {field: 'action', title: '操作', width: 100, align: 'center', fixed: 'right', toolbar: "#action"}

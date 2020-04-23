@@ -19,7 +19,6 @@ class CreatePaymentMethodApplicationsTable extends Migration
 			$table->integer('credit')->default(0)->comment('信用额度，只针对货到付款');
 			$table->tinyInteger('monthly_day')->unsigned()->default(0)->comment('月结天数');
 			$table->text('reason')->default('')->comment('申请原因');
-			$table->text('reject_reason')->default('')->comment('驳回原因');
 			$table->integer('user_id')->default(0)->comment('申请人ID');
 			$table->tinyInteger('status')->default(0)->comment('状态，1为待审核，2为已驳回，3为已通过');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');
