@@ -3,7 +3,7 @@
     <div class="erp-detail">
         <div class="erp-detail-title">
             <fieldset class="layui-elem-field layui-field-title">
-                <legend>付款方式申请</legend>
+                <legend>基本信息</legend>
             </fieldset>
         </div>
         <div class="erp-detail-content">

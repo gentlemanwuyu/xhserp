@@ -4,7 +4,7 @@
         <input type="hidden" name="application_id" value="{{$application_id}}">
         <div class="layui-card">
             <div class="layui-card-header">
-                <h3>付款方式申请</h3>
+                <h3>基本信息</h3>
             </div>
             <div class="layui-card-body">
                 <div class="layui-row layui-col-space30">
