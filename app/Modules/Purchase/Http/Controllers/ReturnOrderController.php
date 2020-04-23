@@ -4,6 +4,7 @@ namespace App\Modules\Purchase\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Purchase\Http\Requests\ReturnOrderRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
@@ -100,7 +101,7 @@ class ReturnOrderController extends Controller
         return view('purchase::returnOrder.form', $data);
     }
 
-    public function save(Request $request)
+    public function save(ReturnOrderRequest $request)
     {
         try {
             $data = [

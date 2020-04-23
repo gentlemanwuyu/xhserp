@@ -37,7 +37,7 @@ class SupplierRequest extends FormRequest
 		}
 
 		if (!empty($inputs['contacts'])) {
-			foreach ($inputs['contacts'] as $index => $goods_sku) {
+			foreach ($inputs['contacts'] as $index => $contact) {
 				$key = 'contacts.' . $index . '.name';
 				$rules[$key] = 'required|max:80';
 				$this->messages = array_merge($this->messages, [

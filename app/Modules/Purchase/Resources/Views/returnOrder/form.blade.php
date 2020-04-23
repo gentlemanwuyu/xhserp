@@ -137,10 +137,10 @@
                                 <td erp-col="entriedQuantity">{{$purchaseOrderItem->entried_quantity}}</td>
                                 <td erp-col="returnableQuantity">{{$purchaseOrderItem->returnable_quantity}}</td>
                                 <td erp-col="quantity">
-                                    <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" oninput="value=value.replace(/[^\d]/g, '')" value="{{$item->quantity}}">
+                                    <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" value="{{$item->quantity}}" oninput="value=value.replace(/[^\d]/g, '')">
                                 </td>
                                 <td erp-col="egressQuantity">
-                                    <input type="text" name="items[{{$item->id}}][egress_quantity]" lay-filter="egressQuantity" placeholder="实收数量" lay-verify="required" lay-reqText="请输入实收数量" class="layui-input" value="{{$item->received_quantity}}">
+                                    <input type="text" name="items[{{$item->id}}][egress_quantity]" lay-filter="egressQuantity" placeholder="实出数量" lay-verify="required" lay-reqText="请输入实出数量" class="layui-input" value="{{$item->received_quantity}}" oninput="value=value.replace(/[^\d]/g, '')">
                                 </td>
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                             </tr>
@@ -246,10 +246,12 @@
             form.on('select(deliveryMethod)', function (data) {
                 var $deliveryMethodItem = $(data.elem).parents('.layui-form-item')
                         ,$expressItem = $('select[name=express_id]').parents('.layui-form-item')
+                        ,$trackNoItem = $('input[name=track_no]').parents('.layui-form-item')
                         ,$addressItem = $('input[name=address]').parents('.layui-form-item')
                         ,$consigneeItem = $('input[name=consignee]').parents('.layui-form-item')
                         ,$consigneePhoneItem = $('input[name=consignee_phone]').parents('.layui-form-item');
                 $expressItem.remove();
+                $trackNoItem.remove();
                 $addressItem.remove();
                 $consigneeItem.remove();
                 $consigneePhoneItem.remove();
@@ -290,7 +292,7 @@
                         html += '<div class="layui-form-item">';
                         html += '<label class="layui-form-label required">联系电话</label>';
                         html += '<div class="layui-input-block">';
-                        html += '<input type="text" name="consignee_phone" placeholder="收货人电话" class="layui-input" lay-verify="required" lay-reqText="请填写收货人电话">';
+                        html += '<input type="text" name="consignee_phone" placeholder="联系电话" class="layui-input" lay-verify="required" lay-reqText="请填写联系电话">';
                         html += '</div>';
                         html += '</div>';
 
@@ -353,11 +355,11 @@
                 html += '<td erp-col="returnableQuantity"></td>';
                 // 退货数量
                 html += '<td erp-col="quantity">';
-                html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" oninput="value=value.replace(\/[\^\\\d]/g, \'\')">';
+                html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="退货数量" lay-verify="required" lay-reqText="请输入退货数量" class="layui-input" oninput="value=value.replace(/[^\\d]/g, \'\')">';
                 html += '</td>';
                 // 实出数量
                 html += '<td erp-col="egressQuantity">';
-                html += '<input type="text" name="items[' + flag + '][egress_quantity]" lay-filter="egressQuantity" placeholder="实收数量" lay-verify="required" lay-reqText="请输入实收数量" class="layui-input">';
+                html += '<input type="text" name="items[' + flag + '][egress_quantity]" lay-filter="egressQuantity" placeholder="实出数量" lay-verify="required" lay-reqText="请输入实出数量" class="layui-input" oninput="value=value.replace(/[^\\d]/g, \'\')">';
                 html += '</td>';
                 html += '<td>';
                 html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button>';

@@ -34,7 +34,7 @@ class OrderRequest extends FormRequest
 		]);
 
 		if (!empty($inputs['items'])) {
-			foreach ($inputs['items'] as $index => $goods_sku) {
+			foreach ($inputs['items'] as $index => $item) {
 				$key = 'items.' . $index . '.product_id';
 				$rules[$key] = 'required';
 				$this->messages = array_merge($this->messages, [
