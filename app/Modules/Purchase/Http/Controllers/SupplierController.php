@@ -118,6 +118,9 @@ class SupplierController extends Controller
             }
 
             DB::beginTransaction();
+            $supplier->contacts->map(function ($contact) {
+                $contact->delete();
+            });
             $supplier->delete();
 
             DB::commit();

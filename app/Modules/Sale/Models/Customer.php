@@ -378,4 +378,24 @@ class Customer extends Model
 
         return $back_amount;
     }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        // 下过订单的客户不可删除
+        if (Order::where('customer_id', $this->id)->exists()) {
+            return false;
+        }
+
+        // 付过款的客户不可删除
+        if (Collection::where('customer_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
+    }
 }

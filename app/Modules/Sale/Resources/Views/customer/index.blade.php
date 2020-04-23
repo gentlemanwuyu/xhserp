@@ -164,37 +164,40 @@
                         });
                         @endcan
 
-                        @can('delete_customer')
-                        actions.push({
-                            title: "删除",
-                            event: function() {
-                                layer.confirm("确认要删除该客户？", {icon: 3, title:"确认"}, function (index) {
-                                    layer.close(index);
-                                    var load_index = layer.load();
-                                    $.ajax({
-                                        method: "post",
-                                        url: "{{route('sale::customer.delete')}}",
-                                        data: {customer_id: data.id},
-                                        success: function (data) {
-                                            layer.close(load_index);
-                                            if ('success' == data.status) {
-                                                layer.msg("客户删除成功", {icon:1});
-                                                tableIns.reload();
-                                            } else {
-                                                layer.msg("客户删除失败:"+data.msg, {icon:2});
+                        if (data.deletable) {
+                            @can('delete_customer')
+                            actions.push({
+                                title: "删除",
+                                event: function() {
+                                    layer.confirm("确认要删除该客户？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('sale::customer.delete')}}",
+                                            data: {customer_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("客户删除成功", {icon: 1, time: 2000}, function () {
+                                                        tableIns.reload();
+                                                    });
+                                                } else {
+                                                    layer.msg("客户删除失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                            layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                            return false;
-                                        }
+                                        });
                                     });
-                                });
-                            }
-                        });
-                        @endcan
+                                }
+                            });
+                            @endcan
+                        }
 
                         return actions;
                     });

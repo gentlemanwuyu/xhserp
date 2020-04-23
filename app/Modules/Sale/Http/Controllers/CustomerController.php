@@ -73,7 +73,7 @@ class CustomerController extends Controller
             $customer->contacts;
             $customer->manager;
             $customer->currency;
-            $customer->setAppends(['payment_method_name', 'tax_name']);
+            $customer->setAppends(['payment_method_name', 'tax_name', 'deletable']);
         }
 
         return response()->json($paginate);
@@ -185,6 +185,9 @@ class CustomerController extends Controller
             }
 
             DB::beginTransaction();
+            $customer->contacts->map(function ($contact) {
+                $contact->delete();
+            });
             $customer->delete();
 
             DB::commit();
