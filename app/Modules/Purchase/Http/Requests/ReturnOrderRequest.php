@@ -92,19 +92,13 @@ class ReturnOrderRequest extends FormRequest
 	public function messages()
 	{
 		return array_merge([
-			'name.required' => '请输入名称',
-			'name.max' => '名称不能超过:max个字符',
-			'name.unique' => '名称已存在',
-			'code.required' => '请输入编号',
-			'code.max' => '编号不能超过:max个字符',
-			'code.unique' => '编号已存在',
-			'company.max' => '公司不能超过:max个字符',
-			'phone.max' => '电话不能超过:max个字符',
-			'fax.max' => '传真不能超过:max个字符',
-			'tax.required' => '请选择税率',
-			'currency_code.required' => '请选择币种',
-			'payment_method.required' => '请输入付款方式',
-			'contacts.required' => '请至少添加一个联系人',
+			'code.required' => '请输入退货单号',
+			'code.max' => '退货单号不能超过:max个字符',
+			'code.unique' => '退货单号已存在',
+			'method.required' => '请选择退货方式',
+			'reason.required' => '请输入退货原因',
+			'delivery_method.required' => '请选择出货方式',
+			'items.required' => '请添加退货明细',
 		], $this->messages);
 	}
 }
