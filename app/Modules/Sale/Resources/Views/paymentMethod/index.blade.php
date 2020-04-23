@@ -95,6 +95,15 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
+                        @can('payment_method_application_detail')
+                            actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('sale::paymentMethod.detail')}}?application_id=" + data.id, '付款方式申请详情[' + data.id + ']');
+                            }
+                        });
+                        @endcan
+
                         if (-1 < [1, 2].indexOf(data.status)) {
                             @can('edit_payment_method_application')
                             actions.push({
@@ -111,7 +120,7 @@
                             actions.push({
                                 title: "审核",
                                 event: function () {
-                                    parent.layui.index.openTabsPage("{{route('sale::paymentMethod.review')}}?application_id=" + data.id, '编辑付款方式申请[' + data.id + ']');
+                                    parent.layui.index.openTabsPage("{{route('sale::paymentMethod.review')}}?action=review&application_id=" + data.id, '审核付款方式申请[' + data.id + ']');
                                 }
                             });
                             @endcan

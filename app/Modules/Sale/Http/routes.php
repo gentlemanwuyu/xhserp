@@ -47,6 +47,7 @@ Route::group(['prefix' => 'paymentMethod', 'as'=>'paymentMethod.'], function (){
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'PaymentMethodController@paginate']);
 	Route::get('form', ['as'=>'form', 'uses'=>'PaymentMethodController@form']);
 	Route::post('save', ['as'=>'save', 'uses'=>'PaymentMethodController@save']);
+	Route::get('detail', ['as'=>'detail', 'uses'=>'PaymentMethodController@detail']);
 	Route::get('review', ['as'=>'review', 'uses'=>'PaymentMethodController@review']);
 	Route::post('agree', ['as'=>'agree', 'uses'=>'PaymentMethodController@agree']);
 	Route::post('reject', ['as'=>'reject', 'uses'=>'PaymentMethodController@reject']);

@@ -23,7 +23,7 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">额度</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度" value="{{$application->credit}}">
+                                    <input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度" value="{{$application->credit}}" oninput="value=value.replace(/[^\d]/g, '')">
                                 </div>
                             </div>
                         @endif
@@ -31,7 +31,7 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">月结天数</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数" value="{{$application->monthly_day}}">
+                                    <input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数" value="{{$application->monthly_day}}" oninput="value=value.replace(/[^\d]/g, '')">
                                 </div>
                             </div>
                         @endif
@@ -66,7 +66,7 @@
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">额度</label>';
                     html += '<div class="layui-input-block">';
-                    html += '<input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度">';
+                    html += '<input type="text" name="credit" class="layui-input" placeholder="额度(元)" lay-verify="required" lay-reqText="请输入额度" oninput="value=value.replace(/[^\\d]/g, \'\')">';
                     html += '</div>';
                     html += '</div>';
                     html += '<div class="layui-form-item layui-form-text">';
@@ -82,7 +82,7 @@
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">月结天数</label>';
                     html += '<div class="layui-input-block">';
-                    html += '<input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数">';
+                    html += '<input type="text" name="monthly_day" class="layui-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数" oninput="value=value.replace(/[^\\d]/g, \'\')">';
                     html += '</div>';
                     html += '</div>';
                     html += '<div class="layui-form-item layui-form-text">';
@@ -107,7 +107,7 @@
                         layer.close(load_index);
                         if ('success' == data.status) {
                             layer.msg("付款方式申请成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
                             layer.msg("付款方式申请失败:"+data.msg, {icon: 2, time: 2000});

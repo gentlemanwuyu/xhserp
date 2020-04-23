@@ -4,10 +4,13 @@ namespace App\Modules\Sale\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Sale\Http\Requests\PaymentMethodApplicationRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Sale\Models\PaymentMethodApplication;
+use App\Modules\Sale\Models\PaymentMethodApplicationLog;
 
 class PaymentMethodController extends Controller
 {
@@ -61,7 +64,7 @@ class PaymentMethodController extends Controller
         return view('sale::paymentMethod.form', compact('application'));
     }
 
-    public function save(Request $request)
+    public function save(PaymentMethodApplicationRequest $request)
     {
         try {
             $application = PaymentMethodApplication::find($request->get('application_id'));
@@ -82,6 +85,13 @@ class PaymentMethodController extends Controller
         }catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
+    }
+
+    public function detail(Request $request)
+    {
+        $application = PaymentMethodApplication::find($request->get('application_id'));
+
+        return view('sale::paymentMethod.detail', compact('application'));
     }
 
     public function review(Request $request)
@@ -116,6 +126,13 @@ class PaymentMethodController extends Controller
                 'credit' => $application->credit,
                 'monthly_day' => $application->monthly_day,
             ]);
+            PaymentMethodApplicationLog::create([
+                'payment_method_application_id' => $application->id,
+                'customer_id' => $customer->id,
+                'message' => '同意',
+                'content' => '',
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
@@ -137,7 +154,19 @@ class PaymentMethodController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '该付款方式申请不是待审核状态，禁止操作']);
             }
 
-            $application->update(['status' => 2, 'reject_reason' => $request->get('reject_reason')]);
+            $customer = $application->customer;
+            if (!$customer) {
+                return response()->json(['status' => 'fail', 'msg' => '找不到该付款方式申请对应的客户']);
+            }
+
+            $application->update(['status' => 2]);
+            PaymentMethodApplicationLog::create([
+                'payment_method_application_id' => $application->id,
+                'customer_id' => $customer->id,
+                'message' => '驳回',
+                'content' => $request->get('reject_reason'),
+                'user_id' => Auth::user()->id,
+            ]);
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {

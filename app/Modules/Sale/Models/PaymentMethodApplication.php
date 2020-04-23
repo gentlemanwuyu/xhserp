@@ -34,6 +34,11 @@ class PaymentMethodApplication extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(PaymentMethodApplicationLog::class)->orderBy('id', 'desc');
+    }
+
     public function getStatusNameAttribute()
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';

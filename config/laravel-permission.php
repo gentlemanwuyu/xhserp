@@ -226,6 +226,7 @@ return [
                 [ // 付款方式申请
                     'name' => 'payment_method_application', 'display_name' => '付款方式申请', 'route' => '', 'type' => 1, 'children' =>
                     [
+                        ['name' => 'payment_method_application_detail', 'display_name' => '付款方式申请详情', 'route' => '', 'type' => 2],
                         ['name' => 'edit_payment_method_application', 'display_name' => '编辑付款方式申请', 'route' => '', 'type' => 2],
                         ['name' => 'review_payment_method_application', 'display_name' => '审核付款方式申请', 'route' => '', 'type' => 2],
                         ['name' => 'delete_payment_method_application', 'display_name' => '删除付款方式申请', 'route' => '', 'type' => 2],

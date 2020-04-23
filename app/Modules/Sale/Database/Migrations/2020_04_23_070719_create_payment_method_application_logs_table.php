@@ -22,7 +22,7 @@ class CreatePaymentMethodApplicationLogsTable extends Migration
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('创建时间');
 			$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))->comment('最后更新时间');
 
-			$table->index('payment_method_application_id');
+			$table->index('payment_method_application_id', 'payment_method_application_id');
 			$table->index('customer_id');
 		});
 	}

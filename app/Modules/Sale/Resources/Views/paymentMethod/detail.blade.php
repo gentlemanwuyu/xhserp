@@ -42,17 +42,61 @@
                             <td>申请人</td>
                             <td>{{$application->user->name or ''}}</td>
                         </tr>
+                        <tr>
+                            <td>状态</td>
+                            <td>{{$application->status_name}}</td>
+                        </tr>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    @if(!$application->logs->isEmpty())
+    <div class="erp-detail">
+        <div class="erp-detail-title">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>审核日志</legend>
+            </fieldset>
+        </div>
+        <div class="erp-detail-content">
+            <div class="layui-row layui-col-space30">
+                <div class="layui-col-xs12">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>日志信息</th>
+                            <th>日志内容</th>
+                            <th>操作人</th>
+                            <th>时间</th>
+                        </tr>
+                        <tbody>
+                        <?php $index = 1; ?>
+                        @foreach($application->logs as $log)
+                            <tr>
+                                <td>{{$index++}}</td>
+                                <td>{{$log->message}}</td>
+                                <td>{{$log->content}}</td>
+                                <td>{{$log->user->name or ''}}</td>
+                                <td>{{$log->created_at}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @if(isset($application) && 1 == $application->status && isset($action) && 'review' == $action)
     <div class="layui-row">
         <form class="layui-form">
             <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>
             <button type="button" class="layui-btn layui-btn-danger" erp-action="reject">驳回</button>
         </form>
     </div>
+    @endif
 @endsection
 @section('scripts')
     <script>
