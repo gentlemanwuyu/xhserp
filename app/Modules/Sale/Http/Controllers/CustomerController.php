@@ -22,8 +22,9 @@ class CustomerController extends Controller
     public function index()
     {
         $users = User::where('is_admin', 0)->get();
+        $currencies = WorldService::currencies();
 
-        return view('sale::customer.index', compact('users'));
+        return view('sale::customer.index', compact('users', 'currencies'));
     }
 
     public function form(Request $request)
@@ -56,6 +57,9 @@ class CustomerController extends Controller
         }
         if ($request->get('payment_method')) {
             $query = $query->where('payment_method', $request->get('payment_method'));
+        }
+        if ($request->get('currency_code')) {
+            $query = $query->where('currency_code', $request->get('currency_code'));
         }
 
         if ('' != $request->get('manager_id')) {

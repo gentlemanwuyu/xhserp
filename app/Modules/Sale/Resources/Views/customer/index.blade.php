@@ -25,6 +25,14 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
+                <select name="currency_code" lay-search="">
+                    <option value="">币种</option>
+                    @foreach($currencies as $currency)
+                        <option value="{{$currency['code']}}">{{$currency['name']}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
                 <select name="manager_id" lay-search="">
                     <option value="">负责人</option>
                     <option value="0">客户池</option>
