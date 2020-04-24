@@ -124,33 +124,31 @@ class OrderController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该客户']);
             }
 
-            // 判断订单号是否存在
-            $query = Order::where('code', $request->get('code'));
-            if ($request->get('order_id')) {
-                $query = $query->where('id', '!=', $request->get('order_id'));
-            }
-            if ($query->first()) {
-                return response()->json(['status' => 'fail', 'msg' => '订单号[' . $request->get('code') . ']已存在']);
-            }
+            $user = Auth::user(); // 当前用户
 
-            // 分析订单需要进入什么状态
+            // 分析订单需要进入什么状态(主要是判断货到付款方式是否有超过额度)
             if (1 == $request->get('payment_method')) {
                 // 如果付款方式是现金，直接进入已通过状态
                 $order_data['status'] = 3;
             }elseif (2 == $request->get('payment_method')) {
-                if (2 == $customer->payment_method) {
-                    // 判断是否超过额度
-                    $current_amount = 0; // 当前订单得金额
-                    foreach ($request->get('items') as $item) {
-                        $current_amount += $item['quantity'] * $item['price'];
-                    }
-                    if ($customer->remained_credit >= $current_amount) {
-                        $order_data['status'] = 3;
-                    }else{
+                if ($user->hasPermissionTo('review_order')) {
+                    // 如果客户有审核订单的权限，直接进入已通过状态
+                    $order_data['status'] = 3;
+                }else {
+                    if (2 == $customer->payment_method) {
+                        // 判断是否超过额度
+                        $current_amount = 0; // 当前订单得金额
+                        foreach ($request->get('items') as $item) {
+                            $current_amount += $item['quantity'] * $item['price'];
+                        }
+                        if ($customer->remained_credit >= $current_amount) {
+                            $order_data['status'] = 3;
+                        }else{
+                            $order_data['status'] = 1;
+                        }
+                    }else {
                         $order_data['status'] = 1;
                     }
-                }else {
-                    $order_data['status'] = 1;
                 }
             }elseif (3 == $request->get('payment_method')) {
                 if (3 == $customer->payment_method) {
@@ -168,7 +166,7 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             if (!$order) {
-                $order_data['user_id'] = Auth::user()->id;
+                $order_data['user_id'] = $user->id;
                 $order = Order::create($order_data);
             }else {
                 $order->update($order_data);
@@ -182,7 +180,7 @@ class OrderController extends Controller
             $order->syncItems($request->get('items'));
 
             DB::commit();
-            return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success', 'content' => ['order' => $order]]);
         }catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);

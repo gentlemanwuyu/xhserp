@@ -365,7 +365,11 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("订单添加成功", {icon: 1, time: 2000}, function () {
+                            var message = '订单添加成功';
+                            if (data.content.order && 1 == data.content.order.status) {
+                                message += ', 需要审核';
+                            }
+                            layer.msg(message, {icon: 1, time: 2000}, function () {
                                 parent.layui.admin.closeThisTabs();
                             });
                         } else {
