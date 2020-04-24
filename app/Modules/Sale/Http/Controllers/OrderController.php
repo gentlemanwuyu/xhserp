@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Sale\Models\Order;
+use App\Modules\Sale\Models\OrderLog;
 use App\Services\WorldService;
 
 class OrderController extends Controller
@@ -238,6 +239,12 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 3, 'payment_status' => 1]);
+            OrderLog::create([
+                'order_id' => $order->id,
+                'action' => 1,
+                'content' => '订单审核通过',
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
@@ -261,6 +268,12 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 2]);
+            OrderLog::create([
+                'order_id' => $order->id,
+                'action' => 2,
+                'content' => $request->get('reason'),
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);
