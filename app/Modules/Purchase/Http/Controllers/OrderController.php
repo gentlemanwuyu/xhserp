@@ -102,7 +102,7 @@ class OrderController extends Controller
                 'payment_method' => $request->get('payment_method'),
                 'tax' => $request->get('tax'),
                 'currency_code' => $request->get('currency_code'),
-                'delivery_date' => $request->get('delivery_date', ''),
+                'delivery_date' => $request->get('delivery_date') ?: null,
                 'status' => 1,
             ];
 
