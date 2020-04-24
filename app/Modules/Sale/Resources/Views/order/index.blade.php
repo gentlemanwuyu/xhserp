@@ -215,31 +215,32 @@
                             @endcan
                         }
 
-                        if (3 == data.status) {
+                        if (3 == data.status && data.cancelable) {
                             @can('cancel_order')
                             actions.push({
                                 title: "取消",
                                 event: function() {
-                                    layer.confirm("确认要取消该订单？", {icon: 3, title:"确认"}, function (index) {
+                                    layer.prompt({title: '取消原因'}, function(value, index, elem){
                                         layer.close(index);
                                         var load_index = layer.load();
                                         $.ajax({
                                             method: "post",
                                             url: "{{route('sale::order.cancel')}}",
-                                            data: {order_id: data.id},
+                                            data: {order_id: data.id, reason: value},
                                             success: function (data) {
                                                 layer.close(load_index);
                                                 if ('success' == data.status) {
-                                                    layer.msg("订单已取消", {icon: 1, time: 2000});
-                                                    table.render(tableOpts);
+                                                    layer.msg("订单已取消", {icon: 1, time: 2000}, function () {
+                                                        table.render(tableOpts);
+                                                    });
                                                 } else {
-                                                    layer.msg("订单取消失败:"+data.msg, {icon:2});
+                                                    layer.msg("订单取消失败:"+data.msg, {icon: 2, time: 2000});
                                                     return false;
                                                 }
                                             },
                                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                                 layer.close(load_index);
-                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
                                         });
@@ -260,37 +261,40 @@
                             @endcan
                         }
 
-                        @can('delete_order')
-                        actions.push({
-                            title: "删除",
-                            event: function() {
-                                layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
-                                    layer.close(index);
-                                    var load_index = layer.load();
-                                    $.ajax({
-                                        method: "post",
-                                        url: "{{route('sale::order.delete')}}",
-                                        data: {order_id: data.id},
-                                        success: function (data) {
-                                            layer.close(load_index);
-                                            if ('success' == data.status) {
-                                                layer.msg("订单删除成功", {icon:1});
-                                                table.render(tableOpts);
-                                            } else {
-                                                layer.msg("订单删除失败:"+data.msg, {icon:2});
+                        if (data.deletable) {
+                            @can('delete_order')
+                            actions.push({
+                                title: "删除",
+                                event: function() {
+                                    layer.confirm("确认要删除该订单？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('sale::order.delete')}}",
+                                            data: {order_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("订单删除成功", {icon: 1, time: 2000}, function () {
+                                                        table.render(tableOpts);
+                                                    });
+                                                } else {
+                                                    layer.msg("订单删除失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                            layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
-                                            return false;
-                                        }
+                                        });
                                     });
-                                });
-                            }
-                        });
-                        @endcan
+                                }
+                            });
+                            @endcan
+                        }
 
                         return actions;
                     });

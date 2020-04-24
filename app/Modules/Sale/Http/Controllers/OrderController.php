@@ -96,7 +96,7 @@ class OrderController extends Controller
             $order->customer;
             $order->user;
             $order->currency;
-            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable', 'deliverable']);
+            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable', 'deliverable', 'deletable', 'cancelable']);
         }
 
         return response()->json($paginate);
@@ -198,10 +198,10 @@ class OrderController extends Controller
             }
 
             DB::beginTransaction();
-            $order->delete();
             $order->items->each(function ($item) {
                 $item->delete();
             });
+            $order->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);
@@ -297,6 +297,12 @@ class OrderController extends Controller
 
             DB::beginTransaction();
             $order->update(['status' => 5]);
+            OrderLog::create([
+                'order_id' => $order->id,
+                'action' => 3,
+                'content' => $request->get('reason'),
+                'user_id' => Auth::user()->id,
+            ]);
 
             DB::commit();
             return response()->json(['status' => 'success']);

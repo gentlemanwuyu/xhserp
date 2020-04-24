@@ -166,4 +166,45 @@ class Order extends Model
 
         return array_sum($real_paids->toArray());
     }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        // 有出货记录的订单不可删除
+        if (DeliveryOrderItem::where('order_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 是否可取消
+     *
+     * @return bool
+     */
+    public function getCancelableAttribute()
+    {
+        // 如果是可删除的，则不可取消
+        if ($this->deletable) {
+            return false;
+        }
+
+        // 有正在出货的出货单不可取消
+        $pending_delivery_order_exists = DeliveryOrderItem::leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
+            ->whereNull('do.deleted_at')
+            ->where('delivery_order_items.order_id', $this->id)
+            ->where('do.status', 1)
+            ->exists();
+
+        if ($pending_delivery_order_exists) {
+            return false;
+        }
+
+        return true;
+    }
 }
