@@ -22,16 +22,24 @@ class Customer extends Model
 {
     use SoftDeletes;
 
+    // 付款方式
+    const CASH      = 1;
+    const CREDIT    = 2;
+    const MONTHLY   = 3;
     static $payment_methods = [
-        1 => '现金',
-        2 => '货到付款',
-        3 => '月结',
+        self::CASH      => '现金',
+        self::CREDIT    => '货到付款',
+        self::MONTHLY   => '月结',
     ];
 
+    // 税率
+    const NONE_TAX      = 1;
+    const THREE_TAX     = 2;
+    const SEVENTEEN_TAX = 3;
     static $taxes = [
-        1 => ['display' => '不含税', 'rate' => 0],
-        2 => ['display' => '3%', 'rate' => 0.03],
-        3 => ['display' => '17%', 'rate' => 0.17],
+        self::NONE_TAX      => ['display' => '不含税', 'rate' => 0],
+        self::THREE_TAX     => ['display' => '3%', 'rate' => 0.03],
+        self::SEVENTEEN_TAX => ['display' => '17%', 'rate' => 0.17],
     ];
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];

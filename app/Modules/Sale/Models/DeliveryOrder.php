@@ -22,15 +22,24 @@ class DeliveryOrder extends Model
 
     const CODE_PREFIX = 'xhssdo';
 
+    // 出货方式
+    const BY_SELF   = 1;
+    const SEND      = 2;
+    const EXPRESS   = 3;
     static $delivery_methods = [
-        1 => '客户自取',
-        2 => '送货',
-        3 => '快递物流',
+        self::BY_SELF   => '客户自取',
+        self::SEND      => '送货',
+        self::EXPRESS   => '快递物流',
     ];
 
+    // 出货单状态
+    const PENDING_REVIEW    = 1;
+    const PENDING_DELIVERY  = 2;
+    const FINISHED          = 3;
     static $statuses = [
-        1 => '待出货',
-        2 => '已完成',
+        self::PENDING_REVIEW    => '待审核',
+        self::PENDING_DELIVERY  => '待出货',
+        self::FINISHED          => '已完成',
     ];
 
     public function syncItems($items)

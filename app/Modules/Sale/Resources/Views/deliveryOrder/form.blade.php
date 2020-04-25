@@ -28,6 +28,24 @@
                                 <span class="erp-form-span">{{$customer->name or ''}}</span>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">付款方式</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->payment_method_name or ''}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">结余金额</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->total_remained_amount or ''}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">退货金额</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->back_amount or ''}}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
