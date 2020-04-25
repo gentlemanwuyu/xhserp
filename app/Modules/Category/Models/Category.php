@@ -15,9 +15,12 @@ class Category extends Model
 {
     use SoftDeletes;
 
+    // 类型
+    const PRODUCT   = 1;
+    const GOODS     = 2;
     static $types = [
-        1 => 'product',
-        2 => 'goods',
+        self::PRODUCT   => 'product',
+        self::GOODS     => 'goods',
     ];
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];

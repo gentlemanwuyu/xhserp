@@ -23,7 +23,6 @@ class Goods extends Model
      */
     const SINGLE = 1;
     const COMBO = 2;
-
     static $types = [
         self::SINGLE => '单品',
         self::COMBO => '组合',

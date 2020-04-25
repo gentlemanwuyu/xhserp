@@ -18,10 +18,14 @@ class PaymentMethodApplication extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    // 付款方式申请状态
+    const PENDING_REVIEW = 1;
+    const REJECTED = 2;
+    const AGREED = 3;
     static $statuses = [
-        1 => '待审核',
-        2 => '已驳回',
-        3 => '已通过',
+        self::PENDING_REVIEW    => '待审核',
+        self::REJECTED          => '已驳回',
+        self::AGREED            => '已通过',
     ];
 
     public function customer()

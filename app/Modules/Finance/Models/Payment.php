@@ -19,10 +19,11 @@ class Payment extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    // 付款方式
     static $methods = [
-        1 => '现金',
-        2 => '汇款',
-        3 => '支票/汇票',
+        \Payment::CASH          => '现金',
+        \Payment::REMITTANCE    => '汇款',
+        \Payment::CHECK         => '支票/汇票',
     ];
 
     public function deductions()

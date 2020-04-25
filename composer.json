@@ -34,7 +34,10 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Libs/Helpers/Helpers.php"
+            "app/Libs/Helpers/Helpers.php",
+            "app/Libs/Constants/Tax.php",
+            "app/Libs/Constants/Payment.php",
+            "app/Libs/Constants/System.php"
         ]
     },
     "autoload-dev": {

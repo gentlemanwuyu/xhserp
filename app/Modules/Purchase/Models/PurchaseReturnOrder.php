@@ -23,22 +23,34 @@ class PurchaseReturnOrder extends Model
 
     const CODE_PREFIX = 'xhspro';
 
+    // 采购退货单状态
+    const AGREED = 1;
+    const EGRESSED = 2;
+    const FINISHED = 3;
+    const CANCELED = 4;
     static $statuses = [
-        1 => '已通过',
-        2 => '已出库',
-        3 => '已完成',
-        4 => '已取消',
+        self::AGREED    => '已通过',
+        self::EGRESSED  => '已出库',
+        self::FINISHED  => '已完成',
+        self::CANCELED  => '已取消',
     ];
 
+    // 退货方式
+    const EXCHANGE = 1;
+    const BACK = 2;
     static $methods = [
-        1 => '换货',
-        2 => '退货',
+        self::EXCHANGE  => '换货',
+        self::BACK      => '退货',
     ];
 
+    // 出货方式
+    const BY_SELF   = 1;
+    const SEND      = 2;
+    const EXPRESS   = 3;
     static $delivery_methods = [
-        1 => '供应商自取',
-        2 => '送货',
-        3 => '快递物流',
+        self::BY_SELF => '供应商自取',
+        self::SEND => '送货',
+        self::EXPRESS => '快递物流',
     ];
 
     public function syncItems($items)

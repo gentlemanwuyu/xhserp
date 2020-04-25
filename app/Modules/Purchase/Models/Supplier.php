@@ -23,16 +23,18 @@ class Supplier extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
+    // 付款方式
     static $payment_methods = [
-        1 => '现金',
-        2 => '货到付款',
-        3 => '月结',
+        \PaymentMethod::CASH    => '现金',
+        \PaymentMethod::CREDIT  => '货到付款',
+        \PaymentMethod::MONTHLY => '月结',
     ];
 
+    // 税率
     static $taxes = [
-        1 => ['display' => '不含税', 'rate' => 0],
-        2 => ['display' => '3%', 'rate' => 0.03],
-        3 => ['display' => '17%', 'rate' => 0.17],
+        \Tax::NONE      => ['display' => '不含税', 'rate' => 0],
+        \Tax::THREE     => ['display' => '3%', 'rate' => 0.03],
+        \Tax::SEVENTEEN => ['display' => '17%', 'rate' => 0.17],
     ];
 
     /**

@@ -22,18 +22,28 @@ class ReturnOrder extends Model
 
     const CODE_PREFIX = 'xhsro';
 
+    // 退货单状态
+    const PENDING_REVIEW = 1;
+    const REJECTED = 2;
+    const AGREED = 3;
+    const ENTRIED = 4;
+    const FINISHED = 5;
+    const CANCELED = 6;
     static $statuses = [
-        1 => '待审核',
-        2 => '已驳回',
-        3 => '已通过',
-        4 => '已入库',
-        5 => '已完成',
-        6 => '已取消',
+        self::PENDING_REVIEW    => '待审核',
+        self::REJECTED          => '已驳回',
+        self::AGREED            => '已通过',
+        self::ENTRIED           => '已入库',
+        self::FINISHED          => '已完成',
+        self::CANCELED          => '已取消',
     ];
 
+    // 退货方式
+    const EXCHANGE = 1;
+    const BACK = 2;
     static $methods = [
-        1 => '换货',
-        2 => '退货',
+        self::EXCHANGE  => '换货',
+        self::BACK      => '退货',
     ];
 
     public function syncItems($items)

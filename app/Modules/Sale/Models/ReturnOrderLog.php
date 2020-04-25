@@ -15,10 +15,14 @@ class ReturnOrderLog extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    // 操作
+    const AGREE = 1;
+    const REJECT = 2;
+    const HANDLE = 3;
     static $actions = [
-        1 => '同意',
-        2 => '驳回',
-        3 => '处理',
+        self::AGREE     => '同意',
+        self::REJECT    => '驳回',
+        self::HANDLE    => '处理',
     ];
 
     public function user()

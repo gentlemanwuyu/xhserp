@@ -27,15 +27,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * gender字段对应的性别
-     *
-     * @var array
-     */
-    protected $genders = [
-        0 => '未知',
-        1 => '男',
-        2 => '女',
+    // 性别
+    const MALE = 1;
+    const FEMALE = 2;
+    static $genders = [
+        self::MALE      => '男',
+        self::FEMALE    => '女',
     ];
 
     /**
@@ -46,7 +43,7 @@ class User extends Authenticatable
      */
     public function getGenderAttribute()
     {
-        return isset($this->genders[$this->gender_id]) ? $this->genders[$this->gender_id] : '未知';
+        return isset(self::$genders[$this->gender_id]) ? self::$genders[$this->gender_id] : '';
     }
 
     /**

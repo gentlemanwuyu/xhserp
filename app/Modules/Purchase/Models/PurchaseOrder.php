@@ -23,12 +23,18 @@ class PurchaseOrder extends Model
 
     const CODE_PREFIX = 'xhspo';
 
+    // 采购订单状态
+    const PENDING_REVIEW = 1;
+    const REJECTED = 2;
+    const AGREED = 3;
+    const FINISHED = 4;
+    const CANCELED = 5;
     static $statuses = [
-        1 => '待审核',
-        2 => '已驳回',
-        3 => '已通过',
-        4 => '已完成',
-        5 => '已取消',
+        self::PENDING_REVIEW    => '待审核',
+        self::REJECTED          => '已驳回',
+        self::AGREED            => '已通过',
+        self::FINISHED          => '已完成',
+        self::CANCELED          => '已取消',
     ];
 
     public function syncItems($items)

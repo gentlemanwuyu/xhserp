@@ -15,10 +15,14 @@ class OrderLog extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    // 操作
+    const AGREE = 1;
+    const REJECT = 2;
+    const CANCEL = 3;
     static $actions = [
-        1 => '同意',
-        2 => '驳回',
-        3 => '取消',
+        self::AGREE     => '同意',
+        self::REJECT    => '驳回',
+        self::CANCEL    => '取消',
     ];
 
     public function user()
