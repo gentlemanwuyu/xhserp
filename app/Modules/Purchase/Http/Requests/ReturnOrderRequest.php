@@ -2,6 +2,7 @@
 namespace App\Modules\Purchase\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Modules\Purchase\Models\PurchaseReturnOrder;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class ReturnOrderRequest extends FormRequest
@@ -25,7 +26,7 @@ class ReturnOrderRequest extends FormRequest
 			'items' => 'required',
 		];
 
-		if (3 == $inputs['delivery_method']) {
+		if (PurchaseReturnOrder::EXPRESS == $inputs['delivery_method']) {
 			$rules['express_id'] = 'required';
 			$this->messages = array_merge($this->messages, ['express_id.required' => '请选择快递公司']);
 			$rules['track_no'] = 'max:80';
@@ -34,7 +35,7 @@ class ReturnOrderRequest extends FormRequest
 			]);
 		}
 
-		if (in_array($inputs['delivery_method'], [2, 3])) {
+		if (in_array($inputs['delivery_method'], [PurchaseReturnOrder::SEND, PurchaseReturnOrder::EXPRESS])) {
 			$rules['address'] = 'required|max:80';
 			$this->messages = array_merge($this->messages, [
 				'address.required' => '请填写地址',

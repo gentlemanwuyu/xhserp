@@ -68,7 +68,7 @@
                                 <td>{{$purchase_return_order->track_no}}</td>
                             </tr>
                         @endif
-                        @if(in_array($purchase_return_order->delivery_method, [2, 3]))
+                        @if(in_array($purchase_return_order->delivery_method, [\App\Modules\Purchase\Models\PurchaseReturnOrder::SEND, \App\Modules\Purchase\Models\PurchaseReturnOrder::EXPRESS]))
                             <tr>
                                 <td>地址</td>
                                 <td>{{$purchase_return_order->address}}</td>
@@ -149,7 +149,7 @@
             var form = layui.form;
 
             $('button[erp-action=egress]').on('click', function () {
-                if (3 == purchase_return_order.delivery_method) {
+                if ("{{\App\Modules\Purchase\Models\PurchaseReturnOrder::EXPRESS}}" == purchase_return_order.delivery_method) {
                     layer.prompt({
                         title: '物流单号',
                         value: purchase_return_order.track_no

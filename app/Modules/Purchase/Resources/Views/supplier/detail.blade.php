@@ -46,7 +46,7 @@
                             <td>付款方式</td>
                             <td>{{$supplier->payment_method_name or ''}}</td>
                         </tr>
-                        @if(3 == $supplier->payment_method)
+                        @if(\PaymentMethod::MONTHLY == $supplier->payment_method)
                             <tr>
                                 <td>月结天数</td>
                                 <td>{{$supplier->monthly_day or ''}}</td>

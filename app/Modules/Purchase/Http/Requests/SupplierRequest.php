@@ -29,7 +29,7 @@ class SupplierRequest extends FormRequest
 			'contacts' => 'required',
 		];
 
-		if (3 == $inputs['payment_method']) {
+		if (\PaymentMethod::MONTHLY == $inputs['payment_method']) {
 			$rules['monthly_day'] = 'required|integer';
 			$this->messages = array_merge($this->messages, [
 				'monthly_day.required' => '请输入月结天数',

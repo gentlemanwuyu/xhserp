@@ -80,7 +80,7 @@
                                 @foreach(\App\Modules\Purchase\Models\Supplier::$payment_methods as $method_id => $method)
                                     <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($supplier->payment_method) && $supplier->payment_method == $method_id) checked @endif>
                                 @endforeach
-                                @if(isset($supplier->payment_method) && 3 == $supplier->payment_method)
+                                @if(isset($supplier->payment_method) && \PaymentMethod::MONTHLY == $supplier->payment_method)
                                     <input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" value="{{$supplier->monthly_day or ''}}" lay-verify="required" lay-reqText="请输入月结天数" oninput="value=value.replace(/[^\d.]/g, '')">
                                 @endif
                             </div>
@@ -307,9 +307,9 @@
             // 付款方式单选监听
             form.on('radio(payment_method)', function(data){
                 var $monthlyDay = $(data.elem).parent().find('input[name=monthly_day]');
-                if (1 == data.value || 2 == data.value) {
+                if ("{{\PaymentMethod::CASH}}" == data.value || "{{\PaymentMethod::CREDIT}}" == data.value) {
                     $monthlyDay.remove();
-                }else if (3 == data.value && $monthlyDay.length == 0) {
+                }else if ("{{\PaymentMethod::MONTHLY}}" == data.value && $monthlyDay.length == 0) {
                     $(data.elem).parent().append('<input type="text" name="monthly_day" class="layui-input erp-after-radio-input" placeholder="月结天数" lay-verify="required" lay-reqText="请输入月结天数" oninput="value=value.replace(/[^\\d]/g, \'\')">');
                 }
             });

@@ -178,7 +178,7 @@
                         });
                         @endcan
 
-                        if (1 == data.status) {
+                        if ("{{\App\Modules\Purchase\Models\PurchaseOrder::PENDING_REVIEW}}" == data.status) {
                             @can('review_purchase_order')
                             actions.push({
                                 title: "审核",
@@ -189,7 +189,7 @@
                             @endcan
                         }
 
-                        if (-1 < [3, 4, 5].indexOf(data.status) && data.returnable) {
+                        if (-1 < ["{{\App\Modules\Purchase\Models\PurchaseOrder::AGREED}}", "{{\App\Modules\Purchase\Models\PurchaseOrder::FINISHED}}", "{{\App\Modules\Purchase\Models\PurchaseOrder::CANCELED}}"].indexOf(data.status) && data.returnable) {
                             @can('return_purchase_order')
                             actions.push({
                                 title: "退货",
@@ -200,7 +200,7 @@
                             @endcan
                         }
 
-                        if (3 == data.status && !data.deletable) {
+                        if ("{{\App\Modules\Purchase\Models\PurchaseOrder::AGREED}}" == data.status && !data.deletable) {
                             @can('cancel_purchase_order')
                             actions.push({
                                 title: "取消",
@@ -235,7 +235,7 @@
                             @endcan
                         }
 
-                        if (-1 < [1, 2].indexOf(data.status)) {
+                        if (-1 < ["{{\App\Modules\Purchase\Models\PurchaseOrder::PENDING_REVIEW}}", "{{\App\Modules\Purchase\Models\PurchaseOrder::REJECTED}}"].indexOf(data.status)) {
                             @can('edit_purchase_order')
                             actions.push({
                                 title: "编辑",
@@ -261,16 +261,17 @@
                                             success: function (data) {
                                                 layer.close(load_index);
                                                 if ('success' == data.status) {
-                                                    layer.msg("订单删除成功", {icon:1});
-                                                    table.render(tableOpts);
+                                                    layer.msg("订单删除成功", {icon: 1, time: 2000}, function () {
+                                                        table.render(tableOpts);
+                                                    });
                                                 } else {
-                                                    layer.msg("订单删除失败:"+data.msg, {icon:2});
+                                                    layer.msg("订单删除失败:"+data.msg, {icon: 2, time: 2000});
                                                     return false;
                                                 }
                                             },
                                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                                 layer.close(load_index);
-                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
                                         });

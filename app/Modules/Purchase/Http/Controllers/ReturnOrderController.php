@@ -23,7 +23,7 @@ class ReturnOrderController extends Controller
     public function index(Request $request)
     {
         $suppliers = Supplier::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('purchase::returnOrder.index', compact('suppliers', 'users'));
     }
@@ -114,7 +114,7 @@ class ReturnOrderController extends Controller
                 'address' => $request->get('address', ''),
                 'consignee' => $request->get('consignee', ''),
                 'consignee_phone' => $request->get('consignee_phone', ''),
-                'status' => 1,
+                'status' => PurchaseReturnOrder::AGREED,
             ];
             if ($request->get('purchase_order_id')) {
                 $data['purchase_order_id'] = $request->get('purchase_order_id');
@@ -160,7 +160,7 @@ class ReturnOrderController extends Controller
             if (!$purchase_return_order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该采购退货单']);
             }
-            if (1 != $purchase_return_order->status) {
+            if (PurchaseReturnOrder::AGREED != $purchase_return_order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该采购退货单不是已通过状态，禁止删除']);
             }
 

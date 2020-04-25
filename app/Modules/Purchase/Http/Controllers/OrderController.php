@@ -24,7 +24,7 @@ class OrderController extends Controller
     public function index()
     {
         $suppliers = Supplier::all(['id', 'name']);
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
         $currencies = WorldService::currencies();
 
         return view('purchase::order.index', compact('suppliers', 'users', 'currencies'));
@@ -103,13 +103,13 @@ class OrderController extends Controller
                 'tax' => $request->get('tax'),
                 'currency_code' => $request->get('currency_code'),
                 'delivery_date' => $request->get('delivery_date') ?: null,
-                'status' => 1,
+                'status' => PurchaseOrder::PENDING_REVIEW,
             ];
 
             $user = Auth::user();
             // 如果用户有审核权限，直接进入已通过状态
             if ($user->hasPermissionTo('review_purchase_order')) {
-                $order_data['status'] = 3;
+                $order_data['status'] = PurchaseOrder::AGREED;
             }
 
             $order = PurchaseOrder::find($request->get('order_id'));
@@ -191,15 +191,15 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
-            if (1 != $order->status) {
+            if (PurchaseOrder::PENDING_REVIEW != $order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该订单不是待审核状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 3]);
+            $order->update(['status' => PurchaseOrder::AGREED]);
             PurchaseOrderLog::create([
                 'purchase_order_id' => $order->id,
-                'action' => 1,
+                'action' => PurchaseOrderLog::AGREE,
                 'content' => '订单审核通过',
                 'user_id' => Auth::user()->id,
             ]);
@@ -220,15 +220,15 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
-            if (1 != $order->status) {
+            if (PurchaseOrder::PENDING_REVIEW != $order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该订单不是待审核状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 2]);
+            $order->update(['status' => PurchaseOrder::REJECTED]);
             PurchaseOrderLog::create([
                 'purchase_order_id' => $order->id,
-                'action' => 2,
+                'action' => PurchaseOrderLog::REJECT,
                 'content' => $request->get('reason'),
                 'user_id' => Auth::user()->id,
             ]);
@@ -249,15 +249,15 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
-            if (3 != $order->status) {
+            if (PurchaseOrder::AGREED != $order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该订单不是已通过状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 5]);
+            $order->update(['status' => PurchaseOrder::CANCELED]);
             PurchaseOrderLog::create([
                 'purchase_order_id' => $order->id,
-                'action' => 3,
+                'action' => PurchaseOrderLog::CANCEL,
                 'content' => $request->get('reason'),
                 'user_id' => Auth::user()->id,
             ]);

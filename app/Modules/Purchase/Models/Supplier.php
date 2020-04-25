@@ -53,7 +53,7 @@ class Supplier extends Model
         $back_order_amounts = $this->back_order_amounts;
         // 未抵扣的付款单
         $remained_payments = Payment::where('supplier_id', $this->id)
-            ->where('is_finished', 0)
+            ->where('is_finished', NO)
             ->orderBy('id', 'asc')
             ->get();
 
@@ -72,14 +72,14 @@ class Supplier extends Model
                         'purchase_return_order_id' => $purchase_return_order_id,
                         'amount' => $amount,
                     ]);
-                    $entry->is_paid = 1;
+                    $entry->is_paid = YES;
                     $entry->save();
 
                     // 退货单剩余未抵扣金额
                     $remained_back_amount = $back_amount - $amount;
                     if (0 == $remained_back_amount) {
                         // 如果刚好抵扣完，则需要将退货单的状态改为已完成，并删除掉这个键值，因为下次还要循环调用
-                        $purchase_return_order->status = 3;
+                        $purchase_return_order->status = PurchaseReturnOrder::FINISHED;
                         $purchase_return_order->save();
                         unset($back_order_amounts[$purchase_return_order_id]);
                     }else {
@@ -95,7 +95,7 @@ class Supplier extends Model
                     ]);
                     $amount -= $back_amount;
                     // 该张退货单已经全部抵扣完
-                    $purchase_return_order->status = 3;
+                    $purchase_return_order->status = PurchaseReturnOrder::FINISHED;
                     $purchase_return_order->save();
                     unset($back_order_amounts[$purchase_return_order_id]);
                 }
@@ -115,7 +115,7 @@ class Supplier extends Model
                     $remained_payment_amount -= $amount;
                     $remained_payment->remained_amount = $remained_payment_amount;
                     if (0 == $remained_payment_amount) {
-                        $remained_payment->is_finished = 1;
+                        $remained_payment->is_finished = YES;
                     }
 
                     $remained_payment->save();
@@ -130,7 +130,7 @@ class Supplier extends Model
                     $amount -= $remained_payment->remained_amount;
                     // 该付款单已经抵扣完
                     $remained_payment->remained_amount = 0;
-                    $remained_payment->is_finished = 1;
+                    $remained_payment->is_finished = YES;
                     $remained_payment->save();
                     // 将该付款单弹出
                     $remained_payments->shift();
@@ -144,7 +144,7 @@ class Supplier extends Model
             if ($amount > 0) {
                 throw new \Exception("选中的明细金额不可大于付款金额");
             }
-            $entry->is_paid = 1;
+            $entry->is_paid = YES;
             $entry->save();
         }
 
@@ -187,7 +187,7 @@ class Supplier extends Model
             ->leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.purchase_order_item_id')
             ->leftJoin('product_skus AS ps', 'ps.id', '=', 'poi.sku_id')
             ->where('purchase_orders.supplier_id', $this->id)
-            ->where('sku_entries.is_paid', 0)
+            ->where('sku_entries.is_paid', YES)
             ->where('sku_entries.real_quantity', '>', 0)
             ->select([
                 'sku_entries.id AS entry_id',
@@ -211,8 +211,8 @@ class Supplier extends Model
     public function backOrders()
     {
         return $this->hasManyThrough(PurchaseReturnOrder::class, PurchaseOrder::class)
-            ->where('purchase_return_orders.method', 2)
-            ->where('purchase_return_orders.status', 2);
+            ->where('purchase_return_orders.method', PurchaseReturnOrder::BACK)
+            ->where('purchase_return_orders.status', PurchaseReturnOrder::EGRESSED);
     }
 
     /**
@@ -275,7 +275,7 @@ class Supplier extends Model
      */
     public function getTotalRemainedAmountAttribute()
     {
-        $payments = Payment::where('supplier_id', $this->id)->where('is_finished', 0)->get()->toArray();
+        $payments = Payment::where('supplier_id', $this->id)->where('is_finished', NO)->get()->toArray();
 
         return array_sum(array_column($payments, 'remained_amount'));
     }

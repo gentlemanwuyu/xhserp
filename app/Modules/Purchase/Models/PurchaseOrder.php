@@ -102,7 +102,7 @@ class PurchaseOrder extends Model
      */
     public function egressExchangeReturnOrders()
     {
-        return $this->hasMany(PurchaseReturnOrder::class)->where('method', 1)->where('status', 2)->OrderBy('id', 'desc');
+        return $this->hasMany(PurchaseReturnOrder::class)->where('method', PurchaseReturnOrder::EXCHANGE)->where('status', PurchaseReturnOrder::EGRESSED)->OrderBy('id', 'desc');
     }
 
     public function entryItems()

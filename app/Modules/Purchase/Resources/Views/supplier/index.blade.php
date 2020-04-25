@@ -80,7 +80,7 @@
                         }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'monthly_day', title: '月结天数', width: 100, align: 'center', templet: function (d) {
-                            return 3 == d.payment_method ? d.monthly_day : '';
+                            return "{{\PaymentMethod::MONTHLY}}" == d.payment_method ? d.monthly_day : '';
                         }},
                         {field: 'detail', title: '联系人', width: 400, align: 'center', templet: function (d) {
                             var html = '';
