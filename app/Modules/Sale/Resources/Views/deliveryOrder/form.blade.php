@@ -28,6 +28,8 @@
                                 <span class="erp-form-span">{{$customer->name or ''}}</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label required">出货单号</label>
                             <div class="layui-input-block">
@@ -95,8 +97,6 @@
                                 <input type="text" name="consignee_phone" lay-verify="required" lay-reqText="请输入联系电话" class="layui-input" value="{{$delivery_order->consignee_phone or ''}}">
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs4">
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-block">
