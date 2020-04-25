@@ -21,14 +21,14 @@ class ProductController extends Controller
 
     public function getList()
     {
-        $categories = Category::tree(1);
+        $categories = Category::tree(Category::PRODUCT);
 
         return view('product::product.list', compact('categories'));
     }
 
     public function form(Request $request)
     {
-        $categories = Category::tree(1);
+        $categories = Category::tree(Category::PRODUCT);
         $data = compact('categories');
         if ($request->get('product_id')) {
             $product = Product::find($request->get('product_id'));

@@ -61,7 +61,7 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class)->where('type', 1);
+        return $this->belongsTo(Category::class)->where('type', Category::PRODUCT);
     }
 
     public function skus()

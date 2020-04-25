@@ -14,6 +14,7 @@ use App\Modules\Goods\Models\ComboSkuProductSku;
 use App\Modules\Goods\Models\SingleSkuProductSku;
 use App\Modules\Warehouse\Models\Inventory;
 use App\Modules\Warehouse\Models\InventoryLog;
+use App\Modules\Purchase\Models\PurchaseOrder;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class ProductSku extends Model
@@ -63,7 +64,7 @@ class ProductSku extends Model
             ->leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
             ->where('purchase_order_items.sku_id', $this->id)
             ->where(function ($query) {
-                $query->where('po.status', 3)->orWhere('po.exchange_status', 1);
+                $query->where('po.status', PurchaseOrder::AGREED)->orWhere('po.exchange_status', 1);
             })
             ->select(['purchase_order_items.*']);
     }
