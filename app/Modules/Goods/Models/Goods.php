@@ -33,9 +33,9 @@ class Goods extends Model
     public function delete()
     {
         // 将对应关系删除掉
-        if (Goods::SINGLE == $this->type) {
+        if (self::SINGLE == $this->type) {
             SingleProduct::where('goods_id', $this->id)->delete();
-        }elseif (Goods::COMBO == $this->type) {
+        }elseif (self::COMBO == $this->type) {
             GoodsSku::where('goods_id', $this->id)->delete();
         }
 
@@ -44,7 +44,7 @@ class Goods extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class)->where('type', 2);
+        return $this->belongsTo(Category::class)->where('type', Category::GOODS);
     }
 
     public function skus()

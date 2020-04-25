@@ -69,8 +69,9 @@
                                         success: function (data) {
                                             layer.close(load_index);
                                             if ('success' == data.status) {
-                                                layer.msg("账户删除成功", {icon: 1, time: 2000});
-                                                tableIns.reload(tableOpts);
+                                                layer.msg("账户删除成功", {icon: 1, time: 2000}, function () {
+                                                    tableIns.reload();
+                                                });
                                             } else {
                                                 layer.msg("账户删除失败:"+data.msg, {icon: 2, time: 2000});
                                                 return false;

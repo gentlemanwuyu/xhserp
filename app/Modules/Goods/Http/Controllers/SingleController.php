@@ -21,7 +21,7 @@ class SingleController extends Controller
 
     public function selectProduct()
     {
-        $categories = Category::tree(1);
+        $categories = Category::tree(Category::PRODUCT);
 
         return view('goods::single.select_product', compact('categories'));
     }
@@ -59,7 +59,7 @@ class SingleController extends Controller
 
     public function form(Request $request)
     {
-        $categories = Category::tree(2);
+        $categories = Category::tree(Category::GOODS);
         $data = compact('categories');
 
         if ($request->get('product_id')) {

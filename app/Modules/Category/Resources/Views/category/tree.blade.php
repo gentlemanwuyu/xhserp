@@ -3,7 +3,7 @@
     <div class="layui-col-xs-12" style="margin-bottom: 15px;">
         <button type="button" class="layui-btn erp-collapse"  dtree-id="category" dtree-menu="moveDown">展开</button>
         {{--<button type="button" class="layui-btn"  dtree-id="category" dtree-menu="moveUp">收起</button>--}}
-        @if(1 == $type && \Auth::user()->hasPermissionTo('add_product_category') || 2 == $type && \Auth::user()->hasPermissionTo('add_goods_category'))
+        @if(\App\Modules\Category\Models\Category::PRODUCT == $type && \Auth::user()->hasPermissionTo('add_product_category') || \App\Modules\Category\Models\Category::GOODS == $type && \Auth::user()->hasPermissionTo('add_goods_category'))
             <button type="button" class="layui-btn layui-btn-normal"  dtree-id="category" dtree-menu="addRoot">添加一级分类</button>
         @endif
     </div>
@@ -82,16 +82,17 @@
                                         success: function (data) {
                                             layer.close(load_index);
                                             if ('success' == data.status) {
-                                                layer.msg("分类添加成功", {icon:1});
-                                                category_tree.refreshTree();
+                                                layer.msg("分类添加成功", {icon: 1, time: 2000}, function () {
+                                                    category_tree.refreshTree();
+                                                });
                                             } else {
-                                                layer.msg("分类添加失败:"+data.msg, {icon:2});
+                                                layer.msg("分类添加失败:"+data.msg, {icon: 2, time: 2000});
                                                 return false;
                                             }
                                         },
                                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                                             layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                             return false;
                                         }
                                     });
@@ -221,11 +222,11 @@
                             buttons.myAdd = "";
                         }
 
-                        if (1 == type) {
+                        if ("{{\App\Modules\Category\Models\Category::PRODUCT}}" == type) {
                             var has_add = <?= json_encode(\Auth::user()->hasPermissionTo('add_product_category')); ?>;
                             var has_edit = <?= json_encode(\Auth::user()->hasPermissionTo('edit_product_category')); ?>;
                             var has_delete = <?= json_encode(\Auth::user()->hasPermissionTo('delete_product_category')); ?>;
-                        }else if (2 == type) {
+                        }else if ("{{\App\Modules\Category\Models\Category::GOODS}}" == type) {
                             var has_add = <?= json_encode(\Auth::user()->hasPermissionTo('add_goods_category')); ?>;
                             var has_edit = <?= json_encode(\Auth::user()->hasPermissionTo('edit_goods_category')); ?>;
                             var has_delete = <?= json_encode(\Auth::user()->hasPermissionTo('delete_goods_category')); ?>;

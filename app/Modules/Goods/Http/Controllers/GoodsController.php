@@ -19,7 +19,7 @@ class GoodsController extends Controller
 
     public function getList(Request $request)
     {
-        $categories = Category::tree(2);
+        $categories = Category::tree(Category::GOODS);
 
         return view('goods::goods.list', compact('categories'));
     }

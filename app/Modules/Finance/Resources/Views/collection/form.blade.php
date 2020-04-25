@@ -196,7 +196,7 @@
                 $('select[name=collect_user_id]').parents('.layui-form-item').remove();
                 $('select[name=account_id]').parents('.layui-form-item').remove();
                 var html = '';
-                if (1 == data.value) {
+                if ("{{\Payment::CASH}}" == data.value) {
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">收款人</label>';
                     html += '<div class="layui-input-block">';
@@ -207,7 +207,7 @@
                     });
                     html += '</select>';
                     html += '</div>';
-                }else if (2 == data.value) {
+                }else if ("{{\Payment::REMITTANCE}}" == data.value) {
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">汇款账户</label>';
                     html += '<div class="layui-input-block">';

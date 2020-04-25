@@ -10,6 +10,7 @@ namespace App\Modules\Goods\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Warehouse\Models\Inventory;
+use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\OrderItem;
 
 class GoodsSku extends Model
@@ -43,11 +44,11 @@ class GoodsSku extends Model
     {
         $goods = $this->goods;
 
-        if (1 == $goods->type) {
+        if (Goods::SINGLE == $goods->type) {
             $product_sku_id = SingleSkuProductSku::where('goods_sku_id', $this->id)->value('product_sku_id');
 
             return Inventory::where('sku_id', $product_sku_id)->value('stock');
-        }elseif (2 == $goods->type) {
+        }elseif (Goods::COMBO == $goods->type) {
             $products = array_column(ComboProduct::where('goods_id', $goods->id)->get()->toArray(), 'quantity', 'product_id');
             $product_sku_ids = array_column(ComboSkuProductSku::where('goods_sku_id', $this->id)->get()->toArray(), 'product_sku_id', 'product_id');
             foreach ($product_sku_ids as $product_id => $product_sku_id) {
@@ -77,7 +78,7 @@ class GoodsSku extends Model
     public function getRequiredQuantityAttribute()
     {
         $items = OrderItem::leftJoin('orders AS o', 'o.id', '=', 'order_items.order_id')
-            ->where('o.status', 3)
+            ->where('o.status', Order::AGREED)
             ->where('order_items.sku_id', $this->id)
             ->select(['order_items.*'])
             ->get();
@@ -120,7 +121,7 @@ class GoodsSku extends Model
     {
         $goods = $this->goods;
 
-        if (1 == $goods->type) {
+        if (Goods::SINGLE == $goods->type) {
             $product_sku_id = SingleSkuProductSku::where('goods_sku_id', $this->id)->value('product_sku_id');
             $inventory = Inventory::where('sku_id', $product_sku_id)->first();
             if (!$inventory) {
@@ -129,7 +130,7 @@ class GoodsSku extends Model
 
             $inventory->stock += $quantity;
             $inventory->save();
-        }elseif (2 == $goods->type) {
+        }elseif (Goods::COMBO == $goods->type) {
             $product_sku_ids = array_column(ComboSkuProductSku::where('goods_sku_id', $this->id)->get(['product_id', 'product_sku_id'])->toArray(), 'product_id', 'product_sku_id');
 
             foreach ($product_sku_ids as $product_sku_id => $product_id) {
@@ -161,7 +162,7 @@ class GoodsSku extends Model
     {
         $goods = $this->goods;
 
-        if (1 == $goods->type) {
+        if (Goods::SINGLE == $goods->type) {
             $product_sku_id = SingleSkuProductSku::where('goods_sku_id', $this->id)->value('product_sku_id');
             $inventory = Inventory::where('sku_id', $product_sku_id)->first();
             if (!$inventory) {
@@ -172,7 +173,7 @@ class GoodsSku extends Model
             }
             $inventory->stock -= $quantity;
             $inventory->save();
-        }elseif (2 == $goods->type) {
+        }elseif (Goods::COMBO == $goods->type) {
             $product_sku_ids = array_column(ComboSkuProductSku::where('goods_sku_id', $this->id)->get(['product_id', 'product_sku_id'])->toArray(), 'product_id', 'product_sku_id');
 
             foreach ($product_sku_ids as $product_sku_id => $product_id) {
@@ -206,7 +207,7 @@ class GoodsSku extends Model
      */
     public function getSingleProductSkuIdAttribute()
     {
-        if (1 != $this->goods->type) {
+        if (Goods::SINGLE != $this->goods->type) {
             throw new \Exception("商品类型不是单品，不可调用single_product_sku_id属性");
         }
 

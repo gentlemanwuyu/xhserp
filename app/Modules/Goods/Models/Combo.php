@@ -10,7 +10,9 @@ namespace App\Modules\Goods\Models;
 
 use Illuminate\Support\Facades\DB;
 use App\Modules\Product\Models\Product;
+use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\OrderItem;
+use App\Modules\Sale\Models\ReturnOrder;
 use App\Modules\Sale\Models\ReturnOrderItem;
 
 class Combo extends Goods
@@ -34,7 +36,7 @@ class Combo extends Goods
             // 如果有订单存在，不可编辑，以免出货的时候零件不对
             $order_exists = OrderItem::leftJoin('orders AS o', 'o.id', '=', 'order_items.order_id')
                 ->whereNull('o.deleted_at')
-                ->whereIn('o.status', [1, 2, 3])
+                ->whereIn('o.status', [Order::PENDING_REVIEW, Order::REJECTED, Order::AGREED])
                 ->where('order_items.sku_id', $flag)
                 ->exists();
 
@@ -50,9 +52,18 @@ class Combo extends Goods
                 ->where('oi.sku_id', $flag)
                 ->where(function ($query) {
                     $query->where(function ($q1) {
-                        $q1->where('ro.method', 1)->whereIn('ro.status', [1, 2, 3, 4]);
+                        $q1->where('ro.method', ReturnOrder::EXCHANGE)->whereIn('ro.status', [
+                            ReturnOrder::PENDING_REVIEW,
+                            ReturnOrder::REJECTED,
+                            ReturnOrder::AGREED,
+                            ReturnOrder::ENTRIED,
+                        ]);
                     })->orWhere(function ($q2) {
-                        $q2->where('ro.method', 2)->whereIn('ro.status', [1, 2, 3]);
+                        $q2->where('ro.method', ReturnOrder::BACK)->whereIn('ro.status', [
+                            ReturnOrder::PENDING_REVIEW,
+                            ReturnOrder::REJECTED,
+                            ReturnOrder::AGREED,
+                        ]);
                     });
                 })
                 ->exists();

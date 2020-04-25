@@ -67,8 +67,9 @@
                     success: function (data) {
                         layer.close(load_index);
                         if ('success' == data.status) {
-                            layer.msg("账号添加成功", {icon: 1, time: 2000});
-                            location.reload();
+                            layer.msg("账号添加成功", {icon: 1, time: 2000}, function () {
+                                parent.layui.admin.closeThisTabs();
+                            });
                         } else {
                             layer.msg("账号添加失败:"+data.msg, {icon: 2, time: 2000});
                             return false;

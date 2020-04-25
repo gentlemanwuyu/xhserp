@@ -21,7 +21,7 @@ class ComboController extends Controller
 
     public function selectProduct()
     {
-        $categories = Category::tree(1);
+        $categories = Category::tree(Category::PRODUCT);
 
         return view('goods::combo.select_product', compact('categories'));
     }
@@ -60,7 +60,7 @@ class ComboController extends Controller
 
     public function form(Request $request)
     {
-        $categories = Category::tree(2);
+        $categories = Category::tree(Category::GOODS);
         $data = compact('categories');
 
         if ($request->get('goods_id')) {
