@@ -11,6 +11,7 @@ use App\Modules\Category\Models\Category;
 use App\Modules\Warehouse\Models\SkuEntry;
 use App\Modules\Warehouse\Models\Inventory;
 use App\Modules\Product\Models\ProductSku;
+use App\Modules\Purchase\Models\PurchaseOrder;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class EntryController extends Controller
@@ -22,7 +23,7 @@ class EntryController extends Controller
 
     public function index()
     {
-        $categories = Category::tree(1);
+        $categories = Category::tree(Category::PRODUCT);
 
         return view('warehouse::entry.index', compact('categories'));
     }
@@ -33,7 +34,7 @@ class EntryController extends Controller
         $purchase_order_items = PurchaseOrderItem::leftJoin('purchase_orders AS po', 'po.id', '=', 'purchase_order_items.purchase_order_id')
             ->whereNull('po.deleted_at')
             ->where(function ($query) {
-                $query->where('po.status', 3)->orWhere('po.exchange_status', 1);
+                $query->where('po.status', PurchaseOrder::AGREED)->orWhere('po.exchange_status', 1);
             })
             ->get(['purchase_order_items.*']);
         foreach ($purchase_order_items as $poi) {

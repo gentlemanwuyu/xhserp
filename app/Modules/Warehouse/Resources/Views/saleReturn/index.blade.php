@@ -53,7 +53,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::returnOrder.paginate')}}",
-                where: {status: 3},
+                where: {status: "{{\App\Modules\Sale\Models\ReturnOrder::AGREED}}"},
                 page: true,
                 parseData: function (res) {
                     return {

@@ -16,7 +16,7 @@ class StockoutController extends Controller
 
     public function index()
     {
-        $categories = Category::tree(1);
+        $categories = Category::tree(Category::PRODUCT);
 
         return view('warehouse::stockout.index', compact('categories'));
     }

@@ -21,7 +21,7 @@ class EgressController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('warehouse::egress.index', compact('customers', 'users'));
     }
@@ -36,9 +36,9 @@ class EgressController extends Controller
             }
 
             DB::beginTransaction();
-            $delivery_order->status = 2;
+            $delivery_order->status = DeliveryOrder::FINISHED;
             $delivery_order->finished_at = Carbon::now()->toDateTimeString();
-            if (3 == $delivery_order->delivery_method) {
+            if (DeliveryOrder::EXPRESS == $delivery_order->delivery_method) {
                 $delivery_order->track_no = $request->get('track_no', '');
             }
             $delivery_order->save();

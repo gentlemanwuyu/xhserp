@@ -132,8 +132,9 @@
                         success: function (data) {
                             layer.close(load_index);
                             if ('success' == data.status) {
-                                layer.msg("快递添加成功", {icon: 1, time: 2000});
-                                tableIns.reload();
+                                layer.msg("快递添加成功", {icon: 1, time: 2000}, function () {
+                                    tableIns.reload();
+                                });
                             } else {
                                 layer.msg("快递添加失败:"+data.msg, {icon: 2, time: 2000});
                                 return false;

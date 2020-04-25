@@ -19,7 +19,7 @@ class PurchaseReturnController extends Controller
     public function index()
     {
         $suppliers = Supplier::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('warehouse::purchaseReturn.index', compact('suppliers', 'users'));
     }
@@ -33,19 +33,19 @@ class PurchaseReturnController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该采购退货单']);
             }
 
-            if (1 != $purchase_return_order->status) {
+            if (PurchaseReturnOrder::AGREED != $purchase_return_order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '非已通过状态的采购退货单不可处理']);
             }
 
             DB::beginTransaction();
             // 更新退货单状态
-            $purchase_return_order->status = 2;
-            if (3 == $purchase_return_order->delivery_method) {
+            $purchase_return_order->status = PurchaseReturnOrder::EGRESSED;
+            if (PurchaseReturnOrder::EXPRESS == $purchase_return_order->delivery_method) {
                 $purchase_return_order->track_no = $request->get('track_no', '');
             }
             $purchase_return_order->save();
 
-            if (1 == $purchase_return_order->method) {
+            if (PurchaseReturnOrder::EXCHANGE == $purchase_return_order->method) {
                 // 如果退货方式为换货，更新订单的exchange_status字段
                 $purchase_order = $purchase_return_order->purchaseOrder;
                 $purchase_order->exchange_status = 1;

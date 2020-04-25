@@ -12,6 +12,7 @@ use App\Events\Entried;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use App\Modules\Warehouse\Models\SkuEntry;
+use App\Modules\Purchase\Models\PurchaseReturnOrder;
 use App\Modules\Purchase\Models\PurchaseReturnOrderItem;
 
 class EntriedPurchaseReturnOrderListener implements ShouldQueue
@@ -47,7 +48,7 @@ class EntriedPurchaseReturnOrderListener implements ShouldQueue
                 if (!$purchase_return_order) {
                     throw new \Exception("采购退货单Item[{$purchase_return_order_item->id}]找不到退货单");
                 }
-                if (1 != $purchase_return_order->method) {
+                if (PurchaseReturnOrder::EXCHANGE != $purchase_return_order->method) {
                     throw new \Exception("采购退货单[{$purchase_return_order->id}]的退货方式不是换货");
                 }
                 if (in_array($purchase_return_order->id, $purchase_return_order_ids)) {
@@ -62,9 +63,9 @@ class EntriedPurchaseReturnOrderListener implements ShouldQueue
                     }
                 }
                 if ($is_finished) {
-                    $purchase_return_order->status = 3;
+                    $purchase_return_order->status = PurchaseReturnOrder::FINISHED;
                     $purchase_return_order->save();
-                    Log::info("采购退货单[{$purchase_return_order->id}]已经完成，状态改为[5]");
+                    Log::info("采购退货单[{$purchase_return_order->id}]已经完成，状态改为[3]");
                 }
             }
 

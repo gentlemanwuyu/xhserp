@@ -49,7 +49,7 @@ class EgressedOrderListener implements ShouldQueue
                 }
 
                 if ($is_finished) {
-                    $order->status = 4;
+                    $order->status = Order::FINISHED;
                     $order->save();
                     Log::info("订单[{$order->id}]已经完成出货，状态改为[4]");
                 }

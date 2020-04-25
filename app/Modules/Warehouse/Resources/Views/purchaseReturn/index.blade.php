@@ -53,7 +53,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('purchase::returnOrder.paginate')}}",
-                where: {status: 1},
+                where: {status: "{{\App\Modules\Purchase\Models\PurchaseReturnOrder::AGREED}}"},
                 page: true,
                 parseData: function (res) {
                     return {
@@ -144,7 +144,7 @@
                         actions.push({
                             title: "出库",
                             event: function () {
-                                if (3 == data.delivery_method) {
+                                if ("{{\App\Modules\Purchase\Models\PurchaseReturnOrder::EXPRESS}}" == data.delivery_method) {
                                     layer.prompt({
                                         title: '物流单号',
                                         value: data.track_no

@@ -11,6 +11,7 @@ namespace App\Listeners;
 use App\Events\Egressed;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Modules\Sale\Models\ReturnOrder;
 use App\Modules\Sale\Models\ReturnOrderItem;
 use App\Modules\Sale\Models\DeliveryOrderItemExchange;
 
@@ -46,7 +47,7 @@ class EgressedReturnOrderListener implements ShouldQueue
                 if (!$returnOrder) {
                     throw new \Exception("退货单Item[{$roi_id}]找不到退货单");
                 }
-                if (1 != $returnOrder->method) {
+                if (ReturnOrder::EXCHANGE != $returnOrder->method) {
                     throw new \Exception("退货单[{$returnOrder->id}]的退货方式不是换货");
                 }
                 if (in_array($returnOrderItem->return_order_id, $return_order_ids)) {
@@ -61,7 +62,7 @@ class EgressedReturnOrderListener implements ShouldQueue
                     }
                 }
                 if ($is_finished) {
-                    $returnOrder->status = 5;
+                    $returnOrder->status = ReturnOrder::FINISHED;
                     $returnOrder->save();
                     Log::info("退货单[{$returnOrder->id}]已经完成，状态改为[5]");
                 }

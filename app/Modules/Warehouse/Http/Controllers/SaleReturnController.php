@@ -22,7 +22,7 @@ class SaleReturnController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin',NO)->get();
 
         return view('warehouse::saleReturn.index', compact('customers', 'users'));
     }
@@ -50,18 +50,18 @@ class SaleReturnController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该退货单']);
             }
 
-            if (3 != $return_order->status) {
+            if (ReturnOrder::AGREED != $return_order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '非已通过状态的退货单不可处理']);
             }
 
             DB::beginTransaction();
             // 更新退货单状态
-            $return_order->status = 4;
+            $return_order->status = ReturnOrder::ENTRIED;
             $return_order->save();
             // 同步item入库数量
             $return_order->syncItems($request->get('items'));
 
-            if (1 == $return_order->method) {
+            if (ReturnOrder::EXCHANGE == $return_order->method) {
                 // 如果退货方式为换货，更新订单的exchange_status字段
                 $order = $return_order->order;
                 $order->exchange_status = 1;
@@ -77,7 +77,7 @@ class SaleReturnController extends Controller
             // 记录操作日志
             ReturnOrderLog::create([
                 'return_order_id' => $request->get('return_order_id'),
-                'action' => 3,
+                'action' => ReturnOrderLog::HANDLE,
                 'content' => $request->get('handle_suggestion', ''),
                 'user_id' => Auth::user()->id,
             ]);

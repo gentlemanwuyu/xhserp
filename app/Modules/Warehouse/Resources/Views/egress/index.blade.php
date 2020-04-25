@@ -144,11 +144,11 @@
                         @endcan
 
                         @can('egress_finished')
-                        if (1 == data.status) {
+                        if ("{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}" == data.status) {
                             actions.push({
                                 title: "完成",
                                 event: function () {
-                                    if (3 == data.delivery_method) {
+                                    if ("{{\App\Modules\Sale\Models\DeliveryOrder::EXPRESS}}" == data.delivery_method) {
                                         layer.prompt({
                                             title: '物流单号',
                                             value: data.track_no
@@ -216,7 +216,7 @@
 
             table.render(tableOpts);
 
-            form.val('search', {status: 1});
+            form.val('search', {status: "{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}"});
 
             laydate.render({
                 elem: 'input[name=created_at_between]'

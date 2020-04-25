@@ -6,7 +6,7 @@ use App\Events\Entried;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use App\Modules\Warehouse\Models\SkuEntry;
-use App\Modules\Purchase\Models\PurchaseOrderItem;
+use App\Modules\Purchase\Models\PurchaseOrder;
 
 class EntriedPurchaseOrderListener implements ShouldQueue
 {
@@ -44,7 +44,7 @@ class EntriedPurchaseOrderListener implements ShouldQueue
             }
 
             if ($is_finished) {
-                $purchase_order->status = 4;
+                $purchase_order->status = PurchaseOrder::FINISHED;
                 $purchase_order->save();
                 Log::info("[EntriedPurchaseOrderListener]采购订单[{$purchase_order->id}]已全部完成入库，状态改为4.");
             }
