@@ -35,21 +35,21 @@ class CustomerRequest extends FormRequest
 		}
 		// 如果选中了付款方式，进一步判断其他字段
 		if (isset($inputs['payment_method'])) {
-			if (2 == $inputs['payment_method']) {
+			if (\PaymentMethod::CREDIT == $inputs['payment_method']) {
 				$rules['credit'] = 'required|integer';
 				$this->messages = array_merge($this->messages, [
 					'credit.required' => '请输入额度',
 					'credit.integer' => '额度必须是整数',
 				]);
 			}
-			if (3 == $inputs['payment_method']) {
+			if (\PaymentMethod::MONTHLY == $inputs['payment_method']) {
 				$rules['monthly_day'] = 'required|integer';
 				$this->messages = array_merge($this->messages, [
 					'monthly_day.required' => '请输入月结天数',
 					'monthly_day.integer' => '月结天数必须是整数',
 				]);
 			}
-			if (in_array($inputs['payment_method'], [2, 3])) {
+			if (in_array($inputs['payment_method'], [\PaymentMethod::CREDIT, \PaymentMethod::MONTHLY])) {
 				$rules['reason'] = 'required';
 				$this->messages = array_merge($this->messages, ['reason.required' => '请输入申请原因']);
 			}

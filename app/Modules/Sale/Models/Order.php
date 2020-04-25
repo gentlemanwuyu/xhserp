@@ -37,6 +37,10 @@ class Order extends Model
         self::CANCELED          => '已取消',
     ];
 
+    // 付款状态
+    const PENDING_PAYMENT = 1; // 待付款
+    const FINISHED_PAYMENT = 2; // 完成付款
+
     public function syncItems($items)
     {
         if (!$items || !is_array($items)) {
@@ -94,7 +98,7 @@ class Order extends Model
 
     public function entryExchangeReturnOrders()
     {
-        return $this->hasMany(ReturnOrder::class)->where('method', 1)->where('status', 4)->OrderBy('id', 'desc');
+        return $this->hasMany(ReturnOrder::class)->where('method', ReturnOrder::EXCHANGE)->where('status', ReturnOrder::ENTRIED)->OrderBy('id', 'desc');
     }
 
     public function customer()
@@ -204,7 +208,7 @@ class Order extends Model
         $pending_delivery_order_exists = DeliveryOrderItem::leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
             ->whereNull('do.deleted_at')
             ->where('delivery_order_items.order_id', $this->id)
-            ->where('do.status', 1)
+            ->where('do.status', DeliveryOrder::PENDING_DELIVERY)
             ->exists();
 
         if ($pending_delivery_order_exists) {

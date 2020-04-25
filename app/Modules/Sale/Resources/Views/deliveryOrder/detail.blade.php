@@ -26,7 +26,7 @@
                             <td>状态</td>
                             <td>{{$delivery_order->status_name}}</td>
                         </tr>
-                        @if(3 == $delivery_order->delivery_method)
+                        @if(\App\Modules\Sale\Models\DeliveryOrder::EXPRESS == $delivery_order->delivery_method)
                             <tr>
                                 <td>快递公司</td>
                                 <td>{{$delivery_order->express->name or ''}}</td>
@@ -39,7 +39,7 @@
                                 <td>是否代收</td>
                                 <td>{{$delivery_order->is_collected_name}}</td>
                             </tr>
-                            @if(1 == $delivery_order->is_collected)
+                            @if(YES == $delivery_order->is_collected)
                                 <tr>
                                     <td>代收金额</td>
                                     <td>{{$delivery_order->collected_amount}}</td>
@@ -113,7 +113,7 @@
             </table>
         </div>
     </div>
-    @if(isset($source) && 'warehouse' == $source && 1 == $delivery_order->status)
+    @if(isset($source) && 'warehouse' == $source && \App\Modules\Sale\Models\DeliveryOrder::PENDING_REVIEW == $delivery_order->status)
         <div class="layui-row">
             <form class="layui-form">
                 <button type="button" class="layui-btn layui-btn-normal" erp-action="finish">完成</button>
@@ -128,7 +128,7 @@
             var form = layui.form;
 
             $('button[erp-action=finish]').on('click', function () {
-                if (3 == delivery_order.delivery_method) {
+                if ("{{\App\Modules\Sale\Models\DeliveryOrder::EXPRESS}}" == delivery_order.delivery_method) {
                     layer.prompt({
                         title: '物流单号',
                         value: delivery_order.track_no

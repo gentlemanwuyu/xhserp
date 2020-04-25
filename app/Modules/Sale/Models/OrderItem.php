@@ -54,8 +54,8 @@ class OrderItem extends Model
     {
         return $this->hasMany(ReturnOrderItem::class)
             ->leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
-            ->where('ro.method', 1)
-            ->where('ro.status', 4)
+            ->where('ro.method', ReturnOrder::EXCHANGE)
+            ->where('ro.status', ReturnOrder::ENTRIED)
             ->whereRaw('return_order_items.quantity > return_order_items.delivery_quantity')
             ->select(['return_order_items.*'])
             ->orderBy('return_order_items.id', 'asc');
@@ -70,7 +70,7 @@ class OrderItem extends Model
     {
         return $this->hasMany(DeliveryOrderItem::class)
             ->leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
-            ->where('do.status', 2)
+            ->where('do.status', DeliveryOrder::FINISHED)
             ->where('delivery_order_items.is_paid', 0)
             ->where('delivery_order_items.real_quantity', '>', 0)
             ->select([
@@ -90,8 +90,8 @@ class OrderItem extends Model
         return $this->hasMany(ReturnOrderItem::class)
             ->leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
             ->where('return_order_items.order_item_id', $this->id)
-            ->where('ro.method', 2)
-            ->whereIn('ro.status', [4, 5]);
+            ->where('ro.method', ReturnOrder::BACK)
+            ->whereIn('ro.status', [ReturnOrder::ENTRIED, ReturnOrder::FINISHED]);
     }
 
     /**
@@ -125,7 +125,7 @@ class OrderItem extends Model
     public function getDeliveriedQuantityAttribute()
     {
         $deliveriedItems = DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
-            ->where('delivery_orders.status', 2)
+            ->where('delivery_orders.status', DeliveryOrder::FINISHED)
             ->where('doi.order_item_id', $this->id)
             ->pluck('quantity');
 
@@ -141,8 +141,8 @@ class OrderItem extends Model
     {
         $exchange_items = ReturnOrder::leftJoin('return_order_items AS roi', 'roi.return_order_id', '=', 'return_orders.id')
             ->where('roi.order_item_id', $this->id)
-            ->where('return_orders.method', 1)
-            ->whereIn('return_orders.status', [4, 5])
+            ->where('return_orders.method', ReturnOrder::EXCHANGE)
+            ->whereIn('return_orders.status', [ReturnOrder::ENTRIED, ReturnOrder::FINISHED])
             ->pluck('roi.quantity');
 
         return array_sum($exchange_items->toArray());

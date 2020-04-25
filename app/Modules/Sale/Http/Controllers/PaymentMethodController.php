@@ -22,7 +22,7 @@ class PaymentMethodController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('sale::paymentMethod.index', compact('customers', 'users'));
     }
@@ -77,7 +77,7 @@ class PaymentMethodController extends Controller
             ];
 
             // 所有编辑过的付款申请都进入待审核状态
-            $data['status'] = 1;
+            $data['status'] = PaymentMethodApplication::PENDING_REVIEW;
 
             $application->update($data);
 
@@ -109,7 +109,7 @@ class PaymentMethodController extends Controller
             if (!$application) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该付款方式申请']);
             }
-            if (1 != $application->status) {
+            if (PaymentMethodApplication::PENDING_REVIEW != $application->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该付款方式申请不是待审核状态，禁止操作']);
             }
 
@@ -119,7 +119,7 @@ class PaymentMethodController extends Controller
             }
 
             DB::beginTransaction();
-            $application->update(['status' => 3]);
+            $application->update(['status' => PaymentMethodApplication::AGREED]);
             // 将付款申请的数据写入客户表
             $customer->update([
                 'payment_method' => $application->payment_method,
@@ -150,7 +150,7 @@ class PaymentMethodController extends Controller
             if (!$application) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该付款方式申请']);
             }
-            if (1 != $application->status) {
+            if (PaymentMethodApplication::PENDING_REVIEW != $application->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该付款方式申请不是待审核状态，禁止操作']);
             }
 
@@ -159,7 +159,7 @@ class PaymentMethodController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '找不到该付款方式申请对应的客户']);
             }
 
-            $application->update(['status' => 2]);
+            $application->update(['status' => PaymentMethodApplication::REJECTED]);
             PaymentMethodApplicationLog::create([
                 'payment_method_application_id' => $application->id,
                 'customer_id' => $customer->id,

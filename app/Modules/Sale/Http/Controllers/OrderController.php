@@ -24,7 +24,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
         $currencies = WorldService::currencies();
 
         return view('sale::order.index', compact('customers', 'users', 'currencies'));
@@ -128,32 +128,32 @@ class OrderController extends Controller
             $user = Auth::user(); // 当前用户
 
             // 分析订单需要进入什么状态(主要是判断货到付款方式是否有超过额度)
-            if (1 == $request->get('payment_method')) {
+            if (\PaymentMethod::CASH == $request->get('payment_method')) {
                 // 如果付款方式是现金，直接进入已通过状态
-                $order_data['status'] = 3;
-            }elseif (2 == $request->get('payment_method')) {
+                $order_data['status'] = Order::AGREED;
+            }elseif (\PaymentMethod::CREDIT == $request->get('payment_method')) {
                 if ($user->hasPermissionTo('review_order')) {
                     // 如果客户有审核订单的权限，直接进入已通过状态
-                    $order_data['status'] = 3;
+                    $order_data['status'] = Order::AGREED;
                 }else {
-                    if (2 == $customer->payment_method) {
+                    if (\PaymentMethod::CREDIT == $customer->payment_method) {
                         // 判断是否超过额度
                         $current_amount = 0; // 当前订单得金额
                         foreach ($request->get('items') as $item) {
                             $current_amount += $item['quantity'] * $item['price'];
                         }
                         if ($customer->remained_credit >= $current_amount) {
-                            $order_data['status'] = 3;
+                            $order_data['status'] = Order::AGREED;
                         }else{
-                            $order_data['status'] = 1;
+                            $order_data['status'] = Order::PENDING_REVIEW;
                         }
                     }else {
-                        $order_data['status'] = 1;
+                        $order_data['status'] = Order::PENDING_REVIEW;
                     }
                 }
-            }elseif (3 == $request->get('payment_method')) {
-                if (3 == $customer->payment_method) {
-                    $order_data['status'] = 3;
+            }elseif (\PaymentMethod::MONTHLY == $request->get('payment_method')) {
+                if (\PaymentMethod::MONTHLY == $customer->payment_method) {
+                    $order_data['status'] = Order::AGREED;
                 }else {
                     return response()->json(['status' => 'fail', 'msg' => '该客户不是月结客户']);
                 }
@@ -161,8 +161,8 @@ class OrderController extends Controller
                 return response()->json(['status' => 'fail', 'msg' => '未知的付款方式']);
             }
 
-            if (3 == $order_data['status']) {
-                $order_data['payment_status'] = 1;
+            if (Order::AGREED == $order_data['status']) {
+                $order_data['payment_status'] = Order::PENDING_PAYMENT;
             }
 
             DB::beginTransaction();
@@ -233,15 +233,15 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
-            if (1 != $order->status) {
+            if (Order::PENDING_REVIEW != $order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该订单不是待审核状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 3, 'payment_status' => 1]);
+            $order->update(['status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT]);
             OrderLog::create([
                 'order_id' => $order->id,
-                'action' => 1,
+                'action' => OrderLog::AGREE,
                 'content' => '订单审核通过',
                 'user_id' => Auth::user()->id,
             ]);
@@ -262,15 +262,15 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
-            if (1 != $order->status) {
+            if (Order::PENDING_REVIEW != $order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该订单不是待审核状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 2]);
+            $order->update(['status' => Order::REJECTED]);
             OrderLog::create([
                 'order_id' => $order->id,
-                'action' => 2,
+                'action' => OrderLog::REJECT,
                 'content' => $request->get('reason'),
                 'user_id' => Auth::user()->id,
             ]);
@@ -291,15 +291,15 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该订单']);
             }
-            if (3 != $order->status) {
+            if (Order::AGREED != $order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该订单不是已通过状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $order->update(['status' => 5]);
+            $order->update(['status' => Order::CANCELED]);
             OrderLog::create([
                 'order_id' => $order->id,
-                'action' => 3,
+                'action' => OrderLog::CANCEL,
                 'content' => $request->get('reason'),
                 'user_id' => Auth::user()->id,
             ]);

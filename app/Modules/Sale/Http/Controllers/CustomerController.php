@@ -21,7 +21,7 @@ class CustomerController extends Controller
 
     public function index()
     {
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
         $currencies = WorldService::currencies();
 
         return view('sale::customer.index', compact('users', 'currencies'));
@@ -109,9 +109,9 @@ class CustomerController extends Controller
                 if ($request->get('in_pool')) {
                     $customer_data['manager_id'] = 0;
                     // 放入客户池时，将这个客户的付款方式申请删除
-                    PaymentMethodApplication::where('customer_id', $customer->id)->whereIn('status', [1, 2])->delete();
+                    PaymentMethodApplication::where('customer_id', $customer->id)->whereIn('status', [PaymentMethodApplication::PENDING_REVIEW, PaymentMethodApplication::REJECTED])->delete();
                     // 并将付款方式改为现金
-                    $customer_data['payment_method'] = 1;
+                    $customer_data['payment_method'] = \PaymentMethod::CASH;
                     $customer_data['credit'] = 0;
                     $customer_data['monthly_day'] = 0;
                 }else{
@@ -119,14 +119,14 @@ class CustomerController extends Controller
                         $customer_data['manager_id'] = Auth::user()->id;
                     }
 
-                    if (1 == $request->get('payment_method')) {
+                    if (\PaymentMethod::CASH == $request->get('payment_method')) {
                         // 将这个客户的付款方式申请删除
-                        PaymentMethodApplication::where('customer_id', $customer->id)->whereIn('status', [1, 2])->delete();
+                        PaymentMethodApplication::where('customer_id', $customer->id)->whereIn('status', [PaymentMethodApplication::PENDING_REVIEW, PaymentMethodApplication::REJECTED])->delete();
                         // 将付款方式改为现金
-                        $customer_data['payment_method'] = 1;
+                        $customer_data['payment_method'] = \PaymentMethod::CASH;
                         $customer_data['credit'] = 0;
                         $customer_data['monthly_day'] = 0;
-                    }elseif (in_array($request->get('payment_method'), [2, 3])) {
+                    }elseif (in_array($request->get('payment_method'), [\PaymentMethod::CREDIT, \PaymentMethod::MONTHLY])) {
                         if ($customer->pendingPaymentMethodApplication) {
                             throw new \Exception("已存在付款方式申请，不可重复提交。");
                         }
@@ -137,7 +137,7 @@ class CustomerController extends Controller
                             'credit' => $request->get('credit', 0),
                             'monthly_day' => $request->get('monthly_day', 0),
                             'reason' => $request->get('reason', ''),
-                            'status' => 1,
+                            'status' => PaymentMethodApplication::PENDING_REVIEW,
                             'user_id' => Auth::user()->id,
                         ]);
                     }
@@ -146,19 +146,19 @@ class CustomerController extends Controller
                 $customer->update($customer_data);
             }else {
                 $customer_data['manager_id'] = $request->get('in_pool') ? 0 : Auth::user()->id;
-                $customer_data['payment_method'] = 1;
+                $customer_data['payment_method'] = \PaymentMethod::CASH;
 
                 $customer = Customer::create($customer_data);
 
                 // 如果是货到付款或月结，需要申请
-                if (in_array($request->get('payment_method'), [2, 3])) {
+                if (in_array($request->get('payment_method'), [\PaymentMethod::CREDIT, \PaymentMethod::MONTHLY])) {
                     PaymentMethodApplication::create([
                         'customer_id' => $customer->id,
                         'payment_method' => $request->get('payment_method'),
                         'credit' => $request->get('credit', 0),
                         'monthly_day' => $request->get('monthly_day', 0),
                         'reason' => $request->get('reason', ''),
-                        'status' => 1,
+                        'status' => PaymentMethodApplication::PENDING_REVIEW,
                         'user_id' => Auth::user()->id,
                     ]);
                 }

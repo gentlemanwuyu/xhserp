@@ -22,7 +22,7 @@ class ReturnOrderController extends Controller
     public function index(Request $request)
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('sale::returnOrder.index', compact('customers', 'users'));
     }
@@ -98,7 +98,7 @@ class ReturnOrderController extends Controller
                 'code' => $request->get('code', ''),
                 'method' => $request->get('method', 0),
                 'reason' => $request->get('reason', ''),
-                'status' => 1,
+                'status' => ReturnOrder::PENDING_REVIEW,
             ];
             if ($request->get('order_id')) {
                 $data['order_id'] = $request->get('order_id');
@@ -111,7 +111,7 @@ class ReturnOrderController extends Controller
                 $data['user_id'] = Auth::user()->id;
                 $return_order = ReturnOrder::create($data);
             }else {
-                if (!in_array($return_order->status, [1, 2])) {
+                if (!in_array($return_order->status, [ReturnOrder::PENDING_REVIEW, ReturnOrder::REJECTED])) {
                     throw new \Exception("非待审核或驳回状态的退货单不可编辑");
                 }
                 $return_order->update($data);
@@ -147,15 +147,15 @@ class ReturnOrderController extends Controller
             if (!$return_order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该退货单']);
             }
-            if (1 != $return_order->status) {
+            if (ReturnOrder::PENDING_REVIEW != $return_order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该退货单不是待审核状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $return_order->update(['status' => 3]);
+            $return_order->update(['status' => ReturnOrder::AGREED]);
             ReturnOrderLog::create([
                 'return_order_id' => $return_order->id,
-                'action' => 1,
+                'action' => ReturnOrderLog::AGREE,
                 'user_id' => Auth::user()->id,
             ]);
 
@@ -175,15 +175,15 @@ class ReturnOrderController extends Controller
             if (!$return_order) {
                 return response()->json(['status' => 'fail', 'msg' => '没有找到该退货单']);
             }
-            if (1 != $return_order->status) {
+            if (ReturnOrder::PENDING_REVIEW != $return_order->status) {
                 return response()->json(['status' => 'fail', 'msg' => '该退货单不是待审核状态，禁止操作']);
             }
 
             DB::beginTransaction();
-            $return_order->update(['status' => 2]);
+            $return_order->update(['status' => ReturnOrder::REJECTED]);
             ReturnOrderLog::create([
                 'return_order_id' => $return_order->id,
-                'action' => 2,
+                'action' => ReturnOrderLog::REJECT,
                 'content' => $request->get('reason'),
                 'user_id' => Auth::user()->id,
             ]);

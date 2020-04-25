@@ -290,14 +290,14 @@
                         html += '<span class="erp-form-span">' + customer.payment_method_name + '</span>';
                         html += '</div>';
                         html += '</div>';
-                        if (2 == customer.payment_method) {
+                        if ("{{\PaymentMethod::CREDIT}}" == customer.payment_method) {
                             html += '<div class="layui-form-item">';
                             html += '<label class="layui-form-label">额度</label>';
                             html += '<div class="layui-input-block">';
                             html += '<span class="erp-form-span">' + customer.credit + '</span>';
                             html += '</div>';
                             html += '</div>';
-                        }else if (3 == customer.payment_method) {
+                        }else if ("{{\PaymentMethod::MONTHLY}}" == customer.payment_method) {
                             html += '<div class="layui-form-item">';
                             html += '<label class="layui-form-label">月结天数</label>';
                             html += '<div class="layui-input-block">';
@@ -321,7 +321,7 @@
                     $('input[name=monthly_day]').parents('.layui-form-item').remove();
                     $('textarea[name=reason]').parents('.layui-form-item').remove();
 
-                    if (2 == data.value) {
+                    if ("{{\PaymentMethod::CREDIT}}" == data.value) {
                         var html = '';
                         html += '<div class="layui-form-item">';
                         html += '<label class="layui-form-label required">额度</label>';
@@ -337,7 +337,7 @@
                         html += '</div>';
 
                         $paymentMethodItem.after(html);
-                    }else if (3 == data.value) {
+                    }else if ("{{\PaymentMethod::MONTHLY}}" == data.value) {
                         var html = '';
                         html += '<div class="layui-form-item">';
                         html += '<label class="layui-form-label required">月结天数</label>';
@@ -375,14 +375,14 @@
                     html += '<span class="erp-form-span">' + customer.payment_method_name + '</span>';
                     html += '</div>';
                     html += '</div>';
-                    if (2 == customer.payment_method) {
+                    if ("{{\PaymentMethod::CREDIT}}" == customer.payment_method) {
                         html += '<div class="layui-form-item">';
                         html += '<label class="layui-form-label">额度</label>';
                         html += '<div class="layui-input-block">';
                         html += '<span class="erp-form-span">' + customer.credit + '</span>';
                         html += '</div>';
                         html += '</div>';
-                    }else if (3 == customer.payment_method) {
+                    }else if ("{{\PaymentMethod::MONTHLY}}" == customer.payment_method) {
                         html += '<div class="layui-form-item">';
                         html += '<label class="layui-form-label">月结天数</label>';
                         html += '<div class="layui-input-block">';

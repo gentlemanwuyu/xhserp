@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <?php $customer = isset($order) ? $order->customer : null; ?>
-                        @if($customer && 2 == $customer->payment_method)
+                        @if($customer && \PaymentMethod::CREDIT == $customer->payment_method)
                             <div class="layui-form-item" id="remained_credit_item">
                                 <label class="layui-form-label">剩余额度</label>
                                 <div class="layui-input-block">
@@ -315,7 +315,7 @@
                     payment_method = customer['payment_method'];
                     tax = customer['tax'];
                     currency_code = customer['currency_code'];
-                    if (2 == customer['payment_method']) {
+                    if ("{{\PaymentMethod::CREDIT}}" == customer['payment_method']) {
                         var html = '';
                         html += '<div class="layui-form-item" id="remained_credit_item">';
                         html += '<label class="layui-form-label">剩余额度</label>';

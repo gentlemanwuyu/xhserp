@@ -121,7 +121,7 @@ class DeliveryOrder extends Model
 
     public function getIsCollectedNameAttribute()
     {
-        return 1 == $this->is_collected ? '是' : '否';
+        return YES == $this->is_collected ? '是' : '否';
     }
 
     public function getTotalAmountAttribute()

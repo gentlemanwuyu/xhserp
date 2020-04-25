@@ -22,7 +22,7 @@ class DeliveryOrderController extends Controller
     public function index(Request $request)
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('sale::deliveryOrder.index', compact('customers', 'users'));
     }
@@ -42,7 +42,7 @@ class DeliveryOrderController extends Controller
 
         $orders = Order::where('customer_id', $customer->id)
             ->where(function ($query) {
-                $query->where('status', 3)->orWhere('exchange_status', 1);
+                $query->where('status', Order::AGREED)->orWhere('exchange_status', 1);
             })
             ->get()
             ->pluck(null, 'id')
@@ -133,10 +133,10 @@ class DeliveryOrderController extends Controller
             DB::beginTransaction();
             if (!$delivery_order) {
                 $data['user_id'] = Auth::user()->id;
-                $data['status'] = 1;
+                $data['status'] = DeliveryOrder::PENDING_DELIVERY;
                 $delivery_order = DeliveryOrder::create($data);
             }else {
-                if (1 != $delivery_order->status) {
+                if (DeliveryOrder::PENDING_DELIVERY != $delivery_order->status) {
                     throw new \Exception("非待出货状态的出货单不可编辑");
                 }
                 $delivery_order->update($data);

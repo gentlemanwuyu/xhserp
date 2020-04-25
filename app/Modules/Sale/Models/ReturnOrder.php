@@ -124,7 +124,7 @@ class ReturnOrder extends Model
      */
     public function handleLog()
     {
-        return $this->hasOne(ReturnOrderLog::class)->where('action', 3)->orderBy('id', 'desc');
+        return $this->hasOne(ReturnOrderLog::class)->where('action', ReturnOrderLog::HANDLE)->orderBy('id', 'desc');
     }
 
     /**

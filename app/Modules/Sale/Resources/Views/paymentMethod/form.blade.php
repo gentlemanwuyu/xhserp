@@ -13,13 +13,13 @@
                             <label class="layui-form-label required">付款方式</label>
                             <div class="layui-input-block">
                                 @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $method)
-                                    @if(1 != $method_id)
+                                    @if(\PaymentMethod::CASH != $method_id)
                                         <input type="radio" name="payment_method" value="{{$method_id}}" title="{{$method}}" lay-verify="checkReq" lay-reqText="请输入付款方式" lay-filter="payment_method" @if(isset($application) && $application->payment_method == $method_id) checked @endif>
                                     @endif
                                 @endforeach
                             </div>
                         </div>
-                        @if(2 == $application->payment_method)
+                        @if(\PaymentMethod::CREDIT == $application->payment_method)
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">额度</label>
                                 <div class="layui-input-block">
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                         @endif
-                        @if(3 == $application->payment_method)
+                        @if(\PaymentMethod::MONTHLY == $application->payment_method)
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">月结天数</label>
                                 <div class="layui-input-block">
@@ -55,13 +55,13 @@
             var form = layui.form;
 
             // 付款方式单选监听
-            form.on('radio(payment_method)', function(data){console.log(111);
+            form.on('radio(payment_method)', function(data){
                 var $paymentMethodItem = $(data.elem).parents('.layui-form-item');
                 $('input[name=credit]').parents('.layui-form-item').remove();
                 $('input[name=monthly_day]').parents('.layui-form-item').remove();
                 $('textarea[name=reason]').parents('.layui-form-item').remove();
 
-                if (2 == data.value) {
+                if ("{{\PaymentMethod::CREDIT}}" == data.value) {
                     var html = '';
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">额度</label>';
@@ -77,7 +77,7 @@
                     html += '</div>';
 
                     $paymentMethodItem.after(html);
-                }else if (3 == data.value) {
+                }else if ("{{\PaymentMethod::MONTHLY}}" == data.value) {
                     var html = '';
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">月结天数</label>';

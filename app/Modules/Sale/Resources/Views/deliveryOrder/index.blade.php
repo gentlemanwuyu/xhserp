@@ -154,7 +154,7 @@
                         });
                         @endcan
 
-                        if (1 == data.status) {
+                        if ("{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}" == data.status) {
                             @can('edit_delivery_order')
                             actions.push({
                                 title: "编辑",

@@ -58,7 +58,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::paymentMethod.paginate')}}",
-                where: {status: 1},
+                where: {status: "{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}"},
                 page: true,
                 parseData: function (res) {
                     return {
@@ -77,10 +77,10 @@
                         {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center', fixed: 'left'},
                         {field: 'credit', title: '额度', width: 100, align: 'center', templet: function (d) {
-                            return 2 == d.payment_method ? d.credit : '';
+                            return "{{\PaymentMethod::CREDIT}}" == d.payment_method ? d.credit : '';
                         }},
                         {field: 'monthly_day', title: '月结天数', width: 100, align: 'center', templet: function (d) {
-                            return 3 == d.payment_method ? d.monthly_day : '';
+                            return "{{\PaymentMethod::MONTHLY}}" == d.payment_method ? d.monthly_day : '';
                         }},
                         {field: 'user_name', title: '申请人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
@@ -104,7 +104,7 @@
                         });
                         @endcan
 
-                        if (-1 < [1, 2].indexOf(data.status)) {
+                        if (-1 < ["{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}", "{{\App\Modules\Sale\Models\PaymentMethodApplication::REJECTED}}"].indexOf(data.status)) {
                             @can('edit_payment_method_application')
                             actions.push({
                                 title: "编辑",
@@ -115,7 +115,7 @@
                             @endcan
                         }
 
-                        if (1 == data.status) {
+                        if ("{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}" == data.status) {
                             @can('review_payment_method_application')
                             actions.push({
                                 title: "审核",
@@ -126,7 +126,7 @@
                             @endcan
                         }
 
-                        if (-1 < [1, 2].indexOf(data.status)) {
+                        if (-1 < ["{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}", "{{\App\Modules\Sale\Models\PaymentMethodApplication::REJECTED}}"].indexOf(data.status)) {
                             @can('delete_payment_method_application')
                             actions.push({
                                 title: "删除",
@@ -167,7 +167,7 @@
             };
 
             form.val("search", {
-                "status": 1
+                "status": "{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}"
             });
 
             table.render(tableOpts);

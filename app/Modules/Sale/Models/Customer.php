@@ -92,7 +92,7 @@ class Customer extends Model
         $back_order_amounts = $this->back_order_amounts;
         // 未抵扣的付款单
         $remained_collections = Collection::where('customer_id', $this->id)
-            ->where('is_finished', 0)
+            ->where('is_finished', NO)
             ->orderBy('id', 'asc')
             ->get();
 
@@ -111,14 +111,14 @@ class Customer extends Model
                         'return_order_id' => $return_order_id,
                         'amount' => $amount,
                     ]);
-                    $delivery_order_item->is_paid = 1;
+                    $delivery_order_item->is_paid = YES;
                     $delivery_order_item->save();
 
                     // 退货单剩余未抵扣金额
                     $remained_return_amount = $return_amount - $amount;
                     if (0 == $remained_return_amount) {
                         // 如果刚好抵扣完，则需要将退货单的状态改为已完成，并删除掉这个键值，因为下次还要循环调用
-                        $return_order->status = 5;
+                        $return_order->status = ReturnOrder::FINISHED;
                         $return_order->save();
                         unset($back_order_amounts[$return_order_id]);
                     }else {
@@ -134,7 +134,7 @@ class Customer extends Model
                     ]);
                     $amount -= $return_amount;
                     // 该张退货单已经全部抵扣完
-                    $return_order->status = 5;
+                    $return_order->status = ReturnOrder::FINISHED;
                     $return_order->save();
                     unset($back_order_amounts[$return_order_id]);
                 }
@@ -154,7 +154,7 @@ class Customer extends Model
                     $remained_collection_amount -= $amount;
                     $remained_collection->remained_amount = $remained_collection_amount;
                     if (0 == $remained_collection_amount) {
-                        $remained_collection->is_finished = 1;
+                        $remained_collection->is_finished = YES;
                     }
 
                     $remained_collection->save();
@@ -168,7 +168,7 @@ class Customer extends Model
                     $amount -= $remained_collection->remained_amount;
                     // 该收款单已经抵扣完
                     $remained_collection->remained_amount = 0;
-                    $remained_collection->is_finished = 1;
+                    $remained_collection->is_finished = YES;
                     $remained_collection->save();
                     // 将该收款单弹出
                     $remained_collections->shift();
@@ -182,7 +182,7 @@ class Customer extends Model
             if ($amount > 0) {
                 throw new \Exception("选中的明细金额不可大于收款金额");
             }
-            $delivery_order_item->is_paid = 1;
+            $delivery_order_item->is_paid = YES;
             $delivery_order_item->save();
         }
 
@@ -235,9 +235,9 @@ class Customer extends Model
             ->leftJoin('orders AS o', 'o.id', '=', 'delivery_order_items.order_id')
             ->leftJoin('order_items AS oi', 'oi.id', '=', 'delivery_order_items.order_item_id')
             ->leftJoin('goods_skus AS gs', 'gs.id', '=', 'oi.sku_id')
-            ->where('delivery_orders.status', '2')
+            ->where('delivery_orders.status', DeliveryOrder::FINISHED)
             ->where('delivery_orders.customer_id', $this->id)
-            ->where('delivery_order_items.is_paid', 0)
+            ->where('delivery_order_items.is_paid', NO)
             ->where('delivery_order_items.real_quantity', '>', 0)
             ->select([
                 'delivery_order_items.id AS delivery_order_item_id',
@@ -263,8 +263,8 @@ class Customer extends Model
     public function backOrders()
     {
         return $this->hasManyThrough(ReturnOrder::class, Order::class)
-            ->where('return_orders.method', 2)
-            ->where('return_orders.status', 4);
+            ->where('return_orders.method', ReturnOrder::BACK)
+            ->where('return_orders.status', ReturnOrder::ENTRIED);
     }
 
     /**
@@ -299,7 +299,7 @@ class Customer extends Model
      */
     public function getTotalRemainedAmountAttribute()
     {
-        $collections = Collection::where('customer_id', $this->id)->where('is_finished', 0)->get()->toArray();
+        $collections = Collection::where('customer_id', $this->id)->where('is_finished', NO)->get()->toArray();
 
         return array_sum(array_column($collections, 'remained_amount'));
     }
@@ -311,7 +311,7 @@ class Customer extends Model
      */
     public function processingOrder()
     {
-        return $this->hasMany(Order::class)->whereIn('status', [3, 4])->where('payment_status', 1);
+        return $this->hasMany(Order::class)->whereIn('status', [Order::AGREED, Order::FINISHED])->where('payment_status', 1);
     }
 
     /**
@@ -321,7 +321,7 @@ class Customer extends Model
      */
     public function getRemainedCreditAttribute()
     {
-        if (2 != $this->payment_method) {
+        if (\PaymentMethod::CREDIT != $this->payment_method) {
             return null;
         }
 
@@ -350,7 +350,7 @@ class Customer extends Model
 
     public function pendingPaymentMethodApplication()
     {
-        return $this->hasOne(PaymentMethodApplication::class)->whereIn('status', [1, 2])->orderBy('id', 'desc');
+        return $this->hasOne(PaymentMethodApplication::class)->whereIn('status', [PaymentMethodApplication::PENDING_REVIEW, PaymentMethodApplication::REJECTED])->orderBy('id', 'desc');
     }
 
     /**
@@ -368,10 +368,10 @@ class Customer extends Model
             ->whereNull('ro.deleted_at')
             ->whereNull('o.deleted_at')
             ->where('o.customer_id', $this->id)
-            ->where('ro.method', 2)
-            ->where('ro.status', 4)
-            ->where('o.status', 4)
-            ->where('o.payment_status', 2)
+            ->where('ro.method', ReturnOrder::BACK)
+            ->where('ro.status', ReturnOrder::ENTRIED)
+            ->where('o.status', Order::FINISHED)
+            ->where('o.payment_status', Order::FINISHED_PAYMENT)
             ->select(['return_order_items.quantity AS back_quantity', 'oi.price'])
             ->get();
         foreach ($return_order_items as $item) {

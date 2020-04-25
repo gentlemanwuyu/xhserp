@@ -46,12 +46,12 @@
                             <td>付款方式</td>
                             <td>{{$customer->payment_method_name or ''}}</td>
                         </tr>
-                        @if(2 == $customer->payment_method)
+                        @if(\PaymentMethod::CREDIT == $customer->payment_method)
                             <tr>
                                 <td>额度</td>
                                 <td>{{$customer->credit or ''}}</td>
                             </tr>
-                        @elseif(3 == $customer->payment_method)
+                        @elseif(\PaymentMethod::MONTHLY == $customer->payment_method)
                             <tr>
                                 <td>月结天数</td>
                                 <td>{{$customer->monthly_day or ''}}</td>

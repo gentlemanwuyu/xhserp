@@ -20,14 +20,14 @@ class PaymentMethodApplicationRequest extends FormRequest
 			'payment_method' => 'required',
 		];
 
-		if (2 == $inputs['payment_method']) {
+		if (\PaymentMethod::CREDIT == $inputs['payment_method']) {
 			$rules['credit'] = 'required|integer';
 			$this->messages = array_merge($this->messages, [
 				'credit.required' => '请输入额度',
 				'credit.integer' => '额度必须是整数',
 			]);
 		}
-		if (3 == $inputs['payment_method']) {
+		if (\PaymentMethod::MONTHLY == $inputs['payment_method']) {
 			$rules['monthly_day'] = 'required|integer';
 			$this->messages = array_merge($this->messages, [
 				'monthly_day.required' => '请输入月结天数',

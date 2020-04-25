@@ -22,13 +22,13 @@
                             <td>申请付款方式</td>
                             <td>{{$application->payment_method_name or ''}}</td>
                         </tr>
-                        @if(2 == $application->payment_method)
+                        @if(\PaymentMethod::CREDIT == $application->payment_method)
                             <tr>
                                 <td>额度</td>
                                 <td>{{$application->credit or ''}}</td>
                             </tr>
                         @endif
-                        @if(3 == $application->payment_method)
+                        @if(\PaymentMethod::MONTHLY == $application->payment_method)
                             <tr>
                                 <td>月结天数</td>
                                 <td>{{$application->monthly_day or ''}}</td>
@@ -89,7 +89,7 @@
         </div>
     </div>
     @endif
-    @if(isset($application) && 1 == $application->status && isset($action) && 'review' == $action)
+    @if(isset($application) && \App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW == $application->status && isset($action) && 'review' == $action)
     <div class="layui-row">
         <form class="layui-form">
             <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>

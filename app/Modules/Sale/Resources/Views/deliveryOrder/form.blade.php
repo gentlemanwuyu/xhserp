@@ -65,8 +65,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="express_field" @if(!isset($delivery_order) || 3 != $delivery_order->delivery_method) class="layui-hide" @endif>
-                            @if(isset($delivery_order) && 3 == $delivery_order->delivery_method)
+                        <div id="express_field" @if(!isset($delivery_order) || \App\Modules\Sale\Models\DeliveryOrder::EXPRESS != $delivery_order->delivery_method) class="layui-hide" @endif>
+                            @if(isset($delivery_order) && \App\Modules\Sale\Models\DeliveryOrder::EXPRESS == $delivery_order->delivery_method)
                                 <div class="layui-form-item">
                                     <label class="layui-form-label required">快递公司</label>
                                     <div class="layui-input-block">
@@ -88,7 +88,7 @@
                                     <label class="layui-form-label">是否代收</label>
                                     <div class="layui-input-block" style="display: flex;">
                                         <input type="checkbox" name="is_collected" lay-filter="is_collected" lay-skin="switch" lay-text="是|否" value="1" @if(1 == $delivery_order->is_collected) checked @endif>
-                                        @if(1 == $delivery_order->is_collected)
+                                        @if(YES == $delivery_order->is_collected)
                                             <input type="text" name="collected_amount" class="erp-after-switch-input" placeholder="代收金额" lay-verify="required" lay-reqText="请输入代收金额" value="{{$delivery_order->collected_amount}}">
                                         @endif
                                     </div>
@@ -147,7 +147,7 @@
                     <tbody class="items">
                     @if(isset($delivery_order))
                         <?php
-                        $index = 1;
+                            $index = 1;
                         ?>
                         @foreach($delivery_order->items as $item)
                             <?php
@@ -412,7 +412,7 @@
             // 监听物流方式
             form.on('select(delivery_method)', function (data) {
                 var $express_field = $('#express_field');
-                if (3 == data.value) {
+                if ("{{\App\Modules\Sale\Models\DeliveryOrder::EXPRESS}}" == data.value) {
                     var html = '';
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">快递公司</label>';
