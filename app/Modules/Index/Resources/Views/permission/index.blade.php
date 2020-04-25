@@ -85,16 +85,17 @@
                                         success: function (data) {
                                             layer.close(load_index);
                                             if ('success' == data.status) {
-                                                layer.msg("权限删除成功", {icon:1});
-                                                tableIns.reload();
+                                                layer.msg("权限删除成功", {icon: 1, time: 2000}, function () {
+                                                    tableIns.reload();
+                                                });
                                             } else {
-                                                layer.msg("权限删除失败:"+data.msg, {icon:2});
+                                                layer.msg("权限删除失败:"+data.msg, {icon: 2, time: 2000});
                                                 return false;
                                             }
                                         },
                                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                                             layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2});
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                             return false;
                                         }
                                     });

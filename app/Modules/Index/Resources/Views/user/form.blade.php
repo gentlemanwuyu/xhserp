@@ -36,8 +36,9 @@
                         <div class="layui-form-item" pane="">
                             <label class="layui-form-label">性别</label>
                             <div class="layui-input-block">
-                                <input type="radio" name="gender_id" value="1" title="男" @if(!empty($user) && 1 == $user->gender_id) checked @endif>
-                                <input type="radio" name="gender_id" value="2" title="女" @if(!empty($user) && 2 == $user->gender_id) checked @endif>
+                                @foreach(\App\Modules\Index\Models\User::$genders as $gender_id => $gender_name)
+                                    <input type="radio" name="gender_id" value="{{$gender_id}}" title="{{$gender_name}}" @if(!empty($user) && $gender_id == $user->gender_id) checked @endif>
+                                @endforeach
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -46,7 +47,7 @@
                                 <input type="text" name="telephone"  lay-verify="phone" class="layui-input" value="{{$user->telephone or ''}}">
                             </div>
                         </div>
-                        @if(1 == \Auth::user()->is_admin)
+                        @if(YES == \Auth::user()->is_admin)
                             <div class="layui-form-item" pane="">
                                 <label class="layui-form-label">是否管理员</label>
                                 <div class="layui-input-block">
@@ -108,7 +109,7 @@
                         layer.close(load_index);
                         if ('success' == data.status) {
                             layer.msg("用户保存成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
                             layer.msg("用户保存失败:"+data.msg, {icon: 2, time: 2000});

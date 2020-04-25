@@ -45,7 +45,7 @@
                         layer.close(load_index);
                         if ('success' == data.status) {
                             layer.msg("密码修改成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
                             layer.msg("密码修改失败:"+data.msg, {icon: 2, time: 2000});
