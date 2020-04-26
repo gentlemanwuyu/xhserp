@@ -19,14 +19,14 @@ class DeliveryOrdersTableSeeder extends Seeder
         $delivery_order = DeliveryOrder::create([
             'code' => 'xhsdo20191217001',
             'customer_id' => 2,
-            'delivery_method' => 3,
+            'delivery_method' => DeliveryOrder::EXPRESS,
             'express_id' => 4,
-            'is_collected' => 1,
+            'is_collected' => YES,
             'collected_amount' => '',
             'address' => '江苏省苏州市太仓市万盛公司',
             'consignee' => '小饶',
             'consignee_phone' => '15206226661',
-            'status' => 1,
+            'status' => DeliveryOrder::PENDING_DELIVERY,
             'user_id' => 7,
         ]);
         DeliveryOrderItem::create([
@@ -47,12 +47,12 @@ class DeliveryOrdersTableSeeder extends Seeder
         $delivery_order = DeliveryOrder::create([
             'code' => 'xhsdo20191217002',
             'customer_id' => 3,
-            'delivery_method' => 2,
+            'delivery_method' => DeliveryOrder::SEND,
             'express_id' => 3,
             'address' => '广东省深圳市宝安区西乡街道铁岗水库路166号(桃花源科技创业中心侧)',
             'consignee' => '王先生',
             'consignee_phone' => '13800138000',
-            'status' => 1,
+            'status' => DeliveryOrder::PENDING_DELIVERY,
             'user_id' => 8,
         ]);
         DeliveryOrderItem::create([

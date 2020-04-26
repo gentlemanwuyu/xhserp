@@ -17,7 +17,7 @@ class OrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $order = Order::create(['code' => 'xhsso20191211001', 'customer_id' => 1, 'payment_method' => 3, 'tax' => 3, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(5)->toDateString() , 'status' => 3, 'payment_status' => 1, 'user_id' => 5]);
+        $order = Order::create(['code' => 'xhsso20191211001', 'customer_id' => 1, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(5)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 5]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -37,7 +37,7 @@ class OrdersTableSeeder extends Seeder
             'price' => 350,
         ]);
 
-        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => 3, 'tax' => 3, 'currency_code' => 'USD', 'delivery_date' => Carbon::now()->addDays(7)->toDateString() , 'status' => 3, 'payment_status' => 1, 'user_id' => 6]);
+        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(7)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 6]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
@@ -66,7 +66,7 @@ class OrdersTableSeeder extends Seeder
             'price' => 1.5,
         ]);
 
-        $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => 2, 'tax' => 1, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(2)->toDateString() , 'status' => 3, 'payment_status' => 1, 'user_id' => 7]);
+        $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => \PaymentMethod::CREDIT, 'tax' => \Tax::NONE, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(2)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 7]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,

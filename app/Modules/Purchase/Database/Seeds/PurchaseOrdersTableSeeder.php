@@ -17,7 +17,7 @@ class PurchaseOrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $order = PurchaseOrder::create(['code' => 'xhspo20191210001', 'supplier_id' => 1, 'payment_method' => 1, 'tax' => 1, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(5)->toDateString(),'status' => 3, 'user_id' => 2]);
+        $order = PurchaseOrder::create(['code' => 'xhspo20191210001', 'supplier_id' => 1, 'payment_method' => \PaymentMethod::CASH, 'tax' => \Tax::NONE, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(5)->toDateString(),'status' => PurchaseOrder::AGREED, 'user_id' => 2]);
         PurchaseOrderItem::create([
             'purchase_order_id' => $order->id,
             'product_id' => 7,
@@ -46,7 +46,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'price' => 0.3,
         ]);
 
-        $order = PurchaseOrder::create(['code' => 'xhspo20191210002', 'supplier_id' => 1, 'payment_method' => 1, 'tax' => 1, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(3)->toDateString(),'status' => 1, 'user_id' => 3]);
+        $order = PurchaseOrder::create(['code' => 'xhspo20191210002', 'supplier_id' => 1, 'payment_method' => \PaymentMethod::CASH, 'tax' => \Tax::NONE, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(3)->toDateString(),'status' => PurchaseOrder::PENDING_REVIEW, 'user_id' => 3]);
         PurchaseOrderItem::create([
             'purchase_order_id' => $order->id,
             'product_id' => 11,
@@ -65,7 +65,7 @@ class PurchaseOrdersTableSeeder extends Seeder
             'quantity' => '2000',
             'price' => 0.25,
         ]);
-        $order = PurchaseOrder::create(['code' => 'xhspo20191210003', 'supplier_id' => 2, 'payment_method' => 3, 'tax' => 3, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(6)->toDateString(),'status' => 3, 'user_id' => 4]);
+        $order = PurchaseOrder::create(['code' => 'xhspo20191210003', 'supplier_id' => 2, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(6)->toDateString(),'status' => PurchaseOrder::AGREED, 'user_id' => 4]);
         PurchaseOrderItem::create([
             'purchase_order_id' => $order->id,
             'product_id' => 15,
