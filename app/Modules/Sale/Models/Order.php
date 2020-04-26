@@ -96,9 +96,17 @@ class Order extends Model
         return $this->hasMany(OrderLog::class)->orderBy('id', 'desc');
     }
 
+    /**
+     * 已入库的换货退货单
+     *
+     * @return mixed
+     */
     public function entryExchangeReturnOrders()
     {
-        return $this->hasMany(ReturnOrder::class)->where('method', ReturnOrder::EXCHANGE)->where('status', ReturnOrder::ENTRIED)->OrderBy('id', 'desc');
+        return $this->hasMany(ReturnOrder::class)
+            ->where('method', ReturnOrder::EXCHANGE)
+            ->where('status', ReturnOrder::ENTRIED)
+            ->OrderBy('id', 'desc');
     }
 
     public function customer()
@@ -204,11 +212,11 @@ class Order extends Model
             return false;
         }
 
-        // 有正在出货的出货单不可取消
+        // 有待审核或待出货的出货单不可取消
         $pending_delivery_order_exists = DeliveryOrderItem::leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
             ->whereNull('do.deleted_at')
             ->where('delivery_order_items.order_id', $this->id)
-            ->where('do.status', DeliveryOrder::PENDING_DELIVERY)
+            ->whereIn('do.status', [DeliveryOrder::PENDING_REVIEW, DeliveryOrder::PENDING_DELIVERY])
             ->exists();
 
         if ($pending_delivery_order_exists) {

@@ -36,7 +36,7 @@ class OrderItem extends Model
     }
 
     /**
-     * 关联发货Item
+     * 出货Item
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -71,7 +71,7 @@ class OrderItem extends Model
         return $this->hasMany(DeliveryOrderItem::class)
             ->leftJoin('delivery_orders AS do', 'do.id', '=', 'delivery_order_items.delivery_order_id')
             ->where('do.status', DeliveryOrder::FINISHED)
-            ->where('delivery_order_items.is_paid', 0)
+            ->where('delivery_order_items.is_paid', NO)
             ->where('delivery_order_items.real_quantity', '>', 0)
             ->select([
                 'delivery_order_items.*',
