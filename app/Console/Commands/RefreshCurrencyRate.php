@@ -61,15 +61,12 @@ class RefreshCurrencyRate extends Command
         $this->initializeParams();
 
         foreach ($this->support_currencies as $currency_code => $currency_name) {
+            $currency = Currency::updateOrCreate(['code' => $currency_code], ['code' => $currency_code, 'name' => $currency_name]);
             try {
                 $swap = Swap::latest($currency_code . '/' . $this->local_currency);
-                $currency = Currency::where('code', $currency_code)->first();
-                if (!$currency) {
-                    Currency::create(['code' => $currency_code, 'name' => $currency_name, 'rate' => $swap->getValue()]);
-                }else {
-                    $currency->update(['rate' => $swap->getValue()]);
-                }
+                $currency->update(['rate' => $swap->getValue()]);
             }catch (\Exception $e) {
+                $currency->update(['rate' => 0]);
                 Log::info("货币[{$currency_code}]不支持");
                 $this->info("货币[{$currency_code}]不支持");
                 continue;

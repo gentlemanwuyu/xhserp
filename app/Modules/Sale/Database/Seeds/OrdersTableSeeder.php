@@ -37,7 +37,7 @@ class OrdersTableSeeder extends Seeder
             'price' => 350,
         ]);
 
-        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(7)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 6]);
+        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'USD', 'delivery_date' => Carbon::now()->addDays(7)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 6]);
         OrderItem::create([
             'order_id' => $order->id,
             'goods_id' => 2,
