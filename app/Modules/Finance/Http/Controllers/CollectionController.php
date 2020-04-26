@@ -21,7 +21,7 @@ class CollectionController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('finance::collection.index', compact('customers', 'users'));
     }

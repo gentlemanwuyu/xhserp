@@ -381,6 +381,16 @@ class Customer extends Model
         return $back_amount;
     }
 
+    public function getUnpaidAmountAttribute()
+    {
+        $unpaid_amount = 0;
+        foreach ($this->unpaidItems as $unpaidItem) {
+            $unpaid_amount += $unpaidItem->price * $unpaidItem->real_quantity;
+        }
+
+        return $unpaid_amount;
+    }
+
     /**
      * 是否可删除
      *

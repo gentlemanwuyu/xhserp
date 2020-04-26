@@ -90,15 +90,17 @@
                     @if(!isset($source) || 'warehouse' != $source)
                         <th>单价</th>
                         <th>总价</th>
+                        <th>付款方式</th>
                     @endif
                 </tr>
                 </thead>
                 <tbody>
                 <?php $index = 1; ?>
                 @foreach($delivery_order->items as $item)
+                    <?php $order = $item->order; ?>
                     <tr>
                         <td>{{$index++}}</td>
-                        <td>{{$item->order->code or ''}}</td>
+                        <td>{{$order->code or ''}}</td>
                         <td>{{$item->orderItem->title or ''}}</td>
                         <td>{{$item->title}}</td>
                         <td>{{$item->orderItem->unit}}</td>
@@ -106,6 +108,7 @@
                         @if(!isset($source) || 'warehouse' != $source)
                             <td>{{$item->orderItem->price}}</td>
                             <td>{{$item->orderItem->price * $item->quantity}}</td>
+                            <td>{{$order->payment_method_name}}</td>
                         @endif
                     </tr>    
                 @endforeach

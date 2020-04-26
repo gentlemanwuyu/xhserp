@@ -25,8 +25,8 @@ class PendingCollectionController extends Controller
     {
         $query = DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
             ->leftJoin('customers AS c', 'c.id', '=', 'delivery_orders.customer_id');
-        $query = $query->where('delivery_orders.status', 2)
-            ->where('doi.is_paid', 0)
+        $query = $query->where('delivery_orders.status', DeliveryOrder::FINISHED)
+            ->where('doi.is_paid', NO)
             ->where('doi.real_quantity', '>', 0);
 
         if ($request->get('code')) {
@@ -56,7 +56,7 @@ class PendingCollectionController extends Controller
     public function deduction(Request $request)
     {
         $collections = Collection::where('customer_id', $request->get('customer_id'))
-            ->where('is_finished', 0)
+            ->where('is_finished', NO)
             ->orderBy('id', 'desc')
             ->get();
         $customer = Customer::find($request->get('customer_id'));

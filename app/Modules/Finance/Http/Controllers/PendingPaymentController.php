@@ -26,7 +26,7 @@ class PendingPaymentController extends Controller
         $query = SkuEntry::leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.purchase_order_item_id')
             ->leftJoin('purchase_orders AS po', 'po.id', '=', 'poi.purchase_order_id')
             ->leftJoin('suppliers AS s', 's.id', '=', 'po.supplier_id');
-        $query = $query->where('sku_entries.is_paid', 0)->where('sku_entries.real_quantity', '>', 0);
+        $query = $query->where('sku_entries.is_paid', NO)->where('sku_entries.real_quantity', '>', 0);
         if ($request->get('code')) {
             $query = $query->where('s.code', $request->get('code'));
         }
@@ -54,7 +54,7 @@ class PendingPaymentController extends Controller
     public function deduction(Request $request)
     {
         $payments = Payment::where('supplier_id', $request->get('supplier_id'))
-            ->where('is_finished', 0)
+            ->where('is_finished', NO)
             ->orderBy('id', 'desc')
             ->get();
         $supplier = Supplier::find($request->get('supplier_id'));

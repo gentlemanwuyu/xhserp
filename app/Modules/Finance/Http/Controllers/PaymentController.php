@@ -21,7 +21,7 @@ class PaymentController extends Controller
     public function index()
     {
         $suppliers = Supplier::all();
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
 
         return view('finance::payment.index', compact('suppliers', 'users'));
     }
@@ -57,7 +57,7 @@ class PaymentController extends Controller
 
     public function form(Request $request)
     {
-        $users = User::where('is_admin', 0)->get();
+        $users = User::where('is_admin', NO)->get();
         $suppliers = Supplier::all()
             ->map(function ($supplier) {
                 $supplier->unpaidItems;

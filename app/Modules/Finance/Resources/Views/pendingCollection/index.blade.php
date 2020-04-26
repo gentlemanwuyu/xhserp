@@ -61,7 +61,7 @@
                         {field: 'total_amount', title: '应收金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
                             d.unpaid_items.forEach(function (item, key) {
-                                total_amount += item.delivery_quantity * item.price;
+                                total_amount += item.real_quantity * item.price;
                             });
                             return total_amount;
                         }},
