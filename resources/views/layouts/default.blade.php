@@ -3,4 +3,5 @@
     <div class="layui-fluid">
         @yield('content')
     </div>
+    @include('layouts.constants')
 @endsection
