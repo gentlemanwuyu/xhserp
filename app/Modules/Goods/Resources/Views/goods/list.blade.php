@@ -136,14 +136,14 @@
                         @endcan
 
                         @can('edit_goods')
-                        if (1 == data.type) {
+                        if (Goods_SINGLE == data.type) {
                             actions.push({
                                 title: "编辑",
                                 event: function () {
                                     parent.layui.index.openTabsPage("{{route('goods::single.form')}}?goods_id=" + data.id, '编辑单品[' + data.id + ']');
                                 }
                             });
-                        }else if (2 == data.type) {
+                        }else if (Goods_COMBO == data.type) {
                             actions.push({
                                 title: "编辑",
                                 event: function () {

@@ -125,7 +125,7 @@
                         });
                         @endcan
 
-                                return actions;
+                        return actions;
                     });
                 }
             }

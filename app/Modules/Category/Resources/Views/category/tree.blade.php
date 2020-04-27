@@ -222,11 +222,11 @@
                             buttons.myAdd = "";
                         }
 
-                        if ("{{\App\Modules\Category\Models\Category::PRODUCT}}" == type) {
+                        if (Category_PRODUCT == type) {
                             var has_add = <?= json_encode(\Auth::user()->hasPermissionTo('add_product_category')); ?>;
                             var has_edit = <?= json_encode(\Auth::user()->hasPermissionTo('edit_product_category')); ?>;
                             var has_delete = <?= json_encode(\Auth::user()->hasPermissionTo('delete_product_category')); ?>;
-                        }else if ("{{\App\Modules\Category\Models\Category::GOODS}}" == type) {
+                        }else if (Category_GOODS == type) {
                             var has_add = <?= json_encode(\Auth::user()->hasPermissionTo('add_goods_category')); ?>;
                             var has_edit = <?= json_encode(\Auth::user()->hasPermissionTo('edit_goods_category')); ?>;
                             var has_delete = <?= json_encode(\Auth::user()->hasPermissionTo('delete_goods_category')); ?>;

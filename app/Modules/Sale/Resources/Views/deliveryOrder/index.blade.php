@@ -154,7 +154,7 @@
                         });
                         @endcan
 
-                        if ("{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}" == data.status) {
+                        if (-1 < [DeliveryOrder_PENDING_DELIVERY, DeliveryOrder_PENDING_REVIEW].indexOf(data.status)) {
                             @can('edit_delivery_order')
                             actions.push({
                                 title: "编辑",

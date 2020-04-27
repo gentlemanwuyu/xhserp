@@ -144,7 +144,7 @@
                         actions.push({
                             title: "出库",
                             event: function () {
-                                if ("{{\App\Modules\Purchase\Models\PurchaseReturnOrder::EXPRESS}}" == data.delivery_method) {
+                                if (PurchaseReturnOrder_EXPRESS == data.delivery_method) {
                                     layer.prompt({
                                         title: '物流单号',
                                         value: data.track_no

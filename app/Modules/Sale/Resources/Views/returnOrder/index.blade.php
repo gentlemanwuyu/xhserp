@@ -160,7 +160,7 @@
                         @endcan
 
                         @can('review_return_order')
-                        if ("{{\App\Modules\Sale\Models\ReturnOrder::PENDING_REVIEW}}" == data.status) {
+                        if (ReturnOrder_PENDING_REVIEW == data.status) {
                             actions.push({
                                 title: "审核",
                                 event: function () {
@@ -170,7 +170,7 @@
                         }
                         @endcan
 
-                        if (-1 < ["{{\App\Modules\Sale\Models\ReturnOrder::PENDING_REVIEW}}", "{{\App\Modules\Sale\Models\ReturnOrder::REJECTED}}"].indexOf(data.status)) {
+                        if (-1 < [ReturnOrder_PENDING_REVIEW, ReturnOrder_REJECTED].indexOf(data.status)) {
                             @can('edit_return_order')
                             actions.push({
                                 title: "编辑",

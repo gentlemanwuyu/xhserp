@@ -182,7 +182,7 @@
                         });
                         @endcan
 
-                        if ("{{\App\Modules\Sale\Models\Order::PENDING_REVIEW}}" == data.status) {
+                        if (Order_PENDING_REVIEW == data.status) {
                             @can('review_order')
                             actions.push({
                                 title: "审核",
@@ -193,7 +193,7 @@
                             @endcan
                         }
 
-                        if ("{{\App\Modules\Sale\Models\Order::AGREED}}" == data.status || 1 == data.exchange_status) {
+                        if (Order_AGREED == data.status || 1 == data.exchange_status) {
                             @can('order_delivery')
                             actions.push({
                                 title: "出货",
@@ -204,7 +204,7 @@
                             @endcan
                         }
 
-                        if (-1 < ["{{\App\Modules\Sale\Models\Order::AGREED}}", "{{\App\Modules\Sale\Models\Order::FINISHED}}"].indexOf(data.status) && data.returnable) {
+                        if (-1 < [Order_AGREED, Order_FINISHED].indexOf(data.status) && data.returnable) {
                             @can('order_return')
                             actions.push({
                                 title: "退货",
@@ -215,7 +215,7 @@
                             @endcan
                         }
 
-                        if ("{{\App\Modules\Sale\Models\Order::AGREED}}" == data.status && data.cancelable) {
+                        if (Order_AGREED == data.status && data.cancelable) {
                             @can('cancel_order')
                             actions.push({
                                 title: "取消",
@@ -250,7 +250,7 @@
                             @endcan
                         }
 
-                        if (-1 < ["{{\App\Modules\Sale\Models\Order::PENDING_REVIEW}}", "{{\App\Modules\Sale\Models\Order::REJECTED}}"].indexOf(data.status)) {
+                        if (-1 < [Order_PENDING_REVIEW, Order_REJECTED].indexOf(data.status)) {
                             @can('edit_order')
                             actions.push({
                                 title: "编辑",

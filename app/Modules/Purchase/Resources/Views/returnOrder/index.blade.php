@@ -159,7 +159,7 @@
                         });
                         @endcan
 
-                        if (1 == data.status) {
+                        if (PurchaseReturnOrder_AGREED == data.status) {
                             @can('delete_purchase_return_order')
                             actions.push({
                                 title: "删除",

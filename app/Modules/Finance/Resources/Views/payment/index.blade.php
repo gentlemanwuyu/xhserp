@@ -133,7 +133,7 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
                         // 未完成抵扣的付款单才可以修改
-                        if (0 == data.is_finished) {
+                        if (NO == data.is_finished) {
                             actions.push({
                                 title: "编辑",
                                 event: function () {

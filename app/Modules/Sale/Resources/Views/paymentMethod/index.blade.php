@@ -104,7 +104,7 @@
                         });
                         @endcan
 
-                        if (-1 < ["{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}", "{{\App\Modules\Sale\Models\PaymentMethodApplication::REJECTED}}"].indexOf(data.status)) {
+                        if (-1 < [PaymentMethodApplication_PENDING_REVIEW, PaymentMethodApplication_REJECTED].indexOf(data.status)) {
                             @can('edit_payment_method_application')
                             actions.push({
                                 title: "编辑",
@@ -115,7 +115,7 @@
                             @endcan
                         }
 
-                        if ("{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}" == data.status) {
+                        if (PaymentMethodApplication_PENDING_REVIEW == data.status) {
                             @can('review_payment_method_application')
                             actions.push({
                                 title: "审核",
@@ -126,7 +126,7 @@
                             @endcan
                         }
 
-                        if (-1 < ["{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}", "{{\App\Modules\Sale\Models\PaymentMethodApplication::REJECTED}}"].indexOf(data.status)) {
+                        if (-1 < [PaymentMethodApplication_PENDING_REVIEW, PaymentMethodApplication_REJECTED].indexOf(data.status)) {
                             @can('delete_payment_method_application')
                             actions.push({
                                 title: "删除",
@@ -167,7 +167,7 @@
             };
 
             form.val("search", {
-                "status": "{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}"
+                "status": PaymentMethodApplication_PENDING_REVIEW
             });
 
             table.render(tableOpts);

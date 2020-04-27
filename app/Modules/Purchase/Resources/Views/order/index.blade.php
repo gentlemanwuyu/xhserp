@@ -178,7 +178,7 @@
                         });
                         @endcan
 
-                        if ("{{\App\Modules\Purchase\Models\PurchaseOrder::PENDING_REVIEW}}" == data.status) {
+                        if (PurchaseOrder_PENDING_REVIEW == data.status) {
                             @can('review_purchase_order')
                             actions.push({
                                 title: "审核",
@@ -189,7 +189,7 @@
                             @endcan
                         }
 
-                        if (-1 < ["{{\App\Modules\Purchase\Models\PurchaseOrder::AGREED}}", "{{\App\Modules\Purchase\Models\PurchaseOrder::FINISHED}}", "{{\App\Modules\Purchase\Models\PurchaseOrder::CANCELED}}"].indexOf(data.status) && data.returnable) {
+                        if (-1 < [PurchaseOrder_AGREED, PurchaseOrder_FINISHED, PurchaseOrder_CANCELED].indexOf(data.status) && data.returnable) {
                             @can('return_purchase_order')
                             actions.push({
                                 title: "退货",
@@ -200,7 +200,7 @@
                             @endcan
                         }
 
-                        if ("{{\App\Modules\Purchase\Models\PurchaseOrder::AGREED}}" == data.status && !data.deletable) {
+                        if (PurchaseOrder_AGREED == data.status && !data.deletable) {
                             @can('cancel_purchase_order')
                             actions.push({
                                 title: "取消",
@@ -235,7 +235,7 @@
                             @endcan
                         }
 
-                        if (-1 < ["{{\App\Modules\Purchase\Models\PurchaseOrder::PENDING_REVIEW}}", "{{\App\Modules\Purchase\Models\PurchaseOrder::REJECTED}}"].indexOf(data.status)) {
+                        if (-1 < [PurchaseOrder_PENDING_REVIEW, PurchaseOrder_REJECTED].indexOf(data.status)) {
                             @can('edit_purchase_order')
                             actions.push({
                                 title: "编辑",

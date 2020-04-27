@@ -144,7 +144,7 @@
                         @endcan
 
                         @can('egress_finished')
-                        if ("{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}" == data.status) {
+                        if (DeliveryOrder_PENDING_DELIVERY == data.status) {
                             actions.push({
                                 title: "完成",
                                 event: function () {
@@ -216,7 +216,7 @@
 
             table.render(tableOpts);
 
-            form.val('search', {status: "{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}"});
+            form.val('search', {status: DeliveryOrder_PENDING_DELIVERY});
 
             laydate.render({
                 elem: 'input[name=created_at_between]'
