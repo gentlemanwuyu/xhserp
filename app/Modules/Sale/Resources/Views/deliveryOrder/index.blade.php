@@ -165,37 +165,39 @@
                             @endcan
                         }
 
-                        @can('delete_delivery_order')
-                        actions.push({
-                            title: "删除",
-                            event: function() {
-                                layer.confirm("确认要删除该出货单？", {icon: 3, title: "确认"}, function (index) {
-                                    layer.close(index);
-                                    var load_index = layer.load();
-                                    $.ajax({
-                                        method: "post",
-                                        url: "{{route('sale::deliveryOrder.delete')}}",
-                                        data: {delivery_order_id: data.id},
-                                        success: function (data) {
-                                            layer.close(load_index);
-                                            if ('success' == data.status) {
-                                                layer.msg("出货单删除成功", {icon: 1, time: 2000});
-                                                table.render(tableOpts);
-                                            } else {
-                                                layer.msg("出货单删除失败:"+data.msg, {icon: 2, time: 2000});
+                        if (-1 < [DeliveryOrder_PENDING_REVIEW, DeliveryOrder_PENDING_DELIVERY].indexOf(data.status)) {
+                            @can('delete_delivery_order')
+                            actions.push({
+                                title: "删除",
+                                event: function() {
+                                    layer.confirm("确认要删除该出货单？", {icon: 3, title: "确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('sale::deliveryOrder.delete')}}",
+                                            data: {delivery_order_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("出货单删除成功", {icon: 1, time: 2000});
+                                                    table.render(tableOpts);
+                                                } else {
+                                                    layer.msg("出货单删除失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                            layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
-                                            return false;
-                                        }
+                                        });
                                     });
-                                });
-                            }
-                        });
-                        @endcan
+                                }
+                            });
+                            @endcan
+                        }
 
                         return actions;
                     });

@@ -167,10 +167,10 @@ class DeliveryOrderController extends Controller
             }
 
             DB::beginTransaction();
-            $delivery_order->delete();
             $delivery_order->items->each(function ($item) {
                 $item->delete();
             });
+            $delivery_order->delete();
 
             DB::commit();
             return response()->json(['status' => 'success']);
