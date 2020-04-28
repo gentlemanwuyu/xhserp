@@ -64,6 +64,7 @@ class DeliveryOrderController extends Controller
                 }
 
                 $o->pis = $pis;
+                $o->currency;
                 return $o;
             })->filter();
         $data['customer'] = $customer;

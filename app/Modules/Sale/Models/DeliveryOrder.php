@@ -123,11 +123,16 @@ class DeliveryOrder extends Model
         return YES == $this->is_collected ? '是' : '否';
     }
 
+    /**
+     * 出货单总金额（转成人民币）
+     *
+     * @return int
+     */
     public function getTotalAmountAttribute()
     {
         $total_amount = 0;
         foreach ($this->items as $item) {
-            $total_amount += $item->quantity * $item->orderItem->price;
+            $total_amount += $item->quantity * $item->orderItem->price * $item->order->currency->rate;
         }
 
         return $total_amount;

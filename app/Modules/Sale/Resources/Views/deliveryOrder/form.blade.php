@@ -138,9 +138,12 @@
                         <th class="required">Item</th>
                         <th class="required">品名</th>
                         <th width="50">单位</th>
+                        <th width="60">币种</th>
                         <th width="150" class="required">数量</th>
                         <th width="100">单价</th>
                         <th width="100">总价</th>
+                        <th width="100">人民币单价</th>
+                        <th width="100">人民币总价</th>
                         <th width="60">操作</th>
                     </tr>
                     </thead>
@@ -151,15 +154,17 @@
                         ?>
                         @foreach($delivery_order->items as $item)
                             <?php
-                            $order_item = $item->orderItem;
+                                $order_item = $item->orderItem;
+                                $order = $item->order;
+                                $currency = $order->currency;
                             ?>
                             <tr data-flag="{{$item->id}}">
                                 <td erp-col="index">{{$index++}}</td>
                                 <td erp-col="order">
                                     <select name="items[{{$item->id}}][order_id]" lay-filter="order" lay-search="" lay-verify="required" lay-reqText="请选择订单">
                                         <option value="">请选择订单</option>
-                                        @foreach($orders as $order)
-                                            <option value="{{$order->id}}" @if($item->order_id == $order->id) selected @endif>{{$order->code}}</option>
+                                        @foreach($orders as $o)
+                                            <option value="{{$o->id}}" @if($item->order_id == $o->id) selected @endif>{{$o->code}}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -175,11 +180,14 @@
                                     <input type="text" name="items[{{$item->id}}][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input" value="{{$item->title or ''}}">
                                 </td>
                                 <td erp-col="unit">{{$order_item->unit or ''}}</td>
+                                <td erp-col="currency">{{$order->currency->name or ''}}</td>
                                 <td erp-col="quantity">
                                     <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$order_item->pending_delivery_quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
                                 </td>
                                 <td erp-col="price">{{$order_item->price or ''}}</td>
                                 <td erp-col="amount">{{$order_item->price * $item->quantity}}</td>
+                                <td erp-col="cnyPrice">{{price_format($order_item->price * $currency->rate)}}</td>
+                                <td erp-col="cnyAmount">{{price_format($order_item->price * $item->quantity * $currency->rate)}}</td>
                                 <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" erp-event="deleteRow">删除</button></td>
                             </tr>
                         @endforeach
@@ -191,9 +199,12 @@
                         <td erp-col="item"></td>
                         <td erp-col="title"></td>
                         <td erp-col="unit"></td>
+                        <td erp-col="currency"></td>
                         <td erp-col="quantity"></td>
                         <td erp-col="price"></td>
-                        <td erp-col="amount">{{isset($delivery_order) ? $delivery_order->total_amount : ''}}</td>
+                        <td erp-col="amount"></td>
+                        <td erp-col="cnyPrice"></td>
+                        <td erp-col="cnyAmount">{{isset($delivery_order) ? price_format($delivery_order->total_amount) : ''}}</td>
                         <td></td>
                     </tr>
                 </table>
@@ -216,7 +227,7 @@
         }).use(['form', 'autocomplete'], function () {
             var form = layui.form
                     ,autocomplete = layui.autocomplete
-            // 检查Item选择框
+                    // 检查Item选择框
                     ,checkItemSelect = function () {
                 // 判断所有的item选择框的option是否要disabled掉
                 $('select[lay-filter=item]').each(function (_, select) {
@@ -238,7 +249,7 @@
                 });
                 form.render('select', 'delivery_order');
             }
-            // 监听订单选择框
+                    // 监听订单选择框
                     ,listenSelectOrder = function () {
                 form.on('select(order)', function(data){
                     var $td = $(data.elem).parent('td')
@@ -253,20 +264,24 @@
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=item]').html(html);
+                        $td.siblings('td[erp-col=currency]').html(orders[data.value]['currency']['name']);
                         listenSelectItem();
                     }else {
                         $td.siblings('td[erp-col=item]').html('');
+                        $td.siblings('td[erp-col=currency]').html('');
                     }
                     $td.siblings('td[erp-col=title]').find('input').val('');
                     $td.siblings('td[erp-col=unit]').html('');
                     $td.siblings('td[erp-col=price]').html('');
+                    $td.siblings('td[erp-col=cnyPrice]').html('');
                     $td.siblings('td[erp-col=quantity]').find('input').val('');
                     $td.siblings('td[erp-col=amount]').html('');
+                    $td.siblings('td[erp-col=cnyAmount]').html('');
                     form.render('select', 'delivery_order');
                     checkItemSelect();
                 });
             }
-            // 监听订单Item选择框
+                    // 监听订单Item选择框
                     ,listenSelectItem = function () {
                 form.on('select(item)', function(data){
                     var $td = $(data.elem).parent('td')
@@ -274,19 +289,23 @@
                             ,$quantityInput = $td.siblings('td[erp-col=quantity]').find('input')
                             ,$unitTd = $td.siblings('td[erp-col=unit]')
                             ,$priceTd = $td.siblings('td[erp-col=price]')
+                            ,$cnyPriceTd = $td.siblings('td[erp-col=cnyPrice]')
                             ,selectedOrderId = $td.siblings('td[erp-col=order]').find('select').val()
                             ,items = orders[selectedOrderId]['pis'];
 
                     $quantityInput.val('');
                     if (data.value) {
+                        var cny_price = items[data.value]['price'] * orders[selectedOrderId]['currency']['rate'];
                         $titleInput.val(items[data.value]['title']);
                         $unitTd.html(items[data.value]['unit']);
                         $priceTd.html(items[data.value]['price']);
+                        $cnyPriceTd.html(cny_price.toFixed(2));
                         $quantityInput.attr('placeholder', '待出货:' + items[data.value]['pending_delivery_quantity'] + ', 库存:' + items[data.value]['sku']['stock']);
                     }else {
                         $titleInput.val('');
                         $unitTd.html('');
                         $priceTd.html('');
+                        $cnyPriceTd.html('');
                         $quantityInput.attr('placeholder', '数量');
                     }
                     $td.siblings('td[erp-col=amount]').html('');
@@ -310,45 +329,49 @@
                 $('input[lay-filter=quantity]').on('keyup', function () {
                     var $tr = $(this).parents('tr')
                             ,quantity = this.value
-                            ,price = $tr.find('td[erp-col=price]').html();
+                            ,price = $tr.find('td[erp-col=price]').html()
+                            ,cny_price = $tr.find('td[erp-col=cnyPrice]').html();
                     if (new RegExp(/^\d{1,}$/).test(quantity) && price && !isNaN(price)) {
-                        var amount = parseInt(quantity) * parseFloat(price);
+                        var amount = parseInt(quantity) * parseFloat(price)
+                                ,cny_amount = parseInt(quantity) * parseFloat(cny_price);
                         $tr.find('td[erp-col=amount]').html(amount);
+                        $tr.find('td[erp-col=cnyAmount]').html(cny_amount.toFixed(2));
                     }else {
                         $tr.find('td[erp-col=amount]').html('');
+                        $tr.find('td[erp-col=cnyAmount]').html('');
                     }
 
                     // 计算汇总金额
-                    var total_amount = 0;
-                    $(this).parents('tbody').find('td[erp-col=amount]').each(function (_, amountTd) {
-                        var amount = parseFloat($(amountTd).html());
-                        if (!isNaN(amount)) {
-                            total_amount += amount;
+                    var cny_total_amount = 0;
+                    $(this).parents('tbody').find('td[erp-col=cnyAmount]').each(function (_, cnyAmountTd) {
+                        var cny_amount = parseFloat($(cnyAmountTd).html());
+                        if (!isNaN(cny_amount)) {
+                            cny_total_amount += cny_amount;
                         }
                     });
-                    $('.erp-total-row').find('td[erp-col=amount]').html(total_amount);
+                    $('.erp-total-row').find('td[erp-col=cnyAmount]').html(cny_total_amount ? cny_total_amount : '');
                 });
             }
                     // 监听删除行
                     ,listenDeleteRow = function () {
                 $('*[erp-event=deleteRow]').on('click', function () {
                     deleteRow(this);
-                    var totalAmount = 0
+                    var cnyTotalAmount = 0
                             ,$detailTable = $('#detailTable')
                             ,$items = $detailTable.find('tbody.items tr')
-                            ,$totalAmountTd = $detailTable.find('tr.erp-total-row td[erp-col=amount]');
-                    $items.find('td[erp-col=amount]').each(function (_, td) {
-                        var amount = $(td).html();
-                        if (0 < amount.length) {
-                            amount = parseFloat(amount);
-                            totalAmount += amount;
+                            ,$cnyTotalAmountTd = $detailTable.find('tr.erp-total-row td[erp-col=cnyAmount]');
+                    $items.find('td[erp-col=cnyAmount]').each(function (_, td) {
+                        var cny_amount = $(td).html();
+                        if (0 < cny_amount.length) {
+                            cny_amount = parseFloat(cny_amount);
+                            cnyTotalAmount += cny_amount;
                         }
                     });
 
-                    if (totalAmount) {
-                        $totalAmountTd.html(totalAmount);
+                    if (cnyTotalAmount) {
+                        $cnyTotalAmountTd.html(cnyTotalAmount ? cnyTotalAmount : '');
                     }else {
-                        $totalAmountTd.html('');
+                        $cnyTotalAmountTd.html('');
                     }
                 });
             };
@@ -381,6 +404,9 @@
                 // 单位
                 html += '<td erp-col="unit">';
                 html += '</td>';
+                // 币种
+                html += '<td erp-col="currency">';
+                html += '</td>';
                 // 数量
                 html += '<td erp-col="quantity">';
                 html += '<input type="text" name="items[' + flag + '][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input">';
@@ -390,6 +416,12 @@
                 html += '</td>';
                 // 总价
                 html += '<td erp-col="amount">';
+                html += '</td>';
+                // 人民币单价
+                html += '<td erp-col="cnyPrice">';
+                html += '</td>';
+                // 人民币总价
+                html += '<td erp-col="cnyAmount">';
                 html += '</td>';
                 html += '<td>';
                 html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger" erp-event="deleteRow">删除</button>';

@@ -131,7 +131,7 @@
                                     <td><input type="text" name="items[{{$item->id}}][unit]" placeholder="单位" lay-verify="required" lay-reqText="请输入单位" class="layui-input" value="{{$item->unit or ''}}"></td>
                                     <td><input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="数量" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity or ''}}" oninput="value=value.replace(/[^\d]/g, '')"></td>
                                     <td><input type="text" name="items[{{$item->id}}][price]" lay-filter="price" placeholder="单价" lay-verify="required" lay-reqText="请输入单价" class="layui-input" value="{{$item->price or ''}}" oninput="value=value.replace(/[^\d.]/g, '')"></td>
-                                    <td erp-col="amount">{{number_format($item->quantity * $item->price, 2, '.', '')}}</td>
+                                    <td erp-col="amount">{{price_format($item->quantity * $item->price)}}</td>
                                     <td><input type="text" name="items[{{$item->id}}][note]" placeholder="备注" class="layui-input" value="{{$item->note or ''}}"></td>
                                     <td><button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRow(this);">删除</button></td>
                                 </tr>

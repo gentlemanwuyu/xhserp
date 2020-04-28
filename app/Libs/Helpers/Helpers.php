@@ -86,3 +86,20 @@ if (! function_exists('flush_sys_configs')) {
         return true;
     }
 }
+
+if (! function_exists('price_format')) {
+    /**
+     * 价格格式, 保留小数点后两位
+     *
+     * @param $price
+     * @return string
+     */
+    function price_format($price)
+    {
+        if (!$price) {
+            return $price;
+        }
+
+        return number_format($price, 2, '.', '');
+    }
+}
