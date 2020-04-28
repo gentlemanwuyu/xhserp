@@ -3,6 +3,9 @@
     <form class="layui-form" lay-filter="search">
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs2">
+                <input type="text" name="code" placeholder="货币代码" class="layui-input">
+            </div>
+            <div class="layui-col-xs2">
                 <input type="text" name="name" placeholder="货币名称" class="layui-input">
             </div>
             <div class="layui-col-xs4">

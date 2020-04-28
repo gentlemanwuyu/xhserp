@@ -21,6 +21,9 @@ class CurrencyController extends Controller
     public function paginate(Request $request)
     {
         $query = Currency::query();
+        if ($request->get('code')) {
+            $query = $query->where('code', $request->get('code'));
+        }
         if ($request->get('name')) {
             $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
         }
