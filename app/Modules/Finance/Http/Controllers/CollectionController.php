@@ -10,6 +10,7 @@ use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Finance\Models\Account;
 use App\Modules\Finance\Models\Collection;
+use App\Services\WorldService;
 
 class CollectionController extends Controller
 {
@@ -51,6 +52,7 @@ class CollectionController extends Controller
             });
             $collection->customer;
             $collection->user;
+            $collection->currency;
         }
 
         return response()->json($paginate);
@@ -77,8 +79,9 @@ class CollectionController extends Controller
             return $customer;
         })->pluck(null, 'id');
         $accounts = Account::all();
+        $currencies = WorldService::currencies();
 
-        return view('finance::collection.form', compact('users', 'customers', 'accounts'));
+        return view('finance::collection.form', compact('users', 'customers', 'accounts', 'currencies'));
     }
 
     public function save(Request $request)
@@ -91,6 +94,7 @@ class CollectionController extends Controller
 
             $collection_data = [
                 'customer_id' => $request->get('customer_id'),
+                'currency_code' => $request->get('currency_code'),
                 'amount' => $request->get('amount'),
                 'method' => $request->get('method'),
                 'collect_user_id' => $request->get('collect_user_id', 0),

@@ -69,6 +69,9 @@
                             return d.customer.name;
                         }},
                         {field: 'amount', title: '金额', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'currency_name', title: '币种', width: 100, align: 'center', fixed: 'left', templet: function (d) {
+                            return d.currency ? d.currency.name : '';
+                        }},
                         {field: 'remained_amount', title: '结余金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return parseFloat(d.remained_amount) ? d.remained_amount : '';
                         }},

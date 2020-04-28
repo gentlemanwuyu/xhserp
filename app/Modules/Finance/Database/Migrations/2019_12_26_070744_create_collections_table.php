@@ -17,6 +17,7 @@ class CreateCollectionsTable extends Migration
 			$table->integer('customer_id')->default(0)->comment('客户ID');
 			$table->decimal('amount', 8, 2)->default(0.00)->comment('收款金额');
 			$table->tinyInteger('method')->default(0)->comment('收款方式，1为现金，2为汇款，3为支票/汇票');
+			$table->char('currency_code', 3)->default('')->comment('币种');
 			$table->integer('collect_user_id')->default(0)->comment('收款人ID');
 			$table->integer('account_id')->default(0)->comment('收款账户ID');
 			$table->decimal('remained_amount', 8, 2)->default(0.00)->comment('剩余金额');

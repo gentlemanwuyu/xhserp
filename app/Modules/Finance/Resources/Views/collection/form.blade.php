@@ -25,6 +25,17 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
+                            <label class="layui-form-label required">币种</label>
+                            <div class="layui-input-block">
+                                <select name="currency_code" lay-search lay-verify="required" lay-reqText="请选择币种">
+                                    <option value="">请选择币种</option>
+                                    @foreach($currencies as $currency)
+                                        <option value="{{$currency['code']}}">{{$currency['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label required">收款金额</label>
                             <div class="layui-input-block">
                                 <input type="text" name="amount" lay-verify="required" lay-reqText="请输入收款金额" class="layui-input" value="" oninput="value=value.replace(/[^\d.]/g, '')">
