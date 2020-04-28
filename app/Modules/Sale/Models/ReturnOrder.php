@@ -117,6 +117,11 @@ class ReturnOrder extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(ReturnOrderLog::class)->orderBy('id', 'desc');
+    }
+
     /**
      * 处理日志
      *

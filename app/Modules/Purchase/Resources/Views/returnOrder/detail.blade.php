@@ -134,7 +134,7 @@
             </table>
         </div>
     </div>
-    @if(isset($source) && 'warehouse' == $source && 1 == $purchase_return_order->status)
+    @if(isset($source) && 'warehouse' == $source && \App\Modules\Purchase\Models\PurchaseReturnOrder::AGREED == $purchase_return_order->status)
         <div class="layui-row">
             <form class="layui-form">
                 <button type="button" class="layui-btn layui-btn-normal" erp-action="egress">出库</button>

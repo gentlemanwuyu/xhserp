@@ -22,21 +22,18 @@
                 <div class="layui-row layui-col-space30">
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
+                            <?php $customer = $order->customer; ?>
                             <label class="layui-form-label">客户</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$order->customer->name}}</span>
+                                <span class="erp-form-span"><a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name or ''}}</a></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label">订单号</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$order->code}}</span>
+                                <span class="erp-form-span"><a lay-href="{{route('sale::order.detail', ['order_id' => $order->id])}}" lay-text="订单详情[{{$order->id}}]">{{$order->code}}</a></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-col-xs4">
                         <div class="layui-form-item">
                             <label class="layui-form-label">订单时间</label>
                             <div class="layui-input-block">
@@ -45,39 +42,6 @@
                         </div>
                     </div>
                 </div>
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th width="50">序号</th>
-                        <th width="150">商品</th>
-                        <th width="150">SKU</th>
-                        <th>标题</th>
-                        <th width="50">单位</th>
-                        <th width="100">数量</th>
-                        <th width="100">单价</th>
-                        <th width="100">总价</th>
-                        <th width="100">已出货数量</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $i = 1;
-                    ?>
-                    @foreach($order->items as $item)
-                        <tr>
-                            <td>{{$i++}}</td>
-                            <td>{{$item->goods->name}}</td>
-                            <td>{{$item->sku->code}}</td>
-                            <td>{{$item->title}}</td>
-                            <td>{{$item->unit}}</td>
-                            <td>{{$item->quantity}}</td>
-                            <td>{{$item->price}}</td>
-                            <td>{{$item->quantity * $item->price}}</td>
-                            <td>{{$item->deliveried_quantity}}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
         <div class="layui-card">
@@ -329,7 +293,7 @@
                         layer.close(load_index);
                         if ('success' == data.status) {
                             layer.msg("退货单保存成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                                parent.layui.admin.closeThisTabs();
                             });
                         } else {
                             layer.msg("退货单保存失败:"+data.msg, {icon: 2, time: 2000});

@@ -23,6 +23,10 @@
                             <td>{{$return_order->reason}}</td>
                         </tr>
                         <tr>
+                            <td>创建人</td>
+                            <td>{{$return_order->user->name or ''}}</td>
+                        </tr>
+                        <tr>
                             <td>状态</td>
                             <td>{{$return_order->status_name}}</td>
                         </tr>
@@ -38,29 +42,29 @@
                         @endif
                     </table>
                 </div>
+                <?php
+                    $order = $return_order->order;
+                    $customer = $order->customer;
+                ?>
                 <div class="layui-col-xs4">
                     <table class="layui-table erp-info-table">
                         <tr>
                             <td>客户</td>
-                            <td>{{$return_order->order->customer->name or ''}}</td>
+                            <td><a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name or ''}}</a></td>
                         </tr>
                         <tr>
                             <td>负责人</td>
-                            <td>{{$return_order->order->customer->manager->name or ''}}</td>
+                            <td>{{$customer->manager->name or ''}}</td>
                         </tr>
-                    </table>
-                </div>
-                <div class="layui-col-xs4">
-                    <table class="layui-table erp-info-table">
                         <tr>
                             <td>订单编号</td>
                             <td>
-                                <a lay-href="{{route('sale::order.detail', ['order_id' => $return_order->order->id])}}" lay-text="订单详情[{{$return_order->order->id}}]">{{$return_order->order->code or ''}}</a>
+                                <a lay-href="{{route('sale::order.detail', ['order_id' => $order->id])}}" lay-text="订单详情[{{$order->id}}]">{{$order->code or ''}}</a>
                             </td>
                         </tr>
                         <tr>
                             <td>下单时间</td>
-                            <td>{{$return_order->order->created_at or ''}}</td>
+                            <td>{{$order->created_at or ''}}</td>
                         </tr>
                     </table>
                 </div>
@@ -114,12 +118,51 @@
             </table>
         </div>
     </div>
-    <div class="layui-row @if(!(isset($action) && 'review' == $action)) layui-hide @endif">
-        <form class="layui-form">
-            <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>
-            <button type="button" class="layui-btn layui-btn-danger" erp-action="reject">驳回</button>
-        </form>
-    </div>
+    @if(!$return_order->logs->isEmpty())
+        <div class="erp-detail">
+            <div class="erp-detail-title">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>退货单日志</legend>
+                </fieldset>
+            </div>
+            <div class="erp-detail-content">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>操作</th>
+                        <th>内容</th>
+                        <th>操作人</th>
+                        <th>时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $index = 1; ?>
+                    @foreach($return_order->logs as $log)
+                        <?php
+
+                        ?>
+                        <tr>
+                            <td>{{$index++}}</td>
+                            <td>{{$log->action_name}}</td>
+                            <td>{{$log->content}}</td>
+                            <td>{{$log->user->name or ''}}</td>
+                            <td>{{$log->created_at}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+    @if(isset($action) && 'review' == $action)
+        <div class="layui-row">
+            <form class="layui-form">
+                <button type="button" class="layui-btn layui-btn-normal" erp-action="agree">同意</button>
+                <button type="button" class="layui-btn layui-btn-danger" erp-action="reject">驳回</button>
+            </form>
+        </div>
+    @endif
 @endsection
 @section('scripts')
     <script>

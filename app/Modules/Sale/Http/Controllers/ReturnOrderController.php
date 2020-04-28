@@ -82,6 +82,8 @@ class ReturnOrderController extends Controller
         $order->returnable_items = $order->items->filter(function ($item) {
             return $item->returnable_quantity;
         })->map(function ($item) {
+            $item->goods;
+            $item->sku;
             $item->setAppends(['deliveried_quantity', 'returnable_quantity']);
             return $item;
         })->pluck(null, 'id');
@@ -98,11 +100,13 @@ class ReturnOrderController extends Controller
                 'code' => $request->get('code', ''),
                 'method' => $request->get('method', 0),
                 'reason' => $request->get('reason', ''),
-                'status' => ReturnOrder::PENDING_REVIEW,
             ];
             if ($request->get('order_id')) {
                 $data['order_id'] = $request->get('order_id');
             }
+
+            $user = Auth::user();
+            $data['status'] = $user->hasPermissionTo('review_return_order') ? ReturnOrder::AGREED : ReturnOrder::PENDING_REVIEW;
 
             $return_order = ReturnOrder::find($request->get('return_order_id'));
 

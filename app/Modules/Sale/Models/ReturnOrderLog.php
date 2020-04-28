@@ -29,4 +29,9 @@ class ReturnOrderLog extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getActionNameAttribute()
+    {
+        return isset(self::$actions[$this->action]) ? self::$actions[$this->action] : '';
+    }
 }
