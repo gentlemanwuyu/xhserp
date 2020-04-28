@@ -46,3 +46,8 @@ Route::group(['prefix' => 'account', 'as'=>'account.'], function (){
 	Route::get('paginate', ['as'=>'paginate', 'uses'=>'AccountController@paginate']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'AccountController@delete']);
 });
+
+Route::group(['prefix' => 'currency', 'as'=>'currency.'], function (){
+	Route::get('index', ['as'=>'index', 'uses'=>'CurrencyController@index']);
+	Route::get('paginate', ['as'=>'paginate', 'uses'=>'CurrencyController@paginate']);
+});

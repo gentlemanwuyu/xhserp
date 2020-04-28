@@ -254,6 +254,11 @@
                                 <a lay-href="{{route('finance::account.index')}}"><i class="layui-icon layui-icon-template"></i>账户管理</a>
                             </dd>
                             @endcan
+                            @can('currency_list')
+                            <dd>
+                                <a lay-href="{{route('finance::currency.index')}}"><i class="layui-icon layui-icon-dollar"></i>货币列表</a>
+                            </dd>
+                            @endcan
                         </dl>
                     </li>
                     @endcan

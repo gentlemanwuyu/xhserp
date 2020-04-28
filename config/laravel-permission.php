@@ -299,6 +299,9 @@ return [
                         ['name' => 'delete_account', 'display_name' => '删除账户', 'route' => '', 'type' => 2],
                     ]
                 ],
+                [ // 货币列表
+                    'name' => 'currency_list', 'display_name' => '货币列表', 'route' => '', 'type' => 1, 'children' => []
+                ],
             ]
         ],
         [ // 系统管理
