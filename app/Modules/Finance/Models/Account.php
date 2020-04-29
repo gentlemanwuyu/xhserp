@@ -16,4 +16,21 @@ class Account extends Model
     use SoftDeletes;
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        if (Collection::where('account_id', $this->id)->exists()) {
+            return false;
+        }
+        if (Payment::where('account_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
+    }
 }

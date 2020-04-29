@@ -50,6 +50,10 @@ class AccountController extends Controller
     {
         $paginate = Account::orderBy('id', 'desc')->paginate($request->get('limit'));
 
+        foreach ($paginate as $account) {
+            $account->setAppends(['deletable']);
+        }
+
         return response()->json($paginate);
     }
 
