@@ -66,20 +66,23 @@
                     <tr>
                         <th>序号</th>
                         <th>退货单号</th>
+                        <th>订单号</th>
+                        <th>币种</th>
                         <th>退货原因</th>
                         <th>未抵扣金额</th>
-                        <th>创建人</th>
-                        <th>创建时间</th>
                         <th class="erp-static-table-list" style="width: 650px;">
                             <span>退货明细</span>
                             <ul class="erp-static-table-list-ul">
-                                <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px; text-align: center;">订单Item</li>
+                                <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px; text-align: center;">品名</li>
                                 <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">订单数量</li>
                                 <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">退货数量</li>
                                 <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">单价</li>
-                                <li class="erp-static-table-list-li" style="width: 100px; text-align: center;">金额</li>
+                                <li class="erp-static-table-list-li" style="width: 150px; text-align: center;">单价(CNY)</li>
+                                <li class="erp-static-table-list-li" style="width: 150px; text-align: center;">金额(CNY)</li>
                             </ul>
                         </th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -174,12 +177,14 @@
                             html += '<tr>';
                             html += '<td>' + (index++) + '</td>';
                             html += '<td>' + return_order.code + '</td>';
+                            html += '<td>' + return_order.order.code + '</td>';
+                            html += '<td>' + return_order.order.currency.code + '</td>';
                             html += '<td>' + return_order.reason + '</td>';
                             html += '<td>' + return_order.undeducted_amount + '</td>';
-                            html += '<td>' + return_order.user.name + '</td>';
-                            html += '<td>' + return_order.created_at + '</td>';
                             html += '<td class="erp-static-table-list">';
                             return_order.items.forEach(function (return_order_item, key) {
+                                var cny_price = return_order_item.order_item.price * return_order.order.currency.rate
+                                        ,cny_amount = cny_price * return_order_item.quantity;
                                 html += '<ul class="erp-static-table-list-ul';
                                 if (0 == key) {
                                     html += ' erp-static-table-list-ul-first';
@@ -189,10 +194,13 @@
                                 html += '<li class="erp-static-table-list-li" style="width: 100px;">' + return_order_item.order_item.quantity + '</li>';
                                 html += '<li class="erp-static-table-list-li" style="width: 100px;">' + return_order_item.quantity + '</li>';
                                 html += '<li class="erp-static-table-list-li" style="width: 100px;">' + return_order_item.order_item.price + '</li>';
-                                html += '<li class="erp-static-table-list-li" style="width: 100px;">' + (parseInt(return_order_item.quantity) * parseFloat(return_order_item.order_item.price)) + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 150px;">' + cny_price.toFixed(2) + '</li>';
+                                html += '<li class="erp-static-table-list-li" style="width: 150px;">' + cny_amount.toFixed(2) + '</li>';
                                 html += '</ul>';
                             });
                             html += '</td>';
+                            html += '<td>' + return_order.user.name + '</td>';
+                            html += '<td>' + return_order.created_at + '</td>';
                             html += '</tr>';
                         });
                         $backOrderTable.find('tbody').html(html);

@@ -66,6 +66,7 @@ class CollectionController extends Controller
             $customer->unpaidItems;
             $customer->backOrders->map(function ($return_order) {
                 $return_order->user;
+                $return_order->order->currency;
                 $return_order->items->map(function ($return_order_item) {
                     $return_order_item->orderItem;
 

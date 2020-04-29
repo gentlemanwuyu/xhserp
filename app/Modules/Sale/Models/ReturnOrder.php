@@ -157,7 +157,7 @@ class ReturnOrder extends Model
      */
     public function getUndeductedAmountAttribute()
     {
-        $deductions = DeliveryOrderItemDeduction::where('return_order_id', $this->id)->get('amount')->toArray();
+        $deductions = DeliveryOrderItemDeduction::where('return_order_id', $this->id)->pluck('amount')->toArray();
 
         return $deductions ? $this->amount - array_sum($deductions) : $this->amount;
     }
