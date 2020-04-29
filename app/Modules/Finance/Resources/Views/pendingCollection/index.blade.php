@@ -58,15 +58,19 @@
                         {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
                         {field: 'code', title: '客户编号', width: 150, align: 'center', fixed: 'left'},
                         {field: 'name', title: '客户名称', width: 120, align: 'center', fixed: 'left'},
-                        {field: 'total_amount', title: '应收金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
+                        {field: 'total_amount', title: '应收金额(CNY)', width: 150, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
                             d.unpaid_items.forEach(function (item, key) {
-                                total_amount += item.real_quantity * item.price;
+                                total_amount += item.real_quantity * item.price * item.rate;
                             });
-                            return total_amount;
+                            return total_amount.toFixed(2);
                         }},
-                        {field: 'total_remained_amount', title: '结余金额', width: 100, align: 'center'},
-                        {field: 'back_amount', title: '退货金额', width: 100, align: 'center'},
+                        {field: 'total_remained_amount', title: '结余金额', width: 100, align: 'center', templet: function (d) {
+                            return d.total_remained_amount.toFixed(2);
+                        }},
+                        {field: 'back_amount', title: '退货金额', width: 100, align: 'center', templet: function (d) {
+                            return d.back_amount.toFixed(2);
+                        }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'detail', title: '出货明细', width: 950, align: 'center', templet: function (d) {
                             var html = '';

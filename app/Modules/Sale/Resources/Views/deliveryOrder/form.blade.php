@@ -37,13 +37,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">结余金额</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$customer->total_remained_amount or ''}}</span>
+                                <span class="erp-form-span">{{price_format($customer->total_remained_amount)}}</span>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">退货金额</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$customer->back_amount or ''}}</span>
+                                <span class="erp-form-span">{{price_format($customer->back_amount)}}</span>
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                                     <input type="text" name="items[{{$item->id}}][title]" placeholder="品名" lay-verify="required" lay-reqText="请输入品名" class="layui-input" value="{{$item->title or ''}}">
                                 </td>
                                 <td erp-col="unit">{{$order_item->unit or ''}}</td>
-                                <td erp-col="currency">{{$order->currency->name or ''}}</td>
+                                <td erp-col="currency">{{$order->currency->code or ''}}</td>
                                 <td erp-col="quantity">
                                     <input type="text" name="items[{{$item->id}}][quantity]" lay-filter="quantity" placeholder="待出货数量:{{$order_item->pending_delivery_quantity}}" lay-verify="required" lay-reqText="请输入数量" class="layui-input" value="{{$item->quantity}}">
                                 </td>
@@ -264,7 +264,7 @@
                         });
                         html += '</select>';
                         $td.siblings('td[erp-col=item]').html(html);
-                        $td.siblings('td[erp-col=currency]').html(orders[data.value]['currency']['name']);
+                        $td.siblings('td[erp-col=currency]').html(orders[data.value]['currency']['code']);
                         listenSelectItem();
                     }else {
                         $td.siblings('td[erp-col=item]').html('');
@@ -528,7 +528,7 @@
                         layer.close(load_index);
                         if ('success' == data.status) {
                             layer.msg("出货单保存成功", {icon: 1, time: 2000}, function () {
-                                location.reload();
+                                parent.layui.admin.closeThisTabs()
                             });
                         } else {
                             layer.msg("出货单保存失败:"+data.msg, {icon: 2, time: 2000});
