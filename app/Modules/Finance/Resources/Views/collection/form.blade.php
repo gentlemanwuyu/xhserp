@@ -119,7 +119,7 @@
                 ,cols: [
                     [
                         {type: 'checkbox', field: 'check', width: 60, totalRowText: '合计'},
-                        {field: 'order_code', title: '订单编号', align: 'center'},
+                        {field: 'order_code', title: '订单编号', width: 200, align: 'center'},
                         {field: 'currency_code', title: '币种', width: 60, align: 'center'},
                         {field: 'title', title: '品名', align: 'center'},
                         {field: 'order_quantity', title: '订单数量', width: 100, align: 'center'},
@@ -127,7 +127,7 @@
                         {field: 'delivery_quantity', title: '出货数量', width: 100, align: 'center'},
                         {field: 'real_quantity', title: '真实数量', width: 100, align: 'center'},
                         {field: 'price', title: '单价', width: 100, align: 'center'},
-                        {field: 'amount', title: '应付金额', width: 100, align: 'center'},
+                        {field: 'amount', title: '应收金额', width: 100, align: 'center'},
                         {field: 'cny_price', title: '单价(CNY)', width: 100, align: 'center'},
                         {field: 'cny_amount', title: '金额(CNY)', width: 100, align: 'center', totalRow: true},
                         {field: 'delivery_date', title: '出货日期', width: 150, align: 'center', templet: function (d) {
@@ -180,7 +180,7 @@
                             html += '<td>' + return_order.order.code + '</td>';
                             html += '<td>' + return_order.order.currency.code + '</td>';
                             html += '<td>' + return_order.reason + '</td>';
-                            html += '<td>' + return_order.undeducted_amount + '</td>';
+                            html += '<td>' + return_order.undeducted_amount.toFixed(2) + '</td>';
                             html += '<td class="erp-static-table-list">';
                             return_order.items.forEach(function (return_order_item, key) {
                                 var cny_price = return_order_item.order_item.price * return_order.order.currency.rate
@@ -219,7 +219,7 @@
                 $('select[name=collect_user_id]').parents('.layui-form-item').remove();
                 $('select[name=account_id]').parents('.layui-form-item').remove();
                 var html = '';
-                if ("{{\Payment::CASH}}" == data.value) {
+                if (Payment_CASH == data.value) {
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">收款人</label>';
                     html += '<div class="layui-input-block">';
@@ -230,7 +230,7 @@
                     });
                     html += '</select>';
                     html += '</div>';
-                }else if ("{{\Payment::REMITTANCE}}" == data.value) {
+                }else if (Payment_REMITTANCE == data.value) {
                     html += '<div class="layui-form-item">';
                     html += '<label class="layui-form-label required">汇款账户</label>';
                     html += '<div class="layui-input-block">';

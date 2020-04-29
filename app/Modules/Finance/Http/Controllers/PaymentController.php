@@ -56,6 +56,7 @@ class PaymentController extends Controller
             });
             $payment->supplier;
             $payment->user;
+            $payment->currency;
         }
 
         return response()->json($paginate);
@@ -69,6 +70,7 @@ class PaymentController extends Controller
                 $supplier->unpaidItems;
                 $supplier->backOrders->map(function ($purchase_return_order) {
                     $purchase_return_order->user;
+                    $purchase_return_order->purchaseOrder->currency;
                     $purchase_return_order->items->map(function ($purchase_return_order_item) {
                         $purchase_return_order_item->purchaseOrderItem;
 

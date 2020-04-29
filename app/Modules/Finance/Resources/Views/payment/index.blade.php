@@ -77,10 +77,13 @@
                             return d.supplier.name;
                         }},
                         {field: 'amount', title: '金额', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'currency_name', title: '币种', width: 100, align: 'center', fixed: 'left', templet: function (d) {
+                            return d.currency ? d.currency.code : '';
+                        }},
                         {field: 'remained_amount', title: '结余金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return parseFloat(d.remained_amount) ? d.remained_amount : '';
                         }},
-                        {field: 'creator', title: '创建人', align: 'center', templet: function (d) {
+                        {field: 'creator', title: '创建人', width: 120, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
                         {field: 'detail', title: '抵扣明细', width: 710, align: 'center', templet: function (d) {

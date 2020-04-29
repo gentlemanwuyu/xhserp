@@ -10,6 +10,7 @@ namespace App\Modules\Finance\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Currency;
 use App\Modules\Index\Models\User;
 use App\Modules\Purchase\Models\Supplier;
 
@@ -39,6 +40,11 @@ class Payment extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_code', 'code');
     }
 
     public function getMethodNameAttribute()

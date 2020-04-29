@@ -134,7 +134,7 @@ class PurchaseReturnOrder extends Model
     }
 
     /**
-     * 退货单金额
+     * 退货单金额(人民币)
      *
      * @return int
      */
@@ -142,7 +142,10 @@ class PurchaseReturnOrder extends Model
     {
         $amount = 0;
         foreach ($this->items as $proi) {
-            $amount += $proi->quantity * $proi->purchaseOrderItem->price;
+            $purchase_order_item = $proi->purchaseOrderItem;
+            $purchase_order = $purchase_order_item->purchaseOrder;
+            $currency = $purchase_order->currency;
+            $amount += $proi->quantity * $purchase_order_item->price * $currency->rate;
         }
 
         return $amount;

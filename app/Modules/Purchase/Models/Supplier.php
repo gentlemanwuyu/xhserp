@@ -50,6 +50,7 @@ class Supplier extends Model
             return false;
         }
 
+        // 退货单未抵扣金额（人民币）
         $back_order_amounts = $this->back_order_amounts;
         // 未抵扣的付款单
         $remained_payments = Payment::where('supplier_id', $this->id)
@@ -60,16 +61,22 @@ class Supplier extends Model
         foreach ($entry_ids as $entry_id) {
             $entry = SkuEntry::find($entry_id);
             $purchase_order_item = $entry->purchaseOrderItem;
-            // 需要抵扣的金额
-            $amount = $purchase_order_item->price * $entry->real_quantity;
+            $purchase_order_currency = $purchase_order_item->purchaseOrder->currency;
+            // 需要抵扣的金额(人民币)
+            $amount = $purchase_order_item->price * $entry->real_quantity * $purchase_order_currency->rate;
 
             // 如果有退货单，先用退货单抵扣
             foreach ($back_order_amounts as $purchase_return_order_id => $back_amount) {
                 $purchase_return_order = PurchaseReturnOrder::find($purchase_return_order_id);
+                $purchase_return_order_currency = $purchase_return_order->purchaseOrder->currency;
                 if ($amount <= $back_amount) { // 退货单可以完全抵扣入库金额
                     SkuEntryDeduction::create([
                         'sku_entry_id' => $entry_id,
+                        'purchase_order_currency_code' => $purchase_order_currency->code,
+                        'purchase_order_rate' => $purchase_order_currency->rate,
                         'purchase_return_order_id' => $purchase_return_order_id,
+                        'deduct_currency_code' => $purchase_return_order_currency->code,
+                        'deduct_rate' => $purchase_return_order_currency->rate,
                         'amount' => $amount,
                     ]);
                     $entry->is_paid = YES;
@@ -90,7 +97,11 @@ class Supplier extends Model
                 }else { // 退货单不够抵扣入库金额
                     SkuEntryDeduction::create([
                         'sku_entry_id' => $entry_id,
+                        'purchase_order_currency_code' => $purchase_order_currency->code,
+                        'purchase_order_rate' => $purchase_order_currency->rate,
                         'purchase_return_order_id' => $purchase_return_order_id,
+                        'deduct_currency_code' => $purchase_return_order_currency->code,
+                        'deduct_rate' => $purchase_return_order_currency->rate,
                         'amount' => $back_amount,
                     ]);
                     $amount -= $back_amount;
@@ -104,30 +115,39 @@ class Supplier extends Model
             // 退货单抵扣完后用付款单抵扣
             $remained_payment = $remained_payments->first();
             while ($remained_payment) {
-                if ($amount <= $remained_payment->remained_amount) { // 付款单可以完全抵扣
+                $payment_currency = $remained_payment->currency;
+                $remained_payment_amount = $remained_payment->remained_amount * $payment_currency->rate; // 付款单剩余金额（人民币）
+                if ($amount <= $remained_payment_amount) { // 付款单可以完全抵扣
                     // 剩余未抵扣的金额
-                    $remained_payment_amount = $remained_payment->remained_amount;
                     SkuEntryDeduction::create([
                         'sku_entry_id' => $entry_id,
+                        'purchase_order_currency_code' => $purchase_order_currency->code,
+                        'purchase_order_rate' => $purchase_order_currency->rate,
                         'payment_id' => $remained_payment->id,
+                        'deduct_currency_code' => $payment_currency->code,
+                        'deduct_rate' => $payment_currency->rate,
                         'amount' => $amount,
                     ]);
                     $remained_payment_amount -= $amount;
-                    $remained_payment->remained_amount = $remained_payment_amount;
                     if (0 == $remained_payment_amount) {
                         $remained_payment->is_finished = YES;
                     }
+                    $remained_payment->remained_amount = price_format($remained_payment_amount / $payment_currency->rate);
 
                     $remained_payment->save();
                     $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
                 }else { // 收款单不够抵扣
                     SkuEntryDeduction::create([
                         'sku_entry_id' => $entry_id,
+                        'purchase_order_currency_code' => $purchase_order_currency->code,
+                        'purchase_order_rate' => $purchase_order_currency->rate,
                         'payment_id' => $remained_payment->id,
-                        'amount' => $remained_payment->remained_amount,
+                        'deduct_currency_code' => $payment_currency->code,
+                        'deduct_rate' => $payment_currency->rate,
+                        'amount' => $remained_payment_amount,
                     ]);
 
-                    $amount -= $remained_payment->remained_amount;
+                    $amount -= $remained_payment_amount;
                     // 该付款单已经抵扣完
                     $remained_payment->remained_amount = 0;
                     $remained_payment->is_finished = YES;
@@ -186,6 +206,7 @@ class Supplier extends Model
         return $this->hasManyThrough(SkuEntry::class, PurchaseOrder::class)
             ->leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.purchase_order_item_id')
             ->leftJoin('product_skus AS ps', 'ps.id', '=', 'poi.sku_id')
+            ->leftJoin('currencies AS c', 'c.code', '=', 'purchase_orders.currency_code')
             ->where('purchase_orders.supplier_id', $this->id)
             ->where('sku_entries.is_paid', NO)
             ->where('sku_entries.real_quantity', '>', 0)
@@ -193,12 +214,17 @@ class Supplier extends Model
                 'sku_entries.id AS entry_id',
                 'purchase_orders.code AS purchase_order_code',
                 'ps.code AS sku_code',
+                'poi.title',
                 'poi.price',
+                'c.rate',
+                'c.code AS currency_code',
                 'poi.quantity AS order_quantity',
                 'sku_entries.quantity AS entry_quantity',
                 'sku_entries.real_quantity',
-                DB::raw('sku_entries.real_quantity * poi.price AS amount'),
                 'sku_entries.created_at AS entried_at',
+                DB::raw('ROUND(poi.price * c.rate, 2) AS cny_price'),
+                DB::raw('ROUND(poi.price * c.rate * sku_entries.real_quantity, 2) AS cny_amount'),
+                DB::raw('sku_entries.real_quantity * poi.price AS amount'),
             ])
             ->orderBy('sku_entries.id', 'asc');
     }
@@ -216,7 +242,7 @@ class Supplier extends Model
     }
 
     /**
-     * 退货单未抵扣金额，每个订单为一行数据
+     * 退货单未抵扣金额(人民币)，每个订单为一行数据
      *
      * @return array
      */
@@ -231,7 +257,7 @@ class Supplier extends Model
     }
 
     /**
-     * 退货金额
+     * 退货金额(人民币)
      *
      * @return int
      */
@@ -275,9 +301,15 @@ class Supplier extends Model
      */
     public function getTotalRemainedAmountAttribute()
     {
-        $payments = Payment::where('supplier_id', $this->id)->where('is_finished', NO)->get()->toArray();
+        $total_remained_amount = 0;
 
-        return array_sum(array_column($payments, 'remained_amount'));
+        $payments = Payment::where('supplier_id', $this->id)->where('is_finished', NO)->get();
+
+        foreach ($payments as $payment) {
+            $total_remained_amount += $payment->remained_amount * $payment->currency->rate;
+        }
+
+        return $total_remained_amount;
     }
 
     public function getTaxNameAttribute()
