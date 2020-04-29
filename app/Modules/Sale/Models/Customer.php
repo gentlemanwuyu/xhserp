@@ -89,6 +89,7 @@ class Customer extends Model
             return false;
         }
 
+        // 退货单未抵扣金额（人民币）
         $back_order_amounts = $this->back_order_amounts;
         // 未抵扣的付款单
         $remained_collections = Collection::where('customer_id', $this->id)
@@ -99,16 +100,22 @@ class Customer extends Model
         foreach ($doi_ids as $doi_id) {
             $delivery_order_item = DeliveryOrderItem::find($doi_id);
             $order_item = $delivery_order_item->orderItem;
-            // 需要抵扣的金额
-            $amount = $order_item->price * $delivery_order_item->real_quantity;
+            $order_currency = $order_item->order->currency;
+            // 需要抵扣的金额(人民币)
+            $amount = $order_item->price * $delivery_order_item->real_quantity * $order_currency->rate;
 
             // 如果有退货单，先用退货单抵扣
             foreach ($back_order_amounts as $return_order_id => $return_amount) {
                 $return_order = ReturnOrder::find($return_order_id);
+                $return_order_currency = $return_order->order->currency;
                 if ($amount <= $return_amount) { // 退货单可以完全抵扣出货item金额
                     DeliveryOrderItemDeduction::create([
                         'delivery_order_item_id' => $doi_id,
+                        'order_currency_code' => $order_currency->code,
+                        'order_rate' => $order_currency->rate,
                         'return_order_id' => $return_order_id,
+                        'deduct_currency_code' => $return_order_currency->code,
+                        'deduct_rate' => $return_order_currency->rate,
                         'amount' => $amount,
                     ]);
                     $delivery_order_item->is_paid = YES;
@@ -129,7 +136,11 @@ class Customer extends Model
                 }else { // 退货单不够抵扣出货item金额
                     DeliveryOrderItemDeduction::create([
                         'delivery_order_item_id' => $doi_id,
+                        'order_currency_code' => $order_currency->code,
+                        'order_rate' => $order_currency->rate,
                         'return_order_id' => $return_order_id,
+                        'deduct_currency_code' => $return_order_currency->code,
+                        'deduct_rate' => $return_order_currency->rate,
                         'amount' => $return_amount,
                     ]);
                     $amount -= $return_amount;
@@ -143,29 +154,38 @@ class Customer extends Model
             // 退货单抵扣完后用收款单抵扣
             $remained_collection = $remained_collections->first();
             while ($remained_collection) {
-                if ($amount <= $remained_collection->remained_amount) { // 收款单可以完全抵扣
+                $collection_currency = $remained_collection->currency; // 收款单货币
+                $remained_collection_amount = $remained_collection->remained_amount * $collection_currency->rate; // 收款单剩余金额（人民币）
+                if ($amount <= $remained_collection_amount) { // 收款单可以完全抵扣
                     // 剩余未抵扣的金额
-                    $remained_collection_amount = $remained_collection->remained_amount;
                     DeliveryOrderItemDeduction::create([
                         'delivery_order_item_id' => $doi_id,
+                        'order_currency_code' => $order_currency->code,
+                        'order_rate' => $order_currency->rate,
                         'collection_id' => $remained_collection->id,
+                        'deduct_currency_code' => $collection_currency->code,
+                        'deduct_rate' => $collection_currency->rate,
                         'amount' => $amount,
                     ]);
                     $remained_collection_amount -= $amount;
-                    $remained_collection->remained_amount = $remained_collection_amount;
                     if (0 == $remained_collection_amount) {
                         $remained_collection->is_finished = YES;
                     }
+                    $remained_collection->remained_amount = price_format($remained_collection_amount / $collection_currency->rate);
 
                     $remained_collection->save();
                     $amount = 0; // 已经完全抵扣，需要抵扣的金额置0
                 }else { // 收款单不够抵扣
                     DeliveryOrderItemDeduction::create([
                         'delivery_order_item_id' => $doi_id,
+                        'order_currency_code' => $order_currency->code,
+                        'order_rate' => $order_currency->rate,
                         'collection_id' => $remained_collection->id,
-                        'amount' => $remained_collection->remained_amount,
+                        'deduct_currency_code' => $collection_currency->code,
+                        'deduct_rate' => $collection_currency->rate,
+                        'amount' => $remained_collection_amount,
                     ]);
-                    $amount -= $remained_collection->remained_amount;
+                    $amount -= $remained_collection_amount;
                     // 该收款单已经抵扣完
                     $remained_collection->remained_amount = 0;
                     $remained_collection->is_finished = YES;
@@ -235,6 +255,7 @@ class Customer extends Model
             ->leftJoin('orders AS o', 'o.id', '=', 'delivery_order_items.order_id')
             ->leftJoin('order_items AS oi', 'oi.id', '=', 'delivery_order_items.order_item_id')
             ->leftJoin('goods_skus AS gs', 'gs.id', '=', 'oi.sku_id')
+            ->leftJoin('currencies AS c', 'c.code', '=', 'o.currency_code')
             ->where('delivery_orders.status', DeliveryOrder::FINISHED)
             ->where('delivery_orders.customer_id', $this->id)
             ->where('delivery_order_items.is_paid', NO)
@@ -246,10 +267,14 @@ class Customer extends Model
                 'oi.title',
                 'oi.price',
                 'oi.quantity AS order_quantity',
+                'c.rate',
+                'c.code AS currency_code',
                 'delivery_order_items.quantity AS delivery_quantity',
                 'delivery_order_items.real_quantity',
                 'delivery_orders.code AS delivery_code',
                 'delivery_order_items.created_at AS delivery_at',
+                DB::raw('ROUND(oi.price * c.rate, 2) AS cny_price'),
+                DB::raw('ROUND(oi.price * c.rate * delivery_order_items.real_quantity, 2) AS cny_amount'),
                 DB::raw('delivery_order_items.real_quantity * oi.price AS amount'),
             ])
             ->orderBy('delivery_order_items.id', 'asc');
@@ -268,7 +293,7 @@ class Customer extends Model
     }
 
     /**
-     * 退货单未抵扣金额，每个订单为一行数据
+     * 退货单未抵扣金额(人民币)，每个订单为一行数据
      *
      * @return array
      */
@@ -283,7 +308,7 @@ class Customer extends Model
     }
 
     /**
-     * 退货金额
+     * 退货金额(人民币)
      *
      * @return int
      */
@@ -299,9 +324,13 @@ class Customer extends Model
      */
     public function getTotalRemainedAmountAttribute()
     {
-        $collections = Collection::where('customer_id', $this->id)->where('is_finished', NO)->get()->toArray();
+        $total_remained_amount = 0;
+        $collections = Collection::where('customer_id', $this->id)->where('is_finished', NO)->get();
+        foreach ($collections as $collection) {
+            $total_remained_amount += $collection->remained_amount * $collection->currency->rate;
+        }
 
-        return array_sum(array_column($collections, 'remained_amount'));
+        return $total_remained_amount;
     }
 
     /**

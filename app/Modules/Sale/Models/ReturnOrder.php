@@ -133,7 +133,7 @@ class ReturnOrder extends Model
     }
 
     /**
-     * 退货单金额
+     * 退货单金额(人民币)
      *
      * @return int
      */
@@ -141,7 +141,10 @@ class ReturnOrder extends Model
     {
         $amount = 0;
         foreach ($this->items as $roi) {
-            $amount += $roi->quantity * $roi->orderItem->price;
+            $order_item = $roi->orderItem;
+            $order = $order_item->order;
+            $currency = $order->currency;
+            $amount += $roi->quantity * $order_item->price * $currency->rate;
         }
 
         return $amount;
@@ -154,7 +157,7 @@ class ReturnOrder extends Model
      */
     public function getUndeductedAmountAttribute()
     {
-        $deductions = DeliveryOrderItemDeduction::where('return_order_id', $this->id)->pluck('amount')->toArray();
+        $deductions = DeliveryOrderItemDeduction::where('return_order_id', $this->id)->get('amount')->toArray();
 
         return $deductions ? $this->amount - array_sum($deductions) : $this->amount;
     }

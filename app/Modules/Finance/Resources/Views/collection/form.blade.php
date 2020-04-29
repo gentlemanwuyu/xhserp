@@ -104,7 +104,8 @@
     <script>
         var users = <?= json_encode($users); ?>
                 ,customers = <?= json_encode($customers); ?>
-                ,accounts = <?= json_encode($accounts); ?>;
+                ,accounts = <?= json_encode($accounts); ?>
+                ,currencies = <?= json_encode($currencies); ?>;
         layui.use(['form', 'table'], function () {
             var form = layui.form
                     ,table = layui.table
@@ -116,13 +117,16 @@
                     [
                         {type: 'checkbox', field: 'check', width: 60, totalRowText: '合计'},
                         {field: 'order_code', title: '订单编号', align: 'center'},
+                        {field: 'currency_code', title: '币种', width: 60, align: 'center'},
                         {field: 'title', title: '品名', align: 'center'},
                         {field: 'order_quantity', title: '订单数量', width: 100, align: 'center'},
                         {field: 'delivery_code', title: '出货单编号', align: 'center'},
                         {field: 'delivery_quantity', title: '出货数量', width: 100, align: 'center'},
                         {field: 'real_quantity', title: '真实数量', width: 100, align: 'center'},
                         {field: 'price', title: '单价', width: 100, align: 'center'},
-                        {field: 'amount', title: '应付金额', width: 100, align: 'center', totalRow: true},
+                        {field: 'amount', title: '应付金额', width: 100, align: 'center'},
+                        {field: 'cny_price', title: '人民币单价', width: 100, align: 'center'},
+                        {field: 'cny_amount', title: '人民币金额', width: 100, align: 'center', totalRow: true},
                         {field: 'delivery_date', title: '出货日期', width: 150, align: 'center', templet: function (d) {
                             return moment(d.delivery_at).format('YYYY-MM-DD');
                         }}
@@ -147,13 +151,13 @@
                     html += '<div class="layui-form-item" id="totalRemainedAmountDiv">';
                     html += '<label class="layui-form-label">结余金额</label>';
                     html += '<div class="layui-input-block">';
-                    html += '<span class="erp-form-span">' + customer.total_remained_amount + '</span>';
+                    html += '<span class="erp-form-span">' + customer.total_remained_amount.toFixed(2) + '</span>';
                     html += '</div>';
                     html += '</div>';
                     html += '<div class="layui-form-item" id="backAmountDiv">';
                     html += '<label class="layui-form-label">退货金额</label>';
                     html += '<div class="layui-input-block">';
-                    html += '<span class="erp-form-span">' + customer.back_amount + '</span>';
+                    html += '<span class="erp-form-span">' + customer.back_amount.toFixed(2) + '</span>';
                     html += '</div>';
                     html += '</div>';
                     $(data.elem).parents('.layui-form-item').after(html);
@@ -239,16 +243,19 @@
             table.on('checkbox(detail)', function (obj) {
                 var checkStatus = table.checkStatus('detail')
                         ,checkedAmount = 0
+                        ,currency_code = $('select[name=currency_code]').val()
+                        ,currency = currencies[currency_code]
                         ,$amountInput = $('input[name=amount]')
                         ,inputAmount = $amountInput.val() ? parseFloat($amountInput.val()) : 0
+                        ,cnyInputAmount = currency ? inputAmount * currency['rate'] : 0
                         ,customer_id = $('select[name=customer_id]').val()
                         ,total_remained_amount = customers[customer_id]['total_remained_amount']
                         ,back_amount = customers[customer_id]['back_amount'];
                 checkStatus.data.forEach(function (item) {
-                    checkedAmount += parseFloat(item.price) * parseInt(item.real_quantity);
+                    checkedAmount += parseFloat(item.price) * parseInt(item.real_quantity) * parseFloat(item.rate);
                 });
 
-                if (checkedAmount > inputAmount + total_remained_amount + back_amount) {
+                if (checkedAmount > cnyInputAmount + total_remained_amount + back_amount) {
                     layer.msg("选中的明细金额不可大于收款金额", {icon: 5, shift: 6});
                     return false;
                 }

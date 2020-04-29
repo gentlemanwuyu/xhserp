@@ -19,7 +19,7 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
-                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input">
+                <input type="text" name="created_at_between" placeholder="创建时间" class="layui-input" autocomplete="off">
             </div>
         </div>
         <div class="layui-row layui-col-space15">
@@ -70,15 +70,15 @@
                         }},
                         {field: 'amount', title: '金额', width: 100, align: 'center', fixed: 'left'},
                         {field: 'currency_name', title: '币种', width: 100, align: 'center', fixed: 'left', templet: function (d) {
-                            return d.currency ? d.currency.name : '';
+                            return d.currency ? d.currency.code : '';
                         }},
                         {field: 'remained_amount', title: '结余金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             return parseFloat(d.remained_amount) ? d.remained_amount : '';
                         }},
-                        {field: 'creator', title: '创建人', align: 'center', templet: function (d) {
+                        {field: 'creator', title: '创建人', width: 120, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
-                        {field: 'detail', title: '抵扣明细', width: 750, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '抵扣明细', width: 1150, align: 'center', templet: function (d) {
                             var html = '';
                             d.deductions.forEach(function (deduction, key) {
                                 if (0 == key) {
@@ -87,12 +87,16 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 100px;">' + deduction.delivery_order_item.delivery_order_id + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 150px;">' + deduction.delivery_order_item.order_item.order.code + '</li>';
+                                var cny_price = deduction.delivery_order_item.order_item.price * deduction.delivery_order_item.order_item.order.currency.rate
+                                        ,cny_amount = cny_price * deduction.delivery_order_item.quantity;
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + deduction.delivery_order_item.order_item.order.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 200px;">' + deduction.delivery_order_item.title + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + deduction.delivery_order_item.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + deduction.delivery_order_item.order_item.order.currency.code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + deduction.delivery_order_item.order_item.price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + deduction.delivery_order_item.quantity * deduction.delivery_order_item.order_item.price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + deduction.amount + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + cny_price.toFixed(2) + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + cny_amount.toFixed(2) + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + deduction.amount + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(deduction.delivery_order_item.created_at).format('YYYY-MM-DD') + '</li>';
                                 html += '</ul>';
                             });
@@ -108,12 +112,14 @@
                     if (0 == $('th[data-field=detail] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
-                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 100px; text-align: center;">出货单ID</li>';
-                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">订单编号</li>';
+                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px; text-align: center;">订单编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 200px; text-align: center;">品名</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">币种</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货金额</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">抵扣金额</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格(人民币)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">出货金额(人民币)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">抵扣金额(人民币)</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货时间</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);

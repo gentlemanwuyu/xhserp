@@ -4,6 +4,7 @@ namespace App\Modules\Finance\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Finance\Http\Requests\CollectionRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
@@ -45,7 +46,7 @@ class CollectionController extends Controller
 
         foreach ($paginate as $collection) {
             $collection->deductions->map(function ($deduction) {
-                $deduction->deliveryOrderItem->orderItem->order;
+                $deduction->deliveryOrderItem->orderItem->order->currency;
 
 
                 return $deduction;
@@ -84,7 +85,7 @@ class CollectionController extends Controller
         return view('finance::collection.form', compact('users', 'customers', 'accounts', 'currencies'));
     }
 
-    public function save(Request $request)
+    public function save(CollectionRequest $request)
     {
         try {
             $customer = Customer::find($request->get('customer_id'));
