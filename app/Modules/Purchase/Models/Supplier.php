@@ -187,7 +187,7 @@ class Supplier extends Model
             ->leftJoin('purchase_order_items AS poi', 'poi.id', '=', 'sku_entries.purchase_order_item_id')
             ->leftJoin('product_skus AS ps', 'ps.id', '=', 'poi.sku_id')
             ->where('purchase_orders.supplier_id', $this->id)
-            ->where('sku_entries.is_paid', YES)
+            ->where('sku_entries.is_paid', NO)
             ->where('sku_entries.real_quantity', '>', 0)
             ->select([
                 'sku_entries.id AS entry_id',

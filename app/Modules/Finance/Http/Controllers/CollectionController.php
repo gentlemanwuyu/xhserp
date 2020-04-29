@@ -34,6 +34,9 @@ class CollectionController extends Controller
         if ($request->get('customer_id')) {
             $query = $query->where('customer_id', $request->get('customer_id'));
         }
+        if ($request->get('currency_code')) {
+            $query = $query->where('currency_code', $request->get('currency_code'));
+        }
         if ($request->get('creator_id')) {
             $query = $query->where('user_id', $request->get('creator_id'));
         }

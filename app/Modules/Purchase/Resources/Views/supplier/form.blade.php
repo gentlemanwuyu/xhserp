@@ -69,7 +69,7 @@
                                 <select name="currency_code" lay-search="" lay-verify="required" lay-reqText="请选择币种">
                                     <option value="">请选择币种</option>
                                     @foreach($currencies as $currency)
-                                        <option value="{{$currency['code']}}" @if(isset($supplier) && $currency['code'] == $supplier->currency_code) selected @endif>{{$currency['name']}}</option>
+                                        <option value="{{$currency['code']}}" @if(isset($supplier) && $currency['code'] == $supplier->currency_code) selected @endif>{{$currency['code']}}({{$currency['name']}})</option>
                                     @endforeach
                                 </select>
                             </div>

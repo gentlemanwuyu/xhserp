@@ -11,6 +11,14 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
+                <select name="currency_code" lay-search="">
+                    <option value="">币种</option>
+                    @foreach($currencies as $currency)
+                        <option value="{{$currency['code']}}">{{$currency['code']}}({{$currency['name']}})</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
                 <select name="creator_id" lay-search="">
                     <option value="">创建人</option>
                     @foreach($users as $user)

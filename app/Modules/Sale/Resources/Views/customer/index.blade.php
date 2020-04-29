@@ -28,7 +28,7 @@
                 <select name="currency_code" lay-search="">
                     <option value="">币种</option>
                     @foreach($currencies as $currency)
-                        <option value="{{$currency['code']}}">{{$currency['name']}}</option>
+                        <option value="{{$currency['code']}}">{{$currency['code']}}({{$currency['name']}})</option>
                     @endforeach
                 </select>
             </div>

@@ -4,12 +4,14 @@ namespace App\Modules\Finance\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Finance\Http\Requests\PaymentRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
 use App\Modules\Finance\Models\Account;
 use App\Modules\Purchase\Models\Supplier;
 use App\Modules\Finance\Models\Payment;
+use App\Services\WorldService;
 
 class PaymentController extends Controller
 {
@@ -22,8 +24,9 @@ class PaymentController extends Controller
     {
         $suppliers = Supplier::all();
         $users = User::where('is_admin', NO)->get();
+        $currencies = WorldService::currencies();
 
-        return view('finance::payment.index', compact('suppliers', 'users'));
+        return view('finance::payment.index', compact('suppliers', 'users', 'currencies'));
     }
 
     public function paginate(Request $request)
@@ -31,6 +34,9 @@ class PaymentController extends Controller
         $query = Payment::query();
         if ($request->get('supplier_id')) {
             $query = $query->where('supplier_id', $request->get('supplier_id'));
+        }
+        if ($request->get('currency_code')) {
+            $query = $query->where('currency_code', $request->get('currency_code'));
         }
         if ($request->get('creator_id')) {
             $query = $query->where('user_id', $request->get('creator_id'));
@@ -78,11 +84,12 @@ class PaymentController extends Controller
             })
             ->pluck(null, 'id');
         $accounts = Account::all();
+        $currencies = WorldService::currencies();
 
-        return view('finance::payment.form', compact('users', 'suppliers', 'accounts'));
+        return view('finance::payment.form', compact('users', 'suppliers', 'accounts', 'currencies'));
     }
 
-    public function save(Request $request)
+    public function save(PaymentRequest $request)
     {
         try {
             $supplier = Supplier::find($request->get('supplier_id'));
@@ -92,6 +99,7 @@ class PaymentController extends Controller
 
             $payment_data = [
                 'supplier_id' => $request->get('supplier_id'),
+                'currency_code' => $request->get('currency_code'),
                 'amount' => $request->get('amount'),
                 'method' => $request->get('method'),
                 'pay_user_id' => $request->get('pay_user_id', 0),
