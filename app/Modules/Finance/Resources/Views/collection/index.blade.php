@@ -117,9 +117,9 @@
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">币种</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格(人民币)</li>';
-                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">出货金额(人民币)</li>';
-                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">抵扣金额(人民币)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格(CNY)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">出货金额(CNY)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">抵扣金额(CNY)</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货时间</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);

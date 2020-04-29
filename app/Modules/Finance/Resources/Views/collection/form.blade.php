@@ -125,8 +125,8 @@
                         {field: 'real_quantity', title: '真实数量', width: 100, align: 'center'},
                         {field: 'price', title: '单价', width: 100, align: 'center'},
                         {field: 'amount', title: '应付金额', width: 100, align: 'center'},
-                        {field: 'cny_price', title: '人民币单价', width: 100, align: 'center'},
-                        {field: 'cny_amount', title: '人民币金额', width: 100, align: 'center', totalRow: true},
+                        {field: 'cny_price', title: '单价(CNY)', width: 100, align: 'center'},
+                        {field: 'cny_amount', title: '金额(CNY)', width: 100, align: 'center', totalRow: true},
                         {field: 'delivery_date', title: '出货日期', width: 150, align: 'center', templet: function (d) {
                             return moment(d.delivery_at).format('YYYY-MM-DD');
                         }}
