@@ -24,8 +24,9 @@ class CollectionController extends Controller
     {
         $customers = Customer::all();
         $users = User::where('is_admin', NO)->get();
+        $currencies = WorldService::currencies();
 
-        return view('finance::collection.index', compact('customers', 'users'));
+        return view('finance::collection.index', compact('customers', 'users', 'currencies'));
     }
 
     public function paginate(Request $request)

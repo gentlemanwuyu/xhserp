@@ -173,7 +173,7 @@
                         actions.push({
                             title: "详情",
                             event: function () {
-                                parent.layui.index.openTabsPage("{{route('purchase::order.detail')}}?order_id=" + data.id, '订单详情[' + data.id + ']');
+                                parent.layui.index.openTabsPage("{{route('purchase::order.detail')}}?order_id=" + data.id, '采购订单详情[' + data.id + ']');
                             }
                         });
                         @endcan

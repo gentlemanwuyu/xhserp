@@ -85,7 +85,7 @@ class PurchaseOrderItem extends Model
     }
 
     /**
-     * 退货数量，包括已入库的和已完成的
+     * 退货数量，包括已出库的和已完成的
      *
      * @return int|number
      */

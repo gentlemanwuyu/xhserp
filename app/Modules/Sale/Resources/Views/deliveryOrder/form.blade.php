@@ -141,9 +141,9 @@
                         <th width="60">币种</th>
                         <th width="150" class="required">数量</th>
                         <th width="100">单价</th>
-                        <th width="100">总价</th>
-                        <th width="100">人民币单价</th>
-                        <th width="100">人民币总价</th>
+                        <th width="100">金额</th>
+                        <th width="100">单价(CNY)</th>
+                        <th width="100">金额(CNY)</th>
                         <th width="60">操作</th>
                     </tr>
                     </thead>

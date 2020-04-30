@@ -1,5 +1,8 @@
 @extends('layouts.default')
 @section('content')
+    <?php
+        $order_currency = $order->currency;
+    ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
             <fieldset class="layui-elem-field layui-field-title">
@@ -28,11 +31,27 @@
                         </tr>
                         <tr>
                             <td>币种</td>
-                            <td>{{$order->currency->name or ''}}</td>
+                            <td>{{$order_currency->name or ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>订单状态</td>
+                            <td>{{$order->status_name or ''}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="layui-col-xs4">
+                    <table class="layui-table erp-info-table">
+                        <tr>
+                            <td>下单时间</td>
+                            <td>{{$order->created_at or ''}}</td>
                         </tr>
                         <tr>
                             <td>交期</td>
                             <td>{{$order->delivery_date or ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>创建人</td>
+                            <td>{{$order->user->name or ''}}</td>
                         </tr>
                     </table>
                 </div>
@@ -49,17 +68,18 @@
             <table class="layui-table">
                 <thead>
                 <tr>
-                    <th>序号</th>
-                    <th>商品</th>
+                    <th width="60">序号</th>
                     <th>商品编号</th>
-                    <th>SKU</th>
+                    <th>品名</th>
+                    <th>SKU编号</th>
                     <th>标题</th>
-                    <th>单位</th>
-                    <th>数量</th>
-                    <th>单价</th>
-                    <th>总价</th>
+                    <th width="60">单位</th>
+                    <th width="60">数量</th>
+                    <th width="80">待发货数量</th>
+                    <th width="60">已退数量</th>
+                    <th width="60">单价</th>
+                    <th width="80">金额</th>
                     <th>备注</th>
-                    <th>最后更新时间</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,16 +87,17 @@
                 @foreach($order->items as $item)
                     <tr>
                         <td>{{$index++}}</td>
-                        <td>{{$item->goods->name or ''}}</td>
                         <td>{{$item->goods->code or ''}}</td>
+                        <td>{{$item->goods->name or ''}}</td>
                         <td>{{$item->sku->code or ''}}</td>
                         <td>{{$item->title or ''}}</td>
                         <td>{{$item->unit or ''}}</td>
                         <td>{{$item->quantity or ''}}</td>
-                        <td>{{$item->price or ''}}</td>
-                        <td>{{$item->quantity * $item->price}}</td>
+                        <td>{{$item->pending_delivery_quantity or ''}}</td>
+                        <td>{{$item->back_quantity or ''}}</td>
+                        <td>{{price_format($item->price)}}</td>
+                        <td>{{price_format($item->quantity * $item->price)}}</td>
                         <td>{{$item->note or ''}}</td>
-                        <td>{{$item->updated_at or ''}}</td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -95,16 +116,18 @@
                 <table class="layui-table">
                     <thead>
                     <tr>
-                        <th>序号</th>
+                        <th width="60">序号</th>
                         <th>订单Item</th>
                         <th>出货单号</th>
-                        <th>出货单状态</th>
-                        <th>单位</th>
-                        <th>出货数量</th>
-                        <th>单价</th>
-                        <th>总价</th>
-                        <th>出货时间</th>
-                        <th>最后更新时间</th>
+                        <th width="100">状态</th>
+                        <th width="100">出货时间</th>
+                        <th width="100">创建人</th>
+                        <th width="60">单位</th>
+                        <th width="60">出货数量</th>
+                        <th width="60">真实数量</th>
+                        <th width="60">单价</th>
+                        <th width="80">金额</th>
+                        <th width="80">是否已付款</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -119,12 +142,14 @@
                             <td>{{$orderItem->title or ''}}</td>
                             <td>{{$deliveryOrder->code or ''}}</td>
                             <td>{{$deliveryOrder->status_name or ''}}</td>
+                            <td>{{$deliveryOrder->user->name or ''}}</td>
+                            <td>{{\Carbon\Carbon::parse($deliveryOrder->finished_at)->toDateString()}}</td>
                             <td>{{$orderItem->unit or ''}}</td>
                             <td>{{$deliveryItem->quantity or ''}}</td>
-                            <td>{{$orderItem->price or ''}}</td>
-                            <td>{{$orderItem->price * $deliveryItem->quantity}}</td>
-                            <td>{{$deliveryOrder->finished_at or ''}}</td>
-                            <td>{{$deliveryOrder->updated_at or ''}}</td>
+                            <td>{{$deliveryItem->real_quantity or ''}}</td>
+                            <td>{{price_format($orderItem->price)}}</td>
+                            <td>{{price_format($orderItem->price * $deliveryItem->real_quantity)}}</td>
+                            <td>{{$deliveryItem->is_paid_name}}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -144,13 +169,13 @@
                 <table class="layui-table">
                     <thead>
                     <tr>
-                        <th>序号</th>
+                        <th width="60">序号</th>
                         <th>退货单号</th>
-                        <th>退货方式</th>
+                        <th width="60">退货方式</th>
                         <th>退货原因</th>
-                        <th>状态</th>
-                        <th>创建人</th>
-                        <th>创建时间</th>
+                        <th width="60">状态</th>
+                        <th width="100">创建人</th>
+                        <th width="160">创建时间</th>
                         <th class="erp-static-table-list" style="width: 650px;">
                             <span>退货明细</span>
                             <ul class="erp-static-table-list-ul">
@@ -183,8 +208,8 @@
                                         <li class="erp-static-table-list-li erp-static-table-list-li-first" style="width: 250px;">{{$orderItem->title or ''}}</li>
                                         <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->quantity or ''}}</li>
                                         <li class="erp-static-table-list-li" style="width: 100px;">{{$returnOrderItem->quantity or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->price or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$orderItem->price * $returnOrderItem->quantity}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{price_format($orderItem->price)}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{price_format($orderItem->price * $returnOrderItem->quantity)}}</li>
                                     </ul>
                                 @endforeach
                             </td>
@@ -207,7 +232,7 @@
                 <table class="layui-table">
                     <thead>
                     <tr>
-                        <th>序号</th>
+                        <th width="60">序号</th>
                         <th>操作</th>
                         <th>内容</th>
                         <th>操作人</th>

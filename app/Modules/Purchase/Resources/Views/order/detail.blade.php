@@ -1,5 +1,8 @@
 @extends('layouts.default')
 @section('content')
+    <?php
+        $purchase_order_currency = $order->currency;
+    ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
             <fieldset class="layui-elem-field layui-field-title">
@@ -28,15 +31,27 @@
                         </tr>
                         <tr>
                             <td>币种</td>
-                            <td>{{$order->currency->name or ''}}</td>
+                            <td>{{$purchase_order_currency->name or ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>订单状态</td>
+                            <td>{{$order->status_name or ''}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="layui-col-xs4">
+                    <table class="layui-table erp-info-table">
+                        <tr>
+                            <td>下单时间</td>
+                            <td>{{$order->created_at or ''}}</td>
                         </tr>
                         <tr>
                             <td>交期</td>
                             <td>{{$order->delivery_date or ''}}</td>
                         </tr>
                         <tr>
-                            <td>订单状态</td>
-                            <td>{{$order->status_name or ''}}</td>
+                            <td>创建人</td>
+                            <td>{{$order->user->name or ''}}</td>
                         </tr>
                     </table>
                 </div>
@@ -53,15 +68,17 @@
             <table class="layui-table">
                 <thead>
                 <tr>
-                    <th>序号</th>
-                    <th>产品</th>
+                    <th width="60">序号</th>
                     <th>产品编号</th>
-                    <th>SKU</th>
+                    <th>产品名称</th>
+                    <th>SKU编号</th>
                     <th>标题</th>
-                    <th>单位</th>
-                    <th>数量</th>
-                    <th>单价</th>
-                    <th>总价</th>
+                    <th width="60">单位</th>
+                    <th width="60">数量</th>
+                    <th width="80">待入库数量</th>
+                    <th width="60">已退数量</th>
+                    <th width="60">单价</th>
+                    <th width="80">金额</th>
                     <th>备注</th>
                 </tr>
                 </thead>
@@ -70,14 +87,16 @@
                 @foreach($order->items as $item)
                     <tr>
                         <td>{{$index++}}</td>
-                        <td>{{$item->product->name or ''}}</td>
                         <td>{{$item->product->code or ''}}</td>
+                        <td>{{$item->product->name or ''}}</td>
                         <td>{{$item->sku->code or ''}}</td>
                         <td>{{$item->title or ''}}</td>
                         <td>{{$item->unit or ''}}</td>
                         <td>{{$item->quantity or ''}}</td>
-                        <td>{{$item->price or ''}}</td>
-                        <td>{{$item->quantity * $item->price}}</td>
+                        <td>{{$item->pending_entry_quantity or ''}}</td>
+                        <td>{{$item->back_quantity or ''}}</td>
+                        <td>{{price_format($item->price)}}</td>
+                        <td>{{price_format($item->price * $item->quantity)}}</td>
                         <td>{{$item->note or ''}}</td>
                     </tr>
                 @endforeach
@@ -97,14 +116,16 @@
                 <table class="layui-table">
                     <thead>
                     <tr>
-                        <th>序号</th>
-                        <th>采购订单Item</th>
-                        <th>单位</th>
-                        <th>入库数量</th>
-                        <th>真实数量</th>
-                        <th>单价</th>
-                        <th>总价</th>
-                        <th>入库时间</th>
+                        <th width="60">序号</th>
+                        <th>Item</th>
+                        <th width="100">入库时间</th>
+                        <th width="100">操作人</th>
+                        <th width="60">单位</th>
+                        <th width="100">入库数量</th>
+                        <th width="100">真实数量</th>
+                        <th width="60">单价</th>
+                        <th width="80">金额</th>
+                        <th width="80">是否已付款</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -116,12 +137,14 @@
                         <tr>
                             <td>{{$index++}}</td>
                             <td>{{$purchaseOrderItem->title or ''}}</td>
+                            <td>{{\Carbon\Carbon::parse($entry->created_at)->toDateString()}}</td>
+                            <td>{{$entry->user->name or ''}}</td>
                             <td>{{$purchaseOrderItem->unit or ''}}</td>
                             <td>{{$entry->quantity}}</td>
                             <td>{{$entry->real_quantity}}</td>
-                            <td>{{$purchaseOrderItem->price or ''}}</td>
-                            <td>{{$purchaseOrderItem->price * $entry->real_quantity}}</td>
-                            <td>{{$entry->created_at}}</td>
+                            <td>{{price_format($purchaseOrderItem->price)}}</td>
+                            <td>{{price_format($purchaseOrderItem->price * $entry->real_quantity)}}</td>
+                            <td>{{$entry->is_paid_name}}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -141,13 +164,13 @@
                 <table class="layui-table">
                     <thead>
                     <tr>
-                        <th>序号</th>
+                        <th width="60">序号</th>
                         <th>退货单号</th>
-                        <th>退货方式</th>
+                        <th width="60">退货方式</th>
                         <th>退货原因</th>
-                        <th>状态</th>
-                        <th>创建人</th>
-                        <th>创建时间</th>
+                        <th width="60">状态</th>
+                        <th width="100">创建人</th>
+                        <th width="160">创建时间</th>
                         <th class="erp-static-table-list" style="width: 650px;">
                             <span>退货明细</span>
                             <ul class="erp-static-table-list-ul">
@@ -181,7 +204,7 @@
                                         <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseOrderItem->quantity or ''}}</li>
                                         <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseReturnOrderItem->quantity or ''}}</li>
                                         <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseOrderItem->price or ''}}</li>
-                                        <li class="erp-static-table-list-li" style="width: 100px;">{{$purchaseOrderItem->price * $purchaseReturnOrderItem->quantity}}</li>
+                                        <li class="erp-static-table-list-li" style="width: 100px;">{{price_format($purchaseOrderItem->price * $purchaseReturnOrderItem->quantity)}}</li>
                                     </ul>
                                 @endforeach
                             </td>

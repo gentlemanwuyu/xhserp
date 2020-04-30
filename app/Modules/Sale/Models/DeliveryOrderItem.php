@@ -74,4 +74,9 @@ class DeliveryOrderItem extends Model
 
         return $this;
     }
+
+    public function getIsPaidNameAttribute()
+    {
+        return YES == $this->is_paid ? '是' : '否';
+    }
 }

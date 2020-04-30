@@ -9,6 +9,7 @@
 namespace App\Modules\Warehouse\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Index\Models\User;
 use App\Modules\Purchase\Models\PurchaseOrderItem;
 
 class SkuEntry extends Model
@@ -18,6 +19,11 @@ class SkuEntry extends Model
     public function purchaseOrderItem()
     {
         return $this->belongsTo(PurchaseOrderItem::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function exchanges()
@@ -66,5 +72,10 @@ class SkuEntry extends Model
         }
 
         return $this;
+    }
+
+    public function getIsPaidNameAttribute()
+    {
+        return YES == $this->is_paid ? '是' : '否';
     }
 }
