@@ -75,9 +75,7 @@
                         {field: 'code', title: '编号', align: 'center'},
                         {field: 'company', title: '公司', width: 250, align: 'center'},
                         {field: 'tax_name', title: '税率', width: 100, align: 'center'},
-                        {field: 'currency_name', title: '币种', width: 100, align: 'center', templet: function (d) {
-                            return d.currency.name;
-                        }},
+                        {field: 'currency_code', title: '币种', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'monthly_day', title: '月结天数', width: 100, align: 'center', templet: function (d) {
                             return "{{\PaymentMethod::MONTHLY}}" == d.payment_method ? d.monthly_day : '';

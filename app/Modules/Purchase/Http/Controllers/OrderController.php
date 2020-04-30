@@ -80,7 +80,7 @@ class OrderController extends Controller
         foreach ($paginate as $order) {
             $order->items->map(function ($item) {
                 $item->product;
-                $item->sku;
+                $item->sku->inventory;
                 $item->setAppends(['entried_quantity', 'pending_entry_quantity', 'back_quantity']);
 
                 return $item;
