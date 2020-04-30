@@ -2,6 +2,7 @@
 @section('content')
     <?php
         $order_currency = $order->currency;
+        $customer = $order->customer;
     ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
@@ -19,19 +20,21 @@
                         </tr>
                         <tr>
                             <td>客户</td>
-                            <td>{{$order->customer->name or ''}}</td>
+                            <td>{{$customer->name or ''}}</td>
                         </tr>
+                        @if(isset($customer) && \PaymentMethod::CREDIT == $customer->payment_method)
+                            <tr>
+                                <td>额度</td>
+                                <td>{{$customer->credit or ''}}</td>
+                            </tr>
+                            <tr>
+                                <td>剩余额度</td>
+                                <td>{{price_format($customer->remained_credit)}}</td>
+                            </tr>
+                        @endif
                         <tr>
                             <td>付款方式</td>
                             <td>{{$order->payment_method_name or ''}}</td>
-                        </tr>
-                        <tr>
-                            <td>税率</td>
-                            <td>{{$order->tax_name or ''}}</td>
-                        </tr>
-                        <tr>
-                            <td>币种</td>
-                            <td>{{$order_currency->name or ''}}</td>
                         </tr>
                         <tr>
                             <td>订单状态</td>
@@ -41,6 +44,14 @@
                 </div>
                 <div class="layui-col-xs4">
                     <table class="layui-table erp-info-table">
+                        <tr>
+                            <td>税率</td>
+                            <td>{{$order->tax_name or ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>币种</td>
+                            <td>{{$order_currency->name or ''}}</td>
+                        </tr>
                         <tr>
                             <td>下单时间</td>
                             <td>{{$order->created_at or ''}}</td>

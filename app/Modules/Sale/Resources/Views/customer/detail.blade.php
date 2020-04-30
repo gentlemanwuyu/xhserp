@@ -30,6 +30,10 @@
                             <td>传真</td>
                             <td>{{$customer->fax or ''}}</td>
                         </tr>
+                        <tr>
+                            <td>负责人</td>
+                            <td>{{$customer->manager->name or ''}}</td>
+                        </tr>
                     </table>
                 </div>
                 <div class="layui-col-xs4">
@@ -51,6 +55,10 @@
                                 <td>额度</td>
                                 <td>{{$customer->credit or ''}}</td>
                             </tr>
+                            <tr>
+                                <td>剩余额度</td>
+                                <td>{{price_format($customer->remained_credit)}}</td>
+                            </tr>
                         @elseif(\PaymentMethod::MONTHLY == $customer->payment_method)
                             <tr>
                                 <td>月结天数</td>
@@ -60,10 +68,6 @@
                         <tr>
                             <td>地址</td>
                             <td>{{$customer->full_address or ''}}</td>
-                        </tr>
-                        <tr>
-                            <td>负责人</td>
-                            <td>{{$customer->manager->name or ''}}</td>
                         </tr>
                         <tr>
                             <td>简介</td>

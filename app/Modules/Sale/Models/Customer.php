@@ -344,7 +344,7 @@ class Customer extends Model
     }
 
     /**
-     * 剩余额度
+     * 剩余额度(人民币)
      *
      * @return mixed|null
      */
@@ -359,7 +359,7 @@ class Customer extends Model
         foreach ($this->processingOrder as $order) {
             $real_paid_amount += $order->real_paid_amount;
             foreach ($order->items as $item) {
-                $processing_order_amount += $item->price * ($item->quantity - $item->back_quantity);
+                $processing_order_amount += $item->price * ($item->quantity - $item->back_quantity) * $order->currency->rate;
             }
         }
 
@@ -383,7 +383,7 @@ class Customer extends Model
     }
 
     /**
-     * 已付款完成订单的退款金额
+     * 已付款完成订单的退货金额
      *
      * @return int
      */
@@ -394,6 +394,7 @@ class Customer extends Model
         $return_order_items = ReturnOrderItem::leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
             ->leftJoin('orders AS o', 'o.id', '=', 'ro.order_id')
             ->leftJoin('order_items AS oi', 'oi.id', '=', 'return_order_items.order_item_id')
+            ->leftJoin('currencies AS c', 'c.code', '=', 'o.currency_code')
             ->whereNull('ro.deleted_at')
             ->whereNull('o.deleted_at')
             ->where('o.customer_id', $this->id)
@@ -401,10 +402,10 @@ class Customer extends Model
             ->where('ro.status', ReturnOrder::ENTRIED)
             ->where('o.status', Order::FINISHED)
             ->where('o.payment_status', Order::FINISHED_PAYMENT)
-            ->select(['return_order_items.quantity AS back_quantity', 'oi.price'])
+            ->select(['return_order_items.quantity AS back_quantity', 'oi.price', 'c.rate'])
             ->get();
         foreach ($return_order_items as $item) {
-            $back_amount += $item->back_quantity * $item->price;
+            $back_amount += $item->back_quantity * $item->price * $item->rate;
         }
 
         return $back_amount;

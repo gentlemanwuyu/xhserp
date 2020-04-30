@@ -39,7 +39,7 @@
                             <div class="layui-form-item" id="remained_credit_item">
                                 <label class="layui-form-label">剩余额度</label>
                                 <div class="layui-input-block">
-                                    <span class="erp-form-span">{{$customer->remained_credit}}</span>
+                                    <span class="erp-form-span">{{price_format($customer->remained_credit)}}</span>
                                 </div>
                             </div>
                         @endif
@@ -320,7 +320,7 @@
                         html += '<div class="layui-form-item" id="remained_credit_item">';
                         html += '<label class="layui-form-label">剩余额度</label>';
                         html += '<div class="layui-input-block">';
-                        html += '<span class="erp-form-span">' + customer.remained_credit + '</span>';
+                        html += '<span class="erp-form-span">' + customer.remained_credit.toFixed(2) + '</span>';
                         html += '</div>';
                         html += '</div>';
                         $(data.elem).parents('.layui-form-item').after(html);

@@ -40,6 +40,10 @@ class Order extends Model
     // 付款状态
     const PENDING_PAYMENT = 1; // 待付款
     const FINISHED_PAYMENT = 2; // 完成付款
+    static $payment_statuses = [
+        self::PENDING_PAYMENT => '待付款',
+        self::FINISHED_PAYMENT => '完成付款',
+    ];
 
     public function syncItems($items)
     {
@@ -132,6 +136,11 @@ class Order extends Model
     public function getStatusNameAttribute()
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
+    }
+
+    public function getPaymentStatusNameAttribute()
+    {
+        return isset(self::$payment_statuses[$this->payment_status]) ? self::$payment_statuses[$this->payment_status] : '';
     }
 
     public function getTaxNameAttribute()

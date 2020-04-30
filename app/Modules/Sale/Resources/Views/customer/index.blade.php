@@ -92,9 +92,7 @@
                         {field: 'code', title: '编号', width: 160, align: 'center', fixed: 'left'},
                         {field: 'company', title: '公司', width: 250, align: 'center'},
                         {field: 'tax_name', title: '税率', width: 100, align: 'center'},
-                        {field: 'currency_name', title: '币种', width: 100, align: 'center', templet: function (d) {
-                            return d.currency.name;
-                        }},
+                        {field: 'currency_code', title: '币种', width: 100, align: 'center'},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'manager_name', title: '负责人', width: 100, align: 'center', templet: function (d) {
                             return null == d.manager ? '' : d.manager.name;

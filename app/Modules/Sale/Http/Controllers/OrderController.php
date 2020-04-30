@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Modules\Sale\Http\Requests\OrderRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Currency;
 use App\Modules\Goods\Models\Goods;
 use App\Modules\Sale\Models\Customer;
 use App\Modules\Sale\Models\Order;
@@ -69,6 +70,9 @@ class OrderController extends Controller
         if ($request->get('status')) {
             $query = $query->where('status', $request->get('status'));
         }
+        if ($request->get('payment_status')) {
+            $query = $query->where('payment_status', $request->get('payment_status'));
+        }
         if ($request->get('payment_method')) {
             $query = $query->where('payment_method', $request->get('payment_method'));
         }
@@ -96,7 +100,7 @@ class OrderController extends Controller
             $order->customer;
             $order->user;
             $order->currency;
-            $order->setAppends(['payment_method_name', 'status_name', 'tax_name', 'returnable', 'deliverable', 'deletable', 'cancelable']);
+            $order->setAppends(['payment_method_name', 'status_name', 'payment_status_name', 'tax_name', 'returnable', 'deliverable', 'deletable', 'cancelable']);
         }
 
         return response()->json($paginate);
@@ -138,9 +142,10 @@ class OrderController extends Controller
                 }else {
                     if (\PaymentMethod::CREDIT == $customer->payment_method) {
                         // 判断是否超过额度
+                        $currency = Currency::where('code', $order_data['currency_code'])->first();
                         $current_amount = 0; // 当前订单得金额
                         foreach ($request->get('items') as $item) {
-                            $current_amount += $item['quantity'] * $item['price'];
+                            $current_amount += $item['quantity'] * $item['price'] * $currency->rate;
                         }
                         if ($customer->remained_credit >= $current_amount) {
                             $order_data['status'] = Order::AGREED;

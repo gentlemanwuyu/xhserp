@@ -22,6 +22,14 @@
                 </select>
             </div>
             <div class="layui-col-xs2">
+                <select name="payment_status">
+                    <option value="">付款状态</option>
+                    @foreach(\App\Modules\Sale\Models\Order::$payment_statuses as $status_id => $status_name)
+                        <option value="{{$status_id}}">{{$status_name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="layui-col-xs2">
                 <select name="payment_method">
                     <option value="">付款方式</option>
                     @foreach(\App\Modules\Sale\Models\Customer::$payment_methods as $method_id => $payment_method_name)
@@ -97,6 +105,8 @@
                             return d.customer.name;
                         }},
                         {field: 'status_name', title: '状态', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'payment_status_name', title: '付款状态', width: 100, align: 'center', fixed: 'left'},
+                        {field: 'currency_code', title: '币种', width: 100, align: 'center', fixed: 'left'},
                         {field: 'total_amount', title: '总金额', width: 100, align: 'center', fixed: 'left', templet: function (d) {
                             var total_amount = 0;
                             d.items.forEach(function (item, key) {
@@ -105,15 +115,12 @@
                             return total_amount.toFixed(2);
                         }},
                         {field: 'tax_name', title: '税率', width: 100, align: 'center'},
-                        {field: 'currency_name', title: '币种', width: 100, align: 'center', templet: function (d) {
-                            return d.currency.name;
-                        }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
                         {field: 'delivery_date', title: '交期', width: 120, align: 'center'},
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
-                        {field: 'detail', title: '订单明细', width: 870, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '订单明细', width: 770, align: 'center', templet: function (d) {
                             var html = '';
                             d.items.forEach(function (item, key) {
                                 if (0 == key) {
@@ -123,12 +130,11 @@
                                 }
 
                                 var amount = item.quantity * item.price;
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + item.goods.name + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 150px;">' + item.sku.code + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku.stock + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.pending_delivery_quantity + '</li>';
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 250px;" title="' + item.title + '">' + item.title + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.back_quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.pending_delivery_quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku.stock + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + amount.toFixed(2) + '</li>';
                                 html += '</ul>';
@@ -145,12 +151,11 @@
                     if (0 == $('th[data-field=detail] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
-                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">商品</li>';
-                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">SKU</li>';
-                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存数量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">待出货数量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">数量</li>';
+                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 250px; text-align: center;">品名</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">订单数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">退货数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">待出货数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">库存数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">价格</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">金额</li>';
                         html += '</ul>';
