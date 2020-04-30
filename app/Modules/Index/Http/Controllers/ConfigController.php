@@ -4,6 +4,7 @@ namespace App\Modules\Index\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Index\Http\Requests\ConfigRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\Config;
 
@@ -45,7 +46,7 @@ class ConfigController extends Controller
         return view('index::config.form', $data);
     }
 
-    public function save(Request $request)
+    public function save(ConfigRequest $request)
     {
         try {
             $data = [

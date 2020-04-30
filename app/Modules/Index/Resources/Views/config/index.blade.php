@@ -89,7 +89,7 @@
                                         },
                                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                                             layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon:2}, time: 2000);
+                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                             return false;
                                         }
                                     });
