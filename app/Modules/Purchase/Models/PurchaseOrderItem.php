@@ -58,6 +58,21 @@ class PurchaseOrderItem extends Model
     }
 
     /**
+     * 所有的采购退货Item，包含已出库的和已完成
+     *
+     * @return mixed
+     */
+    public function backItems()
+    {
+        return $this->hasMany(PurchaseReturnOrderItem::class)
+            ->leftJoin('purchase_return_orders AS pro', 'pro.id', '=', 'purchase_return_order_items.purchase_return_order_id')
+            ->whereNull('pro.deleted_at')
+            ->where('purchase_return_order_items.purchase_order_item_id', $this->id)
+            ->where('pro.method', PurchaseReturnOrder::BACK)
+            ->whereIn('pro.status', [PurchaseReturnOrder::EGRESSED, PurchaseReturnOrder::FINISHED]);
+    }
+
+    /**
      * 已入库数量
      *
      * @return number
@@ -69,16 +84,19 @@ class PurchaseOrderItem extends Model
         return $entries ? array_sum($entries) : 0;
     }
 
+    /**
+     * 退货数量，包括已入库的和已完成的
+     *
+     * @return int|number
+     */
     public function getBackQuantityAttribute()
     {
-        $back_quantities = PurchaseReturnOrderItem::leftJoin('purchase_return_orders AS pro', 'pro.id', '=', 'purchase_return_order_items.purchase_return_order_id')
-            ->where('purchase_order_item_id', $this->id)
-            ->where('pro.method', PurchaseReturnOrder::BACK)
-            ->where('pro.status', PurchaseReturnOrder::EGRESSED)
-            ->pluck('quantity')
-            ->toArray();
+        $back_quantity = 0;
+        foreach ($this->backItems as $purchase_return_order_item) {
+            $back_quantity += $purchase_return_order_item->quantity;
+        }
 
-        return $back_quantities ? array_sum($back_quantities) : 0;
+        return $back_quantity;
     }
 
     /**

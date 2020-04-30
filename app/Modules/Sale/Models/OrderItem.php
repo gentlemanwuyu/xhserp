@@ -89,6 +89,7 @@ class OrderItem extends Model
     {
         return $this->hasMany(ReturnOrderItem::class)
             ->leftJoin('return_orders AS ro', 'ro.id', '=', 'return_order_items.return_order_id')
+            ->whereNull('ro.deleted_at')
             ->where('return_order_items.order_item_id', $this->id)
             ->where('ro.method', ReturnOrder::BACK)
             ->whereIn('ro.status', [ReturnOrder::ENTRIED, ReturnOrder::FINISHED]);
