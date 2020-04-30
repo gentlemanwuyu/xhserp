@@ -14,6 +14,12 @@
                 <div class="layui-row layui-col-space30">
                     <div class="layui-col-xs4">
                         <div class="layui-form-item">
+                            <label class="layui-form-label">客户名称</label>
+                            <div class="layui-input-block">
+                                <span class="erp-form-span">{{$customer->name or ''}}</span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label">可抵扣金额</label>
                             <div class="layui-input-block">
                                 <span class="erp-form-span">{{price_format($customer->total_remained_amount + $customer->back_amount)}}</span>
@@ -51,6 +57,7 @@
                         <th>币种</th>
                         <th>收款金额</th>
                         <th>剩余金额</th>
+                        <th>剩余金额(CNY)</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -62,10 +69,12 @@
                             <td>{{$collection->currency->code or ''}}</td>
                             <td>{{$collection->amount}}</td>
                             <td>{{$collection->remained_amount}}</td>
+                            <td>{{price_format($collection->remained_amount * $collection->currency->rate)}}</td>
                         </tr>
                     @endforeach
                     <tr class="erp-total-row">
                         <td>合计</td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -111,9 +120,10 @@
                         {field: 'order_quantity', title: '订单数量', width: 100, align: 'center'},
                         {field: 'delivery_code', title: '出货单编号', align: 'center'},
                         {field: 'delivery_quantity', title: '出货数量', width: 100, align: 'center'},
+                        {field: 'real_quantity', title: '真实数量', width: 100, align: 'center'},
                         {field: 'price', title: '单价', width: 100, align: 'center'},
                         {field: 'cny_price', title: '单价(CNY)', width: 150, align: 'center'},
-                        {field: 'cny_amount', title: '总价(CNY)', width: 150, align: 'center', totalRow: true},
+                        {field: 'cny_amount', title: '应收金额(CNY)', width: 150, align: 'center', totalRow: true},
                         {field: 'delivery_date', title: '出货日期', width: 150, align: 'center', templet: function (d) {
                             return moment(d.delivery_at).format('YYYY-MM-DD');
                         }}

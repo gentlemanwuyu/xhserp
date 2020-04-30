@@ -72,7 +72,7 @@
                             return d.back_amount.toFixed(2);
                         }},
                         {field: 'payment_method_name', title: '付款方式', width: 100, align: 'center'},
-                        {field: 'detail', title: '出货明细', width: 950, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '出货明细', width: 1280, align: 'center', templet: function (d) {
                             var html = '';
                             d.unpaid_items.forEach(function (item, key) {
                                 if (0 == key) {
@@ -81,14 +81,18 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                var amount = item.delivery_quantity * item.price;
-                                var delivery_at = null == item.delivery_at ? '' : item.delivery_at;
+                                var cny_price = item.price * item.rate
+                                        ,cny_amount = cny_price * item.real_quantity
+                                        ,delivery_at = null == item.delivery_at ? '' : item.delivery_at;
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + item.order_code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 250px;" title="' + item.title + '">' + item.title + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.currency_code + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.order_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.delivery_quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.real_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + item.price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + amount.toFixed(2) + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + cny_price.toFixed(2) + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + cny_amount.toFixed(2) + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 120px;">' + moment(delivery_at).format('YYYY-MM-DD') + '</li>';
                                 html += '</ul>';
                             });
@@ -104,10 +108,13 @@
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">订单号</li>';
                         html += '<li class="erp-table-list-li" style="width: 250px; text-align: center;">品名</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">币种</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">订单数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">出货数量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">价格</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">金额</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">真实数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">单价</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">单价(CNY)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">应收金额(CNY)</li>';
                         html += '<li class="erp-table-list-li" style="width: 120px; text-align: center;">出货日期</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);
