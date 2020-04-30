@@ -50,7 +50,7 @@ class PaymentController extends Controller
 
         foreach ($paginate as $payment) {
             $payment->deductions->map(function ($item) {
-                $item->skuEntry->purchaseOrderItem->purchaseOrder;
+                $item->skuEntry->purchaseOrderItem->purchaseOrder->currency;
 
                 return $item;
             });

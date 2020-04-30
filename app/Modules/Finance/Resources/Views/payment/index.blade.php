@@ -86,7 +86,7 @@
                         {field: 'creator', title: '创建人', width: 120, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},
-                        {field: 'detail', title: '抵扣明细', width: 710, align: 'center', templet: function (d) {
+                        {field: 'detail', title: '抵扣明细', width: 1250, align: 'center', templet: function (d) {
                             var html = '';
                             d.deductions.forEach(function (item, key) {
                                 if (0 == key) {
@@ -95,14 +95,18 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                var entry_amount = item.sku_entry.quantity * item.sku_entry.purchase_order_item.price;
+                                var cny_price = item.sku_entry.purchase_order_item.price * item.sku_entry.purchase_order_item.purchase_order.currency.rate
+                                        ,cny_amount = cny_price * item.sku_entry.real_quantity;
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px;">' + item.sku_entry.purchase_order_item.purchase_order.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 200px;">' + item.sku_entry.purchase_order_item.title + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.purchase_order_item.quantity + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku_entry.quantity + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 80px;">' + item.sku_entry.purchase_order_item.price + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + entry_amount.toFixed(2) + '</li>';
-                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.amount + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.quantity + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.real_quantity + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + moment(item.sku_entry.created_at).format('YYYY-MM-DD') + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + item.sku_entry.purchase_order_item.price + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + cny_price.toFixed(2) + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + cny_amount.toFixed(2) + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + item.amount + '</li>';
                                 html += '</ul>';
                             });
                             return html;
@@ -118,12 +122,15 @@
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 150px; text-align: center;">订单编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 200px; text-align: center;">品名</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">订单数量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">入库数量</li>';
-                        html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">价格</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">入库金额</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">抵扣金额</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">入库数量</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">真实数量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">入库时间</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">价格(CNY)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">应付金额(CNY)</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">抵扣金额(CNY)</li>';
                         html += '</ul>';
                         $('th[data-field=detail]').append(html);
                     }
