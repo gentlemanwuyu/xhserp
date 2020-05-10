@@ -4,6 +4,7 @@ namespace App\Modules\Index\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Index\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
@@ -64,7 +65,7 @@ class UserController extends Controller
         return view('index::user.form', $data);
     }
 
-    public function save(Request $request)
+    public function save(UserRequest $request)
     {
         try {
             $data = [
@@ -74,14 +75,10 @@ class UserController extends Controller
                 'gender_id' => $request->get('gender_id', 0),
             ];
 
-            // 判断邮箱是否已存在
-            if ($request->get('email')) {
-                $user = User::where('email', $request->get('email'))->first();
-                if ($user) {
-                    return response()->json(['status' => 'fail', 'msg' => '邮箱已存在！']);
-                }
-
+            // 新增用户时才有邮箱, 并默认正常状态
+            if (empty($request->get('user_id'))) {
                 $data['email'] = $request->get('email');
+                $data['status'] = User::ENABLED;
             }
 
             if ($request->get('is_admin')) {

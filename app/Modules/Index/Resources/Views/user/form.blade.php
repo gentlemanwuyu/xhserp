@@ -30,7 +30,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">生日</label>
                             <div class="layui-input-block">
-                                <input type="text" name="birthday"  lay-verify="date" class="layui-input" value="{{$user->birthday or ''}}">
+                                <input type="text" name="birthday"  lay-verify="date" class="layui-input" value="{{$user->birthday or ''}}" autocomplete="off">
                             </div>
                         </div>
                         <div class="layui-form-item" pane="">
