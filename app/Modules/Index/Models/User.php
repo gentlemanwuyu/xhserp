@@ -35,6 +35,14 @@ class User extends Authenticatable
         self::FEMALE    => '女',
     ];
 
+    // 状态
+    const ENABLED = 1;
+    const DISABLED = 2;
+    static $statuses = [
+        self::ENABLED => '已启用',
+        self::DISABLED => '已禁用',
+    ];
+
     /**
      * gender属性访问器
      *
@@ -44,6 +52,11 @@ class User extends Authenticatable
     public function getGenderAttribute()
     {
         return isset(self::$genders[$this->gender_id]) ? self::$genders[$this->gender_id] : '';
+    }
+
+    public function getStatusNameAttribute()
+    {
+        return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
     }
 
     /**

@@ -14,6 +14,14 @@
             <div class="layui-col-xs2">
                 <input type="text" name="name" placeholder="用户名" class="layui-input">
             </div>
+            <div class="layui-col-xs2">
+                <select name="status">
+                    <option value="">状态</option>
+                    @foreach(\App\Modules\Index\Models\User::$statuses as $status_id => $status_name)
+                        <option value="{{$status_id}}">{{$status_name}}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs4">
@@ -67,6 +75,7 @@
 
                         return roles_html;
                     }},
+                    {field: 'status_name', title: '状态', width: 100, align: 'center'},
                     {field: 'created_at', title: '创建时间', align: 'center', sort: true},
                     {field: 'updated_at', title: '最后更新时间', align: 'center', sort: true},
                     {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}

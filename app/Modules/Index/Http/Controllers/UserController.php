@@ -32,11 +32,14 @@ class UserController extends Controller
         if ($request->get('name')) {
             $query = $query->where('name', 'like', '%' . $request->get('name') . '%');
         }
+        if ($request->get('status')) {
+            $query = $query->where('status', $request->get('status'));
+        }
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
         foreach ($paginate as $user) {
             $user->roles;
-            $user->setAppends(['gender']);
+            $user->setAppends(['gender', 'status_name']);
         }
 
         return response()->json($paginate);
