@@ -289,16 +289,16 @@
                                 <a lay-href="{{route('index::permission.index')}}"><i class="layui-icon layui-icon-vercode"></i>权限管理</a>
                             </dd>
                             @endcan
-                            @can('system_config')
+                            @if(YES == \Auth::user()->is_admin)
                             <dd>
                                 <a lay-href="{{route('index::config.index')}}"><i class="layui-icon layui-icon-set-sm"></i>系统配置</a>
                             </dd>
-                            @endcan
-                            @can('system_log')
+                            @endif
+                            @if(YES == \Auth::user()->is_admin)
                             <dd>
                                 <a lay-href="{{route('index::index.logs')}}"><i class="layui-icon layui-icon-log"></i>系统日志</a>
                             </dd>
-                            @endcan
+                            @endif
                         </dl>
                     </li>
                     @endcan

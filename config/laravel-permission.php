@@ -333,22 +333,22 @@ return [
                 [ // 权限管理
                     'name' => 'permission_management', 'display_name' => '权限管理', 'route' => '', 'type' => 1, 'children' =>
                     [
-                        ['name' => 'add_permission', 'display_name' => '添加权限', 'route' => '', 'type' => 2],
-                        ['name' => 'edit_permission', 'display_name' => '编辑权限', 'route' => '', 'type' => 2],
-                        ['name' => 'delete_permission', 'display_name' => '删除权限', 'route' => '', 'type' => 2],
+//                        ['name' => 'add_permission', 'display_name' => '添加权限', 'route' => '', 'type' => 2],
+//                        ['name' => 'edit_permission', 'display_name' => '编辑权限', 'route' => '', 'type' => 2],
+//                        ['name' => 'delete_permission', 'display_name' => '删除权限', 'route' => '', 'type' => 2],
                     ]
                 ],
-                [ // 系统配置
-                    'name' => 'system_config', 'display_name' => '系统配置', 'route' => '', 'type' => 1, 'children' =>
-                    [
-                        ['name' => 'add_system_config', 'display_name' => '添加系统配置', 'route' => '', 'type' => 2],
-                        ['name' => 'edit_system_config', 'display_name' => '编辑系统配置', 'route' => '', 'type' => 2],
-                        ['name' => 'delete_system_config', 'display_name' => '删除系统配置', 'route' => '', 'type' => 2],
-                    ]
-                ],
-                [ // 系统日志
-                    'name' => 'system_log', 'display_name' => '系统日志', 'route' => '', 'type' => 1, 'children' => []
-                ],
+//                [ // 系统配置
+//                    'name' => 'system_config', 'display_name' => '系统配置', 'route' => '', 'type' => 1, 'children' =>
+//                    [
+//                        ['name' => 'add_system_config', 'display_name' => '添加系统配置', 'route' => '', 'type' => 2],
+//                        ['name' => 'edit_system_config', 'display_name' => '编辑系统配置', 'route' => '', 'type' => 2],
+//                        ['name' => 'delete_system_config', 'display_name' => '删除系统配置', 'route' => '', 'type' => 2],
+//                    ]
+//                ],
+//                [ // 系统日志
+//                    'name' => 'system_log', 'display_name' => '系统日志', 'route' => '', 'type' => 1, 'children' => []
+//                ],
             ]
         ],
     ],
