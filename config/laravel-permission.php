@@ -313,7 +313,7 @@ return [
                         ['name' => 'assign_user_permission', 'display_name' => '分配用户权限', 'route' => '', 'type' => 2],
                         ['name' => 'add_user', 'display_name' => '添加用户', 'route' => '', 'type' => 2],
                         ['name' => 'edit_user', 'display_name' => '编辑用户', 'route' => '', 'type' => 2],
-                        ['name' => 'delete_user', 'display_name' => '删除用户', 'route' => '', 'type' => 2],
+//                        ['name' => 'delete_user', 'display_name' => '删除用户', 'route' => '', 'type' => 2],
                     ]
                 ],
 //                [ // 组织结构

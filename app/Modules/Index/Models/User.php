@@ -11,6 +11,21 @@ namespace App\Modules\Index\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
+use App\Modules\Warehouse\Models\Express;
+use App\Modules\Warehouse\Models\InventoryLog;
+use App\Modules\Sale\Models\Order;
+use App\Modules\Sale\Models\OrderLog;
+use App\Modules\Sale\Models\Customer;
+use App\Modules\Sale\Models\ReturnOrder;
+use App\Modules\Sale\Models\DeliveryOrder;
+use App\Modules\Sale\Models\ReturnOrderLog;
+use App\Modules\Sale\Models\PaymentMethodApplication;
+use App\Modules\Sale\Models\PaymentMethodApplicationLog;
+use App\Modules\Purchase\Models\PurchaseOrder;
+use App\Modules\Purchase\Models\PurchaseOrderLog;
+use App\Modules\Purchase\Models\PurchaseReturnOrder;
+use App\Modules\Finance\Models\Payment;
+use App\Modules\Finance\Models\Collection;
 
 class User extends Authenticatable
 {
@@ -62,6 +77,65 @@ class User extends Authenticatable
     public function getIsAdminNameAttribute()
     {
         return YES == $this->is_admin ? '是' : '否';
+    }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        if (Payment::where('user_id', $this->id)->orWhere('pay_user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (Collection::where('user_id', $this->id)->orWhere('collect_user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (Config::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (Customer::where('manager_id', $this->id)->exists()) {
+            return false;
+        }
+        if (DeliveryOrder::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (Express::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (InventoryLog::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (Order::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (OrderLog::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (PaymentMethodApplication::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (PaymentMethodApplicationLog::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (PurchaseOrder::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (PurchaseOrderLog::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (PurchaseReturnOrder::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (ReturnOrder::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+        if (ReturnOrderLog::where('user_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

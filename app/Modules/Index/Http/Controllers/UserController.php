@@ -45,9 +45,14 @@ class UserController extends Controller
         }
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
+
+        $appends = ['gender', 'status_name', 'is_admin_name'];
+        if (YES == Auth::user()->is_admin) {
+            $appends[] = 'deletable';
+        }
         foreach ($paginate as $user) {
             $user->roles;
-            $user->setAppends(['gender', 'status_name', 'is_admin_name']);
+            $user->setAppends($appends);
         }
 
         return response()->json($paginate);

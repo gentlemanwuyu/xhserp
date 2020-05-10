@@ -114,38 +114,40 @@
                         });
                         @endcan
 
-                        @can('delete_user')
-                        actions.push({
-                            title: "删除",
-                            event: function() {
-                                layer.confirm("确认要删除该用户？", {icon: 3, title:"确认"}, function (index) {
-                                    layer.close(index);
-                                    var load_index = layer.load();
-                                    $.ajax({
-                                        method: "post",
-                                        url: "{{route('index::user.delete')}}",
-                                        data: {user_id: data.id},
-                                        success: function (data) {
-                                            layer.close(load_index);
-                                            if ('success' == data.status) {
-                                                layer.msg("用户删除成功", {icon: 1, time: 2000}, function () {
-                                                    tableIns.reload();
-                                                });
-                                            } else {
-                                                layer.msg("用户删除失败:"+data.msg, {icon: 2, time: 2000});
+                        @if(YES == \Auth::user()->is_admin)
+                        if (data.deletable) {
+                            actions.push({
+                                title: "删除",
+                                event: function() {
+                                    layer.confirm("确认要删除该用户？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('index::user.delete')}}",
+                                            data: {user_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("用户删除成功", {icon: 1, time: 2000}, function () {
+                                                        tableIns.reload();
+                                                    });
+                                                } else {
+                                                    layer.msg("用户删除失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
                                                 return false;
                                             }
-                                        },
-                                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                            layer.close(load_index);
-                                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
-                                            return false;
-                                        }
+                                        });
                                     });
-                                });
-                            }
-                        });
-                        @endcan
+                                }
+                            });
+                        }
+                        @endif
 
                         return actions;
                     });
