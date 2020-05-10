@@ -10,6 +10,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\Modules\Index\Models\User;
 
 class ErpInstall extends Command
 {
@@ -84,7 +85,9 @@ class ErpInstall extends Command
             'name' => 'admin',
             'email' => '492444775@qq.com',
             'password' => bcrypt('admin'),
-            'is_admin' => 1,
+            'gender_id' => User::MALE,
+            'is_admin' => YES,
+            'status' => User::ENABLED,
         ]);
     }
 }

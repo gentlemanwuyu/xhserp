@@ -39,7 +39,7 @@ class User extends Authenticatable
     const ENABLED = 1;
     const DISABLED = 2;
     static $statuses = [
-        self::ENABLED => '已启用',
+        self::ENABLED => '正常',
         self::DISABLED => '已禁用',
     ];
 
@@ -57,6 +57,11 @@ class User extends Authenticatable
     public function getStatusNameAttribute()
     {
         return isset(self::$statuses[$this->status]) ? self::$statuses[$this->status] : '';
+    }
+
+    public function getIsAdminNameAttribute()
+    {
+        return YES == $this->is_admin ? '是' : '否';
     }
 
     /**

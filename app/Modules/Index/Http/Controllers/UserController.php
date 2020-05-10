@@ -35,11 +35,18 @@ class UserController extends Controller
         if ($request->get('status')) {
             $query = $query->where('status', $request->get('status'));
         }
+        if (NO == Auth::user()->is_admin) {
+            $query = $query->where('is_admin', NO);
+        }else {
+            if ('' !== $request->get('is_admin', '')) {
+                $query = $query->where('is_admin', $request->get('is_admin'));
+            }
+        }
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
         foreach ($paginate as $user) {
             $user->roles;
-            $user->setAppends(['gender', 'status_name']);
+            $user->setAppends(['gender', 'status_name', 'is_admin_name']);
         }
 
         return response()->json($paginate);

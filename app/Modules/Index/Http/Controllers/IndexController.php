@@ -3,6 +3,7 @@ namespace App\Modules\Index\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Modules\Index\Models\User;
 use Illuminate\Http\Request;
 use App\Modules\Index\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ class IndexController extends Controller
         $parameters = [
             'email' => $request->get('email'),
             'password' => $request->get('password'),
+            'status' => User::ENABLED,
         ];
         $login = Auth::attempt($parameters,$request->get('remember'));
 

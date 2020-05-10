@@ -22,6 +22,15 @@
                     @endforeach
                 </select>
             </div>
+            @if(YES == \Auth::user()->is_admin)
+                <div class="layui-col-xs2">
+                    <select name="is_admin">
+                        <option value="">是否管理员</option>
+                        <option value="{{NO}}">否</option>
+                        <option value="{{YES}}">是</option>
+                    </select>
+                </div>
+            @endif
         </div>
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs4">
@@ -65,8 +74,8 @@
                     {field: 'name', title: '用户名', align: 'center'},
                     {field: 'email', title: '邮箱', width: 200, align: 'center'},
                     {field: 'gender', title: '性别', width: 60, align: 'center'},
-                    {field: 'birthday', title: '生日', align: 'center'},
-                    {field: 'telephone', title: '电话', align: 'center'},
+                    {field: 'birthday', title: '生日', width: 120, align: 'center'},
+                    {field: 'telephone', title: '电话', width: 120, align: 'center'},
                     {field: 'roles', title: '角色', width: 220, align: 'center', templet: function (d) {
                         var roles_html = '';
                         d.roles.forEach(function (role) {
@@ -76,8 +85,11 @@
                         return roles_html;
                     }},
                     {field: 'status_name', title: '状态', width: 100, align: 'center'},
-                    {field: 'created_at', title: '创建时间', align: 'center', sort: true},
-                    {field: 'updated_at', title: '最后更新时间', align: 'center', sort: true},
+                    @if(YES == \Auth::user()->is_admin)
+                        {field: 'is_admin_name', title: '管理员', width: 80, align: 'center'},
+                    @endif
+                    {field: 'created_at', title: '创建时间', width: 160, align: 'center', sort: true},
+                    {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center', sort: true},
                     {field: 'action', title: '操作', width: 100, align: 'center', toolbar: "#action"}
                 ]]
                 ,done: function(res, curr, count){
