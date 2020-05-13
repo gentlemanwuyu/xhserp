@@ -13,9 +13,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Illuminate\Database\Events\QueryExecuted' => [
-            'App\Listeners\QueryListener',
-        ],
+//        'Illuminate\Database\Events\QueryExecuted' => [
+//            'App\Listeners\QueryListener',
+//        ],
         'App\Events\Egressed' => [
             'App\Listeners\EgressedOrderListener',
             'App\Listeners\EgressedReturnOrderListener',
