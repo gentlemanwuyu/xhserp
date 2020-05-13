@@ -33,7 +33,7 @@ class PermissionController extends Controller
 
         foreach ($paginate as $permission) {
             $permission->parent;
-            $permission->setAppends(['parent_ids']);
+            $permission->setAppends(['parent_ids', 'deletable']);
         }
 
         return response()->json($paginate);

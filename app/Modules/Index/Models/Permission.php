@@ -9,12 +9,15 @@
 namespace App\Modules\Index\Models;
 
 use Spatie\Permission\Models\Permission as SpatiePermission;
+use Illuminate\Support\Facades\DB;
 
 class Permission extends SpatiePermission
 {
+    const MENU = 1;
+    const BUTTON = 2;
     static $types = [
-        1 => '菜单',
-        2 => '按钮',
+        self::MENU => '菜单',
+        self::BUTTON => '按钮',
     ];
 
     public static function tree($parent_id = 0)
@@ -60,5 +63,22 @@ class Permission extends SpatiePermission
         }
 
         return array_filter(array_unique($parent_ids));
+    }
+
+    /**
+     * 是否可删除
+     *
+     * @return bool
+     */
+    public function getDeletableAttribute()
+    {
+        if (DB::table('role_has_permissions')->where('permission_id', $this->id)->exists()) {
+            return false;
+        }
+        if (DB::table('user_has_permissions')->where('permission_id', $this->id)->exists()) {
+            return false;
+        }
+
+        return true;
     }
 }
