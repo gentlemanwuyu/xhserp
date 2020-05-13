@@ -43,6 +43,11 @@ class Customer extends Model
         return $this->hasMany(CustomerContact::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(CustomerLog::class)->orderBy('id', 'desc');
+    }
+
     public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency_code', 'code');

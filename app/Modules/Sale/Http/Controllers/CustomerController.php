@@ -205,6 +205,10 @@ class CustomerController extends Controller
     public function detail(Request $request)
     {
         $customer = Customer::find($request->get('customer_id'));
+        $customer->logs->map(function ($log) {
+            $log->user;
+            $log->setAppends(['action_name']);
+        });
 
         return view('sale::customer.detail', compact('customer'));
     }

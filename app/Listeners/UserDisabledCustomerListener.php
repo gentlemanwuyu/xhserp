@@ -11,7 +11,9 @@ namespace App\Listeners;
 use App\Events\UserDisabled;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
+use App\Modules\Index\Models\User;
 use App\Modules\Sale\Models\Customer;
+use App\Modules\Sale\Models\CustomerLog;
 
 class UserDisabledCustomerListener implements ShouldQueue
 {
@@ -28,16 +30,22 @@ class UserDisabledCustomerListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  Entried  $event
+     * @param  UserDisabled  $event
      * @return void
      */
     public function handle(UserDisabled $event)
     {
         try {
+            $user = User::find($event->user_id);
             $customers = Customer::where('manager_id', $event->user_id)->get();
             foreach ($customers as $customer) {
                 $customer->manager_id = 0;
                 $customer->save();
+                CustomerLog::create([
+                    'customer_id' => $customer->id,
+                    'action' => CustomerLog::RELEASE,
+                    'content' => "禁用用户{$user->name}[{$user->id}]，系统自动释放",
+                ]);
                 Log::info("[UserDisabledCustomerListener]客户释放成功, customer_id:{$customer->id}, user_id:{$event->user_id}");
             }
 

@@ -20,7 +20,9 @@
                         </tr>
                         <tr>
                             <td>客户</td>
-                            <td>{{$customer->name or ''}}</td>
+                            <td>
+                                <a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name or ''}}</a>
+                            </td>
                         </tr>
                         @if(isset($customer) && \PaymentMethod::CREDIT == $customer->payment_method)
                             <tr>

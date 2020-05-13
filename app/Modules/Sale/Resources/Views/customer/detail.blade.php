@@ -112,4 +112,47 @@
             </div>
         </div>
     </div>
+    @if(!$customer->logs->isEmpty())
+        <div class="erp-detail">
+            <div class="erp-detail-title">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>客户日志</legend>
+                </fieldset>
+            </div>
+            <div class="erp-detail-content">
+                <table class="layui-table" lay-filter="logs" id="logs">
+
+                </table>
+            </div>
+        </div>
+    @endif
+@endsection
+@section('scripts')
+    <script>
+        var customer_logs = <?= json_encode($customer->logs); ?>;
+        layui.use(['table'], function () {
+            var table = layui.table
+                    ,tableOpts = {
+                elem: '#logs',
+                page: true,
+                data: customer_logs,
+                cols: [
+                    [
+                        {field: 'id', title: '序号', width: 100, align: 'center'},
+                        {field: 'action_name', title: '操作', width: 100, align: 'center'},
+                        {field: 'content', title: '内容', align: 'center'},
+                        {field: 'user_name', title: '操作人', width: 120, align: 'center', templet: function (d) {
+                            return null == d.user ? '' : d.user.name;
+                        }},
+                        {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
+                        {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'}
+                    ]
+                ]
+                ,done: function(res, curr, count){
+
+                }
+            }
+                    ,tableIns = table.render(tableOpts);
+        });
+    </script>
 @endsection
