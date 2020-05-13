@@ -93,4 +93,11 @@ class RoleController extends Controller
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
+
+    public function detail(Request $request)
+    {
+        $role = Role::find($request->get('role_id'));
+
+        return view('index::role.detail', compact('role'));
+    }
 }

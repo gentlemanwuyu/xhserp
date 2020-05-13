@@ -58,6 +58,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'role', 'as'=>'role.'], func
     Route::get('form', ['as'=>'form', 'uses'=>'RoleController@form']);
     Route::post('save', ['as'=>'save', 'uses'=>'RoleController@save']);
     Route::post('delete', ['as'=>'delete', 'uses'=>'RoleController@delete']);
+    Route::get('detail', ['as'=>'detail', 'uses'=>'RoleController@detail']);
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'organization', 'as'=>'organization.'], function (){

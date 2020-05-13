@@ -326,6 +326,7 @@ return [
                 [ // 角色管理
                     'name' => 'role_management', 'display_name' => '角色管理', 'route' => '', 'type' => 1, 'children' =>
                     [
+                        ['name' => 'role_detail', 'display_name' => '角色详情', 'route' => '', 'type' => 2],
                         ['name' => 'add_role', 'display_name' => '添加角色', 'route' => '', 'type' => 2],
                         ['name' => 'edit_role', 'display_name' => '编辑角色', 'route' => '', 'type' => 2],
                         ['name' => 'delete_role', 'display_name' => '删除角色', 'route' => '', 'type' => 2],

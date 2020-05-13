@@ -58,6 +58,15 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
+                        @can('role_detail')
+                        actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('index::role.detail')}}?role_id=" + data.id, '角色详情[' + data.id + ']');
+                            }
+                        });
+                        @endcan
+
                         @can('edit_role')
                         actions.push({
                             title: "编辑",
