@@ -4,6 +4,7 @@ namespace App\Modules\Index\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Index\Http\Requests\RoleRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Index\Models\Role;
 use App\Modules\Index\Models\Permission;
@@ -51,7 +52,7 @@ class RoleController extends Controller
         return view('index::role.form', $data);
     }
 
-    public function save(Request $request)
+    public function save(RoleRequest $request)
     {
         try {
             $data = [
