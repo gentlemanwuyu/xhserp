@@ -138,14 +138,13 @@
                 data: customer_logs,
                 cols: [
                     [
-                        {field: 'id', title: '序号', width: 100, align: 'center'},
+                        {type: 'numbers', title: '序号', width: 100, align: 'center'},
                         {field: 'action_name', title: '操作', width: 100, align: 'center'},
                         {field: 'content', title: '内容', align: 'center'},
                         {field: 'user_name', title: '操作人', width: 120, align: 'center', templet: function (d) {
                             return null == d.user ? '' : d.user.name;
                         }},
-                        {field: 'created_at', title: '创建时间', width: 160, align: 'center'},
-                        {field: 'updated_at', title: '最后更新时间', width: 160, align: 'center'}
+                        {field: 'created_at', title: '时间', width: 160, align: 'center'}
                     ]
                 ]
                 ,done: function(res, curr, count){
