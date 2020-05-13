@@ -34,6 +34,10 @@ class RoleController extends Controller
 
         $paginate = $query->orderBy('id', 'desc')->paginate($request->get('limit'));
 
+        foreach ($paginate as $role) {
+            $role->setAppends(['deletable']);
+        }
+
         return response()->json($paginate);
     }
 
@@ -59,14 +63,6 @@ class RoleController extends Controller
                 'name' => $request->get('name', ''),
                 'display_name' => $request->get('display_name', ''),
             ];
-
-            $name_exist = Role::where('name', $request->get('name'));
-            if ($request->get('role_id')) {
-                $name_exist->where('id', '!=', $request->get('role_id'));
-            }
-            if ($name_exist->first()) {
-                throw new \Exception("角色名已存在");
-            }
 
             DB::beginTransaction();
             $role = Role::updateOrCreate(['id' => $request->get('role_id')], $data);
