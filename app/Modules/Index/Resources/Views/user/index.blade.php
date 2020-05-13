@@ -97,16 +97,16 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
-                        @can('assign_user_permission')
-                        actions.push({
-                            title: "分配权限",
-                            event: function () {
-                                parent.layui.index.openTabsPage("{{route('index::user.assign_permission')}}?user_id=" + data.id, '分配用户权限[' + data.id + ']');
-                            }
-                        });
-                        @endcan
-
                         if (User_ENABLED == data.status) {
+
+                            @can('assign_user_permission')
+                            actions.push({
+                                title: "分配权限",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('index::user.assign_permission')}}?user_id=" + data.id, '分配用户权限[' + data.id + ']');
+                                }
+                            });
+                            @endcan
                             @can('disable_user')
                             actions.push({
                                 title: "禁用",
@@ -139,16 +139,16 @@
                                 }
                             });
                             @endcan
-                        }
 
-                        @can('edit_user')
-                        actions.push({
-                            title: "编辑",
-                            event: function () {
-                                parent.layui.index.openTabsPage("{{route('index::user.form')}}?user_id=" + data.id, '编辑用户[' + data.id + ']');
-                            }
-                        });
-                        @endcan
+                            @can('edit_user')
+                            actions.push({
+                                title: "编辑",
+                                event: function () {
+                                    parent.layui.index.openTabsPage("{{route('index::user.form')}}?user_id=" + data.id, '编辑用户[' + data.id + ']');
+                                }
+                            });
+                            @endcan
+                        }
 
                         @if(YES == \Auth::user()->is_admin)
                         if (data.deletable) {
