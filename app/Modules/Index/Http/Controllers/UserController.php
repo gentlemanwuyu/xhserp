@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Modules\Index\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Events\UserDisabled;
 use App\Modules\Index\Models\User;
 use App\Modules\Index\Models\Role;
 use App\Modules\Index\Models\Permission;
@@ -113,6 +114,25 @@ class UserController extends Controller
             }
 
             $user->delete();
+
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
+    }
+
+    public function disable(Request $request)
+    {
+        try {
+            $user = User::find($request->get('user_id'));
+
+            if (!$user) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该用户']);
+            }
+
+            $user->status = User::DISABLED;
+            $user->save();
+            event(new UserDisabled($user->id));
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {

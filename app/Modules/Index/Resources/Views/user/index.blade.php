@@ -60,6 +60,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('index::user.paginate')}}",
+                where: {status: User_ENABLED},
                 page: true,
                 parseData: function (res) {
                     return {
@@ -104,6 +105,41 @@
                             }
                         });
                         @endcan
+
+                        if (User_ENABLED == data.status) {
+                            @can('disable_user')
+                            actions.push({
+                                title: "禁用",
+                                event: function () {
+                                    layer.confirm("确认要禁用该用户？", {icon: 3, title:"确认"}, function (index) {
+                                        layer.close(index);
+                                        var load_index = layer.load();
+                                        $.ajax({
+                                            method: "post",
+                                            url: "{{route('index::user.disable')}}",
+                                            data: {user_id: data.id},
+                                            success: function (data) {
+                                                layer.close(load_index);
+                                                if ('success' == data.status) {
+                                                    layer.msg("用户禁用成功", {icon: 1, time: 2000}, function () {
+                                                        tableIns.reload();
+                                                    });
+                                                } else {
+                                                    layer.msg("用户禁用失败:"+data.msg, {icon: 2, time: 2000});
+                                                    return false;
+                                                }
+                                            },
+                                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                                layer.close(load_index);
+                                                layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                                                return false;
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                            @endcan
+                        }
 
                         @can('edit_user')
                         actions.push({
@@ -154,6 +190,8 @@
                 }
             }
                     ,tableIns = table.render(tableOpts);
+
+            form.val('search', {status: User_ENABLED});
 
             form.on('submit(search)', function (form_data) {
                 tableOpts.where = form_data.field;

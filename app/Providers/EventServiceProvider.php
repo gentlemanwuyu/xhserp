@@ -27,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\EntriedPurchaseReturnOrderListener',
             'App\Listeners\EntriedPurchaseOrderListener',
         ],
+        'App\Events\UserDisabled' => [
+            'App\Listeners\UserDisabledCustomerListener',
+        ],
     ];
 
     /**

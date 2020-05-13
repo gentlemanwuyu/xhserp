@@ -61,7 +61,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::deliveryOrder.paginate')}}",
-                where: {status: "{{\App\Modules\Sale\Models\DeliveryOrder::PENDING_DELIVERY}}"},
+                where: {status: DeliveryOrder_PENDING_DELIVERY},
                 page: true,
                 parseData: function (res) {
                     return {

@@ -16,6 +16,8 @@
             ,Goods_COMBO = parseInt("{{\App\Modules\Goods\Models\Goods::COMBO}}")
             ,User_MALE = parseInt("{{\App\Modules\Index\Models\User::MALE}}")
             ,User_FEMALE = parseInt("{{\App\Modules\Index\Models\User::FEMALE}}")
+            ,User_ENABLED = parseInt("{{\App\Modules\Index\Models\User::ENABLED}}")
+            ,User_DISABLED = parseInt("{{\App\Modules\Index\Models\User::DISABLED}}")
             ,PurchaseOrder_PENDING_REVIEW = parseInt("{{\App\Modules\Purchase\Models\PurchaseOrder::PENDING_REVIEW}}")
             ,PurchaseOrder_REJECTED = parseInt("{{\App\Modules\Purchase\Models\PurchaseOrder::REJECTED}}")
             ,PurchaseOrder_AGREED = parseInt("{{\App\Modules\Purchase\Models\PurchaseOrder::AGREED}}")
