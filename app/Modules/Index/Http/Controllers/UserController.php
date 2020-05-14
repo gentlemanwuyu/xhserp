@@ -201,7 +201,14 @@ class UserController extends Controller
     public function detail(Request $request)
     {
         $user = User::find($request->get('user_id'));
+        $permissions = Permission::tree();
+        $user_permissions = array_column($user->permissions->toArray(), 'name');
+        foreach ($user->roles as $role) {
+            $user_permissions = array_merge($user_permissions, array_column($role->permissions->toArray(), 'name'));
+        }
+        $user_permissions = array_unique($user_permissions);
 
-        return view('index::user.detail', compact('user'));
+
+        return view('index::user.detail', compact('user', 'permissions', 'user_permissions'));
     }
 }
