@@ -97,7 +97,8 @@ class RoleController extends Controller
     public function detail(Request $request)
     {
         $role = Role::find($request->get('role_id'));
+        $permissions = Permission::tree();
 
-        return view('index::role.detail', compact('role'));
+        return view('index::role.detail', compact('role', 'permissions'));
     }
 }
