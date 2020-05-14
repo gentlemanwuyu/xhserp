@@ -4,6 +4,7 @@ namespace App\Modules\Sale\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Sale\Http\Requests\DeliveryOrderRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\Index\Models\User;
@@ -110,7 +111,7 @@ class DeliveryOrderController extends Controller
         return response()->json($paginate);
     }
 
-    public function save(Request $request)
+    public function save(DeliveryOrderRequest $request)
     {
         try {
             $data = [

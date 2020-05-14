@@ -25,7 +25,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">客户</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$customer->name or ''}}</span>
+                                <span class="erp-form-span">
+                                    @if(\Auth::user()->hasPermissionTo('customer_detail'))
+                                        <a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name}}</a>
+                                    @else
+                                        {{$customer->name}}
+                                    @endif
+                                </span>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -334,7 +340,7 @@
                     if (new RegExp(/^\d{1,}$/).test(quantity) && price && !isNaN(price)) {
                         var amount = parseInt(quantity) * parseFloat(price)
                                 ,cny_amount = parseInt(quantity) * parseFloat(cny_price);
-                        $tr.find('td[erp-col=amount]').html(amount);
+                        $tr.find('td[erp-col=amount]').html(amount.toFixed(2));
                         $tr.find('td[erp-col=cnyAmount]').html(cny_amount.toFixed(2));
                     }else {
                         $tr.find('td[erp-col=amount]').html('');
@@ -349,7 +355,7 @@
                             cny_total_amount += cny_amount;
                         }
                     });
-                    $('.erp-total-row').find('td[erp-col=cnyAmount]').html(cny_total_amount ? cny_total_amount : '');
+                    $('.erp-total-row').find('td[erp-col=cnyAmount]').html(cny_total_amount ? cny_total_amount.toFixed(2) : '');
                 });
             }
                     // 监听删除行
