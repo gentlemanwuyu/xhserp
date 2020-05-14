@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'user', 'as'=>'user.'], func
     Route::get('assign_permission', ['as'=>'assign_permission', 'uses'=>'UserController@assignPermission']);
     Route::post('assign', ['as'=>'assign', 'uses'=>'UserController@assign']);
     Route::post('disable', ['as'=>'disable', 'uses'=>'UserController@disable']);
+    Route::get('detail', ['as'=>'detail', 'uses'=>'UserController@detail']);
 });
 
 Route::group(['middleware' => ['auth'], 'prefix' => 'config', 'as'=>'config.'], function (){

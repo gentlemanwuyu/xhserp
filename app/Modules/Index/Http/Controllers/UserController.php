@@ -197,4 +197,11 @@ class UserController extends Controller
             return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
         }
     }
+
+    public function detail(Request $request)
+    {
+        $user = User::find($request->get('user_id'));
+
+        return view('index::user.detail', compact('user'));
+    }
 }

@@ -97,8 +97,16 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
 
-                        if (User_ENABLED == data.status) {
+                        @can('user_detail')
+                            actions.push({
+                            title: "详情",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('index::user.detail')}}?user_id=" + data.id, '用户详情[' + data.id + ']');
+                            }
+                        });
+                        @endcan
 
+                        if (User_ENABLED == data.status) {
                             @can('assign_user_permission')
                             actions.push({
                                 title: "分配权限",
