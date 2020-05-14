@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+    <?php $manager = $customer->manager; ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
             <fieldset class="layui-elem-field layui-field-title">
@@ -32,7 +33,13 @@
                         </tr>
                         <tr>
                             <td>负责人</td>
-                            <td>{{$customer->manager->name or ''}}</td>
+                            <td>
+                                @if(\Auth::user()->hasPermissionTo('user_detail'))
+                                    <a lay-href="{{route('index::user.detail', ['user_id' => $manager->id])}}" lay-text="用户详情[{{$manager->id}}]">{{$manager->name}}</a>
+                                @else
+                                    {{$manager->name}}
+                                @endif
+                            </td>
                         </tr>
                     </table>
                 </div>

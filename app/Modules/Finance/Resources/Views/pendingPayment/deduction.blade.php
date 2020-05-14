@@ -16,7 +16,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">供应商名称</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$supplier->name or ''}}</span>
+                                <span class="erp-form-span">
+                                    @if(\Auth::user()->hasPermissionTo('supplier_detail'))
+                                        <a lay-href="{{route('purchase::supplier.detail', ['supplier_id' => $supplier->id])}}" lay-text="供应商详情[{{$supplier->id}}]">{{$supplier->name}}</a>
+                                    @else
+                                        {{$supplier->name}}
+                                    @endif
+                                </span>
                             </div>
                         </div>
                         <div class="layui-form-item">

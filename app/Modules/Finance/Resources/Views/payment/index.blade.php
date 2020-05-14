@@ -151,14 +151,14 @@
                     dropdown(res.data,function(data) {
                         var actions = [];
                         // 未完成抵扣的付款单才可以修改
-                        if (NO == data.is_finished) {
-                            actions.push({
-                                title: "编辑",
-                                event: function () {
-                                    parent.layui.index.openTabsPage("{{route('finance::collection.form')}}?collection_id=" + data.id, '编辑收款单[' + data.id + ']');
-                                }
-                            });
-                        }
+                        {{--if (NO == data.is_finished) {--}}
+                            {{--actions.push({--}}
+                                {{--title: "编辑",--}}
+                                {{--event: function () {--}}
+                                    {{--parent.layui.index.openTabsPage("{{route('finance::collection.form')}}?collection_id=" + data.id, '编辑收款单[' + data.id + ']');--}}
+                                {{--}--}}
+                            {{--});--}}
+                        {{--}--}}
 
                         return actions;
                     });

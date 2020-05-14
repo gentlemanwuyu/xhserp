@@ -3,6 +3,7 @@
     <?php
         $order_currency = $order->currency;
         $customer = $order->customer;
+        $user = $order->user;
     ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
@@ -21,7 +22,11 @@
                         <tr>
                             <td>客户</td>
                             <td>
-                                <a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name or ''}}</a>
+                                @if(\Auth::user()->hasPermissionTo('customer_detail'))
+                                    <a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name}}</a>
+                                @else
+                                    {{$customer->name}}
+                                @endif
                             </td>
                         </tr>
                         @if(isset($customer) && \PaymentMethod::CREDIT == $customer->payment_method)
@@ -64,7 +69,13 @@
                         </tr>
                         <tr>
                             <td>创建人</td>
-                            <td>{{$order->user->name or ''}}</td>
+                            <td>
+                                @if(\Auth::user()->hasPermissionTo('user_detail'))
+                                    <a lay-href="{{route('index::user.detail', ['user_id' => $user->id])}}" lay-text="用户详情[{{$user->id}}]">{{$user->name}}</a>
+                                @else
+                                    {{$user->name}}
+                                @endif
+                            </td>
                         </tr>
                     </table>
                 </div>

@@ -30,7 +30,6 @@
         }).use(['table', 'dropdown', 'laydate', 'form'], function () {
             var table = layui.table
                     ,dropdown = layui.dropdown
-                    ,laydate = layui.laydate
                     ,form = layui.form
                     ,tableOpts = {
                 elem: '#list',

@@ -2,6 +2,7 @@
 @section('content')
     <?php
         $purchase_order_currency = $order->currency;
+        $supplier = $order->supplier;
     ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
@@ -19,7 +20,13 @@
                         </tr>
                         <tr>
                             <td>供应商</td>
-                            <td>{{$order->supplier->name or ''}}</td>
+                            <td>
+                                @if(\Auth::user()->hasPermissionTo('supplier_detail'))
+                                    <a lay-href="{{route('purchase::supplier.detail', ['supplier_id' => $supplier->id])}}" lay-text="供应商详情[{{$supplier->id}}]">{{$supplier->name}}</a>
+                                @else
+                                    {{$supplier->name}}
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <td>付款方式</td>

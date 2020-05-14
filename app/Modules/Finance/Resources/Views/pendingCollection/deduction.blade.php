@@ -16,7 +16,13 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">客户名称</label>
                             <div class="layui-input-block">
-                                <span class="erp-form-span">{{$customer->name or ''}}</span>
+                                <span class="erp-form-span">
+                                    @if(\Auth::user()->hasPermissionTo('customer_detail'))
+                                        <a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name}}</a>
+                                    @else
+                                        {{$customer->name}}
+                                    @endif
+                                </span>
                             </div>
                         </div>
                         <div class="layui-form-item">

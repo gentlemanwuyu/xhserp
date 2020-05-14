@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+    <?php $customer = $delivery_order->customer; ?>
     <div class="erp-detail">
         <div class="erp-detail-title">
             <fieldset class="layui-elem-field layui-field-title">
@@ -12,7 +13,13 @@
                     <table class="layui-table erp-info-table">
                         <tr>
                             <td>客户</td>
-                            <td>{{$delivery_order->customer->name or ''}}</td>
+                            <td>
+                                @if(\Auth::user()->hasPermissionTo('customer_detail'))
+                                    <a lay-href="{{route('sale::customer.detail', ['customer_id' => $customer->id])}}" lay-text="客户详情[{{$customer->id}}]">{{$customer->name}}</a>
+                                @else
+                                    {{$customer->name}}
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <td>出货单号</td>

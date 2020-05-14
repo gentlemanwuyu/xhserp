@@ -37,13 +37,21 @@
                             <?php $supplier = $purchaseOrder->supplier; ?>
                             <td>供应商</td>
                             <td>
-                                <a lay-href="{{route('purchase::supplier.detail', ['supplier_id' => $supplier->id])}}" lay-text="供应商详情[{{$supplier->id}}]">{{$supplier->name or ''}}</a>
+                                @if(\Auth::user()->hasPermissionTo('supplier_detail'))
+                                    <a lay-href="{{route('purchase::supplier.detail', ['supplier_id' => $supplier->id])}}" lay-text="供应商详情[{{$supplier->id}}]">{{$supplier->name}}</a>
+                                @else
+                                    {{$supplier->name}}
+                                @endif
                             </td>
                         </tr>
                         <tr>
                             <td>订单编号</td>
                             <td>
-                                <a lay-href="{{route('purchase::order.detail', ['order_id' => $purchaseOrder->id])}}" lay-text="采购订单详情[{{$purchaseOrder->id}}]">{{$purchaseOrder->code or ''}}</a>
+                                @if(\Auth::user()->hasPermissionTo('purchase_order_detail'))
+                                    <a lay-href="{{route('purchase::order.detail', ['order_id' => $purchaseOrder->id])}}" lay-text="采购订单详情[{{$purchaseOrder->id}}]">{{$purchaseOrder->code}}</a>
+                                @else
+                                    {{$purchaseOrder->code}}
+                                @endif
                             </td>
                         </tr>
                         <tr>
