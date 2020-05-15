@@ -50,6 +50,8 @@ class Product extends Model
                 ProductSku::updateOrCreate(['id' => $flag], [
                     'product_id' => $this->id,
                     'code' => $data['code'] ?: '',
+                    'size' => $data['size'] ?: '',
+                    'model' => $data['model'] ?: '',
                     'weight' => $data['weight'] ?: 0.00,
                     'cost_price' => $data['cost_price'] ?: 0.00,
                 ]);

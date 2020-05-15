@@ -42,6 +42,8 @@
                 <thead>
                 <tr>
                     <th>SKU编号</th>
+                    <th>规格</th>
+                    <th>型号</th>
                     <th>重量</th>
                     <th>成本价</th>
                     <th>库存数量</th>
@@ -55,6 +57,8 @@
                     <?php $inventory = $product_sku->inventory; ?>
                     <tr>
                         <td>{{$product_sku->code}}</td>
+                        <td>{{$product_sku->size}}</td>
+                        <td>{{$product_sku->model}}</td>
                         <td>{{$product_sku->weight}}</td>
                         <td>{{$product_sku->cost_price}}</td>
                         <td>{{$inventory->stock or '-'}}</td>

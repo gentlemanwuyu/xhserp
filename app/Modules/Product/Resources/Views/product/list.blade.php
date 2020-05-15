@@ -67,11 +67,11 @@
                     [
                         {field: 'id', title: 'ID', width: 60, align: 'center', fixed: 'left'},
                         {field: 'code', title: '产品编号', width: 160, align: 'center', fixed: 'left'},
-                        {field: 'name', title: '品名', width: 160, align: 'center', fixed: 'left'},
-                        {field: 'category', title: '分类', align: 'center', templet: function (d) {
+                        {field: 'name', title: '品名', width: 200, align: 'center', fixed: 'left'},
+                        {field: 'category', title: '分类', width: 100, align: 'center', templet: function (d) {
                             return d.category.name;
                         }},
-                        {field: 'detail', title: 'SKU列表', width: 640, align: 'center', templet: function (d) {
+                        {field: 'detail', title: 'SKU列表', width: 930, align: 'center', templet: function (d) {
                             var html = '';
                             d.skus.forEach(function (sku, key) {
                                 if (0 == key) {
@@ -87,7 +87,9 @@
                                     lowest_stock = sku.inventory.lowest_stock;
                                 }
 
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px;">' + sku.code + '</li>';
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;" title="' + sku.code + '">' + sku.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;">' + sku.size + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.model + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 80px;">' + sku.weight + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.cost_price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + stock + '</li>';
@@ -107,7 +109,9 @@
                     if (0 == $('th[data-field=detail] ul').length) {
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
-                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 160px; text-align: center;">sku编号</li>';
+                        html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">规格</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">尺寸</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">重量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">成本价</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">库存</li>';

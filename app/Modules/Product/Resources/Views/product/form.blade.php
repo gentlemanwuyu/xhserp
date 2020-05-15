@@ -53,6 +53,8 @@
                     <thead>
                     <tr>
                         <th class="required">SKU编号</th>
+                        <th>规格</th>
+                        <th>型号</th>
                         <th>重量</th>
                         <th>成本价</th>
                         <th>操作</th>
@@ -62,7 +64,9 @@
                     @if(isset($product->skus))
                         @foreach($product->skus as $sku)
                             <tr>
-                                <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号(必填)" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code or ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][size]" placeholder="规格" class="layui-input" value="{{$sku->size or ''}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][model]" placeholder="型号" class="layui-input" value="{{$sku->model or ''}}"></td>
                                 <td><input type="text" name="skus[{{$sku->id}}][weight]" placeholder="重量" class="layui-input" value="{{(float)$sku->weight ? $sku->weight : ''}}" oninput="value=value.replace(/[^\d.]/g, '')"></td>
                                 <td><input type="text" name="skus[{{$sku->id}}][cost_price]" placeholder="成本价" class="layui-input" value="{{(float)$sku->cost_price ? $sku->cost_price : ''}}" oninput="value=value.replace(/[^\d.]/g, '')"></td>
                                 <td>
@@ -127,7 +131,13 @@
                         ,sku_flag = Date.now();
                 html += '<tr>';
                 html += '<td>';
-                html += '<input type="text" name="skus[' + sku_flag + '][code]" placeholder="SKU编号（必填）" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input">';
+                html += '<input type="text" name="skus[' + sku_flag + '][code]" placeholder="SKU编号(必填)" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<input type="text" name="skus[' + sku_flag + '][size]" placeholder="规格" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<input type="text" name="skus[' + sku_flag + '][model]" placeholder="型号" class="layui-input">';
                 html += '</td>';
                 html += '<td>';
                 html += '<input type="text" name="skus[' + sku_flag + '][weight]" placeholder="重量" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">';
