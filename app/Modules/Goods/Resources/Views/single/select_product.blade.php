@@ -52,7 +52,7 @@
                         {field: 'category', title: '分类', align: 'center', templet: function (d) {
                             return d.category.name;
                         }},
-                        {field: 'sku_list', title: 'SKU列表', width: 400, align: 'center', templet: function (d) {
+                        {field: 'sku_list', title: 'SKU列表', width: 650, align: 'center', templet: function (d) {
                             var html = '';
                             d.skus.forEach(function (sku, key) {
                                 if (0 == key) {
@@ -61,7 +61,9 @@
                                     html += '<ul class="erp-table-list-ul">';
                                 }
 
-                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + sku.code + '</li>';
+                                html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;" title="' + sku.code + '">' + sku.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 150px;" title="' + sku.size + '">' + sku.size + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.model + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.weight + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.cost_price + '</li>';
                                 html += '</ul>';
@@ -79,6 +81,8 @@
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">规格</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">型号</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">重量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">成本价</li>';
                         html += '</ul>';
