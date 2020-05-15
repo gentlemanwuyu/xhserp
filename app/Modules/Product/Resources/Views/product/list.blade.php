@@ -111,7 +111,7 @@
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
                         html += '<li class="erp-table-list-li" style="width: 150px; text-align: center;">规格</li>';
-                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">尺寸</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">型号</li>';
                         html += '<li class="erp-table-list-li" style="width: 80px; text-align: center;">重量</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">成本价</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">库存</li>';

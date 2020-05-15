@@ -40,16 +40,19 @@ class CategoriesTableSeeder extends Seeder
         Category::create(['name' => '螺母', 'parent_id' => $flowmeter_parts->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => '指示扣', 'parent_id' => $flowmeter_parts->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => '胶圈', 'parent_id' => $flowmeter_parts->id, 'type' => Category::PRODUCT]);
+        Category::create(['name' => '盖子', 'parent_id' => $flowmeter_parts->id, 'type' => Category::PRODUCT]);
 
         // 滚轮片
         $disk = Category::create(['name' => '行辘片', 'type' => Category::PRODUCT]);
         $category = Category::create(['name' => '一体滚轮片', 'parent_id' => $disk->id, 'type' => Category::PRODUCT]);
+        Category::create(['name' => 'PVC滚轮片', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => 'PP滚轮片', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
+        Category::create(['name' => '包胶滚轮片', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => '孟山都滚轮片', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => '耐高温滚轮片', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
-        $category = Category::create(['name' => '包胶滚轮片', 'parent_id' => $disk->id, 'type' => Category::PRODUCT]);
-        Category::create(['name' => '包胶滚轮片骨架', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
-        Category::create(['name' => '包胶滚轮片胶圈', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
+        $category = Category::create(['name' => '套胶滚轮片', 'parent_id' => $disk->id, 'type' => Category::PRODUCT]);
+        Category::create(['name' => '套胶滚轮片骨架', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
+        Category::create(['name' => '套胶滚轮片胶圈', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
         $category = Category::create(['name' => 'LCD滚轮', 'parent_id' => $disk->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => 'LCD滚轮内套', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);
         Category::create(['name' => 'LCD滚轮外套', 'parent_id' => $category->id, 'type' => Category::PRODUCT]);

@@ -868,5 +868,369 @@ class ProductsTableSeeder extends Seeder
         Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
         $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLA30S500PSU00B', 'size' => 'F30、500NLPM', 'model' => 'F30AIR-500', 'weight' =>118.5, 'cost_price' => 15.4,]);
         Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 100, 'lowest_stock' => 30]);
+
+        $product = Product::create(['code' => 'LLF10LM', 'name' => 'F10螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10SPVC85B', 'size' => 'F10、10LPM', 'model' => 'F-1010', 'weight' =>6.97, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2236, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLF20LM', 'name' => 'F20螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF20PVC85B', 'size' => 'F20', 'model' => 'F-20', 'weight' =>13.32, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1660, 'highest_stock' => 3000, 'lowest_stock' => 300]);
+
+        $product = Product::create(['code' => 'LLF30LM', 'name' => 'F30螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30L30PVC85B', 'size' => '1寸Φ32', 'model' => '17.3', 'weight' =>17.27, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 310, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLF32LM', 'name' => 'F32螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF32PVC85B', 'size' => 'F32', 'model' => 'F-32', 'weight' =>17.27, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1268, 'highest_stock' => 500, 'lowest_stock' => 50]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF32PVC85B（细牙）', 'size' => 'F32', 'model' => 'F-32', 'weight' =>53.9, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 119, 'highest_stock' => 3000, 'lowest_stock' => 100]);
+
+        $product = Product::create(['code' => 'LLF45LM', 'name' => 'F45螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PVC85B', 'size' => 'F45', 'model' => '', 'weight' =>88.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 819, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLJ15LM', 'name' => 'J15螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ15PVC85B', 'size' => 'J15', 'model' => 'J-1505', 'weight' =>20.6, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 385, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLJ20LM', 'name' => 'J20螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ20PVC85B', 'size' => 'J20', 'model' => '', 'weight' =>37.1, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 566, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLJ25LM', 'name' => 'J25螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ25PVC85B', 'size' => 'J25', 'model' => 'J-25', 'weight' =>38.06, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1182, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLJ50LM', 'name' => 'J50螺母', 'category_id' => 12,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ50PVC85B', 'size' => 'J50', 'model' => '', 'weight' =>53.63, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 16, 'highest_stock' => 1000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLF10JQ', 'name' => 'F10胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10VITON45B', 'size' => 'F10、', 'model' => 'Φ29*2', 'weight' =>0.53, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1241, 'highest_stock' => 1000, 'lowest_stock' => 100]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10SEPDM02B', 'size' => 'F10', 'model' => 'Φ29*2', 'weight' =>0.32, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2448, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLF20JQ', 'name' => 'F20胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20SEPDM02B', 'size' => 'F20', 'model' => 'Φ33*2', 'weight' =>0.34, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2704, 'highest_stock' => 10000, 'lowest_stock' => 500]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20S20VITON45B', 'size' => 'F20', 'model' => 'Φ33*2', 'weight' =>0.54, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1959, 'highest_stock' => 10000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLF30JQ', 'name' => 'F30胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30JVITON45B', 'size' => 'F30-Φ42*2（原登记38*3）', 'model' => 'Φ42*2', 'weight' =>0.85, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1280, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30JEPDM02B', 'size' => 'J25-Φ42*2（原登记38*3）', 'model' => 'Φ42*2', 'weight' =>0.45, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 3162, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLF45JQ', 'name' => 'F45胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF45FO45B', 'size' => 'F45系列导轨用（￠14*4）', 'model' => '￠14*4', 'weight' =>0.78, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2002, 'highest_stock' => 5000, 'lowest_stock' => 300]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF45FO45B', 'size' => 'F45系列（42*4.3？）', 'model' => 'F-45', 'weight' =>4.7, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LLF60JQ', 'name' => 'F60胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF60S600PSU00B(F45)', 'size' => 'F60、600LPM（¢72*5MM ）', 'model' => 'F-60600', 'weight' =>7.8, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2070, 'highest_stock' => 5000, 'lowest_stock' => 300]);
+
+        $product = Product::create(['code' => 'LLJ15JQ', 'name' => 'J15胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ15SEPDM02B', 'size' => 'J15', 'model' => 'Φ24*3', 'weight' =>0.52, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1896, 'highest_stock' => 5000, 'lowest_stock' => 300]);
+
+        $product = Product::create(['code' => 'LLJ20JQ', 'name' => 'J20胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ20EPDM02B', 'size' => 'J20', 'model' => 'Φ34*3', 'weight' =>0.83, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2261, 'highest_stock' => 5000, 'lowest_stock' => 300]);
+
+        $product = Product::create(['code' => 'LLJ25JQ', 'name' => 'J25胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ25EPDM02B', 'size' => 'F-45', 'model' => '￠42*4H', 'weight' =>1.9, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 796, 'highest_stock' => 5000, 'lowest_stock' => 300]);
+
+        $product = Product::create(['code' => 'LLJ50JQ', 'name' => 'J50胶圈', 'category_id' => 14,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ50EPDM02B（共F45胶圈）', 'size' => 'F60、600LPM（¢72*5MM ）', 'model' => 'J-50', 'weight' =>6.26, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 2000, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LLF10GZ', 'name' => 'F10盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10UPVC02B', 'size' => 'F10', 'model' => 'F-10', 'weight' =>0.89, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1652, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLJ15GZ', 'name' => 'J15盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ15PP00B', 'size' => 'J15', 'model' => 'J-15', 'weight' =>0.73, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2348, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ15PVDF00B', 'size' => 'J15', 'model' => 'J-15', 'weight' =>0.89, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 332, 'highest_stock' => 500, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LLF20GZ', 'name' => 'F20盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20PVC85B', 'size' => 'F20', 'model' => 'F-20', 'weight' =>1.49, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 3158, 'highest_stock' => 10000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLJ20GZ', 'name' => 'J20盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ20PP00B', 'size' => 'J20', 'model' => 'J-20', 'weight' =>1.62, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => -8, 'highest_stock' => 5000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLF30GZ', 'name' => 'F30盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30G20PVC00B', 'size' => 'F30', 'model' => 'F-1020', 'weight' =>2.59, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 6929, 'highest_stock' => 10000, 'lowest_stock' => 1000]);
+
+        $product = Product::create(['code' => 'LLJ25GZ', 'name' => 'J25盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ25PP00B', 'size' => 'J25', 'model' => 'F-1020', 'weight' =>2.66, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1040, 'highest_stock' => 5000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LLF45GZ', 'name' => 'F45盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PP00B（同J50)', 'size' => 'J50(F45)', 'model' => '', 'weight' =>11.8, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2030, 'highest_stock' => 5000, 'lowest_stock' => 300]);
+
+        $product = Product::create(['code' => 'LLF32GZ', 'name' => 'F32盖子', 'category_id' => 15,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF32ABS45B', 'size' => 'F32', 'model' => '', 'weight' =>10.8, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1926, 'highest_stock' => 2000, 'lowest_stock' => 50]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF32ABS45B', 'size' => 'F32', 'model' => '', 'weight' =>7.7, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1930, 'highest_stock' => 2000, 'lowest_stock' => 50]);
+
+        $product = Product::create(['code' => 'LLF10JT', 'name' => 'F10接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10PVC85B-22', 'size' => 'F10', 'model' => 'F-1010', 'weight' =>11.8, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2964, 'highest_stock' => 3000, 'lowest_stock' => 200]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10PVC85B-20', 'size' => 'F10', 'model' => 'F-1010', 'weight' =>13.91, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 480, 'highest_stock' => 2000, 'lowest_stock' => 100]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10PVC85B-25', 'size' => 'F10', 'model' => 'F-1010', 'weight' =>10.8, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 316, 'highest_stock' => 500, 'lowest_stock' => 100]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF10PVC85B', 'size' => 'F10', 'model' => '', 'weight' =>11.6, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 98, 'highest_stock' => 200, 'lowest_stock' => 50]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10PVC00B-core', 'size' => 'F10、10LPM', 'model' => 'F-1010', 'weight' =>11.62, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 471, 'highest_stock' => 100, 'lowest_stock' => 30]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S10PVC00B', 'size' => 'F10、10LPM', 'model' => 'F-1010', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 100, 'lowest_stock' => 30]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S20PVC02B-et', 'size' => 'F10', 'model' => 'F-1020', 'weight' =>10.39, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 232, 'highest_stock' => 1000, 'lowest_stock' => 100]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S20PVC02B-it', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>19.9, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 163, 'highest_stock' => 0, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S20PVDF00B-et', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>15.9, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 157, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S20PVDF00B-it', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>27.9, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LLF20JT', 'name' => 'F20接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF20SPVC85B', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>17.54, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 780, 'highest_stock' => 1000, 'lowest_stock' => 100]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20PVC85B', 'size' => 'F20', 'model' => 'F20', 'weight' =>19.14, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 353, 'highest_stock' => 500, 'lowest_stock' => 30]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20PVC85B-et', 'size' => 'F20', 'model' => 'F-20', 'weight' =>23.54, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 173, 'highest_stock' => 500, 'lowest_stock' => 30]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20S20PP80B-et', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>8.25, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 200, 'lowest_stock' => 1]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20S20PP80B-it', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>9.25, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 300, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20S20PVC00B', 'size' => 'F20、20LPM', 'model' => 'F-1020', 'weight' =>16.8, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 100, 'lowest_stock' => 30]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20S20PVC85B', 'size' => 'F20', 'model' => 'F-20', 'weight' =>22.43, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 576, 'highest_stock' => 1000, 'lowest_stock' => 100]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF20S20PVC85B', 'size' => 'F20', 'model' => 'F-1020', 'weight' =>16.77, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1167, 'highest_stock' => 3000, 'lowest_stock' => 300]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF20PVC85B', 'size' => 'F20', 'model' => '', 'weight' =>15, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 200, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF10S20PP80B(F20)', 'size' => 'F10、20LPM', 'model' => 'F-1020', 'weight' =>13.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 230, 'highest_stock' => 200, 'lowest_stock' => 10]);
+
+        $product = Product::create(['code' => 'LLF30JT', 'name' => 'F30接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30C30PVC85B', 'size' => '1寸', 'model' => '34.2', 'weight' =>34.2, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 952, 'highest_stock' => 1500, 'lowest_stock' => 300]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30CPP80B', 'size' => '1寸', 'model' => '', 'weight' =>31, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 224, 'highest_stock' => 200, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30C30PVC00B', 'size' => '1寸', 'model' => '', 'weight' =>37, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 344, 'highest_stock' => 200, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF30W30PVC02B', 'size' => '1寸', 'model' => '', 'weight' =>31.02, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2219, 'highest_stock' => 500, 'lowest_stock' => 50]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF30NPVC85B', 'size' => 'F30', 'model' => '', 'weight' =>39.59, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 14, 'highest_stock' => 500, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF30NPP00B', 'size' => 'F30', 'model' => '', 'weight' =>34.3, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 8, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF30NPVDF00B', 'size' => 'F30', 'model' => '', 'weight' =>59, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF30WPVC85B', 'size' => 'F30', 'model' => '', 'weight' =>31.02, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2140, 'highest_stock' => 500, 'lowest_stock' => 30]);
+
+        $product = Product::create(['code' => 'LLF320JT', 'name' => 'F320接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF32PVC85B', 'size' => 'F32', 'model' => 'F-32', 'weight' =>53.63, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 475, 'highest_stock' => 500, 'lowest_stock' => 50]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLF32PVC85B(细牙）', 'size' => 'F32', 'model' => 'F-32', 'weight' =>37.37, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 19, 'highest_stock' => 3000, 'lowest_stock' => 100]);
+
+        $product = Product::create(['code' => 'LLF60JT', 'name' => 'F60接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF60PVC85B(F45)', 'size' => 'F45', 'model' => '', 'weight' =>113, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 411, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF60PVC85B(F45)', 'size' => 'F60', 'model' => '', 'weight' =>144.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 110, 'highest_stock' => 200, 'lowest_stock' => 10]);
+
+        $product = Product::create(['code' => 'LLF45JT', 'name' => 'F45接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PVC85B', 'size' => 'F45', 'model' => '', 'weight' =>107, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 538, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PVC85B', 'size' => 'F45', 'model' => '', 'weight' =>88.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 23, 'highest_stock' => 200, 'lowest_stock' => 50]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PP80B', 'size' => 'F45', 'model' => '', 'weight' =>100, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 330, 'highest_stock' => 200, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PP80B(加工件)', 'size' => 'F45', 'model' => '', 'weight' =>97, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 100, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PP80B(加工件)', 'size' => 'F45', 'model' => '', 'weight' =>127, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 26, 'highest_stock' => 100, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PVC85B(加工件)', 'size' => 'F45', 'model' => 'F45', 'weight' =>118.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 12, 'highest_stock' => 100, 'lowest_stock' => 10]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PVC85B', 'size' => 'F45', 'model' => '', 'weight' =>129, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 20, 'highest_stock' => 50, 'lowest_stock' => 5]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFF45PVC85B（F60)', 'size' => 'F45', 'model' => '', 'weight' =>150, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 30, 'highest_stock' => 50, 'lowest_stock' => 5]);
+
+        $product = Product::create(['code' => 'LLJ15JT', 'name' => 'J15接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ15PVC85B', 'size' => 'J15', 'model' => '', 'weight' =>12.6, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1386, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLJ20JT', 'name' => 'J20接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ20PVC85B', 'size' => 'J20', 'model' => '', 'weight' =>20.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 543, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ20PVC85B', 'size' => 'J20', 'model' => '', 'weight' =>20.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 144, 'highest_stock' => 300, 'lowest_stock' => 10]);
+
+        $product = Product::create(['code' => 'LLJ15JT', 'name' => 'J15接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ25PVC85B', 'size' => 'J25', 'model' => '', 'weight' =>53.63, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 666, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LLJ50JT', 'name' => 'J50接头', 'category_id' => 11,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLFJ50PVC85B', 'size' => 'J50', 'model' => '', 'weight' =>122, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LLJ15S10PVC00B（原J10)', 'size' => 'J15', 'model' => 'J-15', 'weight' =>14.3, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1300, 'highest_stock' => 500, 'lowest_stock' => 50]);
+
+
+        // 轮片
+        $product = Product::create(['code' => 'LP0101', 'name' => 'Φ25PVC滚轮片101', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0101APVC30B', 'size' => 'Φ25*Φ9*13L', 'model' => 'HS-2510C', 'weight' =>4.38, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 405, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LP0102', 'name' => 'Φ30PVC滚轮片102', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0102APVC15B', 'size' => 'Φ30*Φ9*12L', 'model' => 'HS-3010C', 'weight' =>3.445, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0102APVC30B', 'size' => 'Φ30*Φ9*12L', 'model' => '', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0102APVC35B', 'size' => 'Φ30*Φ9*12L', 'model' => 'HS-3010C', 'weight' =>3.265, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1286, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LP0103', 'name' => 'Φ35PVC滚轮片103', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0103APVC30B', 'size' => 'Φ35*Φ9*33L', 'model' => 'HS-3510C', 'weight' =>7.405, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 35, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LP0104', 'name' => 'Φ40PVC滚轮片104', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0104APVC30B', 'size' => 'Φ40*Φ7*11L', 'model' => 'HS-3510C', 'weight' =>6.91, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2514, 'highest_stock' => 3000, 'lowest_stock' => 500]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0104BPVC30B', 'size' => 'Φ40*Φ9*11L', 'model' => 'HS-3510C', 'weight' =>6.91, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 172, 'highest_stock' => 3000, 'lowest_stock' => 500]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0104CPVC00B(30B)', 'size' => 'Φ40*Φ11*11L', 'model' => 'HS-3510C', 'weight' =>6.04, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 43, 'highest_stock' => 3000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LP0105', 'name' => 'Φ40PVC滚轮片105', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0105APVC30B', 'size' => 'Φ40*Φ7*11L', 'model' => 'HS-4008C', 'weight' =>4.63, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0105BPVC30B', 'size' => 'Φ40*Φ9.5*11L', 'model' => 'HS-4008C', 'weight' =>4.3, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2260, 'highest_stock' => 3000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LP0106', 'name' => 'Φ43PVC滚轮片106', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0106APVC35B', 'size' => 'Φ43*Φ9*28L', 'model' => 'HS-4310C', 'weight' =>9.2, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1758, 'highest_stock' => 3000, 'lowest_stock' => 500]);
+
+        $product = Product::create(['code' => 'LP0107', 'name' => 'Φ45PVC滚轮片107', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0107APVC30B', 'size' => 'Φ45*Φ9*33L', 'model' => 'HS-4510C', 'weight' =>8.53, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 927, 'highest_stock' => 3000, 'lowest_stock' => 500]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0107APVC35B', 'size' => 'Φ45*Φ9*33L', 'model' => 'HS-4510C', 'weight' =>8.53, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LP0108', 'name' => 'Φ50PVC滚轮片108', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0108APVC00B', 'size' => 'Φ50*Φ6*9.5L', 'model' => 'HS-5006C', 'weight' =>10.1, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0108APVC20B', 'size' => 'Φ50*Φ6*9.6L', 'model' => 'HS-5006C', 'weight' =>10.1, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0108APVC35B', 'size' => 'Φ50*Φ6*9.5L', 'model' => 'HS-5007C', 'weight' =>10.1, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1950, 'highest_stock' => 2000, 'lowest_stock' => 200]);
+
+        $product = Product::create(['code' => 'LP0109', 'name' => 'Φ50PVC滚轮片109', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0109APVC30B', 'size' => 'Φ50*Φ8*26L', 'model' => 'HS-5008C', 'weight' =>11.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 520, 'highest_stock' => 2000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0109APVC30B（有效长短0.4MM)', 'size' => 'Φ50*Φ8*32L', 'model' => 'HS-5008C', 'weight' =>11.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 300, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0109APVC35B', 'size' => 'Φ50*Φ8*26L', 'model' => 'HS-5008C', 'weight' =>11.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LP0110', 'name' => 'Φ50PVC滚轮片110', 'category_id' => 18,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0110APVC00B', 'size' => 'Φ50*Φ9*32L', 'model' => 'HS-5010C', 'weight' =>11.3, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 2000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0110APVC30B', 'size' => 'Φ50*Φ9*32L', 'model' => 'HS-5010C', 'weight' =>11.3, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 43, 'highest_stock' => 2000, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LP0141', 'name' => 'Φ22包胶滚轮片141', 'category_id' => 20,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0141APP+TPV25B', 'size' => '￠22*￠8*22.5L*6W', 'model' => 'HS-872', 'weight' =>2.15, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0141ATPV20B', 'size' => 'Φ22*Φ9.5*22.5L', 'model' => 'HS-206', 'weight' =>2.15, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 950, 'highest_stock' => 1000, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0141ATPV29B', 'size' => 'Φ22*Φ9.5*22.5L', 'model' => 'HS-206', 'weight' =>2.15, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 590, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0141BPP+TPV25B', 'size' => '￠22*￠10*22.5L*6W', 'model' => 'HS-872', 'weight' =>2.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1448, 'highest_stock' => 1000, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LP0142', 'name' => 'Φ22包胶滚轮片142', 'category_id' => 20,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0142APP+TPV20B', 'size' => 'Φ22*Φ9.5*15L', 'model' => 'HS-205', 'weight' =>1.322, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 425, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0142APP+TPV25B', 'size' => 'Φ22*Φ9.5*15L', 'model' => 'HS-205', 'weight' =>1.322, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2500, 'highest_stock' => 2000, 'lowest_stock' => 500]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0142BPP00B', 'size' => 'Φ22*Φ10*15L', 'model' => 'HS-205', 'weight' =>1.22, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 4723, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0142BPP+PVC00B', 'size' => 'Φ22*Φ10*15L', 'model' => 'HS-205', 'weight' =>1.3065, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 6800, 'highest_stock' => 3000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0142BPP+TPV25B', 'size' => 'Φ22*Φ10*15L', 'model' => 'HS-205', 'weight' =>1.3695, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 197, 'highest_stock' => 10000, 'lowest_stock' => 1000]);
+
+        $product = Product::create(['code' => 'LP0143', 'name' => 'Φ30包胶滚轮片143', 'category_id' => 20,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0143APP+TPV85B', 'size' => 'Φ30*Φ10*20L', 'model' => 'HS-620', 'weight' =>2.5714, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0143BPP+TPV02B', 'size' => 'Φ30*Φ10*20L', 'model' => 'HS-620', 'weight' =>2.81, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0143BPP+TPV25B', 'size' => 'Φ30*Φ10*20L', 'model' => 'HS-620', 'weight' =>2.81, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 7787, 'highest_stock' => 10000, 'lowest_stock' => 2000]);
+
+        $product = Product::create(['code' => 'LP0144', 'name' => 'Φ40包胶滚轮片144', 'category_id' => 20,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144APP 01B', 'size' => 'Φ40*Φ8*33L', 'model' => 'HS-4008B', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144APP+PVC15B', 'size' => 'Φ40*Φ8*33L', 'model' => 'HS-4008B', 'weight' =>4.851, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 283, 'highest_stock' => 1000, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144APVC15B', 'size' => 'Φ40', 'model' => 'HS-4010B', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144BPP+PVC15B', 'size' => 'Φ40*Φ10*33L', 'model' => 'HS-4010B', 'weight' =>5.409, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 1523, 'highest_stock' => 3000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144BPP00B', 'size' => 'Φ10*33L', 'model' => 'HS-4010B', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144CPP+PVC15B(外购）', 'size' => 'Φ40*Φ12*33L', 'model' => 'HS-4012B', 'weight' =>5.37, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 2236, 'highest_stock' => 5000, 'lowest_stock' => 2000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144CPP+TPV25B(外购）', 'size' => 'Φ40*Φ12*33L', 'model' => 'HS-4012B', 'weight' =>5.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 214, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144CPP+TPV25B(外购短30丝）', 'size' => 'Φ40*Φ12*33L', 'model' => 'HS-4012B', 'weight' =>5.5, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 500, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0144CPP+PVC20B(外购）', 'size' => 'Φ40*Φ12*33L', 'model' => 'HS-4012B', 'weight' =>5.37, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LP0145', 'name' => 'Φ25包胶滚轮片145', 'category_id' => 20,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0145APP+TPV02B', 'size' => 'Φ25*8*15L', 'model' => 'HS-970', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 3458, 'highest_stock' => 2000, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0145APP+TPV25B(非标)', 'size' => 'Φ25*8*20L', 'model' => 'HS-970', 'weight' =>0, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+
+        $product = Product::create(['code' => 'LP0146', 'name' => 'Φ40包胶滚轮片146', 'category_id' => 20,]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0146APP+TPV25B', 'size' => 'Φ40*Φ9.5*20L', 'model' => 'HS-163', 'weight' =>3.59, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 3238, 'highest_stock' => 5000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0146CPP+TPV25B', 'size' => 'Φ40*Φ8*20L', 'model' => 'HS-163', 'weight' =>3.59, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0146BPP+TPV25B', 'size' => 'Φ40*Φ10*20L', 'model' => 'HS-4010B', 'weight' =>3.3925, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 11146, 'highest_stock' => 10000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0146BPP+TPV25B(耐温100度）', 'size' => 'Φ40*Φ10*20L', 'model' => 'HS-4010B', 'weight' =>3.393, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 11.82, 'highest_stock' => 10000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0146BPP+TPV02B', 'size' => 'Φ40*Φ10*20L', 'model' => 'HS-4010B', 'weight' =>3.393, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 3188, 'highest_stock' => 5000, 'lowest_stock' => 1000]);
+        $product_sku = ProductSku::create(['product_id' => $product->id, 'code' => 'LP0146BPP+TPV85B', 'size' => 'Φ40*Φ10*20L', 'model' => 'HS-970', 'weight' =>3.393, 'cost_price' => 15.4,]);
+        Inventory::create(['sku_id' => $product_sku->id, 'product_id' => $product->id, 'stock' => 0, 'highest_stock' => 0, 'lowest_stock' => 0]);
     }
 }
