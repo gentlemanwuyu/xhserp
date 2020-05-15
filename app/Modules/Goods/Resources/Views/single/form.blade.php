@@ -59,19 +59,21 @@
                 <table class="layui-table" id="skuTable">
                     <thead>
                     <tr>
-                        <th rowspan="2" width="8%">
+                        <th rowspan="2" width="100">
                             是否开启
                             <input type="checkbox" lay-skin="switch" lay-text="是|否" switch-index="all" lay-filter="enableSku" @if(isset($goods) && $goods->all_enabled) checked @endif>
                         </th>
-                        <th colspan="3">产品信息</th>
+                        <th colspan="5">产品信息</th>
                         <th rowspan="2" class="required">SKU编号</th>
-                        <th rowspan="2" class="required">最低售价</th>
-                        <th rowspan="2">建议零售价</th>
+                        <th rowspan="2" class="required" width="120">最低售价</th>
+                        <th rowspan="2" width="120">建议零售价</th>
                     </tr>
                     <tr>
-                        <th>SKU编号</th>
-                        <th>重量</th>
-                        <th>成本价</th>
+                        <th width="250">SKU编号</th>
+                        <th width="150">规格</th>
+                        <th width="100">型号</th>
+                        <th width="80">重量</th>
+                        <th width="100">成本价</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -82,7 +84,9 @@
                             ?>
                             <tr @if(!$single_sku) class="layui-disabled" @endif row-index="{{$sku->id}}">
                                 <td><input type="checkbox" name="" lay-skin="switch" lay-text="是|否" switch-index="{{$sku->id}}" lay-filter="enableSku" @if($single_sku) checked @endif @if($single_sku && !$single_sku->deletable) disabled @endif></td>
-                                <td>{{$sku->code or ''}}</td>
+                                <td title="{{$sku->code}}">{{$sku->code}}</td>
+                                <td title="{{$sku->size}}">{{$sku->size}}</td>
+                                <td>{{$sku->model}}</td>
                                 <td>{{(float)$sku->weight ? $sku->weight : ''}}</td>
                                 <td>{{(float)$sku->cost_price ? $sku->weight : ''}}</td>
                                 <td goods-field="code">
