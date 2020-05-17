@@ -140,6 +140,7 @@ class CategoriesTableSeeder extends Seeder
         // 滚轮片
         $disk = Category::create(['name' => '滚轮片', 'type' => Category::GOODS]);
         Category::create(['name' => 'PP滚轮片', 'parent_id' => $disk->id, 'type' => Category::GOODS]);
+        Category::create(['name' => 'PVC滚轮片', 'parent_id' => $disk->id, 'type' => Category::GOODS]);
         Category::create(['name' => '包胶滚轮片', 'parent_id' => $disk->id, 'type' => Category::GOODS]);
         Category::create(['name' => '孟山都滚轮片', 'parent_id' => $disk->id, 'type' => Category::GOODS]);
         Category::create(['name' => '耐高温滚轮片', 'parent_id' => $disk->id, 'type' => Category::GOODS]);

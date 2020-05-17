@@ -30,14 +30,51 @@ class GoodsTableSeeder extends Seeder
      */
     public function singleSeeder()
     {
-        $products = Product::whereIn('id', [1, 3, 5, 6, 7, 8])->get();
+        $products = Product::whereIn('id', [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111])->get();
         $category_relations = [
-            1 => 75,
-            3 => 76,
-            5 => 76,
-            6 => 79,
-            7 => 91,
-            8 => 93,
+            1 => 69,
+            2 => 69,
+            3 => 70,
+            4 => 70,
+            5 => 70,
+            6 => 70,
+            7 => 70,
+            8 => 72,
+            9 => 72,
+            10 => 72,
+            11 => 72,
+            12 => 72,
+            13 => 72,
+            14 => 72,
+            15 => 72,
+            16 => 73,
+            17 => 73,
+            18 => 73,
+            19 => 73,
+            20 => 73,
+            21 => 73,
+            22 => 73,
+            23 => 73,
+            24 => 72,
+            25 => 72,
+            26 => 72,
+            27 => 72,
+            96 => 80,
+            97 => 80,
+            98 => 80,
+            99 => 80,
+            100 => 80,
+            101 => 80,
+            102 => 80,
+            103 => 80,
+            104 => 80,
+            105 => 80,
+            106 => 81,
+            107 => 81,
+            108 => 81,
+            109 => 81,
+            110 => 81,
+            111 => 81,
         ];
         foreach ($products as $product) {
             $goods = Goods::create([
@@ -56,6 +93,8 @@ class GoodsTableSeeder extends Seeder
                 $goods_sku = GoodsSku::create([
                     'goods_id' => $goods->id,
                     'code' => $product_sku->code,
+                    'size' => $product_sku->size,
+                    'model' => $product_sku->model,
                     'lowest_price' => $product_sku->cost_price * 2,
                     'msrp' => $product_sku->cost_price * 4,
                 ]);
