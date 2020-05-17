@@ -46,6 +46,8 @@
                 <thead>
                 <tr>
                     <th>SKU编号</th>
+                    <th>规格</th>
+                    <th>型号</th>
                     <th>最低售价</th>
                     <th>建议零售价</th>
                 </tr>
@@ -54,6 +56,8 @@
                 @foreach($goods->skus as $goods_sku)
                     <tr>
                         <td>{{$goods_sku->code}}</td>
+                        <td>{{$goods_sku->size}}</td>
+                        <td>{{$goods_sku->model}}</td>
                         <td>{{$goods_sku->lowest_price}}</td>
                         <td>{{$goods_sku->msrp}}</td>
                     </tr>

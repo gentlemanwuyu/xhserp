@@ -54,6 +54,8 @@ class Single extends Goods
                 $goods_sku = GoodsSku::create([
                     'goods_id' => $this->id,
                     'code' => $item['code'],
+                    'size' => $item['size'],
+                    'model' => $item['code'],
                     'lowest_price' => $item['lowest_price'],
                     'msrp' => $item['msrp'],
                 ]);
@@ -62,6 +64,8 @@ class Single extends Goods
                 $goods_sku = GoodsSku::find($goods_sku_id);
                 $goods_sku->update([
                     'code' => $item['code'],
+                    'size' => $item['size'],
+                    'model' => $item['code'],
                     'lowest_price' => $item['lowest_price'],
                     'msrp' => $item['msrp'],
                 ]);

@@ -74,6 +74,8 @@ class Combo extends Goods
             $goods_sku = GoodsSku::updateOrCreate(['id' => $flag], [
                 'goods_id' => $this->id,
                 'code' => $item['code'],
+                'size' => $item['size'],
+                'model' => $item['model'],
                 'lowest_price' => $item['lowest_price'],
                 'msrp' => $item['msrp'],
             ]);

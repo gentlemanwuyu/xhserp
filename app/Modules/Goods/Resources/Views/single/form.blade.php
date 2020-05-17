@@ -59,21 +59,23 @@
                 <table class="layui-table" id="skuTable">
                     <thead>
                     <tr>
-                        <th rowspan="2" width="100">
+                        <th rowspan="2" width="80">
                             是否开启
                             <input type="checkbox" lay-skin="switch" lay-text="是|否" switch-index="all" lay-filter="enableSku" @if(isset($goods) && $goods->all_enabled) checked @endif>
                         </th>
                         <th colspan="5">产品信息</th>
-                        <th rowspan="2" class="required">SKU编号</th>
-                        <th rowspan="2" class="required" width="120">最低售价</th>
-                        <th rowspan="2" width="120">建议零售价</th>
+                        <th rowspan="2" class="required" width="200">SKU编号</th>
+                        <th rowspan="2" width="100">规格</th>
+                        <th rowspan="2" width="100">型号</th>
+                        <th rowspan="2" class="required" width="100">最低售价</th>
+                        <th rowspan="2" width="100">建议零售价</th>
                     </tr>
                     <tr>
                         <th width="250">SKU编号</th>
                         <th width="150">规格</th>
-                        <th width="100">型号</th>
-                        <th width="80">重量</th>
-                        <th width="100">成本价</th>
+                        <th width="80">型号</th>
+                        <th width="60">重量</th>
+                        <th width="60">成本价</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -92,6 +94,16 @@
                                 <td goods-field="code">
                                     @if($single_sku)
                                         <input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$single_sku->code}}">
+                                    @endif
+                                </td>
+                                <td goods-field="size">
+                                    @if($single_sku)
+                                        <input type="text" name="skus[{{$sku->id}}][size]" placeholder="规格" class="layui-input" value="{{$single_sku->size}}">
+                                    @endif
+                                </td>
+                                <td goods-field="model">
+                                    @if($single_sku)
+                                        <input type="text" name="skus[{{$sku->id}}][model]" placeholder="型号" class="layui-input" value="{{$single_sku->model}}">
                                     @endif
                                 </td>
                                 <td goods-field="lowest_price">
@@ -131,12 +143,16 @@
                     $tr.removeClass('layui-disabled');
                     $tr.find('input[lay-filter=enableSku]').prop('checked', true);
                     $tr.children('td[goods-field=code]').html('<input type="text" name="skus[' + productSku.id + '][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="' + productSku.code + '">');
+                    $tr.children('td[goods-field=size]').html('<input type="text" name="skus[' + productSku.id + '][size]" placeholder="规格" class="layui-input" value="' + productSku.size + '">');
+                    $tr.children('td[goods-field=model]').html('<input type="text" name="skus[' + productSku.id + '][model]" placeholder="型号" class="layui-input" value="' + productSku.model + '">');
                     $tr.children('td[goods-field=lowest_price]').html('<input type="text" name="skus[' + productSku.id + '][lowest_price]" placeholder="最低售价" lay-verify="required" lay-reqText="请输入最低售价" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">');
                     $tr.children('td[goods-field=msrp]').html('<input type="text" name="skus[' + productSku.id + '][msrp]" placeholder="建议零售价" class="layui-input" oninput="value=value.replace(/[^\\d.]/g, \'\')">');
                 }else {
                     $tr.addClass('layui-disabled');
                     $tr.find('input[lay-filter=enableSku]').prop('checked', false);
                     $tr.children('td[goods-field=code]').html('');
+                    $tr.children('td[goods-field=size]').html('');
+                    $tr.children('td[goods-field=model]').html('');
                     $tr.children('td[goods-field=lowest_price]').html('');
                     $tr.children('td[goods-field=msrp]').html('');
                 }

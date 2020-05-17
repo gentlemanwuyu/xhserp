@@ -59,11 +59,13 @@
                 <table class="layui-table" id="skuTable">
                     <thead>
                     <tr>
-                        <th rowspan="2" class="required">SKU编号</th>
+                        <th rowspan="2" class="required" width="200">SKU编号</th>
+                        <th rowspan="2" width="100">规格</th>
+                        <th rowspan="2" width="100">型号</th>
                         <th colspan="{{count($products)}}">产品列表</th>
-                        <th rowspan="2" class="required">最低售价</th>
-                        <th rowspan="2">建议零售价</th>
-                        <th rowspan="2">操作</th>
+                        <th rowspan="2" class="required" width="100">最低售价</th>
+                        <th rowspan="2" width="120">建议零售价</th>
+                        <th rowspan="2" width="60">操作</th>
                     </tr>
                     <tr>
                         @foreach($products as $product)
@@ -76,6 +78,8 @@
                         @foreach($goods->skus as $sku)
                             <tr>
                                 <td><input type="text" name="skus[{{$sku->id}}][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input" value="{{$sku->code}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][size]" placeholder="规格" class="layui-input" value="{{$sku->size}}"></td>
+                                <td><input type="text" name="skus[{{$sku->id}}][model]" placeholder="型号" class="layui-input" value="{{$sku->model}}"></td>
                                 @foreach($products as $product)
                                     <td>
                                         <select name="skus[{{$sku->id}}][parts][{{$product->id}}]" lay-verify="required" lay-reqText="请选择产品SKU">
@@ -123,6 +127,12 @@
                 html += '<tr>';
                 html += '<td>';
                 html += '<input type="text" name="skus[' + sku_flag + '][code]" placeholder="SKU编号" lay-verify="required" lay-reqText="请输入SKU编号" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<input type="text" name="skus[' + sku_flag + '][size]" placeholder="规格" class="layui-input">';
+                html += '</td>';
+                html += '<td>';
+                html += '<input type="text" name="skus[' + sku_flag + '][model]" placeholder="型号" class="layui-input">';
                 html += '</td>';
                 @foreach($products as $product)
                     html += '<td>';

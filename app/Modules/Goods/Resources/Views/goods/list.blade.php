@@ -74,7 +74,7 @@
                             return d.category.name;
                         }},
                         {field: 'type_name', title: '类型', width: '5%', align: 'center'},
-                        {field: 'detail', title: 'SKU列表', width: 500, align: 'center', templet: function (d) {
+                        {field: 'detail', title: 'SKU列表', width: 700, align: 'center', templet: function (d) {
                             var html = '';
                             d.skus.forEach(function (sku, key) {
                                 if (0 == key) {
@@ -85,6 +85,8 @@
 
                                 var msrp = parseFloat(sku.msrp);
                                 html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px;">' + sku.code + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.size + '</li>';
+                                html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.model + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.lowest_price + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + (msrp ? msrp : '') + '</li>';
                                 html += '<li class="erp-table-list-li" style="width: 100px;">' + sku.stock + '</li>';
@@ -103,6 +105,8 @@
                         var html = '';
                         html += '<ul class="erp-table-list-ul">';
                         html += '<li class="erp-table-list-li erp-table-list-li-first" style="width: 200px; text-align: center;">sku编号</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">规格</li>';
+                        html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">型号</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">最低售价</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">建议零售价</li>';
                         html += '<li class="erp-table-list-li" style="width: 100px; text-align: center;">库存</li>';
