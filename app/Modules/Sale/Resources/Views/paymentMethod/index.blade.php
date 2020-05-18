@@ -48,6 +48,8 @@
 @endsection
 @section('scripts')
     <script>
+        // 页面请求参数中的status
+        var query_pma_status = "{{$status or ''}}";
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
         }).use(['table', 'dropdown', 'laydate', 'form'], function () {
@@ -58,7 +60,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::paymentMethod.paginate')}}",
-                where: {status: "{{\App\Modules\Sale\Models\PaymentMethodApplication::PENDING_REVIEW}}"},
+                where: {status: query_pma_status},
                 page: true,
                 parseData: function (res) {
                     return {
@@ -167,7 +169,7 @@
             };
 
             form.val("search", {
-                "status": PaymentMethodApplication_PENDING_REVIEW
+                "status": query_pma_status
             });
 
             table.render(tableOpts);

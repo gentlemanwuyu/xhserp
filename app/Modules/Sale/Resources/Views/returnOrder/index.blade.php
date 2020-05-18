@@ -51,6 +51,8 @@
 @endsection
 @section('scripts')
     <script>
+        // 页面请求参数中的status
+        var query_return_order_status = "{{$status or ''}}";
         layui.extend({
             dropdown: '/assets/layui-table-dropdown/dropdown'
         }).use(['table', 'dropdown', 'laydate', 'form'], function () {
@@ -61,6 +63,7 @@
                     ,tableOpts = {
                 elem: '#list',
                 url: "{{route('sale::returnOrder.paginate')}}",
+                where: {status: query_return_order_status},
                 page: true,
                 parseData: function (res) {
                     return {
@@ -219,6 +222,8 @@
             };
 
             table.render(tableOpts);
+
+            form.val('search', {status: query_return_order_status});
 
             laydate.render({
                 elem: 'input[name=created_at_between]'
