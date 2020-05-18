@@ -108,48 +108,133 @@ class GoodsTableSeeder extends Seeder
 
     public function comboSeeder()
     {
-        // 滚轮片144
-        $goods = Goods::create(['code' => 'xhsglpbj144', 'name' => '包胶滚轮片144', 'type' => Goods::COMBO, 'category_id' => 92,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 11, 'quantity' => 1,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 12, 'quantity' => 1,]);
-        $goods_sku1 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsglpbj144a', 'lowest_price' => 0.6, 'msrp' => 1.2,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 11, 'product_sku_id' => 29,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 12, 'product_sku_id' => 32,]);
-        $goods_sku2 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsglpbj144b', 'lowest_price' => 0.6, 'msrp' => 1.2,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 11, 'product_sku_id' => 30,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 12, 'product_sku_id' => 32,]);
-        $goods_sku3 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsglpbj144c', 'lowest_price' => 0.6, 'msrp' => 1.2,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 11, 'product_sku_id' => 31,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 12, 'product_sku_id' => 33,]);
+        // Kingspring流量计
+        $goods = Goods::create(['code' => 'LLF10', 'name' => 'Kingspring流量计F10', 'type' => Goods::COMBO, 'category_id' => 77,]);
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 28, 'quantity' => 2,]); // 指示扣
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 33, 'quantity' => 1,]); // 转子
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 39, 'quantity' => 1,]); // 导轨
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 48, 'quantity' => 1,]); // 视管
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 60, 'quantity' => 2,]); // 螺母
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 69, 'quantity' => 2,]); // 胶圈
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 78, 'quantity' => 1,]); // 盖子
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 86, 'quantity' => 1,]); // 接头
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-4LPM-SUS-A', 'size' => 'F10-PC视管-4LPM-SUS转子-外牙', 'model' => 'F-1004', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 94,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 175,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 405,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-4LPM-SUS-B', 'size' => 'F10-PC视管-4LPM-SUS转子-插管', 'model' => 'F-1004', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 94,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 175,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 399,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-4LPM-SUS-C', 'size' => 'F10-PC视管-4LPM-SUS转子-套管', 'model' => 'F-1004', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 94,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 175,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 402,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-4LPM-SUS-D', 'size' => 'F10-PC视管-4LPM-SUS转子-内牙', 'model' => 'F-1004', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 94,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 175,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 406,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-5LPM-SUS-A', 'size' => 'F10-PC视管-5LPM-SUS转子-外牙', 'model' => 'F-1005', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 95,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 180,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 405,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-5LPM-SUS-B', 'size' => 'F10-PC视管-5LPM-SUS转子-插管', 'model' => 'F-1005', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 95,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 180,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 399,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-5LPM-SUS-C', 'size' => 'F10-PC视管-5LPM-SUS转子-套管', 'model' => 'F-1005', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 95,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 180,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 402,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF10S10PC00B-5LPM-SUS-D', 'size' => 'F10-PC视管-5LPM-SUS转子-内牙', 'model' => 'F-1005', 'lowest_price' => 120, 'msrp' => 240,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 33, 'product_sku_id' => 95,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 39, 'product_sku_id' => 160,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 48, 'product_sku_id' => 180,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 60, 'product_sku_id' => 366,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 69, 'product_sku_id' => 376,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 78, 'product_sku_id' => 389,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 86, 'product_sku_id' => 406,]);
 
-        // 流量计011
-        $goods = Goods::create(['code' => 'xhsllj011', 'name' => 'kingspring流量计011', 'type' => Goods::COMBO, 'category_id' => 89,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 17, 'quantity' => 1,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 18, 'quantity' => 1,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 19, 'quantity' => 1,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 20, 'quantity' => 2,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 21, 'quantity' => 2,]);
-        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 22, 'quantity' => 2,]);
-        $goods_sku1 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsgllj01110-100lpm', 'lowest_price' => 120, 'msrp' => 240,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 17, 'product_sku_id' => 44,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 18, 'product_sku_id' => 47,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 19, 'product_sku_id' => 49,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 20, 'product_sku_id' => 51,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 21, 'product_sku_id' => 52,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku1->id, 'product_id' => 22, 'product_sku_id' => 54,]);
-        $goods_sku2 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsgllj01115-150lpm', 'lowest_price' => 130, 'msrp' => 240,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 17, 'product_sku_id' => 45,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 18, 'product_sku_id' => 47,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 19, 'product_sku_id' => 49,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 20, 'product_sku_id' => 51,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 21, 'product_sku_id' => 52,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku2->id, 'product_id' => 22, 'product_sku_id' => 54,]);
-        $goods_sku3 = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'xhsgllj01120-200lpm', 'lowest_price' => 140, 'msrp' => 260,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 17, 'product_sku_id' => 46,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 18, 'product_sku_id' => 48,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 19, 'product_sku_id' => 50,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 20, 'product_sku_id' => 51,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 21, 'product_sku_id' => 52,]);
-        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku3->id, 'product_id' => 22, 'product_sku_id' => 54,]);
+        $goods = Goods::create(['code' => 'LLF20', 'name' => 'Kingspring流量计F20', 'type' => Goods::COMBO, 'category_id' => 77,]);
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 28, 'quantity' => 2,]); // 指示扣
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 34, 'quantity' => 1,]); // 转子
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 40, 'quantity' => 1,]); // 导轨
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 49, 'quantity' => 1,]); // 视管
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 61, 'quantity' => 2,]); // 螺母
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 70, 'quantity' => 2,]); // 胶圈
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 80, 'quantity' => 1,]); // 盖子
+        ComboProduct::create(['goods_id' => $goods->id, 'product_id' => 87, 'quantity' => 1,]); // 接头
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF20S20PC00B-10LPM-SUS-A', 'size' => 'F20-PC视管-10LPM-SUS转子-外牙', 'model' => 'F-2010', 'lowest_price' => 160, 'msrp' => 320,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 34, 'product_sku_id' => 104,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 40, 'product_sku_id' => 162,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 49, 'product_sku_id' => 197,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 61, 'product_sku_id' => 367,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 70, 'product_sku_id' => 378,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 80, 'product_sku_id' => 392,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 87, 'product_sku_id' => 412,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF20S20PC00B-10LPM-SUS-B', 'size' => 'F20-PC视管-10LPM-SUS转子-插管', 'model' => 'F-2010', 'lowest_price' => 160, 'msrp' => 320,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 34, 'product_sku_id' => 104,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 40, 'product_sku_id' => 162,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 49, 'product_sku_id' => 197,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 61, 'product_sku_id' => 367,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 70, 'product_sku_id' => 378,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 80, 'product_sku_id' => 392,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 87, 'product_sku_id' => 410,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF20S20PC00B-10LPM-SUS-C', 'size' => 'F20-PC视管-10LPM-SUS转子-套管', 'model' => 'F-2010', 'lowest_price' => 160, 'msrp' => 320,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 34, 'product_sku_id' => 104,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 40, 'product_sku_id' => 162,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 49, 'product_sku_id' => 197,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 61, 'product_sku_id' => 367,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 70, 'product_sku_id' => 378,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 80, 'product_sku_id' => 392,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 87, 'product_sku_id' => 416,]);
+        $goods_sku = GoodsSku::create(['goods_id' => $goods->id, 'code' => 'LLF20S20PC00B-10LPM-SUS-D', 'size' => 'F20-PC视管-10LPM-SUS转子-内牙', 'model' => 'F-2010', 'lowest_price' => 160, 'msrp' => 320,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 28, 'product_sku_id' => 80,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 34, 'product_sku_id' => 104,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 40, 'product_sku_id' => 162,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 49, 'product_sku_id' => 197,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 61, 'product_sku_id' => 367,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 70, 'product_sku_id' => 378,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 80, 'product_sku_id' => 392,]);
+        ComboSkuProductSku::create(['goods_sku_id' => $goods_sku->id, 'product_id' => 87, 'product_sku_id' => 413,]);
     }
 }
