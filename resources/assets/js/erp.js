@@ -1,4 +1,66 @@
 var $ = layui.$
+    // 柱状图默认配置
+    ,barDefaultOpts = {
+    color: [
+        '#009688','#1E9FFF','#FFB980','#5FB878','#D87A80',
+        '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
+        '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
+        '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089'
+    ],
+
+    textStyle: {
+        fontFamily: '微软雅黑, Arial, Verdana, sans-serif'
+    },
+    xAxis: {
+        axisLine: {
+            lineStyle: {
+                color: '#009688',
+                width: 1.5
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#f2f2f2'
+            }
+        }
+    },
+    yAxis: {
+        axisLine: {
+            lineStyle: {
+                color: '#009688',
+                width: 1.5
+            }
+        },
+        axisTick: {
+            show: false
+        },
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#f2f2f2'
+            }
+        }
+    },
+    tooltip: {
+        backgroundColor: 'rgba(50,50,50,0.5)',   // 提示背景颜色，默认为透明度为0.7的黑色
+        axisPointer : {      // 坐标轴指示器，坐标轴触发有效
+            type : 'line',     // 默认为直线，可选为：'line' | 'shadow'
+            lineStyle : {      // 直线指示器样式设置
+                color: '#009688'
+            },
+            crossStyle: {
+                color: '#008acd'
+            },
+            shadowStyle : {           // 阴影指示器样式设置
+                color: 'rgba(200,200,200,0.2)'
+            }
+        }
+    }
+}
 /**
  * 组装响应内容
  *
