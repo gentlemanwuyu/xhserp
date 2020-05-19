@@ -89,13 +89,19 @@ class IndexController extends Controller
         $pending_review_mpa_number = PaymentMethodApplication::where('status', PaymentMethodApplication::PENDING_REVIEW)->count();
 
         // 销售业绩
+        $year = Carbon::now()->year;
+        $last_year = $year - 1;
         $month_sale_amounts = [];
         $month_delivery_amounts = [];
         $month_collect_amounts = [];
+        $last_year_month_delivery_amounts = [];
         foreach (range(1, 12) as $key => $month) {
-            $carbon = Carbon::create(Carbon::now()->year, $month, 1);
+            $carbon = Carbon::create($year, $month, 1);
             $start = $carbon->firstOfMonth()->toDateString() . ' 00:00:00';
             $end = $carbon->lastOfMonth()->toDateString() . ' 23:59:59';
+            $last_carbon = Carbon::create($last_year, $month, 1);
+            $last_start = $last_carbon->firstOfMonth()->toDateString() . ' 00:00:00';
+            $last_end = $last_carbon->lastOfMonth()->toDateString() . ' 23:59:59';
             $month_sale_amount = Order::leftJoin('order_items AS oi', 'oi.order_id', '=', 'orders.id')
                 ->leftJoin('currencies AS c', 'c.code', '=', 'orders.currency_code')
                 ->whereNull('oi.deleted_at')
@@ -119,6 +125,19 @@ class IndexController extends Controller
                 ->pluck('amount')
                 ->sum();
             $month_delivery_amounts[] = number_format($month_delivery_amount, 2, '.', '');
+            $last_year_month_delivery_amount = DeliveryOrder::leftJoin('delivery_order_items AS doi', 'doi.delivery_order_id', '=', 'delivery_orders.id')
+                ->leftJoin('order_items AS oi', 'oi.id', '=', 'doi.order_item_id')
+                ->leftJoin('orders AS o', 'o.id', '=', 'oi.order_id')
+                ->leftJoin('currencies AS c', 'c.code', '=', 'o.currency_code')
+                ->whereNull('o.deleted_at')
+                ->whereNull('oi.deleted_at')
+                ->whereIn('delivery_orders.status', [DeliveryOrder::FINISHED])
+                ->where('delivery_orders.created_at', '>=', $last_start)
+                ->where('delivery_orders.created_at', '<=', $last_end)
+                ->select(DB::raw('doi.quantity * oi.price * c.rate AS amount'))
+                ->pluck('amount')
+                ->sum();
+            $last_year_month_delivery_amounts[] = number_format($last_year_month_delivery_amount, 2, '.', '');
             $month_collect_amount = Collection::leftJoin('currencies AS c', 'c.code', '=', 'collections.currency_code')
                 ->where('collections.created_at', '>=', $start)
                 ->where('collections.created_at', '<=', $end)
@@ -127,7 +146,32 @@ class IndexController extends Controller
                 ->sum();
             $month_collect_amounts[] = number_format($month_collect_amount, 2, '.', '');
         }
+        $sale_performance = compact('month_sale_amounts', 'month_delivery_amounts', 'month_collect_amounts');
+        $sale_target = [
+            'last_year' => [
+                'name' => (string)$last_year,
+                'data' => $last_year_month_delivery_amounts
+            ],
+            'this_year' => [
+                'name' => (string)$year,
+                'data' => $month_delivery_amounts
+            ],
+            'target' => [
+                'name' => '业绩目标',
+                'data' => [1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000]
+            ],
+        ];
 
-        return response()->json(compact('delivery_order_number', 'purchase_order_sku_number', 'return_order_number', 'stockout_sku_number', 'pending_review_order_number', 'pending_review_return_order_number', 'pending_review_mpa_number', 'month_sale_amounts', 'month_delivery_amounts', 'month_collect_amounts'));
+        return response()->json(compact(
+            'delivery_order_number',
+            'purchase_order_sku_number',
+            'return_order_number',
+            'stockout_sku_number',
+            'pending_review_order_number',
+            'pending_review_return_order_number',
+            'pending_review_mpa_number',
+            'sale_performance',
+            'sale_target'
+        ));
     }
 }

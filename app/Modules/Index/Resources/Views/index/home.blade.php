@@ -108,6 +108,18 @@
     </div>
     <div class="layui-row">
         <div class="layui-col-xs12">
+            <div class="layui-card" id="sales_target">
+                <div class="layui-card-header">
+                    <h3>业绩目标图</h3>
+                </div>
+                <div class="layui-card-body">
+                    <div class="erp-charts" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
             <div class="layui-card" id="sales_performance">
                 <div class="layui-card-header">
                     <h3>销售业绩图</h3>
@@ -122,7 +134,8 @@
 @section('scripts')
     <script>
         layui.use(['form'], function () {
-            var salesPerformanceEcharts = echarts.init($('#sales_performance').find('.erp-charts')[0]);
+            var salesPerformanceEcharts = echarts.init($('#sales_performance').find('.erp-charts')[0])
+                    ,saleTargetEcharts = echarts.init($('#sales_target').find('.erp-charts')[0]);
 
             $.get("{{route('index::index.home_data')}}").done(function (data) {
                 $tasks = $('#tasks');
@@ -133,6 +146,31 @@
                 $tasks.find('.layui-card[erp-card-id=pending_review_order_number] .layuiadmin-card-list p').html(data['pending_review_order_number']);
                 $tasks.find('.layui-card[erp-card-id=pending_review_return_order_number] .layuiadmin-card-list p').html(data['pending_review_return_order_number']);
                 $tasks.find('.layui-card[erp-card-id=pending_review_mpa_number] .layuiadmin-card-list p').html(data['pending_review_mpa_number']);
+
+                saleTargetEcharts.setOption($.extend(true, barDefaultOpts, {
+                    legend: {
+                        data:[data.sale_target.last_year.name, data.sale_target.this_year.name, data.sale_target.target.name]
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                    },
+                    series: [
+                        {
+                            name: data.sale_target.last_year.name,
+                            type: 'bar',
+                            data: data.sale_target.last_year.data
+                        }, {
+                            name: data.sale_target.this_year.name,
+                            type: 'bar',
+                            data: data.sale_target.this_year.data
+                        }, {
+                            name: data.sale_target.target.name,
+                            type: 'bar',
+                            data: data.sale_target.target.data
+                        }
+                    ]
+                }));
 
                 salesPerformanceEcharts.setOption($.extend(true, barDefaultOpts, {
                     legend: {
@@ -146,15 +184,15 @@
                         {
                             name: '销售金额',
                             type: 'bar',
-                            data: data.month_sale_amounts
+                            data: data.sale_performance.month_sale_amounts
                         }, {
                             name: '出货金额',
                             type: 'bar',
-                            data: data.month_delivery_amounts
+                            data: data.sale_performance.month_delivery_amounts
                         }, {
                             name: '回款金额',
                             type: 'bar',
-                            data: data.month_collect_amounts
+                            data: data.sale_performance.month_collect_amounts
                         }
                     ]
                 }));
