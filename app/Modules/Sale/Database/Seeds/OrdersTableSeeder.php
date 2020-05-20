@@ -14,6 +14,7 @@ use Illuminate\Database\Seeder;
 use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\OrderItem;
 use App\Modules\Sale\Models\Customer;
+use App\Modules\Finance\Models\Collection;
 
 class OrdersTableSeeder extends Seeder
 {
@@ -67,10 +68,23 @@ class OrdersTableSeeder extends Seeder
                         'updated_at' => $carbon->toDateTimeString(),
                     ]);
                 }
+
+                $collection_amount = price_format($order_amount * rand(60, 100) / 100);
+                Collection::create([
+                    'customer_id' => $customer->id,
+                    'amount' => $collection_amount,
+                    'method' => \Payment::REMITTANCE,
+                    'currency_code' => $customer->currency_code,
+                    'account_id' => 2,
+                    'remained_amount' => $collection_amount,
+                    'user_id' => rand(2, 31),
+                    'created_at' => $carbon->toDateTimeString(),
+                    'updated_at' => $carbon->toDateTimeString(),
+                ]);
             }
         }
 
-        // 去年各个月份的订单
+        // 今年各个月份的订单
         foreach (range(1, $this_month) as $month) {
             // 业绩在60万到100万之间随机取
             $amount = rand(800000, 1300000);
@@ -111,6 +125,18 @@ class OrdersTableSeeder extends Seeder
                         'updated_at' => $carbon->toDateTimeString(),
                     ]);
                 }
+                $collection_amount = price_format($order_amount * rand(60, 100) / 100);
+                Collection::create([
+                    'customer_id' => $customer->id,
+                    'amount' => $collection_amount,
+                    'method' => \Payment::REMITTANCE,
+                    'currency_code' => $customer->currency_code,
+                    'account_id' => 2,
+                    'remained_amount' => $collection_amount,
+                    'user_id' => rand(2, 31),
+                    'created_at' => $carbon->toDateTimeString(),
+                    'updated_at' => $carbon->toDateTimeString(),
+                ]);
             }
         }
     }
