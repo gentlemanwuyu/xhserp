@@ -85,7 +85,7 @@
                             });
                             return total_amount.toFixed(2);
                         }},
-                        {field: 'delivery_method_name', title: '付款方式', width: 100, align: 'center'},
+                        {field: 'delivery_method_name', title: '出货方式', width: 100, align: 'center'},
                         {field: 'creator', title: '创建人', width: 100, align: 'center', templet: function (d) {
                             return d.user ? d.user.name : '';
                         }},

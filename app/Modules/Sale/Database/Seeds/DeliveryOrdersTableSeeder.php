@@ -23,7 +23,7 @@ class DeliveryOrdersTableSeeder extends Seeder
             $customer = $order->customer;
             $contacts = $customer->contacts;
             $contact = $contacts->shuffle()->shift();
-            $delivery_methods = DeliveryOrder::$delivery_methods;
+            $delivery_methods = array_keys(DeliveryOrder::$delivery_methods);
             shuffle($delivery_methods);
             $delivery_method = array_shift($delivery_methods);
             $data = [
