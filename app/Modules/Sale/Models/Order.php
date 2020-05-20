@@ -21,7 +21,7 @@ class Order extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-    const CODE_PREFIX = 'xhsso';
+    const CODE_PREFIX = 'SO';
 
     // 订单状态
     const PENDING_REVIEW = 1;

@@ -97,6 +97,33 @@ class CustomersTableSeeder extends Seeder
             'payment_method' => \PaymentMethod::CREDIT,
             'credit' => 20000,
             'reason' => '系统自动生成',
+            'user_id' => rand(2, 31),
+            'status' => PaymentMethodApplication::PENDING_REVIEW,
+        ]);
+
+        $customer = Customer::create([
+            'name' => '满星坤',
+            'code' => 'CUSJX005',
+            'company' => '深圳市满星坤科技有限公司',
+            'intro' => '',
+            'phone' => '',
+            'fax' => '',
+            'tax' => \Tax::NONE,
+            'currency_code' => 'CNY',
+            'payment_method' => \PaymentMethod::CASH,
+            'state_id' => '1935',
+            'city_id' => '1959',
+            'county_id' => '1963',
+            'street_address' => '沙井街道中心路汇盈商务大厦十六楼1604室',
+            'manager_id' => rand(2, 31),
+        ]);
+        CustomerContact::create(['customer_id' => $customer->id, 'name' => '李宏', 'position' => '老板', 'phone' => '13502856205']);
+        PaymentMethodApplication::create([
+            'customer_id' => $customer->id,
+            'payment_method' => \PaymentMethod::MONTHLY,
+            'monthly_day' => 30,
+            'reason' => '系统自动生成',
+            'user_id' => rand(2, 31),
             'status' => PaymentMethodApplication::PENDING_REVIEW,
         ]);
 
@@ -180,8 +207,27 @@ class CustomersTableSeeder extends Seeder
             'payment_method' => \PaymentMethod::MONTHLY,
             'monthly_day' => 60,
             'reason' => '系统自动生成',
+            'user_id' => rand(2, 31),
             'status' => PaymentMethodApplication::PENDING_REVIEW,
         ]);
+
+        $customer = Customer::create([
+            'name' => '明阳电路',
+            'code' => 'CUSZD005',
+            'company' => '深圳明阳电路科技股份有限公司',
+            'intro' => '',
+            'phone' => '0755-27243597',
+            'fax' => '0755-27243609',
+            'tax' => \Tax::SEVENTEEN,
+            'currency_code' => 'CNY',
+            'payment_method' => \PaymentMethod::CASH,
+            'state_id' => '1935',
+            'city_id' => '1959',
+            'county_id' => '1963',
+            'street_address' => '新桥街道上星第二工业区',
+            'manager_id' => rand(2, 31),
+        ]);
+        CustomerContact::create(['customer_id' => $customer->id, 'name' => '马云', 'position' => '乡村教师', 'phone' => '13800138000']);
 
         $customer = Customer::create([
             'name' => '天华机器',
@@ -248,6 +294,7 @@ class CustomersTableSeeder extends Seeder
             'payment_method' => \PaymentMethod::MONTHLY,
             'monthly_day' => 60,
             'reason' => '系统自动生成',
+            'user_id' => rand(2, 31),
             'status' => PaymentMethodApplication::PENDING_REVIEW,
         ]);
 

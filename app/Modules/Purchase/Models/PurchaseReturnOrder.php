@@ -21,7 +21,7 @@ class PurchaseReturnOrder extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-    const CODE_PREFIX = 'xhspro';
+    const CODE_PREFIX = 'PRO';
 
     // 采购退货单状态
     const AGREED = 1;

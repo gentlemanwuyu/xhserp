@@ -21,7 +21,7 @@ class PurchaseOrder extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-    const CODE_PREFIX = 'xhspo';
+    const CODE_PREFIX = 'PO';
 
     // 采购订单状态
     const PENDING_REVIEW = 1;

@@ -20,7 +20,7 @@ class ReturnOrder extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-    const CODE_PREFIX = 'xhsro';
+    const CODE_PREFIX = 'RO';
 
     // 退货单状态
     const PENDING_REVIEW = 1;

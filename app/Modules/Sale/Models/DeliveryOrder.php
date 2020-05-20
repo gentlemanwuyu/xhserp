@@ -19,7 +19,7 @@ class DeliveryOrder extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at', 'deleted_at'];
 
-    const CODE_PREFIX = 'xhssdo';
+    const CODE_PREFIX = 'SDO';
 
     // 出货方式
     const BY_SELF   = 1;
