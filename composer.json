@@ -17,7 +17,8 @@
         "php-http/curl-client": "^2.1",
         "nyholm/psr7": "^1.2",
         "php-http/message": "^1.8",
-        "florianv/laravel-swap": "^2.1"
+        "florianv/laravel-swap": "^2.1",
+        "barryvdh/laravel-dompdf": "v0.8.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

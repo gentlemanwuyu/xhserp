@@ -177,7 +177,11 @@ return [
         // 权限扩展包
         \Spatie\Permission\PermissionServiceProvider::class,
 
+        // 货币汇率扩展包
         \Swap\Laravel\SwapServiceProvider::class,
+
+        // PDF扩展包
+        \Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -224,6 +228,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Swap' => Swap\Laravel\Facades\Swap::class,
+        'PDF' => \Barryvdh\DomPDF\Facade::class,
     ],
 
 ];
