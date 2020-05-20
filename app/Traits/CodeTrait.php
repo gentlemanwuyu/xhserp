@@ -17,16 +17,18 @@ Trait CodeTrait
      *
      * @return string
      */
-    public static function codeGenerator()
+    public static function codeGenerator($date = null)
     {
-        $todayNumber = static::where('created_at', '>=', Carbon::now()->toDateString() . ' 00:00:00')
-            ->where('created_at', '<=', Carbon::now()->toDateString() . ' 23:59:59')
+        $carbon = $date ? Carbon::parse($date) : Carbon::now();
+
+        $todayNumber = static::where('created_at', '>=', $carbon->toDateString() . ' 00:00:00')
+            ->where('created_at', '<=', $carbon->toDateString() . ' 23:59:59')
             ->count();
 
         do {
             $todayNumber++;
             $number = sprintf('%04s', $todayNumber);
-            $code = static::CODE_PREFIX . Carbon::now()->format('Ymd') . $number;
+            $code = static::CODE_PREFIX . $carbon->format('Ymd') . $number;
             $codeExists = static::where('code', $code)->first();
             if ($codeExists) {
                 $code = '';

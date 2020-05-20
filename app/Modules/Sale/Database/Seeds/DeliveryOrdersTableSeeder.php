@@ -9,6 +9,8 @@
 namespace App\Modules\Sale\Database\Seeds;
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
+use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\DeliveryOrder;
 use App\Modules\Sale\Models\DeliveryOrderItem;
 
@@ -16,65 +18,45 @@ class DeliveryOrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $delivery_order = DeliveryOrder::create([
-            'code' => 'xhsdo20191217001',
-            'customer_id' => 2,
-            'delivery_method' => DeliveryOrder::EXPRESS,
-            'express_id' => 4,
-            'is_collected' => YES,
-            'collected_amount' => '',
-            'address' => '江苏省苏州市太仓市万盛公司',
-            'consignee' => '小饶',
-            'consignee_phone' => '15206226661',
-            'status' => DeliveryOrder::PENDING_DELIVERY,
-            'user_id' => 7,
-        ]);
-        DeliveryOrderItem::create([
-            'delivery_order_id' => $delivery_order->id,
-            'order_id' => 3,
-            'order_item_id' => 6,
-            'title' => 'PP单面隔膜压力表10KG',
-            'quantity' => 20,
-        ]);
-        DeliveryOrderItem::create([
-            'delivery_order_id' => $delivery_order->id,
-            'order_id' => 3,
-            'order_item_id' => 7,
-            'title' => 'kingspring流量计011 150JPM',
-            'quantity' => 10,
-        ]);
+        foreach (Order::all() as $order) {
+            $carbon = Carbon::parse($order->delivery_date)->addDay();
+            $customer = $order->customer;
+            $contacts = $customer->contacts;
+            $contact = $contacts->shuffle()->shift();
+            $delivery_methods = DeliveryOrder::$delivery_methods;
+            shuffle($delivery_methods);
+            $delivery_method = array_shift($delivery_methods);
+            $data = [
+                'code' => DeliveryOrder::codeGenerator($carbon->toDateString()),
+                'customer_id' => $customer->id,
+                'delivery_method' => $delivery_method,
+                'address' => $customer->full_address,
+                'consignee' => $contact->name,
+                'consignee_phone' => $contact->phone ?: '13800138000',
+                'status' => DeliveryOrder::FINISHED,
+                'user_id' => $customer->manager_id,
+                'created_at' => $carbon->toDateTimeString(),
+                'updated_at' => $carbon->toDateTimeString(),
+            ];
 
-        $delivery_order = DeliveryOrder::create([
-            'code' => 'xhsdo20191217002',
-            'customer_id' => 3,
-            'delivery_method' => DeliveryOrder::SEND,
-            'express_id' => 3,
-            'address' => '广东省深圳市宝安区西乡街道铁岗水库路166号(桃花源科技创业中心侧)',
-            'consignee' => '王先生',
-            'consignee_phone' => '13800138000',
-            'status' => DeliveryOrder::PENDING_DELIVERY,
-            'user_id' => 8,
-        ]);
-        DeliveryOrderItem::create([
-            'delivery_order_id' => $delivery_order->id,
-            'order_id' => 2,
-            'order_item_id' => 3,
-            'title' => 'PP单面隔膜压力表10KG',
-            'quantity' => 40,
-        ]);
-        DeliveryOrderItem::create([
-            'delivery_order_id' => $delivery_order->id,
-            'order_id' => 2,
-            'order_item_id' => 4,
-            'title' => 'kingspring流量计011 200JPM',
-            'quantity' => 10,
-        ]);
-        DeliveryOrderItem::create([
-            'delivery_order_id' => $delivery_order->id,
-            'order_id' => 2,
-            'order_item_id' => 5,
-            'title' => '孟山都滚轮片162A',
-            'quantity' => 300,
-        ]);
+            if (DeliveryOrder::EXPRESS == $delivery_method) {
+                $data['express_id'] = rand(1, 4);
+            }
+            $delivery_order = DeliveryOrder::create($data);
+            foreach ($order->items as $order_item) {
+                DeliveryOrderItem::create([
+                    'delivery_order_id' => $delivery_order->id,
+                    'order_id' => $order->id,
+                    'order_item_id' => $order_item->id,
+                    'title' => $order_item->title,
+                    'quantity' => $order_item->quantity,
+                    'real_quantity' => $order_item->quantity,
+                    'is_paid' => YES,
+                    'delivered_at' => $carbon->toDateString() . ' 23:59:59',
+                    'created_at' => $carbon->toDateTimeString(),
+                    'updated_at' => $carbon->toDateTimeString(),
+                ]);
+            }
+        }
     }
 }

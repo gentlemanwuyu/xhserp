@@ -8,82 +8,110 @@
 
 namespace App\Modules\Sale\Database\Seeds;
 
+use App\Modules\Goods\Models\Goods;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use App\Modules\Sale\Models\Order;
 use App\Modules\Sale\Models\OrderItem;
+use App\Modules\Sale\Models\Customer;
 
 class OrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        $order = Order::create(['code' => 'xhsso20191211001', 'customer_id' => 1, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(5)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 5]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 2,
-            'sku_id' => 6,
-            'title' => 'PP单面隔膜压力表7KG',
-            'unit' => '个',
-            'quantity' => '50',
-            'price' => 65,
-        ]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 8,
-            'sku_id' => 22,
-            'title' => 'kingspring流量计011 150JPM',
-            'unit' => '个',
-            'quantity' => '10',
-            'price' => 350,
-        ]);
+        $customers = Customer::all();
+        $customer_number = $customers->count();
+        $goods = Goods::all();
+        $this_year = Carbon::now()->year;
+        $this_month = Carbon::now()->month;
+        $last_year = $this_year -1 ;
 
-        $order = Order::create(['code' => 'xhsso20191211002', 'customer_id' => 3, 'payment_method' => \PaymentMethod::MONTHLY, 'tax' => \Tax::SEVENTEEN, 'currency_code' => 'USD', 'delivery_date' => Carbon::now()->addDays(7)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 6]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 2,
-            'sku_id' => 7,
-            'title' => 'PP单面隔膜压力表10KG',
-            'unit' => '个',
-            'quantity' => '50',
-            'price' => 65,
-        ]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 8,
-            'sku_id' => 23,
-            'title' => 'kingspring流量计011 200JPM',
-            'unit' => '个',
-            'quantity' => '10',
-            'price' => 350,
-        ]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 6,
-            'sku_id' => 16,
-            'title' => '孟山都滚轮片162A',
-            'unit' => '个',
-            'quantity' => '300',
-            'price' => 1.5,
-        ]);
+        // 去年各个月份的订单
+        foreach (range(1, 12) as $month) {
+            // 业绩在60万到100万之间随机取
+            $amount = rand(600000, 1000000);
+            foreach ($customers->shuffle() as $customer) {
+                // 每个客户平均订单金额
+                $order_amount = price_format($amount / $customer_number);
+                $carbon = Carbon::create($last_year, $month, rand(1, 28));
+                $clone_carbon = clone $carbon;
+                $order = Order::create([
+                    'code' => Order::codeGenerator($carbon->toDateString()),
+                    'customer_id' => $customer->id,
+                    'payment_method' => $customer->payment_method,
+                    'tax' => $customer->tax,
+                    'currency_code' => $customer->currency_code,
+                    'delivery_date' => $clone_carbon->addDays(rand(3, 7))->toDateString(),
+                    'status' => Order::FINISHED,
+                    'payment_status' => Order::FINISHED_PAYMENT,
+                    'user_id' => $customer->manager_id,
+                    'created_at' => $carbon->toDateTimeString(),
+                    'updated_at' => $carbon->toDateTimeString(),
+                ]);
 
-        $order = Order::create(['code' => 'xhsso20191211003', 'customer_id' => 2, 'payment_method' => \PaymentMethod::CREDIT, 'tax' => \Tax::NONE, 'currency_code' => 'CNY', 'delivery_date' => Carbon::now()->addDays(2)->toDateString() , 'status' => Order::AGREED, 'payment_status' => Order::PENDING_PAYMENT, 'user_id' => 7]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 2,
-            'sku_id' => 6,
-            'title' => 'PP单面隔膜压力表7KG',
-            'unit' => '个',
-            'quantity' => '50',
-            'price' => 65,
-        ]);
-        OrderItem::create([
-            'order_id' => $order->id,
-            'goods_id' => 8,
-            'sku_id' => 22,
-            'title' => 'kingspring流量计011 150JPM',
-            'unit' => '个',
-            'quantity' => '10',
-            'price' => 350,
-        ]);
+                $order_item_number = rand(1, 5);
+                $item_amount = price_format($order_amount / $order_item_number); // 每个Item平均金额
+                foreach ($goods->shuffle()->slice(0, $order_item_number)  as $g) {
+                    $goods_sku = $g->skus->shuffle()->shift(); // 随机取一个sku
+                    $price = price_format($goods_sku->lowest_price * 1.3);
+                    $quantity = floor($item_amount / $price);
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'goods_id' => $g->id,
+                        'sku_id' => $goods_sku->id,
+                        'title' => $g->name,
+                        'unit' => '个',
+                        'quantity' => $quantity,
+                        'price' => $price,
+                        'created_at' => $carbon->toDateTimeString(),
+                        'updated_at' => $carbon->toDateTimeString(),
+                    ]);
+                }
+            }
+        }
+
+        // 去年各个月份的订单
+        foreach (range(1, $this_month) as $month) {
+            // 业绩在60万到100万之间随机取
+            $amount = rand(800000, 1300000);
+            foreach ($customers->shuffle() as $customer) {
+                // 每个客户平均订单金额
+                $order_amount = price_format($amount / $customer_number);
+                $carbon = Carbon::create($this_year, $month, rand(1, 28));
+                $clone_carbon = clone $carbon;
+                $order = Order::create([
+                    'code' => Order::codeGenerator($carbon->toDateString()),
+                    'customer_id' => $customer->id,
+                    'payment_method' => $customer->payment_method,
+                    'tax' => $customer->tax,
+                    'currency_code' => $customer->currency_code,
+                    'delivery_date' => $clone_carbon->addDays(rand(3, 7))->toDateString(),
+                    'status' => Order::FINISHED,
+                    'payment_status' => Order::FINISHED_PAYMENT,
+                    'user_id' => $customer->manager_id,
+                    'created_at' => $carbon->toDateTimeString(),
+                    'updated_at' => $carbon->toDateTimeString(),
+                ]);
+
+                $order_item_number = rand(1, 5);
+                $item_amount = price_format($order_amount / $order_item_number); // 每个Item平均金额
+                foreach ($goods->shuffle()->slice(0, $order_item_number)  as $g) {
+                    $goods_sku = $g->skus->shuffle()->shift(); // 随机取一个sku
+                    $price = price_format($goods_sku->lowest_price * 1.3);
+                    $quantity = floor($item_amount / $price);
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'goods_id' => $g->id,
+                        'sku_id' => $goods_sku->id,
+                        'title' => $g->name,
+                        'unit' => '个',
+                        'quantity' => $quantity,
+                        'price' => $price,
+                        'created_at' => $carbon->toDateTimeString(),
+                        'updated_at' => $carbon->toDateTimeString(),
+                    ]);
+                }
+            }
+        }
     }
 }
