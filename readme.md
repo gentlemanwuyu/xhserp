@@ -1,5 +1,8 @@
 # 欣汉生企业管理系统
 * Author: Woozee(https://www.woozee.com.cn)
+* 演示地址: https://xhserp.woozee.com.cn
+* 账号: 492444775@qq.com
+* 密码: admin
 
 ## 基础功能
 - 用户管理 —— 添加、编辑、删除；
