@@ -157,7 +157,7 @@
                         actions.push({
                             title: "打印",
                             event: function () {
-                                parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.document')}}?delivery_order_id=" + data.id, '打印出货单[' + data.id + ']');
+                                parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.bill')}}?delivery_order_id=" + data.id, '打印出货单[' + data.id + ']');
                             }
                         });
 
