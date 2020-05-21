@@ -40,4 +40,5 @@ Route::group(['prefix' => 'returnOrder', 'as'=>'returnOrder.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'ReturnOrderController@save']);
 	Route::get('detail', ['as'=>'detail', 'uses'=>'ReturnOrderController@detail']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'ReturnOrderController@delete']);
+	Route::post('edit_track_no', ['as'=>'edit_track_no', 'uses'=>'ReturnOrderController@editTrackNo']);
 });

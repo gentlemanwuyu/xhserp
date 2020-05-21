@@ -41,7 +41,9 @@
                             <tr>
                                 <td>
                                     物流单号
+                                    @can('edit_delivery_order')
                                     <a href="javascript:;" erp-event="edit_track_no">[修改]</a>
+                                    @endcan
                                 </td>
                                 <td>{{$delivery_order->track_no}}</td>
                             </tr>

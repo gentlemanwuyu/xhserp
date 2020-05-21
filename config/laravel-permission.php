@@ -249,7 +249,6 @@ return [
                     'name' => 'delivery_order_management', 'display_name' => '出货管理', 'route' => '', 'type' => 1, 'children' =>
                     [
                         ['name' => 'delivery_order_detail', 'display_name' => '出货单详情', 'route' => '', 'type' => 2],
-                        ['name' => 'edit_delivery_order_track_no', 'display_name' => '编辑出货单物流单号', 'route' => '', 'type' => 2],
                         ['name' => 'edit_delivery_order', 'display_name' => '编辑出货单', 'route' => '', 'type' => 2],
                         ['name' => 'delete_delivery_order', 'display_name' => '删除出货单', 'route' => '', 'type' => 2],
                     ]

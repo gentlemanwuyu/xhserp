@@ -4,6 +4,7 @@ namespace App\Modules\Purchase\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Purchase\Http\Requests\TrackNoRequest;
 use App\Modules\Purchase\Http\Requests\ReturnOrderRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -169,6 +170,30 @@ class ReturnOrderController extends Controller
                 $item->delete();
             });
             $purchase_return_order->delete();
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
+    }
+
+    public function editTrackNo(TrackNoRequest $request)
+    {
+        try {
+            $purchase_return_order = PurchaseReturnOrder::find($request->get('purchase_return_order_id'));
+
+            if (!$purchase_return_order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该采购退货单']);
+            }
+            if (PurchaseReturnOrder::EXPRESS != $purchase_return_order->delivery_method) {
+                return response()->json(['status' => 'fail', 'msg' => '该采购退货单的发货方式不是快递']);
+            }
+
+            DB::beginTransaction();
+            $purchase_return_order->track_no = $request->get('track_no');
+            $purchase_return_order->save();
 
             DB::commit();
             return response()->json(['status' => 'success']);
