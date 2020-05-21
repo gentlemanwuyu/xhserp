@@ -40,7 +40,7 @@ Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
 	Route::post('save', ['as'=>'save', 'uses'=>'DeliveryOrderController@save']);
 	Route::post('delete', ['as'=>'delete', 'uses'=>'DeliveryOrderController@delete']);
 	Route::get('detail', ['as'=>'detail', 'uses'=>'DeliveryOrderController@detail']);
-	Route::get('document', ['as'=>'document', 'uses'=>'DeliveryOrderController@document']);
+	Route::get('bill', ['as'=>'bill', 'uses'=>'DeliveryOrderController@bill']);
 });
 
 Route::group(['prefix' => 'paymentMethod', 'as'=>'paymentMethod.'], function (){

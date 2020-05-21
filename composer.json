@@ -39,7 +39,8 @@
             "app/Libs/Helpers/Helpers.php",
             "app/Libs/Constants/Tax.php",
             "app/Libs/Constants/Payment.php",
-            "app/Libs/Constants/System.php"
+            "app/Libs/Constants/System.php",
+            "app/Libs/Constants/Bill.php"
         ]
     },
     "autoload-dev": {

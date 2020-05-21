@@ -105,7 +105,12 @@ if (! function_exists('price_format')) {
 }
 
 if (! function_exists('amount_to_cn')) {
-
+    /**
+     * 将金额转成中文写法
+     *
+     * @param $amount
+     * @return string
+     */
     function amount_to_cn($amount)
     {
         if (0 == $amount) {
@@ -151,3 +156,25 @@ if (! function_exists('amount_to_cn')) {
     }
 }
 
+if (! function_exists('array_piece')) {
+    /**
+     * 价格格式, 保留小数点后两位
+     *
+     * @param $price
+     * @return string
+     */
+    function array_piece($array, $piece_len)
+    {
+        $result = [];
+        if ($array && is_array($array)) {
+            $arr_len = count($array);
+            $offset = 0;
+            do {
+                $result[] = array_slice($array, $offset, $piece_len);
+                $offset += $piece_len;
+            }while($offset < $arr_len);
+        }
+
+        return $result;
+    }
+}
