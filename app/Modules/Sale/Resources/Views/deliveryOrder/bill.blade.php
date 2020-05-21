@@ -116,8 +116,14 @@
             @endforeach
         </div>
     </div>
+    <div class="row" style="margin-top: 15px;">
+        <div class="layui-col-xs12" style="text-align: center">
+            <button type="button" class="layui-btn layui-btn-normal" erp-action="preview">打印预览</button>
+        </div>
+    </div>
 @endsection
 @section('scripts')
+    <script src="{{asset('/assets/js/LodopFuncs.js')}}"></script>
     <script>
         layui.use('carousel', function(){
             var carousel = layui.carousel;
@@ -129,6 +135,20 @@
                 ,arrow: 'always'
                 ,autoplay: false
                 ,indicator: 'none'
+            });
+
+            $('*[erp-action=preview]').on('click', function () {
+                var LODOP=getLodop();
+                LODOP.PRINT_INIT("delivery_order");
+                $('.bill').each(function (index, dom) {
+                    if (0 == index) {
+                        LODOP.ADD_PRINT_HTM(0, 0, '210mm', '140mm',dom.innerHTML);
+                    }else {
+                        LODOP.NewPage();
+                        LODOP.ADD_PRINT_HTM(0, 0, '210mm', '140mm',dom.innerHTML);
+                    }
+                });
+                LODOP.PREVIEW();
             });
         });
     </script>
