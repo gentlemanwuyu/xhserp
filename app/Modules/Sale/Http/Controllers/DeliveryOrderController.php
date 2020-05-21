@@ -4,6 +4,7 @@ namespace App\Modules\Sale\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Modules\Sale\Http\Requests\TrackNoRequest;
 use App\Modules\Sale\Http\Requests\DeliveryOrderRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -194,5 +195,29 @@ class DeliveryOrderController extends Controller
         $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
 
         return view('sale::deliveryOrder.bill', compact('delivery_order'));
+    }
+
+    public function editTrackNo(TrackNoRequest $request)
+    {
+        try {
+            $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
+
+            if (!$delivery_order) {
+                return response()->json(['status' => 'fail', 'msg' => '没有找到该出货单']);
+            }
+            if (DeliveryOrder::EXPRESS != $delivery_order->delivery_method) {
+                return response()->json(['status' => 'fail', 'msg' => '该出货单的发货方式不是快递']);
+            }
+
+            DB::beginTransaction();
+            $delivery_order->track_no = $request->get('track_no');
+            $delivery_order->save();
+
+            DB::commit();
+            return response()->json(['status' => 'success']);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'fail', 'msg' => $e->getMessage(), 'exception' => get_class($e)]);
+        }
     }
 }

@@ -39,7 +39,10 @@
                                 <td>{{$delivery_order->express->name or ''}}</td>
                             </tr>
                             <tr>
-                                <td>物流单号</td>
+                                <td>
+                                    物流单号
+                                    <a href="javascript:;" erp-event="edit_track_no">[修改]</a>
+                                </td>
                                 <td>{{$delivery_order->track_no}}</td>
                             </tr>
                             <tr>
@@ -194,6 +197,37 @@
                         });
                     });
                 }
+            });
+
+            $('*[erp-event=edit_track_no]').on('click', function () {
+                layer.prompt({
+                    title: '物流单号',
+                    value: delivery_order.track_no
+                }, function(value, index, elem){
+                    layer.close(index);
+                    var load_index = layer.load();
+                    $.ajax({
+                        method: "post",
+                        url: "{{route('sale::deliveryOrder.edit_track_no')}}",
+                        data: {delivery_order_id: delivery_order.id, track_no: value},
+                        success: function (res) {
+                            layer.close(load_index);
+                            if ('success' == res.status) {
+                                layer.msg("物流单号编辑成功", {icon: 1, time: 2000}, function(){
+                                    location.reload();
+                                });
+                            } else {
+                                layer.msg("物流单号编辑失败:" + res.msg, {icon: 2, time: 2000});
+                                return false;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.close(load_index);
+                            layer.msg(packageValidatorResponseText(XMLHttpRequest.responseText), {icon: 2, time: 2000});
+                            return false;
+                        }
+                    });
+                });
             });
         });
     </script>

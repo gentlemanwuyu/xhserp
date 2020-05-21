@@ -41,6 +41,7 @@ Route::group(['prefix' => 'deliveryOrder', 'as'=>'deliveryOrder.'], function (){
 	Route::post('delete', ['as'=>'delete', 'uses'=>'DeliveryOrderController@delete']);
 	Route::get('detail', ['as'=>'detail', 'uses'=>'DeliveryOrderController@detail']);
 	Route::get('bill', ['as'=>'bill', 'uses'=>'DeliveryOrderController@bill']);
+	Route::post('edit_track_no', ['as'=>'edit_track_no', 'uses'=>'DeliveryOrderController@editTrackNo']);
 });
 
 Route::group(['prefix' => 'paymentMethod', 'as'=>'paymentMethod.'], function (){
