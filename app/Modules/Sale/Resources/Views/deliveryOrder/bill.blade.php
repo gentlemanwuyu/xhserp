@@ -7,11 +7,22 @@
             height: 140mm;
             background-color: #fff;
             padding: 5mm;
+            position: relative;
+        }
+        .page{
+            position: absolute;
+            right: 5mm;
+            bottom: 5mm;
+        }
+        .bill_no{
+            position: absolute;
+            right: 5mm;
+            top: 5mm;
         }
         h1, h2, p{text-align: center;}
-        h1{padding-top: 5px; padding-bottom: 5px;}
+        h1{padding-top: 5px; padding-bottom: 5px; margin-left: 80px;}
         h2{padding-top: 5px; padding-bottom: 5px;}
-        p{padding-top: 3px; padding-bottom: 3px;}
+        p{padding-top: 3px; padding-bottom: 3px; margin-left: 80px;}
         .items td{padding: 6px 10px;}
     </style>
 @endsection
@@ -27,13 +38,15 @@
             @foreach($doi_pieces as $p_index => $dois)
             <div>
                 <div class="layui-row bill">
-                    <div class="layui-col-xs12" style="position: relative;">
-                        <span style="position: absolute;right: 0;top: 0;">{{$p_index + 1}}/{{$page_number or 1}}</span>
-                        <span style="position: absolute;left: 0;top: 0;">{{$delivery_order->code}}</span>
-                        <h1>深圳市欣汉生科技有限公司</h1>
-                        <p>SHENZHEN HANSHENG ELECTR0NIC DEVICE STUFF CO.,LTD</p>
-                        <p>ADD:深圳市龙岗区龙岗街道龙胜路8号香玉儿工业园10栋3楼 URL:http://www.hspcb168.com</p>
-                        <p>TEL:0755-84841960 84828209 84826609   FAX:0755-84828709</p>
+                    <span class="page">{{$p_index + 1}}/{{$page_number or 1}}</span>
+                    <span class="bill_no">NO: {{$delivery_order->code}}</span>
+                    <div class="layui-col-xs12">
+                        <div id="header" style="position: relative; background: url('{{asset('/assets/images/xhs-logo.png')}}') no-repeat 20px center; background-size: auto 70%;">
+                            <h1>深圳市欣汉生科技有限公司</h1>
+                            <p>SHENZHEN HANSHENG ELECTR0NIC DEVICE STUFF CO.,LTD</p>
+                            <p>ADD:深圳市龙岗区龙岗街道龙胜路8号香玉儿工业园10栋3楼 URL:http://www.hspcb168.com</p>
+                            <p>TEL:0755-84841960 84828209 84826609   FAX:0755-84828709</p>
+                        </div>
                         <h2>
                             送货单
                         </h2>
@@ -45,10 +58,6 @@
                         <div class="layui-row" style="margin-top: 3px; margin-bottom: 3px;">
                             <div class="layui-col-xs12" style="position: relative;padding-right: 3em;">
                                 <table class="layui-table items" style="margin: 0;">
-                                    <?php
-                                        $dois_number = count($dois);
-
-                                    ?>
                                     <tr>
                                         <td width="40">序号</td>
                                         <td colspan="3">物料名称及规格</td>
@@ -107,9 +116,6 @@
             @endforeach
         </div>
     </div>
-
-
-
 @endsection
 @section('scripts')
     <script>
