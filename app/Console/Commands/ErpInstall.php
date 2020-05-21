@@ -49,14 +49,13 @@ class ErpInstall extends Command
         $this->execShellWithPrettyPrint("php artisan world:init");
         $this->execShellWithPrettyPrint("php artisan currency:refresh");
         $this->execShellWithPrettyPrint("php artisan module:migrate");
-        $this->execShellWithPrettyPrint("php artisan db:seed");
         $this->createAdminAccount();
         // 填充权限数据
         $this->execShellWithPrettyPrint("php artisan index:fill_permission");
         // 是否填充数据
         if ($this->option('seed')) {
             $this->createGuestAccount();
-            $this->execShellWithPrettyPrint("php artisan module:seed");
+            $this->execShellWithPrettyPrint("php artisan db:seed");
         }
     }
 
