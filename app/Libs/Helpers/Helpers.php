@@ -103,3 +103,51 @@ if (! function_exists('price_format')) {
         return number_format($price, 2, '.', '');
     }
 }
+
+if (! function_exists('amount_to_cn')) {
+
+    function amount_to_cn($amount)
+    {
+        if (0 == $amount) {
+            return "零元整";
+        }
+
+        if (12 < strlen($amount)) {
+            return "不支持万亿及更高金额";
+        }
+
+        // 预定义中文转换的数组
+        $digital = array('零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖');
+        // 预定义单位转换的数组
+        $position = array('仟', '佰', '拾', '亿', '仟', '佰', '拾', '万', '仟', '佰', '拾', '元');
+
+        // 将金额的数值字符串拆分成数组
+        $amountArr = explode('.', $amount);
+        // 将整数位的数值字符串拆分成数组
+        $integerArr = str_split($amountArr[0], 1);
+
+        // 将整数部分替换成大写汉字
+        $result = '';
+        $integerArrLength = count($integerArr);
+        $positionLength = count($position);
+        for ($i=0; $i<$integerArrLength; $i++) {
+            $result = $result . $digital[$integerArr[$i]]. $position[$positionLength - $integerArrLength + $i];
+        }
+
+        // 如果存在小数位，继续转换小数位
+        if (!empty($amountArr[1])) {
+            $decimalArr = str_split($amountArr[1], 1);
+            if (isset($decimalArr[0])) {
+                $result .= $digital[$decimalArr[0]] . '角';
+            }
+            if (isset($decimalArr[1])) {
+                $result .= $digital[$decimalArr[1]] . '分';
+            }
+        }else {
+            $result .= '整';
+        }
+
+        return $result;
+    }
+}
+

@@ -13,7 +13,6 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix.copy('node_modules/layui-src/dist','public/assets/layui-src/dist');
-    mix.copy('node_modules/layui-src/dist/font','storage/fonts');
     mix.copy('node_modules/echarts/dist','public/assets/echarts/dist');
     mix.copy('node_modules/moment/moment.js','public/assets/moment/moment.js');
     mix.copy('node_modules/xm-select/dist','public/assets/xm-select/dist');

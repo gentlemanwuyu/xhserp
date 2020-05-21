@@ -154,6 +154,13 @@
                         });
                         @endcan
 
+                        actions.push({
+                            title: "打印",
+                            event: function () {
+                                parent.layui.index.openTabsPage("{{route('sale::deliveryOrder.document')}}?delivery_order_id=" + data.id, '打印出货单[' + data.id + ']');
+                            }
+                        });
+
                         if (-1 < [DeliveryOrder_PENDING_DELIVERY, DeliveryOrder_PENDING_REVIEW].indexOf(data.status)) {
                             @can('edit_delivery_order')
                             actions.push({

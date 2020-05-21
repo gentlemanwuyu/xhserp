@@ -188,4 +188,11 @@ class DeliveryOrderController extends Controller
 
         return view('sale::deliveryOrder.detail', compact('delivery_order'));
     }
+
+    public function document(Request $request)
+    {
+        $delivery_order = DeliveryOrder::find($request->get('delivery_order_id'));
+
+        return view('sale::deliveryOrder.document', compact('delivery_order'));
+    }
 }
