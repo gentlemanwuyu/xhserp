@@ -55,6 +55,7 @@ class ErpInstall extends Command
         $this->execShellWithPrettyPrint("php artisan index:fill_permission");
         // 是否填充数据
         if ($this->option('seed')) {
+            $this->createGuestAccount();
             $this->execShellWithPrettyPrint("php artisan module:seed");
         }
     }
@@ -89,5 +90,19 @@ class ErpInstall extends Command
             'is_admin' => YES,
             'status' => User::ENABLED,
         ]);
+    }
+
+    public function createGuestAccount()
+    {
+        $guest =  User::create([
+            'name' => 'guest',
+            'email' => 'guest@example.com',
+            'password' => bcrypt('woozee'),
+            'gender_id' => User::MALE,
+            'telephone' => '10086',
+            'status' => User::ENABLED,
+        ]);
+
+        return $guest->giveAllPermissions();
     }
 }

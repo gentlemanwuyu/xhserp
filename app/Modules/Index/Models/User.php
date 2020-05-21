@@ -138,6 +138,14 @@ class User extends Authenticatable
         return true;
     }
 
+    public function giveAllPermissions()
+    {
+        $permissions = Permission::pluck('name')->toArray();
+        $this->syncPermissions($permissions);
+
+        return $this;
+    }
+
     /**
      * 重写方法，本地环境和管理员拥有所有权限
      *
