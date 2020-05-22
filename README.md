@@ -1,1 +1,1 @@
-- <a href="usageDocument.md">使用文档</a>
+- <a href="usageDocument">使用文档</a>
