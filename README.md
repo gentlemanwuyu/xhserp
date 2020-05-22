@@ -1,1 +1,1 @@
-- <a href="usageDocument">使用文档</a>
+- [使用文档](https://gentlemanwuyu.github.io/xhserp/usageDocument)

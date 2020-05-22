@@ -1,7 +1,7 @@
 # 使用文档
-- <a href="#category_management">分类管理</a>
-    - <a href="#pruduct_category">产品分类</a>
-    - <a href="#goods_category">商品分类</a>
+- [分类管理](https://gentlemanwuyu.github.io/xhserp/usageDocument#分类管理)
+    - [产品分类](https://gentlemanwuyu.github.io/xhserp/usageDocument#产品分类)
+    - [商品分类](https://gentlemanwuyu.github.io/xhserp/usageDocument#商品分类)
 - 产品管理
     - 产品列表
 - 商品管理
@@ -39,12 +39,11 @@
 
 
 
-## <a name="category_management">分类管理</a>
+## 分类管理
 
 系统将产品分类和商品分类分开管理，两者之间互不关联，目前最多支持3级分类。
 
-- <a name="product_category">产品分类</a>
-
+### 产品分类
 分类采用树状结构展示，点击 **展开** 可以展开所有节点
 
 按钮|说明
@@ -54,6 +53,5 @@
 编辑|分类名必填<br>分类名不能超过80个字符
 删除|存在子分类的不可删除<br>分类下存在产品的不可删除
 
-- <a name="goods_category">商品分类</a>
-
-同<a href="#pruduct_category">产品分类</a>
+### 商品分类
+同[产品分类](https://gentlemanwuyu.github.io/xhserp/usageDocument#产品分类)
