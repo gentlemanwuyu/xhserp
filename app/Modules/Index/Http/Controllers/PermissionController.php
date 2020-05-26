@@ -63,6 +63,8 @@ class PermissionController extends Controller
             ];
 
             Permission::updateOrCreate(['id' => $request->get('permission_id')], $data);
+            // 更新完刷新缓存
+            flush_permission_tree();
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {
@@ -80,6 +82,8 @@ class PermissionController extends Controller
             }
 
             $permission->delete();
+            // 删除完刷新缓存
+            flush_permission_tree();
 
             return response()->json(['status' => 'success']);
         }catch (\Exception $e) {

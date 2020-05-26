@@ -111,7 +111,8 @@ class FillPermission extends Command
                 }
             }
 
-
+            // 刷新缓存
+            flush_permission_tree();
         }catch (\Exception $e) {
             $this->info("[" . get_class($e) . "]" . $e->getMessage());
         }

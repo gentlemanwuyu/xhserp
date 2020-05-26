@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Cache;
 use App\Modules\Index\Models\Config;
+use App\Modules\Index\Models\Permission;
 
 if (! function_exists('module_path')) {
     /**
@@ -53,7 +54,7 @@ if (! function_exists('get_sys_configs')) {
      * 获取系统配置
      *
      * @param $module
-     * @return object
+     * @return array
      */
     function get_sys_configs()
     {
@@ -74,7 +75,7 @@ if (! function_exists('flush_sys_configs')) {
      * 刷新系统配置缓存
      *
      * @param $module
-     * @return object
+     * @return bool
      */
     function flush_sys_configs()
     {
@@ -82,6 +83,25 @@ if (! function_exists('flush_sys_configs')) {
 
         $sys_configs = array_column(Config::all(['key', 'value'])->toArray(), 'value', 'key');
         Cache::put('system:configs', json_encode($sys_configs), 14400);
+
+        return true;
+    }
+}
+
+if (! function_exists('flush_permission_tree')) {
+    /**
+     * 刷新权限树缓存
+     *
+     * @param $module
+     * @return bool
+     */
+    function flush_permission_tree()
+    {
+        Cache::forget('entrust:permission_tree_0');
+
+        $tree = Permission::tree();
+
+        Cache::forever('entrust:permission_tree_0', json_encode($tree));
 
         return true;
     }
@@ -161,7 +181,7 @@ if (! function_exists('array_piece')) {
      * 价格格式, 保留小数点后两位
      *
      * @param $price
-     * @return string
+     * @return array
      */
     function array_piece($array, $piece_len)
     {
