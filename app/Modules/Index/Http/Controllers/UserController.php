@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\UserDisabled;
 use App\Modules\Index\Models\User;
 use App\Modules\Index\Models\Role;
-use App\Modules\Index\Models\Permission;
+use App\Services\EntrustService;
 
 class UserController extends Controller
 {
@@ -170,7 +170,7 @@ class UserController extends Controller
 
     public function assignPermission(Request $request)
     {
-        $tree = Permission::tree();
+        $tree = EntrustService::permissionTree();
         $user = User::find($request->get('user_id'));
         $roles_permissions = array_unique(array_column($user->getPermissionsViaRoles()->toArray(), 'name'));
         $permissions = array_unique(array_column($user->permissions->toArray(), 'name'));
@@ -201,7 +201,7 @@ class UserController extends Controller
     public function detail(Request $request)
     {
         $user = User::find($request->get('user_id'));
-        $permissions = Permission::tree();
+        $permissions = EntrustService::permissionTree();
         $user_permissions = array_column($user->permissions->toArray(), 'name');
         foreach ($user->roles as $role) {
             $user_permissions = array_merge($user_permissions, array_column($role->permissions->toArray(), 'name'));

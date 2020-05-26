@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Modules\Index\Http\Requests\RoleRequest;
 use Illuminate\Support\Facades\DB;
 use App\Modules\Index\Models\Role;
-use App\Modules\Index\Models\Permission;
+use App\Services\EntrustService;
 
 class RoleController extends Controller
 {
@@ -43,7 +43,7 @@ class RoleController extends Controller
 
     public function form(Request $request)
     {
-        $tree = Permission::tree();
+        $tree = EntrustService::permissionTree();
         $data = compact('tree');
         $permissions = [];
         if ($request->get('role_id')) {
@@ -97,7 +97,7 @@ class RoleController extends Controller
     public function detail(Request $request)
     {
         $role = Role::find($request->get('role_id'));
-        $permissions = Permission::tree();
+        $permissions = EntrustService::permissionTree();
 
         return view('index::role.detail', compact('role', 'permissions'));
     }

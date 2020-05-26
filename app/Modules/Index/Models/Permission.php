@@ -20,6 +20,12 @@ class Permission extends SpatiePermission
         self::BUTTON => '按钮',
     ];
 
+    /**
+     * 权限树
+     *
+     * @param int $parent_id
+     * @return array
+     */
     public static function tree($parent_id = 0)
     {
         $tree = [];

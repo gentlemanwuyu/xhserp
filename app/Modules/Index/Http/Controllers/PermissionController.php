@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Index\Models\Permission;
+use App\Services\EntrustService;
 
 class PermissionController extends Controller
 {
@@ -41,7 +42,7 @@ class PermissionController extends Controller
 
     public function form(Request $request)
     {
-        $tree = Permission::tree();
+        $tree = EntrustService::permissionTree();
         $data = compact('tree');
         if ($request->get('permission_id')) {
             $data['permission'] = Permission::find($request->get('permission_id'));
