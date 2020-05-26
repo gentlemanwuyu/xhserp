@@ -81,12 +81,12 @@
                         <dl class="layui-nav-child">
                             @can('product_category')
                             <dd>
-                                <a lay-href="{{route('category::category.tree', ['type' => 1])}}"><i class="layui-icon layui-icon-tree"></i>产品分类</a>
+                                <a lay-href="{{route('category::category.tree', ['type' => 1], false)}}"><i class="layui-icon layui-icon-tree"></i>产品分类</a>
                             </dd>
                             @endcan
                             @can('goods_category')
                             <dd>
-                                <a lay-href="{{route('category::category.tree', ['type' => 2])}}"><i class="layui-icon layui-icon-tree"></i>商品分类</a>
+                                <a lay-href="{{route('category::category.tree', ['type' => 2], false)}}"><i class="layui-icon layui-icon-tree"></i>商品分类</a>
                             </dd>
                             @endcan
                         </dl>
@@ -101,7 +101,7 @@
                         <dl class="layui-nav-child">
                             @can('product_list')
                             <dd>
-                                <a lay-href="{{route('product::product.list')}}"><i class="layui-icon layui-icon-template-1"></i>产品列表</a>
+                                <a lay-href="{{route('product::product.list', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>产品列表</a>
                             </dd>
                             @endcan
                         </dl>
@@ -116,7 +116,7 @@
                         <dl class="layui-nav-child">
                             @can('goods_list')
                             <dd>
-                                <a lay-href="{{route('goods::goods.list')}}"><i class="layui-icon layui-icon-template-1"></i>商品列表</a>
+                                <a lay-href="{{route('goods::goods.list', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>商品列表</a>
                             </dd>
                             @endcan
                         </dl>
@@ -131,32 +131,32 @@
                         <dl class="layui-nav-child">
                             @can('stockout_management')
                             <dd>
-                                <a lay-href="{{route('warehouse::stockout.index')}}"><i class="layui-icon layui-icon-template-1"></i>备货管理</a>
+                                <a lay-href="{{route('warehouse::stockout.index', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>备货管理</a>
                             </dd>
                             @endcan
                             @can('entry_management')
                             <dd>
-                                <a lay-href="{{route('warehouse::entry.index')}}"><i class="layui-icon layui-icon-template-1"></i>入库管理</a>
+                                <a lay-href="{{route('warehouse::entry.index', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>入库管理</a>
                             </dd>
                             @endcan
                             @can('egress_management')
                             <dd>
-                                <a lay-href="{{route('warehouse::egress.index')}}"><i class="layui-icon layui-icon-template-1"></i>出库管理</a>
+                                <a lay-href="{{route('warehouse::egress.index', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>出库管理</a>
                             </dd>
                             @endcan
                             @can('sale_return_management')
                             <dd>
-                                <a lay-href="{{route('warehouse::saleReturn.index')}}"><i class="layui-icon layui-icon-template-1"></i>销售退货管理</a>
+                                <a lay-href="{{route('warehouse::saleReturn.index', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>销售退货管理</a>
                             </dd>
                             @endcan
                             @can('purchase_return_management')
                             <dd>
-                                <a lay-href="{{route('warehouse::purchaseReturn.index')}}"><i class="layui-icon layui-icon-template-1"></i>采购退货管理</a>
+                                <a lay-href="{{route('warehouse::purchaseReturn.index', [], false)}}"><i class="layui-icon layui-icon-template-1"></i>采购退货管理</a>
                             </dd>
                             @endcan
                             @can('express_management')
                             <dd>
-                                <a lay-href="{{route('warehouse::express.index')}}"><i class="layui-icon layui-icon-release"></i>快递管理</a>
+                                <a lay-href="{{route('warehouse::express.index', [], false)}}"><i class="layui-icon layui-icon-release"></i>快递管理</a>
                             </dd>
                             @endcan
                         </dl>
@@ -171,17 +171,17 @@
                         <dl class="layui-nav-child">
                             @can('supplier_management')
                             <dd>
-                                <a lay-href="{{route('purchase::supplier.index')}}"><i class="layui-icon layui-icon-group"></i>供应商管理</a>
+                                <a lay-href="{{route('purchase::supplier.index', [], false)}}"><i class="layui-icon layui-icon-group"></i>供应商管理</a>
                             </dd>
                             @endcan
                             @can('purchase_order_management')
                             <dd>
-                                <a lay-href="{{route('purchase::order.index')}}"><i class="layui-icon layui-icon-form"></i>采购订单管理</a>
+                                <a lay-href="{{route('purchase::order.index', [], false)}}"><i class="layui-icon layui-icon-form"></i>采购订单管理</a>
                             </dd>
                             @endcan
                             @can('purchase_return_order_management')
                             <dd>
-                                <a lay-href="{{route('purchase::returnOrder.index')}}"><i class="layui-icon layui-icon-form"></i>采购退货单管理</a>
+                                <a lay-href="{{route('purchase::returnOrder.index', [], false)}}"><i class="layui-icon layui-icon-form"></i>采购退货单管理</a>
                             </dd>
                             @endcan
                         </dl>
@@ -196,27 +196,27 @@
                         <dl class="layui-nav-child">
                             @can('customer_management')
                             <dd>
-                                <a lay-href="{{route('sale::customer.index')}}"><i class="layui-icon layui-icon-group"></i>客户管理</a>
+                                <a lay-href="{{route('sale::customer.index', [], false)}}"><i class="layui-icon layui-icon-group"></i>客户管理</a>
                             </dd>
                             @endcan
                             @can('payment_method_application')
                             <dd>
-                                <a lay-href="{{route('sale::paymentMethod.index')}}"><i class="layui-icon layui-icon-auz"></i>付款方式申请</a>
+                                <a lay-href="{{route('sale::paymentMethod.index', [], false)}}"><i class="layui-icon layui-icon-auz"></i>付款方式申请</a>
                             </dd>
                             @endcan
                             @can('order_management')
                             <dd>
-                                <a lay-href="{{route('sale::order.index')}}"><i class="layui-icon layui-icon-form"></i>订单管理</a>
+                                <a lay-href="{{route('sale::order.index', [], false)}}"><i class="layui-icon layui-icon-form"></i>订单管理</a>
                             </dd>
                             @endcan
                             @can('delivery_order_management')
                             <dd>
-                                <a lay-href="{{route('sale::deliveryOrder.index')}}"><i class="layui-icon layui-icon-form"></i>出货单管理</a>
+                                <a lay-href="{{route('sale::deliveryOrder.index', [], false)}}"><i class="layui-icon layui-icon-form"></i>出货单管理</a>
                             </dd>
                             @endcan
                             @can('return_order_management')
                             <dd>
-                                <a lay-href="{{route('sale::returnOrder.index')}}"><i class="layui-icon layui-icon-form"></i>退货单管理</a>
+                                <a lay-href="{{route('sale::returnOrder.index', [], false)}}"><i class="layui-icon layui-icon-form"></i>退货单管理</a>
                             </dd>
                             @endcan
                         </dl>
@@ -231,32 +231,32 @@
                         <dl class="layui-nav-child">
                             @can('collection_management')
                             <dd>
-                                <a lay-href="{{route('finance::collection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>收款管理</a>
+                                <a lay-href="{{route('finance::collection.index', [], false)}}"><i class="layui-icon layui-icon-rate-solid"></i>收款管理</a>
                             </dd>
                             @endcan
                             @can('pending_collection')
                             <dd>
-                                <a lay-href="{{route('finance::pendingCollection.index')}}"><i class="layui-icon layui-icon-rate-solid"></i>销售应收款</a>
+                                <a lay-href="{{route('finance::pendingCollection.index', [], false)}}"><i class="layui-icon layui-icon-rate-solid"></i>销售应收款</a>
                             </dd>
                             @endcan
                             @can('payment_management')
                             <dd>
-                                <a lay-href="{{route('finance::payment.index')}}"><i class="layui-icon layui-icon-rate"></i>付款管理</a>
+                                <a lay-href="{{route('finance::payment.index', [], false)}}"><i class="layui-icon layui-icon-rate"></i>付款管理</a>
                             </dd>
                             @endcan
                             @can('pending_payment')
                             <dd>
-                                <a lay-href="{{route('finance::pendingPayment.index')}}"><i class="layui-icon layui-icon-rate"></i>采购应付款</a>
+                                <a lay-href="{{route('finance::pendingPayment.index', [], false)}}"><i class="layui-icon layui-icon-rate"></i>采购应付款</a>
                             </dd>
                             @endcan
                             @can('account_management')
                             <dd>
-                                <a lay-href="{{route('finance::account.index')}}"><i class="layui-icon layui-icon-template"></i>账户管理</a>
+                                <a lay-href="{{route('finance::account.index', [], false)}}"><i class="layui-icon layui-icon-template"></i>账户管理</a>
                             </dd>
                             @endcan
                             @can('currency_list')
                             <dd>
-                                <a lay-href="{{route('finance::currency.index')}}"><i class="layui-icon layui-icon-dollar"></i>货币列表</a>
+                                <a lay-href="{{route('finance::currency.index', [], false)}}"><i class="layui-icon layui-icon-dollar"></i>货币列表</a>
                             </dd>
                             @endcan
                         </dl>
@@ -271,7 +271,7 @@
                         <dl class="layui-nav-child">
                             @can('user_management')
                             <dd>
-                                <a lay-href="{{route('index::user.index')}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
+                                <a lay-href="{{route('index::user.index', [], false)}}"><i class="layui-icon layui-icon-user"></i>用户管理</a>
                             </dd>
                             @endcan
                             {{--@can('organization')--}}
@@ -281,22 +281,22 @@
                             {{--@endcan--}}
                             @can('role_management')
                             <dd>
-                                <a lay-href="{{route('index::role.index')}}"><i class="layui-icon layui-icon-username"></i>角色管理</a>
+                                <a lay-href="{{route('index::role.index', [], false)}}"><i class="layui-icon layui-icon-username"></i>角色管理</a>
                             </dd>
                             @endcan
                             @can('permission_management')
                             <dd>
-                                <a lay-href="{{route('index::permission.index')}}"><i class="layui-icon layui-icon-vercode"></i>权限管理</a>
+                                <a lay-href="{{route('index::permission.index', [], false)}}"><i class="layui-icon layui-icon-vercode"></i>权限管理</a>
                             </dd>
                             @endcan
                             @if(YES == \Auth::user()->is_admin)
                             <dd>
-                                <a lay-href="{{route('index::config.index')}}"><i class="layui-icon layui-icon-set-sm"></i>系统配置</a>
+                                <a lay-href="{{route('index::config.index', [], false)}}"><i class="layui-icon layui-icon-set-sm"></i>系统配置</a>
                             </dd>
                             @endif
                             @if(YES == \Auth::user()->is_admin)
                             <dd>
-                                <a lay-href="{{route('index::index.logs')}}"><i class="layui-icon layui-icon-log"></i>系统日志</a>
+                                <a lay-href="{{route('index::index.logs', [], false)}}"><i class="layui-icon layui-icon-log"></i>系统日志</a>
                             </dd>
                             @endif
                         </dl>
