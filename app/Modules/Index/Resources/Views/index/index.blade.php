@@ -74,7 +74,7 @@
                 <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
                     @can('category_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="分类管理" lay-direction="2">
                             <i class="layui-icon layui-icon-list"></i>
                             <cite>分类管理</cite>
                         </a>
@@ -94,7 +94,7 @@
                     @endcan
                     @can('product_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="产品管理" lay-direction="2">
                             <i class="layui-icon layui-icon-templeate-1"></i>
                             <cite>产品管理</cite>
                         </a>
@@ -109,7 +109,7 @@
                     @endcan
                     @can('goods_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="商品管理" lay-direction="2">
                             <i class="layui-icon layui-icon-templeate-1"></i>
                             <cite>商品管理</cite>
                         </a>
@@ -124,7 +124,7 @@
                     @endcan
                     @can('warehouse_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="仓库管理" lay-direction="2">
                             <i class="layui-icon layui-icon-component"></i>
                             <cite>仓库管理</cite>
                         </a>
@@ -164,7 +164,7 @@
                     @endcan
                     @can('purchase_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="采购管理" lay-direction="2">
                             <i class="layui-icon layui-icon-cart-simple"></i>
                             <cite>采购管理</cite>
                         </a>
@@ -189,7 +189,7 @@
                     @endcan
                     @can('sale_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="销售管理" lay-direction="2">
                             <i class="layui-icon layui-icon-cart"></i>
                             <cite>销售管理</cite>
                         </a>
@@ -224,7 +224,7 @@
                     @endcan
                     @can('finance_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="财务管理" lay-direction="2">
                             <i class="layui-icon layui-icon-rmb"></i>
                             <cite>财务管理</cite>
                         </a>
@@ -264,7 +264,7 @@
                     @endcan
                     @can('system_management')
                     <li class="layui-nav-item">
-                        <a href="javascript:;">
+                        <a href="javascript:;" lay-tips="系统管理" lay-direction="2">
                             <i class="layui-icon layui-icon-set"></i>
                             <cite>系统管理</cite>
                         </a>
