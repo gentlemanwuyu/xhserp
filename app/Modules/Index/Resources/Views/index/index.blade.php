@@ -45,11 +45,11 @@
                         <i class="layui-icon layui-icon-theme"></i>
                     </a>
                 </li>
-                {{--<li class="layui-nav-item layui-hide-xs" lay-unselect>--}}
-                    {{--<a href="javascript:;" layadmin-event="note">--}}
-                        {{--<i class="layui-icon layui-icon-note"></i>--}}
-                    {{--</a>--}}
-                {{--</li>--}}
+                <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" layadmin-event="note">
+                        <i class="layui-icon layui-icon-note"></i>
+                    </a>
+                </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <cite>{{\Auth::user()->name}}</cite>

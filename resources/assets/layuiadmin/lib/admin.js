@@ -420,11 +420,11 @@ layui.define('view', function(exports){
                 ,anim: -1
                 ,id: 'LAY_adminNote'
                 ,skin: 'layadmin-note layui-anim layui-anim-upbit'
-                ,content: '<textarea placeholder="内容"></textarea>'
+                ,content: '<textarea placeholder="便签中的内容会存储在本地，这样即便你关掉了浏览器，在下次打开时，依然会读取到上一次的记录。是个非常小巧实用的本地备忘录。"></textarea>'
                 ,resize: false
                 ,success: function(layero, index){
                     var textarea = layero.find('textarea')
-                        ,value = note === undefined ? '便签中的内容会存储在本地，这样即便你关掉了浏览器，在下次打开时，依然会读取到上一次的记录。是个非常小巧实用的本地备忘录' : note;
+                        ,value = note === undefined ? '' : note;
 
                     textarea.val(value).focus().on('keyup', function(){
                         layui.data(setter.tableName, {
