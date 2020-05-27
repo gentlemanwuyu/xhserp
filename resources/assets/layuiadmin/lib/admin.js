@@ -693,6 +693,7 @@ layui.define('view', function(exports){
                         });
 
                         if(matched2){
+                            matched1 = true;
                             var selected = data2.list[0] ? SIDE_NAV_ITEMD : THIS;
                             othis2.addClass(selected).siblings().removeClass(selected); //标记选择器
                             return false

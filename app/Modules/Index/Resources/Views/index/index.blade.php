@@ -324,7 +324,7 @@
             </div>
             <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
                 <ul class="layui-tab-title" id="LAY_app_tabsheader">
-                    <li lay-id="{{route('index::index.home', [], false)}}" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                    <li lay-id="{{route('index::index.home', [], false)}}" lay-attr="{{route('index::index.home', [], false)}}" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
                 </ul>
             </div>
         </div>
